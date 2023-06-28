@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import * as Yup from 'yup';
 import { signInWithPopup } from 'firebase/auth';
-import { Link, useNavigate, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { auth, provider } from './config.js';
 import backgroundimage from '../assets/images/round.png';
@@ -12,19 +12,18 @@ function Signin() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check if the user is already logged in
         const email = localStorage.getItem('email');
         if (email) {
-            navigate('/dashboard'); // Redirect to the dashboard
+            navigate('/dashboard'); 
         }
-    }, []);
+    }, [navigate]);
 
     const handleGoogleLogin = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
                 console.log(result.user);
                 localStorage.setItem('email', result.user.email);
-                navigate('/dashboard'); // Redirect to the dashboard
+                navigate('/dashboard'); 
             })
             .catch((error) => {
                 console.log(error.message);

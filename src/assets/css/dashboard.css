@@ -1,0 +1,165 @@
+/* App.css */
+.flex {
+  display: flex;
+}
+
+.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.light-mode {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.sidebar {
+  width: 72px;
+}
+
+
+.bg-dark-purple {
+  background-color: #44337a;
+}
+
+.bg-light-purple {
+  background-color: #9b5de5;
+}
+
+.border-dark-purple {
+  border-color: #44337a;
+}
+
+.p-5 {
+  padding: 20px;
+}
+
+.pt-8 {
+  padding-top: 32px;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.right-3 {
+  right: 0.75rem;
+}
+
+.top-9 {
+  top: 2.25rem;
+}
+
+.w-7 {
+  width: 1.75rem;
+}
+
+.border-2 {
+  border-width: 2px;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.duration-500 {
+  transition-duration: 500ms;
+}
+
+.origin-left {
+  transform-origin: left;
+}
+
+.scale-0 {
+  transform: scale(0);
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.text-xl {
+  font-size: 1.75rem;
+}
+
+.bg-light-white {
+  background-color: #f9fafb;
+}
+
+.pt-6 {
+  padding-top: 1.5rem;
+}
+
+.rounded-md {
+  border-radius: 0.375rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+
+.hover\:bg-light-white:hover {
+  background-color: #f9fafb;
+}
+
+.text-gray-300 {
+  color: #d1d5db;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.mt-9 {
+  margin-top: 2.25rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.content {
+  flex: 1;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.p-7 {
+  padding: 1.75rem;
+}
+
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.mode-toggle span {
+  margin: 0 0.5rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
