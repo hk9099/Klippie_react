@@ -73,7 +73,7 @@ function Signin() {
                                     type="text"
                                     name="email"
                                     placeholder="Email"
-                                    className="px-2 py-1 focus:outline-none "
+                                    className="px-2 py-1 focus:outline-none bg-transparent"
                                     onMouseEnter={(e) => {
                                         e.target.style.borderBottomColor = 'blue';
                                         e.target.previousSibling.style.color = 'blue';
@@ -97,7 +97,7 @@ function Signin() {
                                     type="password"
                                     name="password"
                                     placeholder="Password"
-                                    className="px-2 py-1 focus:outline-none "
+                                    className="px-2 py-1 focus:outline-none bg-transparent"
                                     onMouseEnter={(e) => {
                                         e.target.style.borderBottomColor = 'blue';
                                         e.target.previousSibling.style.color = 'blue';

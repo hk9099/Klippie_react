@@ -6,22 +6,18 @@ import Forgotpassword from './forgotpassword.js';
 import Dashboard from './dashboard.js';
 import Layout from './Layout.js';
 
-
 function App() {
   return (
     <Router>
-      <Layout>
       <Routes>
         <Route path="/signup" element={<Signup />} />
         <Route exact path="/" element={<Signin />} />
         <Route path="/forgotpassword" element={<Forgotpassword />} />
         <Route path="*" element={<h1>Not Found</h1>} />
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-        </Routes>
-      </Layout>
+        <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+      </Routes>
     </Router>
   );
 }
 
 export default App;
-
