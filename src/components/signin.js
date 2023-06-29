@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,18 +7,23 @@ import { auth } from './config.js';
 import backgroundimage from '../assets/images/round.png';
 import googleicon from '../assets/images/google.png';
 import '../assets/css/signin.css';
+import Loader from './Loader.js';
+
 
 function Signin() {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const email = localStorage.getItem('email');
         if (email) {
-            navigate('/dashboard'); 
+            setIsLoading(true);
+            navigate('/dashboard');
         }
     }, [navigate]);
 
     const handleGoogleLogin = () => {
+        setIsLoading(true);
         const customProvider = new GoogleAuthProvider();
         customProvider.setCustomParameters({ prompt: 'select_account' });
 
@@ -48,14 +53,17 @@ function Signin() {
     });
 
     const handleSubmit = (values, { setSubmitting }) => {
+        setIsLoading(true);
         setTimeout(() => {
-            // alert(JSON.stringify(values, null, 2));
-            // setSubmitting(false);
             navigate('/dashboard');
+            setSubmitting(false);
         }, 400);
     };
 
     return (
+        <main>
+             {isLoading && <Loader />}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
             <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                 <div className="left_heading text-center">
@@ -166,7 +174,8 @@ function Signin() {
                     <p>This is some sample text.</p>
                 </div>
             </div>
-        </div>
+            </div>
+        </main>
     );
 }
 
