@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import * as Yup from 'yup';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { auth, provider } from './config.js';
+import { auth } from './config.js';
 import backgroundimage from '../assets/images/round.png';
 import googleicon from '../assets/images/google.png';
 import '../assets/css/signin.css';
@@ -19,16 +19,20 @@ function Signin() {
     }, [navigate]);
 
     const handleGoogleLogin = () => {
-        signInWithPopup(auth, provider)
+        const customProvider = new GoogleAuthProvider();
+        customProvider.setCustomParameters({ prompt: 'select_account' });
+
+        signInWithPopup(auth, customProvider)
             .then((result) => {
                 console.log(result.user);
                 localStorage.setItem('email', result.user.email);
-                navigate('/dashboard'); 
+                navigate('/dashboard');
             })
             .catch((error) => {
                 console.log(error.message);
             });
     };
+
 
     const initialValues = {
         email: '',
