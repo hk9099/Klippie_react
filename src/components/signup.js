@@ -98,7 +98,20 @@ function Signup() {
                                         name="name"
                                         placeholder="Name"
                                         className="px-2 py-1 focus:outline-none"
-                                    // Add any other event handlers or styling as needed
+                                        onMouseEnter={(e) => {
+                                            e.target.style.borderBottomColor = 'blue';
+                                            e.target.previousSibling.style.color = 'blue';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.borderBottomColor = 'gray';
+                                            e.target.previousSibling.style.color = 'gray';
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.placeholder = '';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.placeholder = 'Name';
+                                        }}
                                     />
                                     <ErrorMessage name="name" component="div" className="text-red-500 mt-2" />
                                 </div>
@@ -133,6 +146,20 @@ function Signup() {
                                         name="password"
                                         placeholder="Password"
                                         className="px-2 py-1 focus:outline-none mt-2"
+                                        onMouseEnter={(e) => {
+                                            e.target.style.borderBottomColor = 'blue';
+                                            e.target.previousSibling.style.color = 'blue';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.borderBottomColor = 'gray';
+                                            e.target.previousSibling.style.color = 'gray';
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.placeholder = '';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.placeholder = 'Password';
+                                        }}
                                     />
                                     <ErrorMessage
                                         name="password"
@@ -149,6 +176,20 @@ function Signup() {
                                         name="confirmPassword"
                                         placeholder="Confirm Password"
                                         className="px-2 py-1 focus:outline-none mt-2"
+                                        onMouseEnter={(e) => {
+                                            e.target.style.borderBottomColor = 'blue';
+                                            e.target.previousSibling.style.color = 'blue';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.borderBottomColor = 'gray';
+                                            e.target.previousSibling.style.color = 'gray';
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.placeholder = '';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.placeholder = 'Confirm Password';
+                                        }}
                                     />
                                     <ErrorMessage
                                         name="confirmPassword"
