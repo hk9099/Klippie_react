@@ -1,19 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 import backgroundimage from '../assets/images/round.png';
 import googleicon from '../assets/images/google.png';
 import '../assets/css/signup.css';
 
 function Signup() {
+    const navigate = useNavigate();
     const initialValues = {
+        name: '',
         email: '',
         password: '',
         confirmPassword: '',
     };
 
+
     const validationSchema = Yup.object({
+        name: Yup.string()
+            .required('Name is required')
+            .max(50, 'Name is too long - should be 50 chars maximum.'),
         email: Yup.string()
             .email('Invalid email address')
             .required('Email is required')
@@ -35,12 +42,33 @@ function Signup() {
             .required('Confirm password is required'),
     });
 
+    const [loading, setLoading] = useState(false);
+
     const handleSubmit = (values, { setSubmitting }) => {
-        setTimeout(() => {
-            // alert(JSON.stringify(values, null, 2));
-            // setSubmitting(false);
-        }, 400);
+        setLoading(true);
+        const payload = {
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+        };
+        axios
+            .post('https://api.getklippie.com/v1/auth/signup', payload)
+            .then(response => {
+                var signupToken = response.data.data;
+                localStorage.setItem('signupToken', signupToken); 
+                navigate('/otpVarification'); 
+            })
+            .catch(error => {
+                // Handle registration error
+                console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
+                setSubmitting(false);
+            });
     };
+
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
@@ -61,75 +89,89 @@ function Signup() {
                         validationSchema={validationSchema}
                         onSubmit={handleSubmit}
                     >
-                        <Form className="flex flex-col justify-center items-center">
-                            <div className="emailinput form_layout  mb-10">
-                                <label className="text-gray-500">Enter your email</label>
-                                <Field
-                                    type="text"
-                                    name="email"
-                                    placeholder="Email"
-                                    className="px-2 py-1 focus:outline-none "
-                                    onMouseEnter={(e) => {
-                                        e.target.style.borderBottomColor = 'blue';
-                                        e.target.previousSibling.style.color = 'blue';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.target.style.borderBottomColor = 'gray';
-                                        e.target.previousSibling.style.color = 'gray';
-                                    }}
-                                    onFocus={(e) => {
-                                        e.target.placeholder = '';
-                                    }}
-                                    onBlur={(e) => {
-                                        e.target.placeholder = 'Email';
-                                    }}
-                                />
-                                <ErrorMessage name="email" component="div" className="text-red-500 mt-2" />
-                            </div>
-                            <div className="passwordinput form_layout">
-                                <label className="text-gray-500 mt-2">Enter your password</label>
-                                <Field
-                                    type="password"
-                                    name="password"
-                                    placeholder="Password"
-                                    className="px-2 py-1 focus:outline-none mt-2"
-                                />
-                                <ErrorMessage
-                                    name="password"
-                                    component="div"
-                                    className="text-red-500"
-                                />
-                            </div>
-                            <div className="passwordinput form_layout mt-10">
-                                <label className="text-gray-500 mt-2">
-                                    Enter your Confirm password
-                                </label>
-                                <Field
-                                    type="password"
-                                    name="confirmPassword"
-                                    placeholder="Confirm Password"
-                                    className="px-2 py-1 focus:outline-none mt-2"
-                                />
-                                <ErrorMessage
-                                    name="confirmPassword"
-                                    component="div"
-                                    className="text-red-500"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="submitbutton mt-10 bg-black text-white font-bold py-2 px-4 rounded-full"
-                            >
-                                Sign Up
-                            </button>
-                        </Form>
+                        {({ isSubmitting }) => (
+                            <Form className="flex flex-col justify-center items-center">
+                                <div className="nameinput form_layout mb-10">
+                                    <label className="text-gray-500">Enter your name</label>
+                                    <Field
+                                        type="text"
+                                        name="name"
+                                        placeholder="Name"
+                                        className="px-2 py-1 focus:outline-none"
+                                    // Add any other event handlers or styling as needed
+                                    />
+                                    <ErrorMessage name="name" component="div" className="text-red-500 mt-2" />
+                                </div>
+                                <div className="emailinput form_layout  mb-10">
+                                    <label className="text-gray-500">Enter your email</label>
+                                    <Field
+                                        type="text"
+                                        name="email"
+                                        placeholder="Email"
+                                        className="px-2 py-1 focus:outline-none "
+                                        onMouseEnter={(e) => {
+                                            e.target.style.borderBottomColor = 'blue';
+                                            e.target.previousSibling.style.color = 'blue';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.borderBottomColor = 'gray';
+                                            e.target.previousSibling.style.color = 'gray';
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.placeholder = '';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.placeholder = 'Email';
+                                        }}
+                                    />
+                                    <ErrorMessage name="email" component="div" className="text-red-500 mt-2" />
+                                </div>
+                                <div className="passwordinput form_layout">
+                                    <label className="text-gray-500 mt-2">Enter your password</label>
+                                    <Field
+                                        type="password"
+                                        name="password"
+                                        placeholder="Password"
+                                        className="px-2 py-1 focus:outline-none mt-2"
+                                    />
+                                    <ErrorMessage
+                                        name="password"
+                                        component="div"
+                                        className="text-red-500"
+                                    />
+                                </div>
+                                <div className="passwordinput form_layout mt-10">
+                                    <label className="text-gray-500 mt-2">
+                                        Enter your Confirm password
+                                    </label>
+                                    <Field
+                                        type="password"
+                                        name="confirmPassword"
+                                        placeholder="Confirm Password"
+                                        className="px-2 py-1 focus:outline-none mt-2"
+                                    />
+                                    <ErrorMessage
+                                        name="confirmPassword"
+                                        component="div"
+                                        className="text-red-500"
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="submitbutton mt-10 bg-black text-white font-bold py-2 px-4 rounded-full"
+                                    disabled={isSubmitting || loading}
+                                >
+                                    {loading ? 'Signing Up...' : 'Sign Up'}
+                                </button>
+                            </Form>
+                        )}
                     </Formik>
 
                     <div className="flex flex-col justify-center items-center mt-2">
                         <p className="create_acp">
-                            Already have an account? 
+                            Already have an account?
                             <Link to="/" className="create_ac">
-                                 Login
+                                Login
                             </Link>
                         </p>
                     </div>

@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import { BsArrowLeftCircle } from 'react-icons/bs'
-import { AiFillPieChart } from 'react-icons/ai'
+import { AiOutlinePlus } from 'react-icons/ai'
 // import { SiFuturelearn } from 'react-icons/si'
 // import { SiOpenaccess } from 'react-icons/si'
 // import { CgProfile } from 'react-icons/cg'
 import Logo from '../assets/images/logo.svg'
 import HamburgerButton from './HumbergerButton'
+import '.././assets/css/Sidebar.css'
 
 const Sidebar = () => {
     const [open, setOpen] = useState(true)
@@ -15,15 +16,12 @@ const Sidebar = () => {
     const location = useLocation()
 
     // const Menus = [
-    //     { title: 'Dashboard', path: '/dashboard', src: <AiFillPieChart /> },
+    //     { title: 'Dashboard', path: '/dashboard', src: <AiOutlinePlus /> },
     // ]
 
     return (
         <>
-            <div
-                className={`${open ? 'w-60' : 'w-fit'
-                    } hidden sm:block relative duration-300 bg-gray-100 border-r border-gray-200 dark:border-gray-600 p-5 dark:bg-custom-color-dark`}
-            >
+            <div  className={`${open ? 'w-80' : 'w-fit' }  hidden sm:block relative duration-300 bg-gray-100 border-r border-gray-200 dark:border-gray-600 p-5 dark:bg-custom-color-dark`}>
                 <BsArrowLeftCircle
                     className={`${!open && 'rotate-180'
                         } absolute text-3xl bg-white fill-slate-800  rounded-full cursor-pointer top-9 -right-4 dark:fill-gray-400 dark:bg-custom-color-dark`}
@@ -34,7 +32,7 @@ const Sidebar = () => {
                         <img src={Logo} alt='' className='pl-2' />
                         {open && (
                             <span className='text-xl font-medium whitespace-nowrap dark:text-white'>
-                                Goal Quest
+                                Klippie
                             </span>
                         )}
                     </div>
@@ -46,13 +44,129 @@ const Sidebar = () => {
                             className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
                         mt-2 ${location.pathname === "/dashboard" && 'bg-gray-200 dark:bg-gray-700'}`}
                         >
-                            <span className='text-2xl'><AiFillPieChart /></span>
+                            <span className='text-2xl'><AiOutlinePlus /></span>
                             <span className={`${!open && 'hidden'} origin-left duration-300 hover:block`}>
-                                Dashboard
+                                Add New Video/Audio
                             </span>
                         </button>
                     </Link>
                 </div>
+
+                <div className={`pt-6 bottom-0 left-0 right-0 overscroll-auto overflow-auto h-auto max-h-[100%] w-auto text-md leading-tight scrollbar scrollbar-thumb-blue-300 scrollbar-track-blue-100 dark:scrollbar-thumb-blue-500 dark:scrollbar-track-gray-800 scrollbar-thin ${!open && 'hidden'}`}>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                            
+                <div className={`pt-6 fixed bottom-0 left-0 right-0`}>
+                    <div className=" flex flex-col gap-2 pb-5">
+                        <Link to="/dashboard">
+                            <button
+                                className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
+                        mt-2 ${location.pathname === "/dashboard" && 'bg-gray-200 dark:bg-gray-700'}`}
+                            >
+                                <span className='text-2xl'><AiOutlinePlus /></span>
+                                <span className={`${!open && 'hidden'} origin-left duration-300 hover:block`}>
+                                    Add New Video/Audio
+                                </span>
+                            </button>
+                        </Link>
+                    </div>
+                </div>
+
             </div>
             {/* Mobile Menu */}
             <div className="pt-3">

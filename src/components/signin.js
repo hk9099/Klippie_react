@@ -18,7 +18,7 @@ function Signin() {
         const email = localStorage.getItem('email');
         if (email) {
             setIsLoading(true);
-            navigate('/dashboard');
+            navigate('/');
         }
     }, [navigate]);
 
@@ -31,7 +31,7 @@ function Signin() {
             .then((result) => {
                 console.log(result.user);
                 localStorage.setItem('email', result.user.email);
-                navigate('/dashboard');
+                navigate('/');
             })
             .catch((error) => {
                 console.log(error.message);
@@ -55,7 +55,7 @@ function Signin() {
     const handleSubmit = (values, { setSubmitting }) => {
         setIsLoading(true);
         setTimeout(() => {
-            navigate('/dashboard');
+            navigate('/');
             setSubmitting(false);
         }, 400);
     };

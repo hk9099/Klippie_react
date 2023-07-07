@@ -4,6 +4,7 @@ import Signin from './signin.js';
 import Signup from './signup.js';
 import Forgotpassword from './forgotpassword.js';
 import Dashboard from './dashboard.js';
+import OtpVarification from './otpVarification.js';
 import Layout from './Layout.js';
 import Loader from './Loader.js';
 
@@ -27,7 +28,8 @@ function App() {
           <Route exact path="/" element={<Signin />} />
           <Route path="/forgotpassword" element={<Forgotpassword />} />
           <Route path="*" element={<h1>Not Found</h1>} />
-          <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+            <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+          <Route path="/otpVarification" element={<OtpVarification />} />
         </Routes>
       )}
     </Router>
