@@ -75,14 +75,14 @@ function Signin() {
                 // Handle successful verification
                 toast.success('OTP verified successfully');
                 console.log(response.data);
-                navigate('/signin');
+                navigate('/');
             })
             .catch((error) => {
                 toast.error(error.message);
                 setAttempts((prevAttempts) => prevAttempts + 1);
                 if (attempts + 1 >= 3) {
                     setShowResendButton(false);
-                    navigate('/signup');
+                    navigate('/');
                 }
             })
             .finally(() => {
