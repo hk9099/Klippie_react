@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -9,12 +9,24 @@ import '../assets/css/signup.css';
 
 function Signup() {
     const navigate = useNavigate();
+    // eslint-disable-next-line
+    const [isLoading, setIsLoading] = useState(false);
+    
     const initialValues = {
         name: '',
         email: '',
         password: '',
         confirmPassword: '',
     };
+
+    useEffect(() => {
+        const encodedEmail = localStorage.getItem('_auth');
+        if (encodedEmail) {
+            setIsLoading(true);
+            // const email = atob(encodedEmail); // Decode email
+            navigate('/dashboard');
+        }
+    }, [navigate]);
 
 
     const validationSchema = Yup.object({
@@ -56,6 +68,7 @@ function Signup() {
             .post('https://api.getklippie.com/v1/auth/signup', payload)
             .then(response => {
                 var signupToken = response.data.data;
+                console.log(signupToken);   
                 localStorage.setItem('signupToken', signupToken); 
                 navigate('/otpVarification'); 
             })

@@ -6,14 +6,25 @@ import backgroundimage from '../assets/images/round.png';
 import '../assets/css/signin.css';
 import Loader from './Loader.js';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Signin() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
-    const [resendTimer, setResendTimer] = useState(30); // Timer in seconds
+    const [resendTimer, setResendTimer] = useState(30);
     const [attempts, setAttempts] = useState(0);
     const [showResendButton, setShowResendButton] = useState(true);
     const [resendButtonLoading, setResendButtonLoading] = useState(false);
+
+    useEffect(() => {
+        const encodedEmail = localStorage.getItem('_auth');
+        if (encodedEmail) {
+            setIsLoading(true);
+            // const email = atob(encodedEmail); // Decode email
+            navigate('/dashboard');
+        }
+    }, [navigate]);
 
     useEffect(() => {
         const email = localStorage.getItem('email');
@@ -36,7 +47,7 @@ function Signin() {
                 }
                 return prevTimer - 1;
             });
-        }, 1000);
+        }, 1000); // Set the interval to 1 second (1000 milliseconds)
     };
 
     const initialValues = {
@@ -62,12 +73,12 @@ function Signin() {
             .post('https://api.getklippie.com/v1/auth/verify-otp', payload)
             .then((response) => {
                 // Handle successful verification
+                toast.success('OTP verified successfully');
                 console.log(response.data);
-                navigate('/');
+                navigate('/signin');
             })
             .catch((error) => {
-                // Handle error
-                console.log(error);
+                toast.error(error.message);
                 setAttempts((prevAttempts) => prevAttempts + 1);
                 if (attempts + 1 >= 3) {
                     setShowResendButton(false);
@@ -81,9 +92,10 @@ function Signin() {
     };
 
     const handleResendOTP = () => {
+        if (resendButtonLoading) return; // Prevent multiple resends while loading
         setResendButtonLoading(true);
         const data = JSON.stringify({
-            email: 'hkk@yopmail.com',
+            email: 'akshit@getklippie.com',
         });
 
         const config = {
@@ -103,8 +115,10 @@ function Signin() {
                 console.log(JSON.stringify(response.data));
                 setResendButtonLoading(false);
                 startResendTimer();
+                toast.success('OTP sent successfully');
             })
             .catch((error) => {
+                toast.error('Too many attempts. Please try again later.');
                 console.log(error);
                 setResendButtonLoading(false);
             });
@@ -112,6 +126,7 @@ function Signin() {
 
     return (
         <main>
+            <ToastContainer />
             {isLoading && <Loader />}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
@@ -167,7 +182,7 @@ function Signin() {
                                         Verify OTP
                                     </button>
 
-                                    {showResendButton ? (
+                                    {showResendButton && attempts < 3 ? (
                                         <button
                                             type="button"
                                             disabled={isSubmitting || resendButtonLoading}
@@ -177,7 +192,7 @@ function Signin() {
                                             {resendButtonLoading ? 'Loading...' : 'Resend OTP'}
                                         </button>
                                     ) : (
-                                        <div className="resend-timer">
+                                        <div className="resend-timer mt-3">
                                             Resend OTP in {resendTimer} seconds
                                         </div>
                                     )}
