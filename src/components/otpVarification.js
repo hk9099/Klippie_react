@@ -66,7 +66,6 @@ function Signin() {
         const payload = {
             token: localStorage.getItem('signupToken'),
             otp: values.otp,
-            type: 'fp',
         };
         localStorage.removeItem('signupToken');
         axios
