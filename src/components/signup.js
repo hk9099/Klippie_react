@@ -6,11 +6,15 @@ import axios from 'axios';
 import backgroundimage from '../assets/images/round.png';
 import googleicon from '../assets/images/google.png';
 import '../assets/css/signup.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function Signup() {
     const navigate = useNavigate();
     // eslint-disable-next-line
     const [isLoading, setIsLoading] = useState(false);
+    
     
     const initialValues = {
         name: '',
@@ -67,16 +71,17 @@ function Signup() {
         axios
             .post('https://api.getklippie.com/v1/auth/signup', payload)
             .then(response => {
+                console.log(response, 'response');   
                 var signupToken = response.data.data;
-                console.log(signupToken);   
                 localStorage.setItem('signupToken', signupToken); 
                 navigate('/otpVarification'); 
             })
             .catch(error => {
-                // Handle registration error
-                console.log(error);
+                console.log(error.response.data);
+                toast.error(error.response.data.detail);
             })
             .finally(() => {
+                console.log('finally');
                 setLoading(false);
                 setSubmitting(false);
             });
@@ -84,6 +89,8 @@ function Signup() {
 
 
     return (
+        <>
+            <ToastContainer />
         <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
             <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                 <div className="left_heading text-center">
@@ -249,7 +256,8 @@ function Signup() {
                     <p>This is some sample text.</p>
                 </div>
             </div>
-        </div>
+            </div>
+        </>
     );
 }
 

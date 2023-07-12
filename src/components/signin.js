@@ -80,7 +80,7 @@ function Signin() {
                     position: toast.POSITION.TOP_CENTER
                 });
             } else {
-                toast.error('Something went wrong', {
+                toast.error(error.response.data.detail, {
                     position: toast.POSITION.TOP_CENTER
                 });
             }
