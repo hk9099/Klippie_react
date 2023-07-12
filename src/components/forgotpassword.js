@@ -12,8 +12,10 @@ const MultiStepForm = () => {
     const [formData, setFormData] = useState({});
     const [emailSent, setEmailSent] = useState(false);
     const [otpVerified, setOtpVerified] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    // eslint-disable-next-line no-unused-vars
     const [success, setSuccess] = useState(null);
     const [emailToken, setEmailToken] = useState(null);
     const inputRef = useRef();
