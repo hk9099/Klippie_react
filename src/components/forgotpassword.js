@@ -136,10 +136,7 @@ const MultiStepForm = () => {
         toast(message, { position: toast.POSITION.TOP_CENTER });
     };
 
-    const openDefaultEmailClient = (emailAddress) => {
-        const mailtoLink = `mailto:${emailAddress}`;
-        window.location.href = mailtoLink;
-    };
+  
 
     return (
         <main>
@@ -188,7 +185,6 @@ const MultiStepForm = () => {
                                             className="submitbutton mt-10 bg-black text-white font-bold py-2 px-4 rounded-full"
                                             onClick={(e) => {
                                                 handleEmailSubmit(e);
-                                                openDefaultEmailClient(formData.email);
                                             }}
                                         >
                                             {emailLoading ? 'Sending Email...' : 'Send OTP'}
