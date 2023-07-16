@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
 .left_backgroundinage {
@@ -43,6 +44,9 @@ width: 100%;
   /* background-color:#917bea6f; */
   font-family: Poppins,sans-serif;
   outline: none;
+  border-top: none;
+    border-left: none;
+    border-right: none;
 }
 
 .emailinput .inputbox-container ,

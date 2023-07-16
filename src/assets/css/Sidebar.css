@@ -28,6 +28,21 @@
   height: 6px;
 }
 
+ .delete-button {
+   display: none;
+   /* Hide the delete button by default */
+ }
+
+ .row:hover .delete-button {
+   display: inline-block;
+      position: absolute;
+        right: 14px;
+        top: 5px;
+        font-size: 19px;
+        background: gray;
+        padding: 5px;
+ }
+
 @keyframes borderPulse {
   0% {
     border-color:#f79533;
@@ -64,8 +79,8 @@
   }
 }
 
-.border-animation {
+/* .border-animation {
   animation: borderPulse 2s infinite;
-}
+} */
 
 

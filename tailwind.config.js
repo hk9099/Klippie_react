@@ -1,5 +1,9 @@
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+    "./src/**/*.{html,js}",
+    "./node_modules/tw-elements/dist/js/**/*.js"
+  ],
 
   // enable dark mode via class strategy
   darkMode: 'class',
@@ -23,8 +27,13 @@ module.exports = {
       //   veryDarkBlue: 'hsl(233, 12%, 13%)',
       // },
     },
+    fontFamily: {
+      sans: ['Inter', 'sans-serif'],
+      poppins: ['Poppins', 'sans-serif'],
+    }
   },
   plugins: [
     require('tailwind-scrollbar'),
+    require("tw-elements/dist/plugin.cjs")
   ],
 }

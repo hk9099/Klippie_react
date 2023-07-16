@@ -9,6 +9,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaMobileAlt } from 'react-icons/fa';
+import bannerRight from '../assets/images/banner-right-pic.avif';
 
 
 function Signin() {
@@ -278,8 +279,7 @@ function Signin() {
                 <div className="hidden sm:block right_block ">
                     <img src={backgroundimage} alt="backgroundimage" className="h-screen w-full object-cover" />
                     <div className="text-overlay">
-                        <h1>Hello, World!</h1>
-                        <p>This is some sample text.</p>
+                        <img src={bannerRight} alt="logo" className="logo" style={{ width: '90%', display: 'inline-block' }} />
                     </div>
                 </div>
             </div>

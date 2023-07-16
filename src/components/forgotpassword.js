@@ -11,6 +11,8 @@ import { RiInformationLine } from 'react-icons/ri';
 import { TbDeviceMobileMessage } from 'react-icons/tb';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
 import { Tooltip } from 'react-tooltip';
+import bannerRight from '../assets/images/banner-right-pic.avif';
+
 
 
 const MultiStepForm = () => {
@@ -385,8 +387,7 @@ const MultiStepForm = () => {
                 <div className="hidden sm:block right_block">
                     <img src={backgroundimage} alt="backgroundimage" className="h-screen w-full object-cover" />
                     <div className="text-overlay">
-                        <h1>Hello, World!</h1>
-                        <p>This is some sample text.</p>
+                        <img src={bannerRight} alt="logo" className="logo" style={{ width: '90%', display: 'inline-block' }} />
                     </div>
                 </div>
             </div>

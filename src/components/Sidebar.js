@@ -1,25 +1,39 @@
-import React, { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-
+import React, { useState, useEffect } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { IoSettingsOutline } from 'react-icons/io5'
 import { MdOutlineLiveHelp } from 'react-icons/md'
-import { BiLogOut } from 'react-icons/bi'
+// import { BiLogOut } from 'react-icons/bi'
 import Logo from '../assets/images/logo.svg'
 import HamburgerButton from './HumbergerButton'
 import '.././assets/css/Sidebar.css'
+import { AiOutlineDelete } from 'react-icons/ai'
+import Logout from './logout'
+
 
 const Sidebar = () => {
+    const navigate = useNavigate();
     const [open, setOpen] = useState(true)
     const [mobileMenu, setMobileMenu] = useState(false)
     const location = useLocation()
     const [lines, setLines] = useState([
-        'lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        'lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        'lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        // Add more lines as needed
+        '11111111111111111111111111111111111111',
+        '22222222222222222222222222222222',
+        '3333333333333333333333333333333333',
+        '433333333333333333333333333333333333',
     ]);
+
+    useEffect(() => {
+        const encodedEmail = localStorage.getItem('_auth');
+        if (encodedEmail) {
+            navigate('/dashboard');
+        } else {
+            navigate('/');
+        }
+    }, [navigate]);
+
+
 
     // const Menus = [
     //     { title: 'Dashboard', path: '/dashboard', src: <AiOutlinePlus /> },
@@ -46,7 +60,7 @@ const Sidebar = () => {
                     <div className={`flex ${open && 'gap-x-4'} items-center`}>
                         <img src={Logo} alt='' className='pl-2' />
                         {open && (
-                            <span className='text-xl font-medium whitespace-nowrap dark:text-white'>
+                            <span className={`text-3xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}>
                                 Klippie
                             </span>
                         )}
@@ -56,7 +70,7 @@ const Sidebar = () => {
                 <div className='pt-6'>
                     <Link to="/dashboard">
                         <button
-                            className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-blue
+                            className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-gray-500 dark:border-gray-100
                         mt-2 ${location.pathname === "/dashboard" && 'bg-gray-200 dark:bg-gray-700'}
                         border-animation`}
                         >
@@ -70,14 +84,25 @@ const Sidebar = () => {
                 </div>
 
                 <div className="border-t border-white/20 flex-grow overflow-y-auto">
-                    <div className={`overflow-hidden ${!open && 'hidden'}`}>
+                    <div className={`overflow-hidden ${!open && 'hidden'} relative`}>
                         {lines.map((line, index) => (
-                            <div key={index} className="width-content">
-                                <p>{line}</p>
-                                <button onClick={() => deleteLine(index)}>Delete</button>
+                            <div key={index} className="width-content row relative bg-gray-200 dark:bg-gray-700 my-2 border-r-2">
+                                <p className='py-2 w-[250px]'>{line}</p>
+                                <button onClick={() => deleteLine(index)} className="delete-button">
+                                    <AiOutlineDelete />
+                                </button>
                             </div>
                         ))}
                     </div>
+
+                    {/* <div className={`overflow-hidden ${!open && 'hidden'}`}>
+                        {lines.map((line, index) => (
+                            <div key={index} className="width-content">
+                                <p>{line}</p>
+                                 <button key={index} onClick={() => deleteLine(index)}><AiOutlineDelete /></button>
+                            </div>
+                        ))}
+                    </div> */}
                 </div>
                 <div className={` bottom-0 left-0 right-0 border-t border-white/20`}>
                     <div className=" flex flex-col gap-1">
@@ -102,7 +127,7 @@ const Sidebar = () => {
                                 </span>
                             </p>
                         </Link>
-                        <Link to="/dashboard">
+                        {/* <Link to="/dashboard">
                             <p
                                 className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
                         ${location.pathname === "/dashboard" && ''}`}
@@ -112,7 +137,8 @@ const Sidebar = () => {
                                     Log Out
                                 </span>
                             </p>
-                        </Link>
+                        </Link> */}
+                        <Logout />
                     </div>
                 </div>
 
