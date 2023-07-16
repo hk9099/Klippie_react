@@ -107,7 +107,7 @@ const Sidebar = () => {
                     <div className={`overflow-hidden ${!open && 'hidden'} relative`}>
                         {lines.map((line, index) => (
                             <div key={index} className="width-content row relative bg-gray-200 dark:bg-gray-700 my-2 rounded">
-                                <p className='py-2 px-1 bg-gray-200 dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-white rounded' style={{ width: '243px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                <p className='py-2 px-2 bg-gray-200 dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-white rounded' style={{ width: '243px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                     {line}
                                 </p>
                                 <button onClick={() => deleteLine(index)} className="delete-button">
