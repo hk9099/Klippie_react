@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
+import { Tooltip} from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css'
+import { RiInformationLine } from 'react-icons/ri';
 import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,10 +15,15 @@ import googleicon from '../assets/images/google.png';
 import '../assets/css/signin.css';
 import Loader from './Loader.js';
 import axios from 'axios';
+import bannerRight from '../assets/images/banner-right-pic.avif';
+import Hiiii from '../assets/images/hi_40x40.gif';
+import {HiOutlineMail} from 'react-icons/hi';
 
 function Signin() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
 
     useEffect(() => {
         const encodedEmail = localStorage.getItem('_auth');
@@ -97,7 +106,7 @@ function Signin() {
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
                         <h1 className="text-4xl font-bold text-gray-800">
-                            Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">Klippie</span>&#128075;
+                            Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Klippie</span><img src={Hiiii} alt="Hiiii" style={ { width: '40px', height: '40px' ,display : 'inline-block' } } />
                         </h1>
                         <p className="text-gray-500">Please Login to your account.</p>
                     </div>
@@ -110,28 +119,53 @@ function Signin() {
                             {({ errors, touched }) => (
                                 <Form className="flex flex-col justify-center items-center">
                                     <div className="emailinput form_layout mb-10">
-                                        <label className="text-gray-500">Enter your email</label>
-                                        <Field
-                                            type="text"
-                                            name="email"
-                                            placeholder="Email"
-                                            className={`px-2 py-1 focus:outline-none bg-transparent ${errors.email && touched.email ? 'border-red-500' : ''
-                                                }`}
-                                        />
-                                        <ErrorMessage name="email" component="div" className="text-red-500 mt-2" />
+                                        <label className="text-gray-500 emailinput">Enter your email</label>
+                                        <div className="inputbox-container">
+                                            <Field
+                                                type="text"
+                                                name="email"
+                                                placeholder="Email"
+                                                className={`inputbox`}
+                                            />
+                                            <span className="email-icon"><HiOutlineMail /></span>
+                                        </div>
+                                        <ErrorMessage name="email" component="div" className="error-message mt-2" />
                                     </div>
                                     <div className="passwordinput form_layout">
-                                        <label className="text-gray-500 mt-2">Enter your password</label>
-                                        <Field
-                                            type="password"
-                                            name="password"
-                                            placeholder="Password"
-                                            className={`px-2 py-1 focus:outline-none bg-transparent ${errors.password && touched.password ? 'border-red-500' : ''
-                                                }`}
-                                        />
-                                        <ErrorMessage name="password" component="div" className="text-red-500" />
+                                        <label className="text-gray-500 mt-2">Enter your password <RiInformationLine data-tooltip-id='password-tooltip' className="password-tooltip" /></label>
+                                       
+                                        <Tooltip id="password-tooltip" content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character" className="custom-tooltip" />
+                                        <div className="inputbox-container">
+                                            <Field
+                                                type={showPassword ? "text" : "password"}
+                                                name="password"
+                                                placeholder="Password"
+                                                className={`inputbox`}
+                                            />
+                                            <span className="password-icon" onClick={() => setShowPassword(!showPassword)}>
+                                                {showPassword ? < BsEyeFill /> : < BsEyeSlashFill />}
+                                            </span>
+                                        </div>
                                     </div>
 
+                                    <p className="create_acp">
+                                        {errors.password && (
+                                            <ErrorMessage
+                                                name="password"
+                                                component="div"
+                                                className="error-message mt-2"
+                                                value={errors.password}
+                                            />
+                                        )}
+                                        {!errors.password && (
+                                            <div className="default-error-message mt-2">
+                                                
+                                            </div>
+                                        )}
+                                        <Link to="/forgotpassword" className="create_ac">
+                                            Forgot Password?
+                                        </Link>
+                                    </p>
                                     <button
                                         type="submit"
                                         className="submitbutton mt-10 bg-black text-white font-bold py-2 px-4 rounded-full"
@@ -142,18 +176,11 @@ function Signin() {
                             )}
                         </Formik>
 
-                        <div className="flex flex-row justify-between items-center mt-2">
-                            <p className="create_acp">
+                            <p className="mt-3 text-center">
                                 <Link to="/signup" className="create_ac">
                                     Create New Account
                                 </Link>
                             </p>
-                            <p className="create_acp">
-                                <Link to="/forgotpassword" className="create_ac">
-                                    Forgot Password?
-                                </Link>
-                            </p>
-                        </div>
                         <div title="OR" className="or_block">
                             <div className="line"></div>
                             <p>OR</p>
@@ -172,10 +199,9 @@ function Signin() {
                 </div>
 
                 <div className="hidden sm:block right_block">
-                    <img src={backgroundimage} alt="backgroundimage" className="h-screen w-full object-cover" />
+                    <img src={backgroundimage} alt="backgroundimage" className="h-screen w-full object-cover backgroundimage" />
                     <div className="text-overlay">
-                        <h1>Hello, World!</h1>
-                        <p>This is some sample text.</p>
+                        <img src={bannerRight} alt="logo" className="logo" style={{ width: '90%',display:'inline-block' }} />
                     </div>
                 </div>
             </div>

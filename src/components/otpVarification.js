@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import backgroundimage from '../assets/images/round.png';
 import '../assets/css/signin.css';
@@ -8,6 +8,8 @@ import Loader from './Loader.js';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaMobileAlt } from 'react-icons/fa';
+
 
 function Signin() {
     const navigate = useNavigate();
@@ -19,6 +21,7 @@ function Signin() {
 
     useEffect(() => {
         const encodedEmail = localStorage.getItem('_auth');
+        console.log(encodedEmail, 'encodedEmail');
         if (encodedEmail) {
             setIsLoading(true);
             // const email = atob(encodedEmail); // Decode email
@@ -28,26 +31,34 @@ function Signin() {
 
     useEffect(() => {
         const email = localStorage.getItem('email');
+        const resendCount = parseInt(localStorage.getItem('resendCount') || '0');
+        if (resendCount >= 3) {
+            setAttempts(3);
+            setShowResendButton(false);
+        } else {
+            setAttempts(resendCount);
+            startResendTimer();
+        }
+
         if (email) {
             setIsLoading(true);
             navigate('/signin');
-        } else {
-            startResendTimer();
         }
     }, [navigate]);
 
     const startResendTimer = () => {
         setShowResendButton(false);
-        setResendTimer(30);
+        const startTime = Date.now();
         const intervalId = setInterval(() => {
-            setResendTimer((prevTimer) => {
-                if (prevTimer === 1) {
-                    clearInterval(intervalId);
-                    setShowResendButton(true);
-                }
-                return prevTimer - 1;
-            });
-        }, 1000); // Set the interval to 1 second (1000 milliseconds)
+            const currentTime = Date.now();
+            const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+            const remainingSeconds = Math.max(30 - elapsedSeconds, 0);
+            setResendTimer(remainingSeconds);
+            if (remainingSeconds === 0) {
+                clearInterval(intervalId);
+                setShowResendButton(true);
+            }
+        }, 1000);
     };
 
     const initialValues = {
@@ -90,11 +101,54 @@ function Signin() {
             });
     };
 
+    // const handleResendOTP = () => {
+    //     if (resendButtonLoading) return; // Prevent multiple resends while loading
+    //     setResendButtonLoading(true);
+    //     localStorage.setItem('resendClicked', 'true');
+    //     var getemail = localStorage.getItem('_authemail');
+    //     console.log(getemail, 'getemail');
+    //     const data = JSON.stringify({
+    //         email: getemail,
+    //     });
+
+    //     const config = {
+    //         method: 'post',
+    //         maxBodyLength: Infinity,
+    //         url: 'https://api.getklippie.com/v1/auth/signup-resend-otp',
+    //         headers: {
+    //             accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         },
+    //         data: data,
+    //     };
+
+    //     axios
+    //         .request(config)
+    //         .then((response) => {
+    //             console.log(JSON.stringify(response.data));
+    //             setResendButtonLoading(false);
+    //             startResendTimer();
+    //             toast.success('OTP sent successfully');
+    //         })
+    //         .catch((error) => {
+    //             toast.error('Too many attempts. Please try again later.');
+    //             console.log(error);
+    //             setResendButtonLoading(false);
+    //         });
+    // };
+
     const handleResendOTP = () => {
-        if (resendButtonLoading) return; // Prevent multiple resends while loading
+        if (attempts >= 3) {
+            // Maximum attempts reached, do nothing
+            return;
+        }
+
+        if (resendButtonLoading) return;
         setResendButtonLoading(true);
+        var getemail = atob(localStorage.getItem('_authemail'));
+        console.log(getemail, 'getemail');
         const data = JSON.stringify({
-            email: 'akshit@getklippie.com',
+            email: getemail,
         });
 
         const config = {
@@ -113,8 +167,17 @@ function Signin() {
             .then((response) => {
                 console.log(JSON.stringify(response.data));
                 setResendButtonLoading(false);
-                startResendTimer();
+                if (attempts < 2) {
+                    startResendTimer();
+                } else {
+                    setShowResendButton(false);
+                }
                 toast.success('OTP sent successfully');
+
+                // Update resendCount in localStorage
+                const updatedResendCount = attempts + 1;
+                localStorage.setItem('resendCount', updatedResendCount.toString());
+                setAttempts(updatedResendCount); // Update attempts state
             })
             .catch((error) => {
                 toast.error('Too many attempts. Please try again later.');
@@ -150,27 +213,23 @@ function Signin() {
                                 <Form className="flex flex-col justify-center items-center">
                                     <div className="emailinput form_layout mb-3  ">
                                         <label className="text-gray-500">OTP</label>
-                                        <Field
-                                            type="text"
+                                        <div className="inputbox-container">
+                                            <Field
+                                                type="text"
+                                                name="otp"
+                                                placeholder="Enter OTP"
+                                                className={`inputbox`}
+                                            />
+                                            <span className="email-icon">
+                                                <FaMobileAlt />
+                                            </span>
+                                        </div>
+                                        <ErrorMessage
                                             name="otp"
-                                            placeholder="Enter OTP"
-                                            className="px-2 py-3 focus:outline-none bg-transparent"
-                                            onMouseEnter={(e) => {
-                                                e.target.style.borderBottomColor = 'blue';
-                                                e.target.previousSibling.style.color = 'blue';
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.target.style.borderBottomColor = 'gray';
-                                                e.target.previousSibling.style.color = 'gray';
-                                            }}
-                                            onFocus={(e) => {
-                                                e.target.placeholder = '';
-                                            }}
-                                            onBlur={(e) => {
-                                                e.target.placeholder = 'Enter OTP';
-                                            }}
+                                            component="div"
+                                            className="error-message mt-2"
                                         />
-                                        <ErrorMessage name="otp" component="div" className="text-red-500" />
+
                                     </div>
 
                                     <button
@@ -181,24 +240,35 @@ function Signin() {
                                         Verify OTP
                                     </button>
 
-                                    {showResendButton && attempts < 3 ? (
-                                        <button
-                                            type="button"
-                                            disabled={isSubmitting || resendButtonLoading}
-                                            onClick={handleResendOTP}
-                                            className="resendbutton mt-4 bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
-                                        >
-                                            {resendButtonLoading ? 'Loading...' : 'Resend OTP'}
-                                        </button>
-                                    ) : (
+                                    {attempts >= 3 ? (
                                         <div className="resend-timer mt-3">
-                                            Resend OTP in {resendTimer} seconds
+                                            <p>
+                                                Maximum attempts reached. Please{' '}
+                                                <Link to="/signup" className="create_ac ml-1">
+                                                    sign up
+                                                </Link>
+                                                .
+                                            </p>
                                         </div>
+                                    ) : (
+                                        <>
+                                            {showResendButton ? (
+                                                <button
+                                                    type="button"
+                                                    disabled={isSubmitting || resendButtonLoading}
+                                                    onClick={handleResendOTP}
+                                                    className="resendbutton mt-4 bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                                                >
+                                                    {resendButtonLoading ? 'Loading...' : 'Resend OTP'}
+                                                </button>
+                                            ) : (
+                                                <div className="resend-timer mt-3">
+                                                    Resend OTP in {resendTimer} seconds
+                                                </div>
+                                            )}
+                                        </>
                                     )}
 
-                                    {attempts >= 3 && (
-                                        <p className="text-red-500 mt-4">Maximum attempts exceeded. Please sign up.</p>
-                                    )}
                                 </Form>
                             )}
                         </Formik>

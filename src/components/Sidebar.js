@@ -14,10 +14,24 @@ const Sidebar = () => {
     const [open, setOpen] = useState(true)
     const [mobileMenu, setMobileMenu] = useState(false)
     const location = useLocation()
+    const [lines, setLines] = useState([
+        'lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        'lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        'lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        // Add more lines as needed
+    ]);
 
     // const Menus = [
     //     { title: 'Dashboard', path: '/dashboard', src: <AiOutlinePlus /> },
     // ]
+
+    const deleteLine = (index) => {
+        setLines((prevLines) => {
+            const updatedLines = [...prevLines];
+            updatedLines.splice(index, 1);
+            return updatedLines;
+        });
+    };
 
     return (
         <>
@@ -55,41 +69,14 @@ const Sidebar = () => {
                     </Link>
                 </div>
 
-                <div className={`border-t border-white/20 flex-grow overflow-y-auto  `}>
-                    <div className={`overflow-hidden ${!open && 'hidden'} `}>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p className='width-content'>lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <div className="border-t border-white/20 flex-grow overflow-y-auto">
+                    <div className={`overflow-hidden ${!open && 'hidden'}`}>
+                        {lines.map((line, index) => (
+                            <div key={index} className="width-content">
+                                <p>{line}</p>
+                                <button onClick={() => deleteLine(index)}>Delete</button>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className={` bottom-0 left-0 right-0 border-t border-white/20`}>

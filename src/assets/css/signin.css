@@ -10,22 +10,115 @@
   background-position: center;
   background-repeat: no-repeat;
 }
-
 .right_block {
   border-left: 6px solid;
   border-image: linear-gradient(0deg, #f0d9ca, #c6e0f5 12.5%, #d8ceff 25%, #ffdd9b 37.5%, #f5c6cf 50%, #f0d9ca 62.5%, #c6e0f5 75%, #d8ceff 87.5%) 1;
   border-image-slice: 1;
   position: relative;
   overflow: hidden;
+  transition: transform 0.3s ease;
 }
 
-.right_block:hover img {
+.right_block:hover .backgroundimage {
   transform: scale(1.2);
 }
 
-.right_block:hover .text-overlay {
-  transform: rotate(-10deg);
+.right_block:hover .text-overlay img {
+  transform: scale(0);
+  transform-origin: right;
+  transform: rotate(10deg);
 }
+
+.inputbox{
+width: 100%;
+  border-bottom: 2px solid #d9d9d9;
+  display: block;
+  font-size: 18px;
+  border-radius: 5px 5px 0 0;
+  line-height: 164%;
+  overflow: hidden;
+  color: #000;
+  font-weight: 600;
+  padding: 15px 40px 15px 10px;
+  /* background-color:#917bea6f; */
+  font-family: Poppins,sans-serif;
+  outline: none;
+}
+
+.emailinput .inputbox-container ,
+.nameinput .inputbox-container{
+  position: relative;
+}
+
+.custom-tooltip {
+  background-color: #917bea;
+  font-size:14px;
+  width: 450px;
+  text-align: center;
+  font-family: Poppins,sans-serif;
+  font-weight: bold;
+}
+
+.password-tooltip{
+  color: #7a5fe3;
+  display: inline-block;
+  outline: none;
+  font-size: 25px;
+}
+
+.error-message{
+  color: red;
+  font-size: 13px;
+  font-family: Poppins,sans-serif;
+  font-weight: 600;
+}
+
+.resend-timer{
+  color: rgb(238, 80, 80);
+  font-size: 15px;
+  font-family: Poppins,sans-serif;
+  font-weight: 600;
+}
+
+.emailinput label,
+.nameinput label{
+  color: #6c6c6c;
+  font-size: 14px;
+  font-family: Poppins,sans-serif;
+  font-weight: 600;
+}
+
+.passwordinput label{
+  color: #6c6c6c;
+  font-size: 14px;
+  font-family: Poppins,sans-serif;
+  font-weight: 600;
+}
+
+.emailinput .inputbox-container .email-icon ,
+.nameinput .inputbox-container .email-icon{
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  font-size: 30px;
+  color: #999;
+}
+
+.passwordinput .inputbox-container {
+  position: relative;
+}
+
+.passwordinput .inputbox-container .password-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  font-size: 25px;
+  color: #999;
+  cursor: pointer;
+}
+
 
 .text-overlay {
   position: absolute;
@@ -35,6 +128,18 @@
   text-align: center;
   color: #000;
   transition: transform 0.3s ease;
+  width: 100%;
+}
+
+.left_heading:hover h1 {
+  transition: all .3s ease;
+  color: #7a5fe3;
+  text-shadow:0 5px 15px rgba(117, 171, 216, .745);
+}
+
+.left_heading:hover p{
+  transition: all .3s ease;
+  text-shadow:0 5px 15px rgba(117, 171, 216, .745);
 }
 
 .right_block img {
@@ -152,6 +257,7 @@
   outline: 3px solid #917bea;
 }
 
+
 .create_acp {
   font-size: 16px;
   line-height: 164%;
@@ -160,6 +266,23 @@
   font-weight: 500;
   margin-top: 10px;
   text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+}
+
+.signup_create_acp {
+  font-size: 16px;
+  line-height: 164%;
+  color: #6c6c6c;
+  text-align: center;
+  font-weight: 500;
+  margin-top: 10px;
+  text-transform: capitalize;
+  width: 100%;
+  max-width: 100%;
 }
 
 .create_ac {
@@ -195,30 +318,49 @@
   right: auto;
 }
 
-.form_layout input,
-.form_layout label {
-  width: -webkit-fill-available;
+.emailinput:hover label,
+.emailinput:hover input::placeholder {
+  color: #917bea;
 }
 
-.form_layout input {
-  border-bottom: 1px solid #000;
-  transition: border-color 0.3s, color 0.3s;
+.emailinput:hover input {
+  border-bottom-color: #917bea;
 }
 
-.form_layout input:hover,
-.form_layout input:focus {
-  border-bottom-color: blue;
+.emailinput:hover input:focus {
+  background-color: #b7a9f185;
+  color: #000;
 }
 
-.form_layout input::placeholder {
-  color: gray;
-  transition: color 0.3s;
+.passwordinput:hover label,
+.passwordinput:hover input::placeholder {
+  color: #917bea;
 }
 
-.form_layout input:hover::placeholder,
-.form_layout input:focus::placeholder {
-  color: blue;
+.passwordinput:hover input {
+  border-bottom-color: #917bea;
 }
+
+.passwordinput:hover input:focus {
+  background-color: #b7a9f185;
+  color: #000;
+}
+
+.nameinput:hover label,
+.nameinput:hover input::placeholder {
+  color: #917bea;
+}
+
+.nameinput:hover input {
+  border-bottom-color: #917bea;
+}
+
+.nameinput:hover input:focus {
+  background-color: #b7a9f185;
+  color: #000;
+}
+
+
 
 .or_block {
   margin: 15px 0;
