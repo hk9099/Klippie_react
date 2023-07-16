@@ -8,6 +8,7 @@ function Logout() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+    const [open] = useState(true);
 
     const cancelButtonRef = useRef(null);
 
@@ -35,15 +36,16 @@ function Logout() {
     };
 
     return (
-        <div>
+        <>
             {isLoading ? (
                 <p
                     className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700`}
+                    onClick={() => setIsOpen(true)} 
                 >
                     <span className="text-2xl">
                         <BiLogOut />
                     </span>
-                    <span className="origin-left duration-300 hover:block text-sm flex items-center gap-x-2">
+                    <span className={`origin-left duration-300 hover:block text-sm flex items-center gap-x-2 ${!open && 'hidden'}`}>
                         Log Out
                         <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
                             <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
@@ -53,12 +55,12 @@ function Logout() {
             ) : (
                 <p
                     className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700`}
-                    onClick={() => setIsOpen(true)} // Open the modal
+                    onClick={() => setIsOpen(true)} 
                 >
                     <span className="text-2xl">
                         <BiLogOut />
                     </span>
-                    <span className="origin-left duration-300 hover:block text-sm">
+                        <span className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}>
                         Log Out
                     </span>
                 </p>
@@ -135,7 +137,7 @@ function Logout() {
                     </div>
                 </Dialog>
             </Transition.Root>
-        </div>
+        </>
     );
 }
 

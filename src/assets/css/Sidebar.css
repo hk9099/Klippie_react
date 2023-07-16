@@ -1,4 +1,4 @@
-.width-content{
+.width-content {
   width: max-content;
 }
 
@@ -28,52 +28,64 @@
   height: 6px;
 }
 
- .delete-button {
-   display: none;
-   /* Hide the delete button by default */
- }
+.delete-button {
+  display: none;
+  /* Hide the delete button by default */
+}
 
- .row:hover .delete-button {
-   display: inline-block;
-      position: absolute;
-        right: 14px;
-        top: 5px;
-        font-size: 19px;
-        background: gray;
-        padding: 5px;
- }
+.row:hover .delete-button {
+  display: inline-block;
+  position: absolute;
+  right: 5px;
+  top: 4px;
+  font-size: 19px;
+  background: rgb(154, 153, 153);
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+}
 
 @keyframes borderPulse {
   0% {
-    border-color:#f79533;
+    border-color: #f79533;
   }
+
   10% {
     border-color: #f37055;
   }
+
   20% {
     border-color: #ef4e7b;
   }
+
   30% {
     border-color: #a166ab;
   }
+
   40% {
     border-color: #5073b8;
   }
+
   50% {
     border-color: #1098ad;
   }
+
   60% {
     border-color: #F1948A;
   }
+
   70% {
     border-color: #07b39b;
   }
+
   80% {
-    border-color:#F1948A;
+    border-color: #F1948A;
   }
+
   90% {
     border-color: #6fba82;
   }
+
   100% {
     border-color: #F1948A;
   }
@@ -82,5 +94,3 @@
 /* .border-animation {
   animation: borderPulse 2s infinite;
 } */
-
-

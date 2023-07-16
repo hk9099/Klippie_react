@@ -18,10 +18,30 @@ const Sidebar = () => {
     const [mobileMenu, setMobileMenu] = useState(false)
     const location = useLocation()
     const [lines, setLines] = useState([
-        '11111111111111111111111111111111111111',
-        '22222222222222222222222222222222',
-        '3333333333333333333333333333333333',
-        '433333333333333333333333333333333333',
+        'Where can we find the courage to act in spite of fear? Trying to eliminate that which we react to fearfully is a fool’s errand because it locates the source of our fear outside ourselves, rather than within our own hearts.',
+        'Practicing leadership – enabling others to achieve purpose in the face of uncertainty – requires engaging the heart, the head, and the hands: motivation, strategy, and action.',
+        'Leadership in organizing is rooted in three questions articulated by the first century Jerusalem sage, Rabbi Hillel: “If I am not for myself, who am I? When I am only for myself, what am I? And if not now, when? – Pirke Avot (Wisdom of the Fathers)',
+        'Organizing is a practice of leadership whereby we define leadership as enabling others to achieve shared purpose under conditions of uncertainty.',
+        'Where can we find the courage to act in spite of fear? Trying to eliminate that which we react to fearfully is a fool’s errand because it locates the source of our fear outside ourselves, rather than within our own hearts.',
+        'Practicing leadership – enabling others to achieve purpose in the face of uncertainty – requires engaging the heart, the head, and the hands: motivation, strategy, and action.',
+        'Leadership in organizing is rooted in three questions articulated by the first century Jerusalem sage, Rabbi Hillel: “If I am not for myself, who am I? When I am only for myself, what am I? And if not now, when? – Pirke Avot (Wisdom of the Fathers)',
+        'Organizing is a practice of leadership whereby we define leadership as enabling others to achieve shared purpose under conditions of uncertainty.',
+        'Where can we find the courage to act in spite of fear? Trying to eliminate that which we react to fearfully is a fool’s errand because it locates the source of our fear outside ourselves, rather than within our own hearts.',
+        'Practicing leadership – enabling others to achieve purpose in the face of uncertainty – requires engaging the heart, the head, and the hands: motivation, strategy, and action.',
+        'Leadership in organizing is rooted in three questions articulated by the first century Jerusalem sage, Rabbi Hillel: “If I am not for myself, who am I? When I am only for myself, what am I? And if not now, when? – Pirke Avot (Wisdom of the Fathers)',
+        'Organizing is a practice of leadership whereby we define leadership as enabling others to achieve shared purpose under conditions of uncertainty.',
+        'Where can we find the courage to act in spite of fear? Trying to eliminate that which we react to fearfully is a fool’s errand because it locates the source of our fear outside ourselves, rather than within our own hearts.',
+        'Practicing leadership – enabling others to achieve purpose in the face of uncertainty – requires engaging the heart, the head, and the hands: motivation, strategy, and action.',
+        'Leadership in organizing is rooted in three questions articulated by the first century Jerusalem sage, Rabbi Hillel: “If I am not for myself, who am I? When I am only for myself, what am I? And if not now, when? – Pirke Avot (Wisdom of the Fathers)',
+        'Organizing is a practice of leadership whereby we define leadership as enabling others to achieve shared purpose under conditions of uncertainty.',
+        'Where can we find the courage to act in spite of fear? Trying to eliminate that which we react to fearfully is a fool’s errand because it locates the source of our fear outside ourselves, rather than within our own hearts.',
+        'Practicing leadership – enabling others to achieve purpose in the face of uncertainty – requires engaging the heart, the head, and the hands: motivation, strategy, and action.',
+        'Leadership in organizing is rooted in three questions articulated by the first century Jerusalem sage, Rabbi Hillel: “If I am not for myself, who am I? When I am only for myself, what am I? And if not now, when? – Pirke Avot (Wisdom of the Fathers)',
+        'Organizing is a practice of leadership whereby we define leadership as enabling others to achieve shared purpose under conditions of uncertainty.',
+        'Where can we find the courage to act in spite of fear? Trying to eliminate that which we react to fearfully is a fool’s errand because it locates the source of our fear outside ourselves, rather than within our own hearts.',
+        'Practicing leadership – enabling others to achieve purpose in the face of uncertainty – requires engaging the heart, the head, and the hands: motivation, strategy, and action.',
+        'Leadership in organizing is rooted in three questions articulated by the first century Jerusalem sage, Rabbi Hillel: “If I am not for myself, who am I? When I am only for myself, what am I? And if not now, when? – Pirke Avot (Wisdom of the Fathers)',
+        'Organizing is a practice of leadership whereby we define leadership as enabling others to achieve shared purpose under conditions of uncertainty.',
     ]);
 
     useEffect(() => {
@@ -86,8 +106,10 @@ const Sidebar = () => {
                 <div className="border-t border-white/20 flex-grow overflow-y-auto">
                     <div className={`overflow-hidden ${!open && 'hidden'} relative`}>
                         {lines.map((line, index) => (
-                            <div key={index} className="width-content row relative bg-gray-200 dark:bg-gray-700 my-2 border-r-2">
-                                <p className='py-2 w-[250px]'>{line}</p>
+                            <div key={index} className="width-content row relative bg-gray-200 dark:bg-gray-700 my-2 rounded">
+                                <p className='py-2 px-1 bg-gray-200 dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-white rounded' style={{ width: '243px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {line}
+                                </p>
                                 <button onClick={() => deleteLine(index)} className="delete-button">
                                     <AiOutlineDelete />
                                 </button>
@@ -95,14 +117,6 @@ const Sidebar = () => {
                         ))}
                     </div>
 
-                    {/* <div className={`overflow-hidden ${!open && 'hidden'}`}>
-                        {lines.map((line, index) => (
-                            <div key={index} className="width-content">
-                                <p>{line}</p>
-                                 <button key={index} onClick={() => deleteLine(index)}><AiOutlineDelete /></button>
-                            </div>
-                        ))}
-                    </div> */}
                 </div>
                 <div className={` bottom-0 left-0 right-0 border-t border-white/20`}>
                     <div className=" flex flex-col gap-1">
@@ -127,17 +141,6 @@ const Sidebar = () => {
                                 </span>
                             </p>
                         </Link>
-                        {/* <Link to="/dashboard">
-                            <p
-                                className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
-                        ${location.pathname === "/dashboard" && ''}`}
-                            >
-                                <span className='text-2xl'><BiLogOut /></span>
-                                <span className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}>
-                                    Log Out
-                                </span>
-                            </p>
-                        </Link> */}
                         <Logout />
                     </div>
                 </div>
