@@ -4,7 +4,6 @@ import { BsArrowLeftCircle } from 'react-icons/bs'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { IoSettingsOutline } from 'react-icons/io5'
 import { MdOutlineLiveHelp } from 'react-icons/md'
-// import { BiLogOut } from 'react-icons/bi'
 import Logo from '../assets/images/logo.svg'
 import HamburgerButton from './HumbergerButton'
 import '.././assets/css/Sidebar.css'
@@ -12,7 +11,7 @@ import { AiOutlineDelete } from 'react-icons/ai'
 import Logout from './logout'
 
 
-const Sidebar = () => {
+const Sidebar = ({ openPicker }) => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(true)
     const [mobileMenu, setMobileMenu] = useState(false)
@@ -53,12 +52,6 @@ const Sidebar = () => {
         }
     }, [navigate]);
 
-
-
-    // const Menus = [
-    //     { title: 'Dashboard', path: '/dashboard', src: <AiOutlinePlus /> },
-    // ]
-
     const deleteLine = (index) => {
         setLines((prevLines) => {
             const updatedLines = [...prevLines];
@@ -74,7 +67,9 @@ const Sidebar = () => {
                 <BsArrowLeftCircle
                     className={`${!open && 'rotate-180'
                         } absolute text-3xl bg-white fill-slate-800  rounded-full cursor-pointer top-9 -right-4 dark:fill-gray-400 dark:bg-custom-color-dark`}
-                    onClick={() => setOpen(!open)}
+                    onClick={() => {
+                         setOpen(!open)
+                    }}
                 />
                 <Link to='/dashboard'>
                     <div className={`flex ${open && 'gap-x-4'} items-center`}>
@@ -88,22 +83,20 @@ const Sidebar = () => {
                 </Link>
 
                 <div className='pt-6'>
-                    <Link to="/dashboard">
-                        <button
-                            className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-gray-500 dark:border-gray-100
-                        mt-2 ${location.pathname === "/dashboard" && 'bg-gray-200 dark:bg-gray-700'}
-                        border-animation`}
-                        >
-                            <span className='text-2xl'><AiOutlinePlus /></span>
-                            <span className={`${!open && 'hidden'} origin-left duration-300 hover:block font-medium text-sm`}>
-                                Add New Video/Audio
-                            </span>
-                        </button>
-
-                    </Link>
+                    <button
+                        className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-gray-500 dark:border-gray-100 mt-2 border-animation`}
+                        onClick={openPicker}
+                    >
+                        <span className="text-2xl">
+                            <AiOutlinePlus />
+                        </span>
+                        <span className={`${!open && 'hidden'} origin-left duration-300 hover:block font-medium text-sm`}>
+                            Add New Video/Audio
+                        </span>
+                    </button>
                 </div>
 
-                <div className="border-t border-white/20 flex-grow overflow-y-auto">
+                <div className="border-t border-white/20 flex-grow overflow-y-auto backdrop-blur-xl	">
                     <div className={`overflow-hidden ${!open && 'hidden'} relative`}>
                         {lines.map((line, index) => (
                             <div key={index} className="width-content row relative bg-gray-200 dark:bg-gray-700 my-2 rounded">
@@ -141,7 +134,7 @@ const Sidebar = () => {
                                 </span>
                             </p>
                         </Link>
-                        <Logout />
+                        <Logout showLogout={open} />
                     </div>
                 </div>
 

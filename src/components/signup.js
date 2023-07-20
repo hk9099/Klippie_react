@@ -103,9 +103,9 @@ function Signup() {
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
                         <h1 className="text-4xl font-bold text-gray-800">
-                            Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Klippie</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block' }} />
+                            Create <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Account</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block' }} />
                         </h1>
-                        <p className="text-gray-500">Please Login to your account.</p>
+                        <p className="text-gray-500">Please Fill The Below Details</p>
                     </div>
                     <div className="mt-10 form_layout">
                         <Formik

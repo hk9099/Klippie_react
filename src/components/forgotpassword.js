@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
@@ -12,6 +13,7 @@ import { TbDeviceMobileMessage } from 'react-icons/tb';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
 import { Tooltip } from 'react-tooltip';
 import bannerRight from '../assets/images/banner-right-pic.avif';
+import think from '../assets/images/think_40x40.gif';
 
 
 
@@ -154,12 +156,12 @@ const MultiStepForm = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
-                        <h1 className="text-4xl font-bold text-gray-800">
-                            Welcome to{' '}
+                        <h1 className="text-4xl font-bold text-gray-800 flext items-center">
+                           Forgot {'  '}
                             <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">
-                                Klippie
+                                Password
                             </span>
-                            &#128075;
+                                <img src={think} alt="think" className="inline-block ml-2" />
                         </h1>
                         <p className="text-gray-500">Please Login to your account.</p>
                     </div>
@@ -378,7 +380,16 @@ const MultiStepForm = () => {
                                             {passwordLoading ? 'Resetting Password...' : 'Reset Password'}
                                         </button>
                                     </div>
+                                      
                                 )}
+                                <div className="flex flex-col justify-center items-center mt-2">
+                                    <p className="signup_create_acp" style={{ justifyContent: 'space-between!important' }}   >
+                                       
+                                        <Link to="/" className="create_ac ml-2">
+                                            Back to Login
+                                        </Link>
+                                    </p>
+                                </div>
                             </Form>
                         </Formik>
                     </div>

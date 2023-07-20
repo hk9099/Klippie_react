@@ -4,11 +4,11 @@ import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 // import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
-function Logout() {
+function Logout({ showLogout }) {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
-    const [open] = useState(true);
+    // const [open] = useState(true);
 
     const cancelButtonRef = useRef(null);
 
@@ -37,15 +37,16 @@ function Logout() {
 
     return (
         <>
+
             {isLoading ? (
                 <p
-                    className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700`}
-                    onClick={() => setIsOpen(true)} 
+                    className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 `}
+                    onClick={() => setIsOpen(true)}
                 >
                     <span className="text-2xl">
                         <BiLogOut />
                     </span>
-                    <span className={`origin-left duration-300 hover:block text-sm flex items-center gap-x-2 ${!open && 'hidden'}`}>
+                    <span className={`origin-left duration-300 hover:block text-sm flex items-center gap-x-2${showLogout ? '' : 'hidden'}`}>
                         Log Out
                         <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
                             <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
@@ -54,13 +55,13 @@ function Logout() {
                 </p>
             ) : (
                 <p
-                    className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700`}
-                    onClick={() => setIsOpen(true)} 
+                    className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 `}
+                    onClick={() => setIsOpen(true)}
                 >
                     <span className="text-2xl">
                         <BiLogOut />
                     </span>
-                        <span className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}>
+                        <span className={`${showLogout ? '' : 'hidden'} origin-left duration-300 hover:block text-sm`}>
                         Log Out
                     </span>
                 </p>
@@ -98,8 +99,8 @@ function Logout() {
                             <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                 <div className="sm:flex sm:items-start">
                                     <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-yellow-600">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 text-yellow-600">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                                         </svg>
 
                                         {/* <ExclamationTriangleIcon className="h-6 w-6 text-yellow-600" aria-hidden="true" /> */}
@@ -110,7 +111,7 @@ function Logout() {
                                         </Dialog.Title>
                                         <div className="mt-2">
                                             <p className="text-sm text-gray-500">
-                                               Are you sure you want to Log Out? 
+                                                Are you sure you want to Log Out?
                                             </p>
                                         </div>
                                     </div>
