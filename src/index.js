@@ -4,6 +4,7 @@ import './index.css';
 import App from './components/App';
 import { ThemeProvider } from './components/ThemeContext'
 import Background from './components/Background'
+import 'tailwindcss/tailwind.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

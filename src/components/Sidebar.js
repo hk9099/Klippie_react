@@ -9,12 +9,22 @@ import HamburgerButton from './HumbergerButton'
 import '.././assets/css/Sidebar.css'
 import { AiOutlineDelete } from 'react-icons/ai'
 import Logout from './logout'
+import Modal from './Modal'
+import UserModal from './UserModal'
+import axios from 'axios';
 
 
 const Sidebar = ({ openPicker }) => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(true)
     const [mobileMenu, setMobileMenu] = useState(false)
+    const [showModal, setShowModal] = useState(false);
+    const [showUserModal, setShowUserModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [userEmailAddress, setUserEmailAddress] = useState('');
+    const [userNickname, setUserNickname] = useState('');
+    const [userAvatar, setUserAvatar] = useState('');
+    // const [Avatar, setAvatar] = useState('');
     const location = useLocation()
     const [lines, setLines] = useState([
         'Where can we find the courage to act in spite of fear? Trying to eliminate that which we react to fearfully is a fool’s errand because it locates the source of our fear outside ourselves, rather than within our own hearts.',
@@ -50,7 +60,67 @@ const Sidebar = ({ openPicker }) => {
         } else {
             navigate('/');
         }
+
+        const encodedToken = localStorage.getItem('_sodfhgiuhih');
+        const userGoogle = localStorage.getItem('_auth');
+
+        let userInfo;
+        let googleUserInfo;
+
+        if (encodedToken) {
+            const decodedToken = atob(encodedToken);
+            userInfo = JSON.parse(decodedToken);
+        } else if (userGoogle) {
+            const decodedGoogle = atob(userGoogle);
+            googleUserInfo = JSON.parse(decodedGoogle);
+        }
+
+        let userAvatar;
+        let userNickname;
+        let userEmailAddress;
+
+        if (userInfo?.user?.name) {
+            // Call the API to get the user avatar based on the name
+            userAvatar = userInfo.user.name;
+
+            let config = {
+                method: 'get',
+                maxBodyLength: Infinity,
+                url: `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`,
+                headers: {}
+            };
+
+            axios(config)
+                .then((response) => {
+                    setUserAvatar(response.config.url);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
+            // Set other user information
+            userNickname = userInfo.user.name;
+            userEmailAddress = userInfo.user.email;
+        } else if (googleUserInfo?.googleImage) {
+            // If user name is not available, use google image directly
+            userAvatar = googleUserInfo.googleImage;
+            // Set other user information from Google data
+            userNickname = googleUserInfo.googleName;
+            userEmailAddress = googleUserInfo.googleEmail;
+        } else {
+            // If neither user name nor Google image is available, set default values
+            userAvatar = '';
+            userNickname = '';
+            userEmailAddress = '';
+        }
+
+        // Update state with user information
+        setUserAvatar(userAvatar);
+        setUserNickname(userNickname);
+        setUserEmailAddress(userEmailAddress);
+
     }, [navigate]);
+
 
     const deleteLine = (index) => {
         setLines((prevLines) => {
@@ -58,6 +128,22 @@ const Sidebar = ({ openPicker }) => {
             updatedLines.splice(index, 1);
             return updatedLines;
         });
+    };
+
+    const handleAddNewVideo = () => {
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+            setShowModal(true);
+        }, 2000);
+    };
+
+    const handleUserModal = () => {
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+            setShowUserModal(true);
+        },2000);
     };
 
     return (
@@ -68,7 +154,7 @@ const Sidebar = ({ openPicker }) => {
                     className={`${!open && 'rotate-180'
                         } absolute text-3xl bg-white fill-slate-800  rounded-full cursor-pointer top-9 -right-4 dark:fill-gray-400 dark:bg-custom-color-dark`}
                     onClick={() => {
-                         setOpen(!open)
+                        setOpen(!open)
                     }}
                 />
                 <Link to='/dashboard'>
@@ -82,20 +168,40 @@ const Sidebar = ({ openPicker }) => {
                     </div>
                 </Link>
 
-                <div className='pt-6'>
+                <div className="pt-6">
                     <button
-                        className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-gray-500 dark:border-gray-100 mt-2 border-animation`}
-                        onClick={openPicker}
+                        className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-gray-500 dark:border-gray-100 mt-2 border-animation ${!open && 'justify-center'}`}
+                        onClick={handleAddNewVideo}
                     >
                         <span className="text-2xl">
                             <AiOutlinePlus />
                         </span>
-                        <span className={`${!open && 'hidden'} origin-left duration-300 hover:block font-medium text-sm`}>
+                        <span
+                            className={`${!open && 'hidden'} origin-left duration-300 hover:block font-medium text-sm`}
+                        >
                             Add New Video/Audio
                         </span>
                     </button>
                 </div>
 
+                {isLoading && (
+                    <div className="fixed top-0 left-0 z-50 w-screen h-screen flex items-center justify-center" style={{ background: "rgba(0,0,0,.7)", margin: "0px" }}>
+                        <div className="bg-white border py-2 px-5 rounded-lg flex items-center flex-col">
+                            <div className="loader-dots block relative w-20 h-5 mt-2">
+                                <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-green-500"></div>
+                                <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-green-500"></div>
+                                <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-green-500"></div>
+                                <div className="absolute top-0 mt-1 w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div className="text-gray-500 text-xs font-light mt-2 text-center">
+                                Please wait...
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <Modal isOpen={showModal} onClose={() => setShowModal(false)} openPicker={openPicker} />
+               
                 <div className="border-t border-white/20 flex-grow overflow-y-auto backdrop-blur-xl	">
                     <div className={`overflow-hidden ${!open && 'hidden'} relative`}>
                         {lines.map((line, index) => (
@@ -115,9 +221,9 @@ const Sidebar = ({ openPicker }) => {
                     <div className=" flex flex-col gap-1">
                         <Link to="/dashboard">
                             <p className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
-                        ${location.pathname === "/dashboard" && ''}`}
+                        ${location.pathname === "/dashboard" && ''} ${!open && 'justify-center'}`}
                             >
-                                <span className='text-2xl'><IoSettingsOutline /></span>
+                                <span className='text-2xl h-6 w-12 flex items-center justify-center'><IoSettingsOutline /></span>
                                 <span className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}>
                                     Settings
                                 </span>
@@ -126,26 +232,53 @@ const Sidebar = ({ openPicker }) => {
                         <Link to="/dashboard">
                             <p
                                 className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
-                        ${location.pathname === "/dashboard" && ''}`}
+                        ${location.pathname === "/dashboard" && ''} ${!open && 'justify-center'}`}
                             >
-                                <span className='text-2xl'><MdOutlineLiveHelp /></span>
+                                <span className='text-2xl h-6 w-12 flex items-center justify-center'><MdOutlineLiveHelp /></span>
                                 <span className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}>
                                     Get Help
                                 </span>
                             </p>
                         </Link>
                         <Logout showLogout={open} />
+                        <div
+                            className="user group flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 " 
+                            onClick={handleUserModal}
+                            title={userEmailAddress}
+                        >
+                            <img className="shrink-0 h-12 w-12 rounded-full" src={userAvatar} alt="Avatar" />
+                            <div className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm overflow-hidden text-ellipsis whitespace-nowrap`}>
+                                <p className="text-sm font-black text-gray-900 dark:text-white">{userNickname}</p>
+                                <p className="text-sm font-black text-gray-900 dark:text-white text-ellipsis overflow-hidden">{userEmailAddress}</p>
+                            </div>
+                        </div>
+
+                        {/* <UserModal isOpen={showUserModal} onClose={() => setShowUserModal(false)} /> */}
+
+
+                        <UserModal
+                            isOpen={showUserModal}
+                            onClose={() => setShowUserModal(false)}
+                            userNickname={userNickname}
+                            userEmailAddress={userEmailAddress}
+                            avatar={userAvatar}
+                            isLoading={isLoading}
+                            onSubmit={(values) => {
+                                console.log(values);
+                                setShowUserModal(false);
+                            }}
+                        />
+
                     </div>
                 </div>
-
-            </div>
+            </div >
             {/* Mobile Menu */}
-            <div className="pt-3">
+            < div className="pt-3" >
                 <HamburgerButton
                     setMobileMenu={setMobileMenu}
                     mobileMenu={mobileMenu}
                 />
-            </div>
+            </div >
             <div className="sm:hidden">
                 <div
                     className={`${mobileMenu ? 'flex' : 'hidden'

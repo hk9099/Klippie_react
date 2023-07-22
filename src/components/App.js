@@ -28,7 +28,7 @@ function App() {
           <Route exact path="/" element={<Signin />} />
           <Route path="/forgotpassword" element={<Forgotpassword />} />
           <Route path="*" element={<h1>Not Found</h1>} />
-            <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+          <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
           <Route path="/otpVarification" element={<OtpVarification />} />
         </Routes>
       )}

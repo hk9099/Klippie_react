@@ -40,13 +40,23 @@ function Signin() {
 
         signInWithPopup(auth, customProvider)
             .then((result) => {
-                console.log(result.user);
-                const encodedEmail = btoa(result.user.email); 
-                localStorage.setItem('_auth', encodedEmail);
+                console.log(result.user, 'result');
+                // setToken(result.user);
+                const userGoogle = {
+                    googleToken: result.user.accessToken,
+                    googleId: result.user.uid,
+                    googleName: result.user.displayName,
+                    googleEmail: result.user.email,
+                    googleImage: result.user.photoURL,
+                };
+
+                const encodedUser = btoa(JSON.stringify(userGoogle));
+                console.log(encodedUser, 'encodedUser');
+                localStorage.setItem('_auth', encodedUser);
                 navigate('/dashboard');
             })
             .catch((error) => {
-                console.log(error.message);
+                // console.log(error.message);
                 toast.error(error.message, {
                     position: toast.POSITION.TOP_CENTER
                 });
@@ -77,7 +87,9 @@ function Signin() {
                 id_token: 'string',
                 device_id: 'string'
             });
-            console.log(response.data);
+            // console.log(response.data.token.access_token);
+            const encodedUser = btoa(JSON.stringify(response.data));
+            localStorage.setItem('_sodfhgiuhih', encodedUser);
             const encodedEmail = btoa(values.email); 
             localStorage.setItem('_auth', encodedEmail);
             navigate('/dashboard');
