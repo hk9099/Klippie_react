@@ -8,8 +8,10 @@ import OtpVarification from './otpVarification.js';
 import Layout from './Layout.js';
 import Loader from './Loader.js';
 
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  console.error = () => { };
 
   useEffect(() => {
     // Simulate loading time

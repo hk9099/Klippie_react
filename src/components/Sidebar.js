@@ -23,7 +23,7 @@ const Sidebar = ({ openPicker }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [userEmailAddress, setUserEmailAddress] = useState('');
     const [userNickname, setUserNickname] = useState('');
-    const [userAvatar, setUserAvatar] = useState('');
+    const [userAvatarUrl, setUserAvatar] = useState('');
     // const [Avatar, setAvatar] = useState('');
     const location = useLocation()
     const [lines, setLines] = useState([
@@ -158,8 +158,8 @@ const Sidebar = ({ openPicker }) => {
                     }}
                 />
                 <Link to='/dashboard'>
-                    <div className={`flex ${open && 'gap-x-4'} items-center`}>
-                        <img src={Logo} alt='' className='pl-2' />
+                    <div className={`flex ${open && 'justify-center'} justify-center items-center`}>
+                        <img src={Logo} alt='' className={`w-17 h-[3rem] ${!open && 'justify-center'}`} />
                         {open && (
                             <span className={`text-3xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}>
                                 Klippie
@@ -170,7 +170,7 @@ const Sidebar = ({ openPicker }) => {
 
                 <div className="pt-6">
                     <button
-                        className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-gray-500 dark:border-gray-100 mt-2 border-animation ${!open && 'justify-center'}`}
+                        className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-gray-500 dark:border-gray-100 border-animation ${!open && 'justify-center'}`}
                         onClick={handleAddNewVideo}
                     >
                         <span className="text-2xl">
@@ -246,14 +246,13 @@ const Sidebar = ({ openPicker }) => {
                             onClick={handleUserModal}
                             title={userEmailAddress}
                         >
-                            <img className="shrink-0 h-12 w-12 rounded-full" src={userAvatar} alt="Avatar" />
+                            <img className="shrink-0 h-12 w-12 rounded-full" src={userAvatarUrl} alt="Avatar" />
                             <div className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm overflow-hidden text-ellipsis whitespace-nowrap`}>
                                 <p className="text-sm font-black text-gray-900 dark:text-white">{userNickname}</p>
                                 <p className="text-sm font-black text-gray-900 dark:text-white text-ellipsis overflow-hidden">{userEmailAddress}</p>
                             </div>
                         </div>
 
-                        {/* <UserModal isOpen={showUserModal} onClose={() => setShowUserModal(false)} /> */}
 
 
                         <UserModal
@@ -261,10 +260,9 @@ const Sidebar = ({ openPicker }) => {
                             onClose={() => setShowUserModal(false)}
                             userNickname={userNickname}
                             userEmailAddress={userEmailAddress}
-                            avatar={userAvatar}
+                            avatar={userAvatarUrl}
                             isLoading={isLoading}
                             onSubmit={(values) => {
-                                console.log(values);
                                 setShowUserModal(false);
                             }}
                         />

@@ -5,7 +5,6 @@ import * as Yup from 'yup';
 const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, onSubmit }) => {
     const [ setIsLoading] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
-    console.log('avatar', avatar);
    
 
     const validationSchema = Yup.object({
@@ -17,7 +16,6 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
         initialValues: {
             userNickname,
             userEmailAddress,
-            avatar: avatar,
         },
         validationSchema,
         onSubmit: (values) => {
