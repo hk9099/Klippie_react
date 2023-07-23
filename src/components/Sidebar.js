@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { BsArrowLeftCircle } from 'react-icons/bs'
-import { AiOutlinePlus } from 'react-icons/ai'
-import { IoSettingsOutline } from 'react-icons/io5'
-import { MdOutlineLiveHelp } from 'react-icons/md'
-import Logo from '../assets/images/logo.svg'
-import HamburgerButton from './HumbergerButton'
-import '.././assets/css/Sidebar.css'
-import { AiOutlineDelete } from 'react-icons/ai'
-import Logout from './logout'
-import Modal from './Modal'
-import UserModal from './UserModal'
+import React, { useState, useEffect, Fragment } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { BsArrowLeftCircle } from 'react-icons/bs';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { IoSettingsOutline } from 'react-icons/io5';
+import { Menu } from '@headlessui/react'; 
+import Logo from '../assets/images/logo.svg';
+import HamburgerButton from './HumbergerButton';
+import '.././assets/css/Sidebar.css';
+import { AiOutlineDelete } from 'react-icons/ai';
+import Modal from './Modal';
+import UserModal from './UserModal';
 import axios from 'axios';
+import DropdownMenu from './DropdownMenu';
 
 
 const Sidebar = ({ openPicker }) => {
@@ -24,6 +24,8 @@ const Sidebar = ({ openPicker }) => {
     const [userEmailAddress, setUserEmailAddress] = useState('');
     const [userNickname, setUserNickname] = useState('');
     const [userAvatar, setUserAvatar] = useState('');
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [dropdownPosition, setDropdownPosition] = useState('down');
     // const [Avatar, setAvatar] = useState('');
     const location = useLocation()
     const [lines, setLines] = useState([
@@ -53,6 +55,11 @@ const Sidebar = ({ openPicker }) => {
         'Organizing is a practice of leadership whereby we define leadership as enabling others to achieve shared purpose under conditions of uncertainty.',
     ]);
 
+    const toggleDropdown = () => {
+        setDropdownOpen(!dropdownOpen);
+        setDropdownPosition('up');
+    };
+
     useEffect(() => {
         const encodedEmail = localStorage.getItem('_auth');
         if (encodedEmail) {
@@ -66,7 +73,7 @@ const Sidebar = ({ openPicker }) => {
 
         let userInfo;
         let googleUserInfo;
-        let userAvatarImage; // Declare the variable here
+        let userAvatarImage;
 
         if (encodedToken) {
             const decodedToken = atob(encodedToken);
@@ -81,7 +88,6 @@ const Sidebar = ({ openPicker }) => {
         let userEmailAddress;
 
         if (userInfo?.user?.name) {
-            // Call the API to get the user avatar based on the name
             const userAvatarName = userInfo.user.name;
 
             let config = {
@@ -93,40 +99,32 @@ const Sidebar = ({ openPicker }) => {
 
             axios(config)
                 .then((response) => {
-                    userAvatarImage = response.config.url; // Assign the value here
+                    userAvatarImage = response.config.url;
 
-                    // Set other user information
                     userAvatar = userAvatarImage;
                     userNickname = userInfo.user.name;
                     userEmailAddress = userInfo.user.email;
 
-                    // Update state with user information
                     setUserAvatar(userAvatar);
                     setUserNickname(userNickname);
                     setUserEmailAddress(userEmailAddress);
 
-                    // Now the userAvatar value is set, you can log it here
                     console.log(userAvatar, 'userAvatar');
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         } else if (googleUserInfo?.googleImage) {
-            // If user name is not available, use google image directly
             userAvatar = googleUserInfo.googleImage;
-            // Set other user information from Google data
             userNickname = googleUserInfo.googleName;
             userEmailAddress = googleUserInfo.googleEmail;
 
-            // Update state with user information
             setUserAvatar(userAvatar);
             setUserNickname(userNickname);
             setUserEmailAddress(userEmailAddress);
 
-            // Now the userAvatar value is set, you can log it here
             console.log(userAvatar, 'userAvatar');
         } else {
-            // If neither user name nor Google image is available, set default values
             userAvatar = '';
             userNickname = '';
             userEmailAddress = '';
@@ -156,7 +154,7 @@ const Sidebar = ({ openPicker }) => {
         setTimeout(() => {
             setIsLoading(false);
             setShowUserModal(true);
-        },2000);
+        }, 2000);
     };
 
     return (
@@ -214,7 +212,7 @@ const Sidebar = ({ openPicker }) => {
                 )}
 
                 <Modal isOpen={showModal} onClose={() => setShowModal(false)} openPicker={openPicker} />
-               
+
                 <div className="border-t border-white/20 flex-grow overflow-y-auto backdrop-blur-xl	">
                     <div className={`overflow-hidden ${!open && 'hidden'} relative`}>
                         {lines.map((line, index) => (
@@ -232,7 +230,7 @@ const Sidebar = ({ openPicker }) => {
                 </div>
                 <div className={` bottom-0 left-0 right-0 border-t border-white/20`}>
                     <div className=" flex flex-col gap-1">
-                        <Link to="/dashboard">
+                        {/* <Link to="/dashboard">
                             <p className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
                         ${location.pathname === "/dashboard" && ''} ${!open && 'justify-center'}`}
                             >
@@ -241,21 +239,30 @@ const Sidebar = ({ openPicker }) => {
                                     Settings
                                 </span>
                             </p>
-                        </Link>
-                        <Link to="/dashboard">
-                            <p
-                                className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
-                        ${location.pathname === "/dashboard" && ''} ${!open && 'justify-center'}`}
+                        </Link> */}
+                        <Menu as="div" className="relative inline-block text-left">
+                            <Menu.Button
+                                onClick={toggleDropdown}
+                                className={`w-full flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
+                                        ${location.pathname === '/dashboard' && ''} ${!open && 'justify-center'
+                                    }`}
                             >
-                                <span className='text-2xl h-6 w-12 flex items-center justify-center'><MdOutlineLiveHelp /></span>
-                                <span className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}>
-                                    Get Help
+                                <span className="text-2xl h-6 w-12 flex items-center justify-center">
+                                    <IoSettingsOutline />
                                 </span>
-                            </p>
-                        </Link>
-                        <Logout showLogout={open} />
+                                <span
+                                    className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}
+                                >
+                                    Settings
+                                </span>
+                            </Menu.Button>
+
+                            <DropdownMenu isOpen={dropdownOpen} setIsOpen={setDropdownOpen} position={dropdownPosition} showLogout={open} />
+
+                        </Menu>
+                        
                         <div
-                            className="user group flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 " 
+                            className="user group flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 "
                             onClick={handleUserModal}
                             title={userEmailAddress}
                         >
@@ -265,8 +272,6 @@ const Sidebar = ({ openPicker }) => {
                                 <p className="text-sm font-black text-gray-900 dark:text-white text-ellipsis overflow-hidden">{userEmailAddress}</p>
                             </div>
                         </div>
-
-
 
                         <UserModal
                             isOpen={showUserModal}
