@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, onSubmit }) => {
     const [ setIsLoading] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
-   
+    console.log('avatar', avatar);
 
     const validationSchema = Yup.object({
         userNickname: Yup.string().required('Required'),
@@ -32,7 +32,7 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setSelectedAvatar(reader.result); 
+                setSelectedAvatar(reader.result);
                 formik.setFieldValue('avatar', file);
             };
             reader.readAsDataURL(file);
@@ -44,6 +44,8 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
 
     
     if (!isOpen) return null;
+
+    const defaultAvatarUrl = avatar
 
     return (
         <section className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50 dark:bg-gray-500 dark:bg-opacity-70`} style={{ margin: '0px' }}>
@@ -94,7 +96,7 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
                         <div className="flex items-center">
                             <img
                                 className="h-12 w-12 rounded-full cursor-pointer border border-gray-400"
-                                src={selectedAvatar}
+                                src={selectedAvatar || avatar || defaultAvatarUrl} 
                                 alt="Avatar"
                                 onClick={() => document.getElementById('avatar').click()}
                             />

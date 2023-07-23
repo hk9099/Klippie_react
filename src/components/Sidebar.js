@@ -23,7 +23,7 @@ const Sidebar = ({ openPicker }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [userEmailAddress, setUserEmailAddress] = useState('');
     const [userNickname, setUserNickname] = useState('');
-    const [userAvatarUrl, setUserAvatar] = useState('');
+    const [userAvatar, setUserAvatar] = useState('');
     // const [Avatar, setAvatar] = useState('');
     const location = useLocation()
     const [lines, setLines] = useState([
@@ -66,6 +66,7 @@ const Sidebar = ({ openPicker }) => {
 
         let userInfo;
         let googleUserInfo;
+        let userAvatarImage; // Declare the variable here
 
         if (encodedToken) {
             const decodedToken = atob(encodedToken);
@@ -81,45 +82,57 @@ const Sidebar = ({ openPicker }) => {
 
         if (userInfo?.user?.name) {
             // Call the API to get the user avatar based on the name
-            userAvatar = userInfo.user.name;
+            const userAvatarName = userInfo.user.name;
 
             let config = {
                 method: 'get',
                 maxBodyLength: Infinity,
-                url: `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`,
-                headers: {}
+                url: `https://ui-avatars.com/api/?name=${userAvatarName}&background=0D8ABC&color=fff&size=128`,
+                headers: {},
             };
 
             axios(config)
                 .then((response) => {
-                    setUserAvatar(response.config.url);
+                    userAvatarImage = response.config.url; // Assign the value here
+
+                    // Set other user information
+                    userAvatar = userAvatarImage;
+                    userNickname = userInfo.user.name;
+                    userEmailAddress = userInfo.user.email;
+
+                    // Update state with user information
+                    setUserAvatar(userAvatar);
+                    setUserNickname(userNickname);
+                    setUserEmailAddress(userEmailAddress);
+
+                    // Now the userAvatar value is set, you can log it here
+                    console.log(userAvatar, 'userAvatar');
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-
-            // Set other user information
-            userNickname = userInfo.user.name;
-            userEmailAddress = userInfo.user.email;
         } else if (googleUserInfo?.googleImage) {
             // If user name is not available, use google image directly
             userAvatar = googleUserInfo.googleImage;
             // Set other user information from Google data
             userNickname = googleUserInfo.googleName;
             userEmailAddress = googleUserInfo.googleEmail;
+
+            // Update state with user information
+            setUserAvatar(userAvatar);
+            setUserNickname(userNickname);
+            setUserEmailAddress(userEmailAddress);
+
+            // Now the userAvatar value is set, you can log it here
+            console.log(userAvatar, 'userAvatar');
         } else {
             // If neither user name nor Google image is available, set default values
             userAvatar = '';
             userNickname = '';
             userEmailAddress = '';
         }
-
-        // Update state with user information
-        setUserAvatar(userAvatar);
-        setUserNickname(userNickname);
-        setUserEmailAddress(userEmailAddress);
-
     }, [navigate]);
+
 
 
     const deleteLine = (index) => {
@@ -246,7 +259,7 @@ const Sidebar = ({ openPicker }) => {
                             onClick={handleUserModal}
                             title={userEmailAddress}
                         >
-                            <img className="shrink-0 h-12 w-12 rounded-full" src={userAvatarUrl} alt="Avatar" />
+                            <img className="shrink-0 h-12 w-12 rounded-full" src={userAvatar} alt="Avatar" />
                             <div className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm overflow-hidden text-ellipsis whitespace-nowrap`}>
                                 <p className="text-sm font-black text-gray-900 dark:text-white">{userNickname}</p>
                                 <p className="text-sm font-black text-gray-900 dark:text-white text-ellipsis overflow-hidden">{userEmailAddress}</p>
@@ -260,7 +273,7 @@ const Sidebar = ({ openPicker }) => {
                             onClose={() => setShowUserModal(false)}
                             userNickname={userNickname}
                             userEmailAddress={userEmailAddress}
-                            avatar={userAvatarUrl}
+                            avatar={userAvatar}
                             isLoading={isLoading}
                             onSubmit={(values) => {
                                 setShowUserModal(false);
