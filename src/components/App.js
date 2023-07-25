@@ -8,6 +8,7 @@ import OtpVarification from './otpVarification.js';
 import Layout from './Layout.js';
 import Loader from './Loader.js';
 import Steps from './Steps.js';
+import Video from './videoplayer.js';
 
 
 
@@ -35,6 +36,8 @@ function App() {
           <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
             <Route path="/otpVarification" element={<OtpVarification />} />
             <Route path="/Steps" element={<Steps />} />
+            <Route path="/video" element={<Video />} />
+            
         </Routes> 
       )}
       </Router>

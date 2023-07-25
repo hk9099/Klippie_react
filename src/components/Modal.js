@@ -1,4 +1,4 @@
-import React, { useState ,useEffect } from 'react';
+import React, { useState , useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -40,6 +40,7 @@ const Modal = ({ isOpen, onClose }) => {
         },
         validationSchema,
         onSubmit: async (values, { setSubmitting }) => {
+            console.log('Submitting form:', values);
             try {
                 // Prepare the data for the API call
                 let data = {};
@@ -89,13 +90,18 @@ const Modal = ({ isOpen, onClose }) => {
         },
     });
 
+    // useEffect(() => {
+    //     if (!isOpen) {
+    //         formik.resetForm();
+    //         setUploadedFileUrl(null);
+    //         setUploadedFileName(null);
+    //     }
+    // }, [isOpen, formik]);
+
     useEffect(() => {
-        if (!isOpen) {
-            formik.resetForm();
-            setUploadedFileUrl(null);
-            setUploadedFileName(null);
-        }
-    }, [isOpen, formik]);
+        // Update the formik values whenever the uploadedFileUrl changes
+        formik.setFieldValue('file', uploadedFileUrl);
+    });
 
     if (!isOpen) return null;
 
@@ -247,7 +253,8 @@ const Modal = ({ isOpen, onClose }) => {
                             disabled={
                                 formik.isSubmitting ||
                                 (selectedOption === 'youtube' && !formik.values.youtubeLink) ||
-                                (selectedOption === 'upload' && !formik.values.file)
+                                
+                                (selectedOption === 'upload' && !formik.values.file , console.log(formik.values.file, "file"))
                             }
                         >
                             {formik.isSubmitting ? 'Submitting...' : 'Submit'}

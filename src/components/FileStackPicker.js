@@ -1,37 +1,37 @@
 import { useEffect, useRef } from 'react';
 import * as filestack from 'filestack-js';
 
-const FilestackUploader = ({ setUploadedFileUrl, setUploadedFileName }) => {
+const FilestackUploader = ({ setUploadedFileUrl, setUploadedFileName, onClose }) => {
     const apiKey = "Ah6BGoib5TtiyxsLeCtXBz";
-    const pickerRef = useRef(null); // Use useRef to preserve 'picker' over renders
+    const pickerRef = useRef(null);
 
     const handleFileUploadFinished = async (res) => {
         console.log(res, "res");
         setUploadedFileUrl(res.url);
         setUploadedFileName(res.filename);
-        pickerRef.current.close();
+        onClose(); // Close the picker after file selection
     };
 
     const handleFileUploadFailed = (res) => {
         console.log(res);
-        // toastr.error('File upload failed');
+        // Handle file upload failure if needed
     };
 
     const handleFileUploadProgress = (res) => {
-        // console.log(res);
-        // toastr.info('File upload in progress');
+        // Handle file upload progress if needed
     };
 
     const handleFileSelected = (res) => {
-        // console.log(res);
+        // Handle file selection if needed
     };
 
     const handleOpen = (res) => {
-        // console.log(res);
+        // Handle picker open event if needed
     };
 
     const handleClose = (res) => {
-        // console.log(res);
+        // Handle picker close event if needed
+        onClose(); // Close the picker when it's closed
     };
 
     useEffect(() => {
@@ -52,10 +52,10 @@ const FilestackUploader = ({ setUploadedFileUrl, setUploadedFileName }) => {
             onOpen: handleOpen,
             onClose: handleClose,
             onUploadDone: (res) => {
-                // console.log(res);
+                // Handle upload done if needed
             },
             onUploadStarted: (res) => {
-                // console.log(res);
+                // Handle upload started if needed
             },
             disableTransformer: true,
             uploadInBackground: true,
@@ -63,9 +63,8 @@ const FilestackUploader = ({ setUploadedFileUrl, setUploadedFileName }) => {
             maxFiles: 1,
         };
 
-        pickerRef.current = client.picker(options); 
-
-        pickerRef.current.open(); 
+        pickerRef.current = client.picker(options);
+        pickerRef.current.open();
 
         return () => {
             pickerRef.current.close();
