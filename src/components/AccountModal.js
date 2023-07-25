@@ -2,6 +2,7 @@ import React, { useState ,useEffect} from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { ToastContainer, toast } from 'react-toastify';
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import axios from 'axios';
 
@@ -27,7 +28,7 @@ const AccountModal = ({ showAccount , onclose }) => {
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+    const navigate = useNavigate();
     const toggleChangePassword = () => {
         setShowChangePassword(!showChangePassword);
         setShowExportData(false);
@@ -134,7 +135,9 @@ const AccountModal = ({ showAccount , onclose }) => {
                                         );
                                         console.log(response.data);
                                         toast.success(response.data.message);
-
+                                        localStorage.removeItem('_auth');
+                                        localStorage.removeItem('_sodfhgiuhih');
+                                        navigate('/');
                                         setSubmitting(false);
                                     } catch (error) {
                                         console.error(error);

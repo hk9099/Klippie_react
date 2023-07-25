@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 
 const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, onSubmit }) => {
-    const [ setIsLoading] = useState(false);
+    // eslint-disable-next-line no-unused-vars
+    const [isLoading, setIsLoading] = useState(false); 
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
     console.log('avatar', avatar);
 
@@ -11,6 +13,23 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
         userNickname: Yup.string().required('Required'),
         userEmailAddress: Yup.string().email('Invalid email').required('Required'),
     });
+
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            const modalElement = document.querySelector('.modal-container');
+            if (modalElement && !modalElement.contains(event.target)) {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            window.addEventListener('click', handleOutsideClick);
+        }
+
+        return () => {
+            window.removeEventListener('click', handleOutsideClick);
+        };
+    }, [isOpen, onClose]);
 
     const formik = useFormik({
         initialValues: {
@@ -34,6 +53,28 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
             reader.onloadend = () => {
                 setSelectedAvatar(reader.result);
                 formik.setFieldValue('avatar', file);
+
+                const data = new FormData();    
+                data.append('file', file);
+
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://api.getklippie.com/v1/auth/upload-profile-image',
+                    headers: {
+                        'accept': 'application/json',
+                        ...data.getHeaders()
+                    },
+                    data: data
+                };
+
+                axios.request(config)
+                    .then((response) => {
+                        console.log(JSON.stringify(response.data));
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             };
             reader.readAsDataURL(file);
         } else {
@@ -42,7 +83,7 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
         }
     };
 
-    
+
     if (!isOpen) return null;
 
     const defaultAvatarUrl = avatar
@@ -91,12 +132,12 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
                     </div>
                     <div className="mb-4">
                         <label htmlFor="avatar" className="block text-gray-700 text-sm font-bold mb-2">
-                            Avatar (JPG)
+                            Avatar
                         </label>
                         <div className="flex items-center">
                             <img
                                 className="h-12 w-12 rounded-full cursor-pointer border border-gray-400"
-                                src={selectedAvatar || avatar || defaultAvatarUrl} 
+                                src={selectedAvatar || avatar || defaultAvatarUrl}
                                 alt="Avatar"
                                 onClick={() => document.getElementById('avatar').click()}
                             />
@@ -104,7 +145,7 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
                                 type="file"
                                 id="avatar"
                                 name="avatar"
-                                accept=".jpg"
+                                accept="image/*"
                                 onChange={handleAvatarChange}
                                 className="hidden"
                             />

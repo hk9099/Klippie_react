@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios'; 
+import axios from 'axios';
 import qs from 'qs';
-import * as filestack from 'filestack-js';
+import FilestackUploader from './FileStackPicker';
 
 const Modal = ({ isOpen, onClose }) => {
     const [selectedOption, setSelectedOption] = useState('upload');
     const [uploadedFileUrl, setUploadedFileUrl] = useState(null);
     const [uploadedFileName, setUploadedFileName] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
+    const [isFilestackOpen, setIsFilestackOpen] = useState(false);
 
-   
-
-    const apiKey = process.env.REACT_APP_FILESTACK_API_KEY;
+    const handleFilestackOpen = () => {
+        setIsFilestackOpen(true);
+    };
 
     const youtubeValidationSchema = Yup.object({
         title: Yup.string().required('Title is required'),
@@ -88,50 +89,13 @@ const Modal = ({ isOpen, onClose }) => {
         },
     });
 
-    const handleFileUploadFinished = async (res) => {
-        // console.log(res);
-        setUploadedFileUrl(res.url);
-        setUploadedFileName(res.filename);
-        formik.setFieldValue('file', res.url);
-    };
-
-    const handleFileUploadFailed = (res) => {
-        // console.log(res);
-    };
-
-    const handleOpen = () => {
-        // console.log('opened');
-    };
-
-    const handleClose = () => {
-        setIsLoading(false);
-    };
-
-    const openPicker = () => {
-        if (!isLoading) {
-            setIsLoading(true);
-            const client = filestack.init(apiKey);
-            const options = {
-                fromSources: [
-                    'local_file_system',
-                    'url',
-                    'googledrive',
-                    'dropbox',
-                    'onedrive',
-                    'facebook',
-                    'instagram',
-                ],
-                accept: ['image/*', 'video/*'],
-                maxFiles: 10,
-                minFiles: 1,
-                onFileUploadFinished: handleFileUploadFinished,
-                onFileUploadFailed: handleFileUploadFailed,
-                onOpen: handleOpen,
-                onClose: handleClose,
-            };
-            client.picker(options).open();
+    useEffect(() => {
+        if (!isOpen) {
+            formik.resetForm();
+            setUploadedFileUrl(null);
+            setUploadedFileName(null);
         }
-    };
+    }, [isOpen, formik]);
 
     if (!isOpen) return null;
 
@@ -257,7 +221,8 @@ const Modal = ({ isOpen, onClose }) => {
                                 <button
                                     type="button"
                                     className={`flex items-center justify-center w-full gap-x-6 p-3 text-base rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-2 border-gray-500 dark:border-gray-100 mt-2 border-animation`}
-                                    onClick={openPicker}
+                                    onClick={handleFilestackOpen} // Set the event handler to open FilestackPicker
+                                    id="uploadBtn"
                                 >
                                     <span className={` origin-left duration-300 hover:block font-medium text-sm text-center`}>
                                         Upload Image/Video
@@ -266,7 +231,7 @@ const Modal = ({ isOpen, onClose }) => {
                             )}
                         </div>
                     )}
-
+                    {isFilestackOpen && <FilestackUploader onClose={() => setIsFilestackOpen(false)} setUploadedFileUrl={setUploadedFileUrl} setUploadedFileName={setUploadedFileName} />}
                     <div className="flex justify-end">
                         <button
                             type="button"

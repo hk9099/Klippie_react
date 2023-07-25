@@ -150,3 +150,8 @@
     transform: translate(24px, 0);
   }
 }
+
+.rc-steps-item-title:after {
+  height: 3px !important;
+  transition: all 2s ease-in-out;
+}

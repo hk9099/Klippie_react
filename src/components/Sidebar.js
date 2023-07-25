@@ -54,6 +54,7 @@ const Sidebar = ({ openPicker }) => {
         'Leadership in organizing is rooted in three questions articulated by the first century Jerusalem sage, Rabbi Hillel: “If I am not for myself, who am I? When I am only for myself, what am I? And if not now, when? – Pirke Avot (Wisdom of the Fathers)',
         'Organizing is a practice of leadership whereby we define leadership as enabling others to achieve shared purpose under conditions of uncertainty.',
     ]);
+    
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -281,6 +282,7 @@ const Sidebar = ({ openPicker }) => {
                             avatar={userAvatar}
                             isLoading={isLoading}
                             onSubmit={(values) => {
+                                console.log(values)
                                 setShowUserModal(false);
                             }}
                         />
