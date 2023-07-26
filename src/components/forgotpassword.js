@@ -316,7 +316,7 @@ const MultiStepForm = () => {
                                                     className={`inputbox`}
                                                     onChange={handleChange}
                                                     value={formData.password || ''}
-                                                />
+                                                    autocomplete="current-password"                                                />
                                                 <span
                                                     className="password-icon"
                                                     onClick={() => setShowPassword(!showPassword)}

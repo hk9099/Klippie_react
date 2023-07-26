@@ -153,6 +153,7 @@ function Signin() {
                                                 name="password"
                                                 placeholder="Password"
                                                 className={`inputbox`}
+                                                autocomplete="current-password"
                                             />
                                             <span className="password-icon" onClick={() => setShowPassword(!showPassword)}>
                                                 {showPassword ? < BsEyeFill /> : < BsEyeSlashFill />}

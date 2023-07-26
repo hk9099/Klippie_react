@@ -54,7 +54,6 @@ const Sidebar = ({ openPicker }) => {
         'Leadership in organizing is rooted in three questions articulated by the first century Jerusalem sage, Rabbi Hillel: “If I am not for myself, who am I? When I am only for myself, what am I? And if not now, when? – Pirke Avot (Wisdom of the Fathers)',
         'Organizing is a practice of leadership whereby we define leadership as enabling others to achieve shared purpose under conditions of uncertainty.',
     ]);
-    
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -62,6 +61,7 @@ const Sidebar = ({ openPicker }) => {
     };
 
     useEffect(() => {
+        
         const encodedEmail = localStorage.getItem('_auth');
         if (encodedEmail) {
             navigate('/dashboard');
@@ -130,6 +130,7 @@ const Sidebar = ({ openPicker }) => {
             userNickname = '';
             userEmailAddress = '';
         }
+
     }, [navigate]);
 
 
@@ -231,16 +232,6 @@ const Sidebar = ({ openPicker }) => {
                 </div>
                 <div className={` bottom-0 left-0 right-0 border-t border-white/20`}>
                     <div className=" flex flex-col gap-1">
-                        {/* <Link to="/dashboard">
-                            <p className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
-                        ${location.pathname === "/dashboard" && ''} ${!open && 'justify-center'}`}
-                            >
-                                <span className='text-2xl h-6 w-12 flex items-center justify-center'><IoSettingsOutline /></span>
-                                <span className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}>
-                                    Settings
-                                </span>
-                            </p>
-                        </Link> */}
                         <Menu as="div" className="relative inline-block text-left">
                             <Menu.Button
                                 onClick={toggleDropdown}

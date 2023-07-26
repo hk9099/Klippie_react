@@ -175,6 +175,7 @@ function Signup() {
                                                 name="password"
                                                 placeholder="Password"
                                                 className={`inputbox`}
+                                                autocomplete="current-password"
                                             />
                                             <span
                                                 className="password-icon"

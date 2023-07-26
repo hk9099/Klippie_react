@@ -90,18 +90,10 @@ const Modal = ({ isOpen, onClose }) => {
         },
     });
 
-    // useEffect(() => {
-    //     if (!isOpen) {
-    //         formik.resetForm();
-    //         setUploadedFileUrl(null);
-    //         setUploadedFileName(null);
-    //     }
-    // }, [isOpen, formik]);
-
     useEffect(() => {
-        // Update the formik values whenever the uploadedFileUrl changes
         formik.setFieldValue('file', uploadedFileUrl);
-    });
+        // eslint-disable-next-line
+    }, [uploadedFileUrl]);
 
     if (!isOpen) return null;
 
@@ -253,8 +245,7 @@ const Modal = ({ isOpen, onClose }) => {
                             disabled={
                                 formik.isSubmitting ||
                                 (selectedOption === 'youtube' && !formik.values.youtubeLink) ||
-                                
-                                (selectedOption === 'upload' && !formik.values.file , console.log(formik.values.file, "file"))
+                                (selectedOption === 'upload' && !formik.values.file)
                             }
                         >
                             {formik.isSubmitting ? 'Submitting...' : 'Submit'}

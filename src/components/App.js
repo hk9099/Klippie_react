@@ -34,9 +34,9 @@ function App() {
           <Route path="/forgotpassword" element={<Forgotpassword />} />
           <Route path="*" element={<h1>Not Found</h1>} />
           <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
-            <Route path="/otpVarification" element={<OtpVarification />} />
-            <Route path="/Steps" element={<Steps />} />
-            <Route path="/video" element={<Video />} />
+          <Route path="/otpVarification" element={<OtpVarification />} />
+          <Route path="/Steps" element={<Steps />} />
+          <Route path="/video" element={<Video />} />
             
         </Routes> 
       )}
