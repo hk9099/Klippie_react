@@ -222,7 +222,7 @@ function Signin() {
                 </div>
 
                 <div className="hidden sm:block right_block">
-                    <img src={backgroundimage} alt="backgroundimage" className="h-fit w-full object-cover backgroundimage" />
+                    <img src={backgroundimage} alt="backgroundimage" className="h-screen w-full object-cover backgroundimage" />
                     <div className="text-overlay">
                         <img src={bannerRight} alt="logo" className="logo" style={{ width: '90%', display: 'inline-block' }} />
                     </div>
