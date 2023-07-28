@@ -3,7 +3,7 @@ import { Menu } from '@headlessui/react';
 import { Link, useLocation } from 'react-router-dom';
 import { MdOutlineLiveHelp } from 'react-icons/md';
 import { RiAccountBoxFill } from 'react-icons/ri';
-import Logout from './logout';
+import Logout from '../Pages/logout';
 import AccountModal from './AccountModal';
 
 const DropdownMenu = ({ isOpen, position, showLogout }) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -14,7 +14,7 @@ import axios from 'axios';
 import DropdownMenu from './DropdownMenu';
 
 
-const Sidebar = ({ openPicker }) => {
+const Sidebar = ({ setProjectId, stepsRunning }) => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(true)
     const [mobileMenu, setMobileMenu] = useState(false)
@@ -25,6 +25,7 @@ const Sidebar = ({ openPicker }) => {
     const [userNickname, setUserNickname] = useState('');
     const [userAvatar, setUserAvatar] = useState('');
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [projectId] = useState(null);
     const [dropdownPosition, setDropdownPosition] = useState('down');
     // const [Avatar, setAvatar] = useState('');
     const location = useLocation()
@@ -131,6 +132,8 @@ const Sidebar = ({ openPicker }) => {
             userEmailAddress = '';
         }
 
+        
+
     }, [navigate]);
 
 
@@ -144,11 +147,18 @@ const Sidebar = ({ openPicker }) => {
     };
 
     const handleAddNewVideo = () => {
-        setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-            setShowModal(true);
-        }, 2000);
+        if (!stepsRunning) {
+            setIsLoading(true);
+            setTimeout(() => {
+                setIsLoading(false);
+                setShowModal(true);
+            }, 2000);
+        }
+    };
+
+    const handleFormSubmit = (projectId) => {
+        setProjectId(projectId);
+        setShowModal(false);
     };
 
     const handleUserModal = () => {
@@ -158,6 +168,8 @@ const Sidebar = ({ openPicker }) => {
             setShowUserModal(true);
         }, 2000);
     };
+
+    
 
     return (
         <>
@@ -183,14 +195,21 @@ const Sidebar = ({ openPicker }) => {
 
                 <div className="pt-6">
                     <button
-                        className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-gray-500 dark:border-gray-100 border-animation ${!open && 'justify-center'}`}
+                        className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-4 border-gray-500 dark:border-gray-100 border-animation ${!open && 'justify-center'
+                            } ${stepsRunning ? 'cursor-not-allowed opacity-50' : ''}`} 
                         onClick={handleAddNewVideo}
+                        disabled={stepsRunning}
                     >
-                        <span className="text-2xl">
+                        <span
+                            className={`text-2xl ${stepsRunning ? 'text-gray-500 dark:text-gray-300' : '' // Change color when disabled
+                                }`}
+                        >
                             <AiOutlinePlus />
                         </span>
                         <span
-                            className={`${!open && 'hidden'} origin-left duration-300 hover:block font-medium text-sm`}
+                            className={`${!open && 'hidden'
+                                } origin-left duration-300 hover:block font-medium text-sm ${stepsRunning ? 'text-gray-500 dark:text-gray-300' : '' // Change color when disabled
+                                }`}
                         >
                             Add New Video/Audio
                         </span>
@@ -213,13 +232,17 @@ const Sidebar = ({ openPicker }) => {
                     </div>
                 )}
 
-                <Modal isOpen={showModal} onClose={() => setShowModal(false)} openPicker={openPicker} />
+                {projectId ? null : (
+                    <Modal onSubmit={handleFormSubmit} isOpen={showModal} onClose={() => setShowModal(false)} setProjectId={setProjectId} />
+                )}
+
 
                 <div className="border-t border-white/20 flex-grow overflow-y-auto backdrop-blur-xl	">
                     <div className={`overflow-hidden ${!open && 'hidden'} relative`}>
                         {lines.map((line, index) => (
-                            <div key={index} className="width-content row relative bg-gray-200 dark:bg-gray-700 my-2 rounded">
-                                <p className='py-2 px-2 bg-gray-200 dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-white rounded cursor-pointer' style={{ width: '243px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', userSelect: 'none' }}>
+                            <div key={index} className="width-content row relative  my-2 rounded">
+                                <p className='py-2 px-2  text-sm font-medium text-gray-700 dark:text-gray-500 rounded cursor-pointer hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white'
+                                    style={{ width: '243px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', userSelect: 'none' }}>
                                     {line}
                                 </p>
                                 <button onClick={() => deleteLine(index)} className="delete-button">

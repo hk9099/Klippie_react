@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './components/App';
+import App from './App';
 import { ThemeProvider } from './components/ThemeContext'
 import Background from './components/Background'
 import 'tailwindcss/tailwind.css';

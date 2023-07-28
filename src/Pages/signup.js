@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { HiOutlineMail } from 'react-icons/hi';
 import { RiInformationLine } from 'react-icons/ri';
-import { BiSolidUser } from 'react-icons/bi';
+import {  BiSolidUser } from 'react-icons/bi';
 import * as Yup from 'yup';
 import axios from 'axios';
 import backgroundimage from '../assets/images/round.png';
@@ -15,12 +15,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Hiiii from '../assets/images/hi_40x40.gif';
 import bannerRight from '../assets/images/banner-right-pic.avif';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '../components/config';
 
 
 
-function Signup() {
+function Signup({ errors, touched }) {
     const navigate = useNavigate();
-        // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -39,6 +41,35 @@ function Signup() {
             navigate('/dashboard');
         }
     }, [navigate]);
+
+    const handleGoogleLogin = () => {
+        const customProvider = new GoogleAuthProvider();
+        customProvider.setCustomParameters({ prompt: 'select_account' });
+
+        signInWithPopup(auth, customProvider)
+            .then((result) => {
+                console.log(result.user, 'result');
+                // setToken(result.user);
+                const userGoogle = {
+                    googleToken: result.user.accessToken,
+                    googleId: result.user.uid,
+                    googleName: result.user.displayName,
+                    googleEmail: result.user.email,
+                    googleImage: result.user.photoURL,
+                };
+
+                const encodedUser = btoa(JSON.stringify(userGoogle));
+                console.log(encodedUser, 'encodedUser');
+                localStorage.setItem('_auth', encodedUser);
+                navigate('/dashboard');
+            })
+            .catch((error) => {
+                // console.log(error.message);
+                toast.error(error.message, {
+                    position: toast.POSITION.TOP_CENTER
+                });
+            });
+    };
 
     const validationSchema = Yup.object({
         name: Yup.string()
@@ -69,7 +100,7 @@ function Signup() {
 
     const handleSubmit = (values, { setSubmitting }) => {
         setLoading(true);
-        const _authemail =btoa(values.email);
+        const _authemail = btoa(values.email);
         localStorage.setItem('_authemail', _authemail);
         const payload = {
             name: values.name,
@@ -78,7 +109,7 @@ function Signup() {
             confirmPassword: values.confirmPassword,
         };
         axios
-            .post('https://api.getklippie.com/v1/auth/signup', payload)
+            .post(process.env.REACT_APP_HOSTING_URL + '/v1/auth/signup', payload)
             .then(response => {
                 console.log(response, 'response');
                 var signupToken = response.data.data;
@@ -102,8 +133,8 @@ function Signup() {
             <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
-                        <h1 className="text-4xl font-bold text-gray-800">
-                            Create <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Account</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block' }} />
+                        <h1 className="text-4xl font-bold dark:text-gray-100 text-gray-900">
+                            Create <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Account</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block', borderRadius: '50%' }} />
                         </h1>
                         <p className="text-gray-500">Please Fill The Below Details</p>
                     </div>
@@ -113,19 +144,20 @@ function Signup() {
                             validationSchema={validationSchema}
                             onSubmit={handleSubmit}
                         >
-                            {({ isSubmitting }) => (
+                            {({ isSubmitting, errors, touched }) => (
                                 <Form className="flex flex-col justify-center items-center">
-                                    <div className="nameinput form_layout mb-5">
+                                    <div className="nameinput form_layout mb-3">
                                         <label className="text-gray-500">Enter your name</label>
-                                        <div className="inputbox-container">
+                                        <div className="inputbox-container mt-1">
                                             <Field
                                                 type="text"
                                                 name="name"
                                                 placeholder="Name"
-                                                className={`inputbox`}
+                                                className={`inputbox dark:bg-purple-200 text-black ${errors.name && touched.name ? 'border-red-500' : ''} dark:text-white`}
+
                                             />
                                             <span className="email-icon">
-                                                <BiSolidUser />
+                                                <BiSolidUser className='dark:text-gray-800 text-gray-500' />
                                             </span>
                                         </div>
                                         <ErrorMessage
@@ -135,19 +167,20 @@ function Signup() {
                                         />
                                     </div>
 
-                                    <div className="emailinput form_layout mb-5">
+                                    <div className="emailinput form_layout mb-3">
                                         <label className="text-gray-500 emailinput">
                                             Enter your email
                                         </label>
-                                        <div className="inputbox-container">
+                                        <div className="inputbox-container mt-1">
                                             <Field
                                                 type="text"
                                                 name="email"
                                                 placeholder="Email"
-                                                className={`inputbox`}
+                                                className={`inputbox dark:bg-purple-200 text-black ${errors.email && touched.email ? 'border-red-500' : ''}`}
+
                                             />
                                             <span className="email-icon">
-                                                <HiOutlineMail />
+                                                <HiOutlineMail className='dark:text-gray-800 text-gray-500' />
                                             </span>
                                         </div>
                                         <ErrorMessage
@@ -156,7 +189,7 @@ function Signup() {
                                             className="error-message mt-2"
                                         />
                                     </div>
-                                    <div className="passwordinput form_layout mb-5">
+                                    <div className="passwordinput form_layout mb-3">
                                         <label className="text-gray-500 mt-2">
                                             Enter your password{' '}
                                             <RiInformationLine
@@ -169,28 +202,29 @@ function Signup() {
                                             content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
                                             className="custom-tooltip"
                                         />
-                                        <div className="inputbox-container">
+                                        <div className="inputbox-container mt-1">
                                             <Field
                                                 type={showPassword ? 'text' : 'password'}
                                                 name="password"
                                                 placeholder="Password"
-                                                className={`inputbox`}
+                                                className={`inputbox dark:bg-purple-200 text-black ${errors.password && touched.password ? 'border-red-500' : ''}`}
+
                                                 autocomplete="current-password"
                                             />
                                             <span
                                                 className="password-icon"
                                                 onClick={() => setShowPassword(!showPassword)}
                                             >
-                                                {showPassword ? <BsEyeFill /> : <BsEyeSlashFill />}
+                                                {showPassword ? <BsEyeFill className='dark:text-gray-800 text-gray-500' /> : <BsEyeSlashFill className='dark:text-gray-800 text-gray-500' />}
                                             </span>
                                         </div>
-                                            <ErrorMessage
-                                                name="password"
-                                                component="div"
-                                                className="error-message mt-2"
-                                            />
+                                        <ErrorMessage
+                                            name="password"
+                                            component="div"
+                                            className="error-message mt-2"
+                                        />
                                     </div>
-                                    <div className="passwordinput form_layout mb-5">
+                                    <div className="passwordinput form_layout mb-3">
                                         <label className="text-gray-500 mt-2">
                                             Confirm your password{' '}
                                             <RiInformationLine
@@ -203,12 +237,13 @@ function Signup() {
                                             content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
                                             className="custom-tooltip"
                                         />
-                                        <div className="inputbox-container">
+                                        <div className="inputbox-container mt-1">
                                             <Field
                                                 type={showConfirmPassword ? 'text' : 'password'}
                                                 name="confirmPassword"
                                                 placeholder="Confirm Password"
-                                                className={`inputbox`}
+                                                className={`inputbox dark:bg-purple-200 text-black ${errors.confirmPassword && touched.confirmPassword ? 'border-red-500' : ''}`}
+
                                             />
                                             <span
                                                 className="password-icon"
@@ -217,21 +252,21 @@ function Signup() {
                                                 }
                                             >
                                                 {showConfirmPassword ? (
-                                                    <BsEyeFill />
+                                                    <BsEyeFill className='dark:text-gray-800 text-gray-500' />
                                                 ) : (
-                                                    <BsEyeSlashFill />
+                                                    <BsEyeSlashFill  className='dark:text-gray-800 text-gray-500' />
                                                 )}
                                             </span>
                                         </div>
-                                            <ErrorMessage
-                                                name="confirmPassword"
-                                                component="div"
-                                                className="error-message mt-2"
-                                            />
+                                        <ErrorMessage
+                                            name="confirmPassword"
+                                            component="div"
+                                            className="error-message mt-2"
+                                        />
                                     </div>
                                     <button
                                         type="submit"
-                                        className="submitbutton mt-10 bg-black text-white font-bold py-2 px-4 rounded-full"
+                                        className="submitbutton mt-10 dark:bg-purple-500 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline bg-gray-200 hover:bg-gray-300 hover:shadow-lg transition duration-300 ease-in-out"
                                         disabled={isSubmitting || loading}
                                     >
                                         {loading ? 'Signing Up...' : 'Sign Up'}
@@ -241,7 +276,7 @@ function Signup() {
                         </Formik>
 
                         <div className="flex flex-col justify-center items-center mt-2">
-                            <p className="signup_create_acp" style={{justifyContent: 'space-between!important'}}   >
+                            <p className="signup_create_acp" style={{ justifyContent: 'space-between!important' }}   >
                                 Already have an account?
                                 <Link to="/" className="create_ac ml-2">
                                     Login
@@ -254,12 +289,13 @@ function Signup() {
                         </div>
                         <button
                             title="Login with google"
-                            className="Signup_with_thirdparty_btn"
+                            className="Signup_with_thirdparty_btn dark:bg-purple-200 text-black flex items-center justify-center mt-5 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            onClick={handleGoogleLogin}
                         >
                             <div className="icon">
                                 <img src={googleicon} alt="google" />
                             </div>
-                            <p>Login with Google</p>
+                            <div>Sign up with Google</div>
                         </button>
                     </div>
                 </div>

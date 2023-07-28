@@ -1,79 +1,82 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Steps from 'awesome-steps';
 import 'awesome-steps/dist/style.css';
 import axios from 'axios';
 import qs from 'qs';
 
-const encodedToken = localStorage.getItem('_sodfhgiuhih');
-const userGoogle = localStorage.getItem('_auth');
+const StepsComponent = ({ projectId, onStart, onStop, onAllAPIsComplete }) => {
+    const encodedToken = localStorage.getItem('_sodfhgiuhih');
+    const userGoogle = localStorage.getItem('_auth');
 
-let userInfo;
-let googleUserInfo;
+    let userInfo;
+    let googleUserInfo;
 
-if (encodedToken) {
-    const decodedToken = atob(encodedToken);
-    userInfo = JSON.parse(decodedToken);
-    var token = userInfo.token.access_token
-} else if (userGoogle) {
-    const decodedGoogle = atob(userGoogle);
-    googleUserInfo = JSON.parse(decodedGoogle);
-    console.log(googleUserInfo)
-}
-
-const apiConfigurations = [
-    {
-        url: 'https://api.getklippie.com/v1/project/transcribe',
-        data: qs.stringify({
-            'project_id': '883322e1-2a4e-4e94-bd20-9827f7572858',
-        }),
-    },
-    {
-        url: 'https://api.getklippie.com/v1/project/clipfinder',
-        data: qs.stringify({
-            'project_id': '883322e1-2a4e-4e94-bd20-9827f7572858',
-        }),
-    },
-    {
-        url: 'https://api.getklippie.com/v1/clip/create',
-        data: qs.stringify({
-            'project_id': '883322e1-2a4e-4e94-bd20-9827f7572858'
-        }),
-    },
-];
-
-const apiToken = 'Bearer ' + token;
-
-export default class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            current: 0,
-            stepsStatus: Array(apiConfigurations.length).fill('process'),
-        };
-        this.currentStep = 0; // Variable to keep track of the current step number
+    if (encodedToken) {
+        const decodedToken = atob(encodedToken);
+        userInfo = JSON.parse(decodedToken);
+        var token = userInfo.token.access_token;
+    } else if (userGoogle) {
+        const decodedGoogle = atob(userGoogle);
+        googleUserInfo = JSON.parse(decodedGoogle);
+        console.log(googleUserInfo);
     }
 
-    componentDidMount() {
-        this.handleStepChange(0);
-    }
+    const apiConfigurations = [
+        {
+            url: `${process.env.REACT_APP_HOSTING_URL}/v1/project/transcribe`,
+            data: qs.stringify({
+                project_id: projectId,
+            }),
+        },
+        {
+            url: `${process.env.REACT_APP_HOSTING_URL}/v1/project/clipfinder`,
+            data: qs.stringify({
+                project_id: projectId,
+            }),
+        },
+        {
+            url: `${process.env.REACT_APP_HOSTING_URL}/v1/clip/create`,
+            data: qs.stringify({
+                project_id: projectId,
+            }),
+        },
+    ];
 
-    handleAPIResponse = (stepNumber, response) => {
-        const resposesting = JSON.stringify(response.data);
-        var responsep = JSON.parse(resposesting);
-        console.log(responsep, stepNumber, "response");
+    const apiToken = 'Bearer ' + token;
+    const [current, setCurrent] = useState(0);
+    const [stepsStatus, setStepsStatus] = useState(Array(apiConfigurations.length).fill('process'));
 
-        this.setStepStatus(stepNumber, 'finish');
-        this.currentStep++; // Increment the currentStep after successful API call
-        this.handleStepChange(this.currentStep); // Make the next API call
+    useEffect(() => {
+        // Call the API or perform any other necessary actions when projectId changes
+        makeAPICall(0);
+    }, [projectId]);// eslint-disable-line react-hooks/exhaustive-deps
+
+    const handleAPIResponse = (stepNumber, response) => {
+        setStepStatus(stepNumber, 'finish');
+
+        // Check if all the API calls are completed
+        if (stepNumber + 1 === apiConfigurations.length) {
+            onAllAPIsComplete();
+        } else {
+            handleStepChange(stepNumber + 1);
+        }
+
+        console.log('Step', stepNumber + 1, 'Response:', response.data);
     };
 
-    handleAPIError = (stepNumber, error) => {
-        console.log(error);
-        this.setStepStatus(stepNumber, 'error');
+    const handleAPIError = (stepNumber, error) => {
+        console.error('Step', stepNumber + 1, 'Error:', error);
+        setStepStatus(stepNumber, 'error');
     };
 
-    makeAPICall = async (stepNumber) => {
+    const makeAPICall = async (stepNumber) => {
         if (stepNumber >= apiConfigurations.length) {
+            onStop(); 
+            return;
+        }
+
+        if (stepsStatus[stepNumber] === 'finish' || stepsStatus[stepNumber] === 'error') {
+            handleStepChange(stepNumber + 1);
             return;
         }
 
@@ -82,56 +85,59 @@ export default class App extends Component {
             maxBodyLength: Infinity,
             url: apiConfigurations[stepNumber].url,
             headers: {
-                'accept': 'application/json',
+                accept: 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': apiToken,
+                Authorization: apiToken,
             },
             data: apiConfigurations[stepNumber].data,
         };
 
         try {
             const response = await axios.request(config);
-            this.handleAPIResponse(stepNumber, response);
+            handleAPIResponse(stepNumber, response);
         } catch (error) {
-            this.handleAPIError(stepNumber, error);
+            handleAPIError(stepNumber, error);
+
+            return;
         }
     };
 
-    setStepStatus = (stepNumber, status) => {
-        const { stepsStatus } = this.state;
-        stepsStatus[stepNumber] = status;
-        this.setState({ stepsStatus });
+    const setStepStatus = (stepNumber, status) => {
+        const updatedStatus = [...stepsStatus];
+        updatedStatus[stepNumber] = status;
+        setStepsStatus(updatedStatus);
     };
 
-    handleStepChange = async (stepNumber) => {
-        this.setState({ current: stepNumber });
-        this.currentStep = stepNumber; // Set the currentStep to the provided stepNumber
-        await this.makeAPICall(stepNumber); // Wait for the API call to complete
+    const handleStepChange = (stepNumber) => {
+        setCurrent(stepNumber);
+        makeAPICall(stepNumber);
+        onStart(); 
     };
-
-    render() {
-        return (
+    return (
+        <div className="flex flex-col items-center justify-center h-[87vh] w-full">
             <Steps
-                current={this.state.current}
+                current={current}
                 labelPlacement="horizontal"
                 direction="horizontal"
-                onChange={this.handleStepChange}
+                onChange={handleStepChange}
+                className="w-[70%!important]"
             >
                 <Steps.Step
                     upperTitle="upperTitle"
-                    title="first"
-                    description="description"
-                    status={this.state.stepsStatus[0]}
-                />
+                    title="Transcribe"
+                    description="We are transcribing your audio/video file"
+                    status={stepsStatus[0]} />
                 <Steps.Step
-                    title="second"
-                    status={this.state.stepsStatus[1]}
-                />
+                    title="Clip Finder"
+                    description="We are finding the best clips for you"
+                    status={stepsStatus[1]} />
                 <Steps.Step
-                    title="third"
-                    status={this.state.stepsStatus[2]}
-                />
+                    title="Clip Creator"
+                    description="We are creating your clips"
+                    status={stepsStatus[2]} />
             </Steps>
-        );
-    }
-}
+        </div>
+    );
+};
+
+export default StepsComponent;

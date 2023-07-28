@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
-import { Tooltip} from 'react-tooltip';
+import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css'
 import { RiInformationLine } from 'react-icons/ri';
 import * as Yup from 'yup';
@@ -9,15 +9,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { auth } from './config.js';
+import { auth } from '../components/config';
 import backgroundimage from '../assets/images/round.png';
 import googleicon from '../assets/images/google.png';
 import '../assets/css/signin.css';
-import Loader from './Loader.js';
 import axios from 'axios';
 import bannerRight from '../assets/images/banner-right-pic.avif';
 import Hiiii from '../assets/images/hi_40x40.gif';
-import {HiOutlineMail} from 'react-icons/hi';
+import { HiOutlineMail } from 'react-icons/hi';
 
 function Signin() {
     const navigate = useNavigate();
@@ -79,20 +78,29 @@ function Signin() {
     const handleSubmit = async (values, { setSubmitting }) => {
         setIsLoading(true);
         try {
-            const response = await axios.post('https://api.getklippie.com/v1/auth/login', {
-                email: values.email,
-                password: values.password,
-                is_social: false,
-                firebase_id: 'string',
-                id_token: 'string',
-                device_id: 'string'
-            });
-            // console.log(response.data.token.access_token);
-            const encodedUser = btoa(JSON.stringify(response.data));
-            localStorage.setItem('_sodfhgiuhih', encodedUser);
-            const encodedEmail = btoa(values.email); 
-            localStorage.setItem('_auth', encodedEmail);
-            navigate('/dashboard');
+            const response = await axios.post(
+                process.env.REACT_APP_HOSTING_URL + '/v1/auth/login',
+                {
+                    email: values.email,
+                    password: values.password,
+                    is_social: false,
+                    firebase_id: 'string',
+                    id_token: 'string',
+                    device_id: 'string'
+                }
+            );
+
+            if (response && response.data) {
+                // Successful login
+                const encodedUser = btoa(JSON.stringify(response.data));
+                localStorage.setItem('_sodfhgiuhih', encodedUser);
+                const encodedEmail = btoa(values.email);
+                localStorage.setItem('_auth', encodedEmail);
+                navigate('/dashboard');
+            } else {
+                // Unexpected response format
+                throw new Error('Invalid response from the server.');
+            }
         } catch (error) {
             console.error(error);
             if (error.response && error.response.data && error.response.data.error) {
@@ -101,7 +109,7 @@ function Signin() {
                     position: toast.POSITION.TOP_CENTER
                 });
             } else {
-                toast.error(error.response.data.detail, {
+                toast.error('An error occurred during login.', {
                     position: toast.POSITION.TOP_CENTER
                 });
             }
@@ -110,15 +118,15 @@ function Signin() {
         setSubmitting(false);
     };
 
+
     return (
         <main>
-            {isLoading && <Loader />}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 h-fit w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
-                        <h1 className="text-4xl font-bold text-gray-800">
-                            Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Klippie</span><img src={Hiiii} alt="Hiiii" style={ { width: '40px', height: '40px' ,display : 'inline-block' } } />
+                        <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-200">
+                            Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Klippie</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block' ,borderRadius : '50%' }} />
                         </h1>
                         <p className="text-gray-500">Please Login to your account.</p>
                     </div>
@@ -132,12 +140,12 @@ function Signin() {
                                 <Form className="flex flex-col justify-center items-center">
                                     <div className="emailinput form_layout mb-10">
                                         <label className="text-gray-500 emailinput">Enter your email</label>
-                                        <div className="inputbox-container">
+                                        <div className="inputbox-container mt-2">
                                             <Field
                                                 type="text"
                                                 name="email"
                                                 placeholder="Email"
-                                                className={`inputbox`}
+                                                className={`inputbox dark:bg-purple-200 text-black ${errors.email && touched.email ? 'border-red-500' : ''}`}
                                             />
                                             <span className="email-icon"><HiOutlineMail /></span>
                                         </div>
@@ -145,14 +153,14 @@ function Signin() {
                                     </div>
                                     <div className="passwordinput form_layout">
                                         <label className="text-gray-500 mt-2">Enter your password <RiInformationLine data-tooltip-id='password-tooltip' className="password-tooltip" /></label>
-                                       
+
                                         <Tooltip id="password-tooltip" content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character" className="custom-tooltip" />
-                                        <div className="inputbox-container">
+                                        <div className="inputbox-container mt-2">
                                             <Field
                                                 type={showPassword ? "text" : "password"}
                                                 name="password"
                                                 placeholder="Password"
-                                                className={`inputbox`}
+                                                className={`inputbox dark:bg-purple-200 text-black ${errors.password && touched.password ? 'border-red-500' : ''}`}
                                                 autocomplete="current-password"
                                             />
                                             <span className="password-icon" onClick={() => setShowPassword(!showPassword)}>
@@ -172,7 +180,7 @@ function Signin() {
                                         )}
                                         {!errors.password && (
                                             <div className="default-error-message mt-2">
-                                                
+
                                             </div>
                                         )}
                                         <Link to="/forgotpassword" className="create_ac">
@@ -181,26 +189,28 @@ function Signin() {
                                     </p>
                                     <button
                                         type="submit"
-                                        className="submitbutton mt-10 bg-black text-white font-bold py-2 px-4 rounded-full"
+                                        className="submitbutton mt-10 bg-purple-500 text-white font-bold py-2 px-4 rounded-full"
+                                        disabled={isLoading} 
+                                        style={{ cursor: isLoading ? 'wait' : 'pointer' }}
                                     >
-                                        Sign in
+                                        {isLoading ? 'Sign in...' : 'Sign in'}
                                     </button>
                                 </Form>
                             )}
                         </Formik>
 
-                            <p className="mt-3 text-center">
-                                <Link to="/signup" className="create_ac">
-                                    Create New Account
-                                </Link>
-                            </p>
+                        <p className="mt-3 text-center">
+                            <Link to="/signup" className="create_ac">
+                                Create New Account
+                            </Link>
+                        </p>
                         <div title="OR" className="or_block">
                             <div className="line"></div>
                             <p>OR</p>
                         </div>
                         <button
                             title="Login with google"
-                            className="Signup_with_thirdparty_btn"
+                            className="Signup_with_thirdparty_btn dark:bg-purple-200 text-black flex items-center justify-center mt-5 hover:bg-gray-100 dark:hover:bg-gray-700"
                             onClick={handleGoogleLogin}
                         >
                             <div className="icon">
@@ -212,9 +222,9 @@ function Signin() {
                 </div>
 
                 <div className="hidden sm:block right_block">
-                    <img src={backgroundimage} alt="backgroundimage" className="h-screen w-full object-cover backgroundimage" />
+                    <img src={backgroundimage} alt="backgroundimage" className="h-fit w-full object-cover backgroundimage" />
                     <div className="text-overlay">
-                        <img src={bannerRight} alt="logo" className="logo" style={{ width: '90%',display:'inline-block' }} />
+                        <img src={bannerRight} alt="logo" className="logo" style={{ width: '90%', display: 'inline-block' }} />
                     </div>
                 </div>
             </div>

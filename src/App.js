@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Signin from './signin.js';
-import Signup from './signup.js';
-import Forgotpassword from './forgotpassword.js';
-import Dashboard from './dashboard.js';
-import OtpVarification from './otpVarification.js';
-import Layout from './Layout.js';
-import Loader from './Loader.js';
-import Steps from './Steps.js';
-import Video from './videoplayer.js';
+import Signin from './Pages/signin.js';
+import Signup from './Pages/signup.js';
+import Forgotpassword from './Pages/forgotpassword.js';
+import Dashboard from './Pages/dashboard.js';
+import OtpVarification from './Pages/otpVarification.js';
+import Layout from './Pages/Layout.js';
+import Loader from './Pages/Loader.js';
+import Video from './Pages/videoplayer.js';
+import Gridview from './Pages/Gridview.js';
 
 
 
@@ -35,12 +35,11 @@ function App() {
           <Route path="*" element={<h1>Not Found</h1>} />
           <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
           <Route path="/otpVarification" element={<OtpVarification />} />
-          <Route path="/Steps" element={<Steps />} />
           <Route path="/video" element={<Video />} />
-            
-        </Routes> 
+          <Route path="/gridview" element={<Gridview />} />
+        </Routes>
       )}
-      </Router>
+    </Router>
   );
 }
 

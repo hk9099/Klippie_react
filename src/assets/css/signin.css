@@ -421,7 +421,6 @@ width: 100%;
 
 .Signup_with_thirdparty_btn {
   width: 100%;
-  background: #fff;
   border: 2px solid #d9d9d9;
   border-radius: 60px;
   min-height: 50px;
@@ -436,7 +435,6 @@ width: 100%;
   text-transform: capitalize;
   font-size: 14px;
   line-height: 164%;
-  color: #000;
   transition: all .3s ease;
 }
 

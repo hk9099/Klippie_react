@@ -5,16 +5,24 @@ import axios from 'axios';
 import qs from 'qs';
 import FilestackUploader from './FileStackPicker';
 
-const Modal = ({ isOpen, onClose }) => {
+const Modal = ({ onSubmit, isOpen, onClose }) => {
     const [selectedOption, setSelectedOption] = useState('upload');
+    //eslint-disable-next-line
+    const [isLoading, setIsLoading] = useState(false);
     const [uploadedFileUrl, setUploadedFileUrl] = useState(null);
     const [uploadedFileName, setUploadedFileName] = useState(null);
     // const [isLoading, setIsLoading] = useState(false);
     const [isFilestackOpen, setIsFilestackOpen] = useState(false);
-
     const handleFilestackOpen = () => {
         setIsFilestackOpen(true);
     };
+
+    const resetFormAndFileStack = () => {
+        formik.resetForm();
+        setUploadedFileUrl(null);
+        setUploadedFileName(null);
+    };
+
 
     const youtubeValidationSchema = Yup.object({
         title: Yup.string().required('Title is required'),
@@ -36,15 +44,15 @@ const Modal = ({ isOpen, onClose }) => {
             title: '',
             description: '',
             youtubeLink: '',
-            file: uploadedFileUrl,
+            file: null,
         },
         validationSchema,
         onSubmit: async (values, { setSubmitting }) => {
-            console.log('Submitting form:', values);
             try {
-                // Prepare the data for the API call
+                setIsLoading(true);
                 let data = {};
-                if (selectedOption === 'youtube') {
+
+                if (validationSchema === youtubeValidationSchema) {
                     data = {
                         name: values.title,
                         description: values.description,
@@ -57,12 +65,14 @@ const Modal = ({ isOpen, onClose }) => {
                         file_url: values.file,
                     };
                 }
+
                 const encodedToken = localStorage.getItem('_sodfhgiuhih');
                 if (encodedToken) {
                     var decodedToken = atob(encodedToken);
                     const userInfo = JSON.parse(decodedToken);
                     var Token = userInfo.token.access_token;
                 }
+
                 const apiUrl = 'https://api.getklippie.com/v1/project/create';
                 const config = {
                     headers: {
@@ -71,20 +81,22 @@ const Modal = ({ isOpen, onClose }) => {
                         Authorization: `Bearer ${Token}`,
                     },
                 };
-                // console.log(data, config);
+
                 const response = await axios.post(apiUrl, qs.stringify(data), config);
 
                 if (response.status === 200) {
-                    console.log('API call successful:', response.data);
+                    console.log('API call successful:', response.data.data.id);
+                    var projectId = response.data.data.id;
+                    onSubmit(projectId); // Call the Dashboard's handleSubmit function with the new project ID
                 } else {
                     console.error('API call error:', response.data);
                 }
 
-                formik.resetForm();
-                setSubmitting(false);
-                onClose();
+                resetFormAndFileStack();
             } catch (error) {
                 console.error('Error submitting form:', error);
+            } finally {
+                setIsLoading(false);
                 setSubmitting(false);
             }
         },
@@ -95,12 +107,15 @@ const Modal = ({ isOpen, onClose }) => {
         // eslint-disable-next-line
     }, [uploadedFileUrl]);
 
+    
+
     if (!isOpen) return null;
 
     return (
         <div className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50" style={{ margin: '0px' }}>
             <div className="bg-white p-8 rounded-lg w-96">
                 <h2 className="text-xl font-medium mb-4">Create a new post</h2>
+                
                 <form onSubmit={formik.handleSubmit}>
                     <div className="mb-4">
                         <label htmlFor="title" className="block font-medium text-gray-800">
@@ -205,14 +220,14 @@ const Modal = ({ isOpen, onClose }) => {
                                 <div className="relative">
                                     <p
                                         id="filename"
-                                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 select-none"
+                                        className="mt-1  w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 select-none"
                                     >{uploadedFileName}</p>
                                     <input
                                         type="text"
                                         id="file"
                                         value={uploadedFileUrl}
                                         readOnly
-                                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden "
+                                        className="mt-1  w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden "
                                     />
                                 </div>
                             ) : (
@@ -234,14 +249,16 @@ const Modal = ({ isOpen, onClose }) => {
                         <button
                             type="button"
                             className="mr-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                            onClick={onClose}
+                            onClick={() => {
+                                resetFormAndFileStack();
+                                onClose();
+                            }}
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className={`px-4 py-2 bg-blue-500 text-white rounded-lg font-medium ${formik.isSubmitting ? 'opacity-75 cursor-wait' : 'hover:bg-blue-600'
-                                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`px-4 py-2 bg-blue-500 text-white rounded-lg font-medium ${formik.isSubmitting ? 'opacity-75 cursor-wait' : 'hover:bg-blue-600'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             disabled={
                                 formik.isSubmitting ||
                                 (selectedOption === 'youtube' && !formik.values.youtubeLink) ||
@@ -251,7 +268,8 @@ const Modal = ({ isOpen, onClose }) => {
                             {formik.isSubmitting ? 'Submitting...' : 'Submit'}
                         </button>
                     </div>
-                </form>
+                        </form>
+                
             </div>
         </div>
     );
