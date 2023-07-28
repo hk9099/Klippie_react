@@ -109,7 +109,7 @@ function Signup({ errors, touched }) {
             confirmPassword: values.confirmPassword,
         };
         axios
-            .post(process.env.REACT_APP_HOSTING_URL + '/v1/auth/signup', payload)
+            .post('https://api.getklippie.com/v1/auth/signup', payload)
             .then(response => {
                 console.log(response, 'response');
                 var signupToken = response.data.data;

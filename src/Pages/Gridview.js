@@ -35,8 +35,8 @@ const App = () => {
             <Column
                 dataField="description"
                 resizable={true}
-                wordWrapEnabled={true}
-                width={500}
+                width={700}
+                className="whitespace-break-spaces"
             />
             <Column
                 dataField="time"

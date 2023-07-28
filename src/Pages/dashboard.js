@@ -8,8 +8,6 @@ export default function Dashboard() {
   const [projectId, setProjectId] = useState(null);
   const [key, setKey] = useState(0); // Key to reset StepsComponent
   const [stepsRunning, setStepsRunning] = useState(false); // State to track if Steps are running
-  //eslint-disable-next-line
-  const [newVideoButtonEnabled, setNewVideoButtonEnabled] = useState(false);
 
   const handleSubmit = (newProjectId) => {
     setKey((prevKey) => prevKey + 1); // Increment key to reset StepsComponent
@@ -28,17 +26,11 @@ export default function Dashboard() {
 
   // Function to enable the "New Video" button when all APIs are completed
   const handleAllAPIsComplete = () => {
-    setNewVideoButtonEnabled(true);
     stopSteps();
   };
 
   // Function to handle the click on the "New Video" button
-//eslint-disable-next-line
-  const handleNewVideoButtonClick = () => {
-    // Perform the desired action when the button is clicked
-    console.log('New Video Button Clicked!');
-    // You can also reset the state or perform any other action as needed.
-  };
+
 
   return (
     <div className="flex flex-auto h-screen">
@@ -55,14 +47,7 @@ export default function Dashboard() {
           />
         )}
         {!projectId && <Modal onSubmit={handleSubmit} />}
-        {/* {newVideoButtonEnabled && (
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleNewVideoButtonClick}
-          >
-            New Video
-          </button>
-        )} */}
+       
       </div>
     </div>
   );
