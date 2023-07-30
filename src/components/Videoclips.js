@@ -9,8 +9,8 @@ import "devextreme/dist/css/dx.light.css";
 import { customers } from "../components/data.js";
 import VideoPlayer from "../Pages/videoplayer.js";
 import DropDownButton from "../components/GridDropdown.js";
-import { LoadingIndicator } from "devextreme-react/bar-gauge.js";
-import { LoadPanel } from "devextreme-react";
+// import { LoadingIndicator } from "devextreme-react/bar-gauge.js";
+// import { LoadPanel } from "devextreme-react";
 const Videoclips = ({ setVideoCount }) => {
 
   useEffect(() => {
