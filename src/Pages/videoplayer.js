@@ -1,5 +1,6 @@
-import React from "react";
+import React,{useState  } from "react";
 import { JolPlayer } from "jol-player";
+import { HiOutlineDownload } from "react-icons/hi";
 
 
 const videoOptions = {
@@ -31,18 +32,60 @@ const videoOptions = {
     videoType: "h264",
     isToast: false,
     toastPosition: "",
-    isProgressFloat: true,
-    progressFloatPosition: "bt",
+    isProgressFloat: false,
+    progressFloatPosition: "",
     mode: "scaleToFill",
 };
+const VideoPlayer = ({ src }) => {
+    const [isLoading, setIsLoading] = useState(false);
 
-const VideoPlayer = ({ src }) => (
-        <JolPlayer className="w-[450px!important] h-[250px!important] m-auto"
-            option={{
-                videoSrc: [src], // Pass the video source from the parent component
-                ...videoOptions,
-            }}
-        />
-);
+    const handleDownload = async () => {
+        try {
+            setIsLoading(true);
+
+            const response = await fetch(src);
+            const videoBlob = await response.blob();
+
+            const blobURL = URL.createObjectURL(videoBlob);
+
+            const downloadLink = document.createElement("a");
+            downloadLink.href = blobURL;
+            downloadLink.download = `${src}.mp4`
+            document.body.appendChild(downloadLink);
+
+            // Programmatically click the link to trigger the download
+            downloadLink.click();
+
+            // Clean up: Remove the download link and revoke the Blob object URL
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(blobURL);
+
+            setIsLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+            console.error("Error while downloading the video:", error);
+        }
+    };
+
+    return (
+        <>
+            <JolPlayer
+                className="w-[400px!important] h-[230px!important] m-auto"
+                option={{
+                    videoSrc: [src],
+                    ...videoOptions,
+                }}
+            />
+            <button className="Download_button m-auto mt-2" onClick={handleDownload}>
+                <HiOutlineDownload />
+                {isLoading ? "Downloading..." : "Download Video"}
+            </button>
+        </>
+    );
+};
 
 export default VideoPlayer;
+
+
+
+

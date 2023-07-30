@@ -1,53 +1,122 @@
-import React, { useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import Navbar from '../components/Navbar';
-import StepsComponent from '../components/Steps';
-import Modal from '../components/Modal';
+import React, { useState } from "react";
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import StepsComponent from "../components/Steps";
+import Modal from "../components/Modal";
+import Mainvideo from "../components/Mainvideo";
+import Videoclips from "../components/Videoclips";
+import "../assets/css/Sidebar.css";
+
+import {
+  Accordion,
+  AccordionBody,
+  AccordionHeader,
+  AccordionItem,
+} from "react-headless-accordion";
+import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 
 export default function Dashboard() {
   const [projectId, setProjectId] = useState(null);
-  const [key, setKey] = useState(0); // Key to reset StepsComponent
-  const [stepsRunning, setStepsRunning] = useState(false); // State to track if Steps are running
+  const [key, setKey] = useState(0);
+  const [stepsRunning, setStepsRunning] = useState(false);
+  const [openStates, setOpenStates] = useState([true, true]);
+  const [videoCount, setVideoCount] = useState(0);
 
   const handleSubmit = (newProjectId) => {
-    setKey((prevKey) => prevKey + 1); // Increment key to reset StepsComponent
-    setProjectId(newProjectId); // Set the new project ID
+    setKey((prevKey) => prevKey + 1);
+    setProjectId(newProjectId);
   };
 
-  // Function to start Steps and set stepsRunning to true
   const startSteps = () => {
     setStepsRunning(true);
   };
 
-  // Function to stop Steps and set stepsRunning back to false
   const stopSteps = () => {
     setStepsRunning(false);
   };
 
-  // Function to enable the "New Video" button when all APIs are completed
   const handleAllAPIsComplete = () => {
     stopSteps();
   };
 
-  // Function to handle the click on the "New Video" button
-
+  const toggleAccordion = (index) => {
+    setOpenStates((prev) =>
+      prev.map((state, i) => (i === index ? !state : state))
+    );
+  };
 
   return (
-    <div className="flex flex-auto h-screen">
-      <Sidebar setProjectId={setProjectId} stepsRunning={stepsRunning} />
-      <div className="grow">
-        <Navbar />
-        {projectId && (
-          <StepsComponent
-            projectId={projectId}
-            key={key}
-            onStart={startSteps}
-            onStop={stopSteps}
-            onAllAPIsComplete={handleAllAPIsComplete}
-          />
-        )}
-        {!projectId && <Modal onSubmit={handleSubmit} />}
-       
+    <div className="h-screen">
+      <div className="flex h-full">
+        <Sidebar setProjectId={setProjectId} stepsRunning={stepsRunning} />
+        <div className="w-full overflow-x-auto">
+          <Navbar />
+          {projectId && (
+            <StepsComponent
+              projectId={projectId}
+              key={key}
+              onStart={startSteps}
+              onStop={stopSteps}
+              onAllAPIsComplete={handleAllAPIsComplete}
+            />
+          )}
+          {!projectId && <Modal onSubmit={handleSubmit} />}
+          <div className="flex-grow-0 flex-shrink-0 w-[100%] h-[90%] overflow-y-auto overflow-x-scroll">
+            <Accordion alwaysOpen={true} className="p-4">
+              <AccordionItem isActive={openStates[0]}>
+                <AccordionHeader
+                  onClick={() => toggleAccordion(0)}
+                  className="cursor-pointer flex items-center justify-between"
+                >
+                  <div className="flex items-center">
+                    {openStates[0] ? (
+                      <FiChevronDown className="mr-2 dark:text-gray-200 text-gray-600 text-lg font-bold" />
+                    ) : (
+                      <FiChevronRight className="mr-2 dark:text-gray-200 text-gray-600 text-lg font-bold" />
+                    )}
+                    <h3 className="dark:text-gray-200 text-gray-800 text-lg font-semibold">
+                      Main Video
+                    </h3>
+                  </div>
+                </AccordionHeader>
+                <AccordionBody>
+                  <div className="relative w-full h-fit overflow-y-auto rounded-[10px] border border-gray-200 dark:border-gray-700 z-10">
+                    <Mainvideo />
+                  </div>
+                </AccordionBody>
+              </AccordionItem>
+
+              <AccordionItem isActive={openStates[1]}>
+                <AccordionHeader
+                  onClick={() => toggleAccordion(1)}
+                  className="cursor-pointer flex items-center justify-between mt-3"
+                >
+                  <div className="flex items-center">
+                    {openStates[1] ? (
+                      <FiChevronDown className="mr-2 dark:text-gray-200 text-gray-600 text-lg font-bold" />
+                    ) : (
+                      <FiChevronRight className="mr-2 dark:text-gray-200 text-gray-600 text-lg font-bold" />
+                    )}
+                    <h3 className="dark:text-gray-200 text-gray-800 text-lg font-semibold">
+                      Video Clips{" "}
+                      <span className="text-sm font-thin text-gray-400">
+                        ({videoCount})
+                      </span>
+                    </h3>
+                  </div>
+                </AccordionHeader>
+
+
+                <AccordionBody>
+                  <div className="relative w-full h-fit overflow-y-auto rounded-[10px] border border-gray-200 dark:border-gray-700 z-10">
+                    <Videoclips setVideoCount={setVideoCount} />
+                  </div>
+                </AccordionBody>
+              </AccordionItem>
+
+            </Accordion>
+          </div>
+        </div>
       </div>
     </div>
   );

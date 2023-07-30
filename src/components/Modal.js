@@ -1,12 +1,12 @@
-import React, { useState , useEffect } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import qs from 'qs';
-import FilestackUploader from './FileStackPicker';
+import React, { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import qs from "qs";
+import FilestackUploader from "./FileStackPicker";
 
 const Modal = ({ onSubmit, isOpen, onClose }) => {
-    const [selectedOption, setSelectedOption] = useState('upload');
+    const [selectedOption, setSelectedOption] = useState("upload");
     //eslint-disable-next-line
     const [isLoading, setIsLoading] = useState(false);
     const [uploadedFileUrl, setUploadedFileUrl] = useState(null);
@@ -23,27 +23,53 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
         setUploadedFileName(null);
     };
 
-
     const youtubeValidationSchema = Yup.object({
-        title: Yup.string().required('Title is required'),
-        description: Yup.string().required('Description is required'),
-        youtubeLink: Yup.string().required('YouTube link is required'),
+        title: Yup.string().required("Title is required"),
+        description: Yup.string().required("Description is required"),
+        youtubeLink: Yup.string().required("YouTube link is required"),
     });
 
     const uploadValidationSchema = Yup.object({
-        title: Yup.string().required('Title is required'),
-        description: Yup.string().required('Description is required'),
-        file: Yup.mixed().required('File is required'),
+        title: Yup.string().required("Title is required"),
+        description: Yup.string().required("Description is required"),
+        file: Yup.mixed().required("File is required"),
     });
 
+    function convertYouTubeUrl(youtubeLink) {
+        const shortFormatRegex = /https:\/\/youtu.be\/([a-zA-Z0-9_-]+)/;
+
+        const longFormatRegex =
+            /https:\/\/www.youtube.com\/watch\?v=([a-zA-Z0-9_-]+)/;
+
+        const isShortFormat = shortFormatRegex.test(youtubeLink);
+
+        const isLongFormat = longFormatRegex.test(youtubeLink);
+
+        if (isLongFormat) {
+            return youtubeLink;
+        }
+
+        if (isShortFormat) {
+            const match = youtubeLink.match(shortFormatRegex);
+            if (match && match[1]) {
+                const videoId = match[1];
+                return `https://www.youtube.com/watch?v=${videoId}`;
+            }
+        }
+
+        return youtubeLink;
+    }
+
     const validationSchema =
-        selectedOption === 'youtube' ? youtubeValidationSchema : uploadValidationSchema;
+        selectedOption === "youtube"
+            ? youtubeValidationSchema
+            : uploadValidationSchema;
 
     const formik = useFormik({
         initialValues: {
-            title: '',
-            description: '',
-            youtubeLink: '',
+            title: "",
+            description: "",
+            youtubeLink: "",
             file: null,
         },
         validationSchema,
@@ -53,10 +79,12 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                 let data = {};
 
                 if (validationSchema === youtubeValidationSchema) {
+                    // Convert the YouTube URL format before submitting
+                    const youtubeLink = convertYouTubeUrl(values.youtubeLink);
                     data = {
                         name: values.title,
                         description: values.description,
-                        yt_url: values.youtubeLink,
+                        yt_url: youtubeLink,
                     };
                 } else {
                     data = {
@@ -66,18 +94,18 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                     };
                 }
 
-                const encodedToken = localStorage.getItem('_sodfhgiuhih');
+                const encodedToken = localStorage.getItem("_sodfhgiuhih");
                 if (encodedToken) {
                     var decodedToken = atob(encodedToken);
                     const userInfo = JSON.parse(decodedToken);
                     var Token = userInfo.token.access_token;
                 }
 
-                const apiUrl = 'https://api.getklippie.com/v1/project/create';
+                const apiUrl = "https://api.getklippie.com/v1/project/create";
                 const config = {
                     headers: {
-                        accept: 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded',
+                        accept: "application/json",
+                        "Content-Type": "application/x-www-form-urlencoded",
                         Authorization: `Bearer ${Token}`,
                     },
                 };
@@ -85,16 +113,16 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                 const response = await axios.post(apiUrl, qs.stringify(data), config);
 
                 if (response.status === 200) {
-                    console.log('API call successful:', response.data.data.id);
+                    console.log("API call successful:", response.data.data.id);
                     var projectId = response.data.data.id;
                     onSubmit(projectId); // Call the Dashboard's handleSubmit function with the new project ID
                 } else {
-                    console.error('API call error:', response.data);
+                    console.error("API call error:", response.data);
                 }
 
                 resetFormAndFileStack();
             } catch (error) {
-                console.error('Error submitting form:', error);
+                console.error("Error submitting form:", error);
             } finally {
                 setIsLoading(false);
                 setSubmitting(false);
@@ -103,22 +131,28 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
     });
 
     useEffect(() => {
-        formik.setFieldValue('file', uploadedFileUrl);
+        formik.setFieldValue("file", uploadedFileUrl);
         // eslint-disable-next-line
     }, [uploadedFileUrl]);
-
-    
 
     if (!isOpen) return null;
 
     return (
-        <div className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50" style={{ margin: '0px' }}>
-            <div className="bg-white p-8 rounded-lg w-96">
-                <h2 className="text-xl font-medium mb-4">Create a new post</h2>
-                
+        <div
+            className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
+            style={{ margin: "0px" }}
+        >
+            <div className=" p-8 rounded-lg w-96 bg-white dark:bg-gray-800 shadow-lg">
+                <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-white font-poppins">
+                    Create a new post
+                </h2>
+
                 <form onSubmit={formik.handleSubmit}>
                     <div className="mb-4">
-                        <label htmlFor="title" className="block font-medium text-gray-800">
+                        <label
+                            htmlFor="title"
+                            className="block font-medium text-gray-800 dark:text-gray-200"
+                        >
                             Title
                         </label>
                         <input
@@ -126,9 +160,9 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                             id="title"
                             name="title"
                             className={`mt-1 block w-full border ${formik.errors.title && formik.touched.title
-                                ? 'border-red-500'
-                                : 'border-gray-300'
-                                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                ? "border-red-500"
+                                : "border-gray-300"
+                                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200`}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.title}
@@ -139,7 +173,10 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                     </div>
 
                     <div className="mb-4">
-                        <label htmlFor="description" className="block font-medium text-gray-800">
+                        <label
+                            htmlFor="description"
+                            className="block font-medium text-gray-800 dark:text-gray-200"
+                        >
                             Description
                         </label>
                         <textarea
@@ -147,9 +184,9 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                             name="description"
                             rows="4"
                             className={`mt-1 block w-full border ${formik.errors.description && formik.touched.description
-                                ? 'border-red-500'
-                                : 'border-gray-300'
-                                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                ? "border-red-500"
+                                : "border-gray-300"
+                                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200`}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.description}
@@ -168,11 +205,14 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 id="youtube"
                                 name="option"
                                 value="youtube"
-                                checked={selectedOption === 'youtube'}
-                                onChange={() => setSelectedOption('youtube')}
+                                checked={selectedOption === "youtube"}
+                                onChange={() => setSelectedOption("youtube")}
                                 className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                             />
-                            <label htmlFor="youtube" className="ml-2">
+                            <label
+                                htmlFor="youtube"
+                                className="ml-2 text-gray-800 dark:text-gray-200"
+                            >
                                 YouTube Link
                             </label>
                         </div>
@@ -182,20 +222,25 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 id="upload"
                                 name="option"
                                 value="upload"
-                                checked={selectedOption === 'upload'}
-                                onChange={() => setSelectedOption('upload')}
+                                checked={selectedOption === "upload"}
+                                onChange={() => setSelectedOption("upload")}
                                 className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                             />
-                            <label htmlFor="upload" className="ml-2">
+                            <label
+                                htmlFor="upload"
+                                className="ml-2 text-gray-800 dark:text-gray-200"
+                            >
                                 Upload Image/Video
                             </label>
                         </div>
                     </div>
 
-
-                    {selectedOption === 'youtube' ? (
+                    {selectedOption === "youtube" ? (
                         <div className="mb-4">
-                            <label htmlFor="youtubeLink" className="block font-medium text-gray-800">
+                            <label
+                                htmlFor="youtubeLink"
+                                className="block font-medium text-gray-800"
+                            >
                                 YouTube Link
                             </label>
                             <input
@@ -203,15 +248,17 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 id="youtubeLink"
                                 name="youtubeLink"
                                 className={`mt-1 block w-full border ${formik.errors.youtubeLink && formik.touched.youtubeLink
-                                    ? 'border-red-500'
-                                    : 'border-gray-300'
+                                    ? "border-red-500"
+                                    : "border-gray-300"
                                     } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.youtubeLink}
                             />
                             {formik.errors.youtubeLink && formik.touched.youtubeLink && (
-                                <p className="text-red-500 text-sm mt-1">{formik.errors.youtubeLink}</p>
+                                <p className="text-red-500 text-sm mt-1">
+                                    {formik.errors.youtubeLink}
+                                </p>
                             )}
                         </div>
                     ) : (
@@ -221,7 +268,9 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                     <p
                                         id="filename"
                                         className="mt-1  w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 select-none"
-                                    >{uploadedFileName}</p>
+                                    >
+                                        {uploadedFileName}
+                                    </p>
                                     <input
                                         type="text"
                                         id="file"
@@ -233,22 +282,30 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                             ) : (
                                 <button
                                     type="button"
-                                    className={`flex items-center justify-center w-full gap-x-6 p-3 text-base rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border-2 border-gray-500 dark:border-gray-100 mt-2 border-animation`}
-                                    onClick={handleFilestackOpen} // Set the event handler to open FilestackPicker
+                                    className={`flex items-center justify-center w-full gap-x-6 p-3 text-base rounded-lg cursor-pointer mt-2 border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200`}
+                                    onClick={handleFilestackOpen}
                                     id="uploadBtn"
                                 >
-                                    <span className={` origin-left duration-300 hover:block font-medium text-sm text-center`}>
+                                    <span
+                                        className={` origin-left duration-300 hover:block font-medium text-sm text-center`}
+                                    >
                                         Upload Image/Video
                                     </span>
                                 </button>
                             )}
                         </div>
                     )}
-                    {isFilestackOpen && <FilestackUploader onClose={() => setIsFilestackOpen(false)} setUploadedFileUrl={setUploadedFileUrl} setUploadedFileName={setUploadedFileName} />}
+                    {isFilestackOpen && (
+                        <FilestackUploader
+                            onClose={() => setIsFilestackOpen(false)}
+                            setUploadedFileUrl={setUploadedFileUrl}
+                            setUploadedFileName={setUploadedFileName}
+                        />
+                    )}
                     <div className="flex justify-end">
                         <button
                             type="button"
-                            className="mr-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            className="mr-2 px-4 py-2 rounded-lg font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             onClick={() => {
                                 resetFormAndFileStack();
                                 onClose();
@@ -258,18 +315,20 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                         </button>
                         <button
                             type="submit"
-                            className={`px-4 py-2 bg-blue-500 text-white rounded-lg font-medium ${formik.isSubmitting ? 'opacity-75 cursor-wait' : 'hover:bg-blue-600'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`px-4 py-2 bg-blue-500 text-white rounded-lg font-medium ${formik.isSubmitting
+                                ? "opacity-75 cursor-wait"
+                                : "hover:bg-blue-600 dark:hover:bg-blue-600 cursor-pointer grab:cursor grab:transition-all grab:duration-200"
+                                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             disabled={
                                 formik.isSubmitting ||
-                                (selectedOption === 'youtube' && !formik.values.youtubeLink) ||
-                                (selectedOption === 'upload' && !formik.values.file)
+                                (selectedOption === "youtube" && !formik.values.youtubeLink) ||
+                                (selectedOption === "upload" && !formik.values.file)
                             }
                         >
-                            {formik.isSubmitting ? 'Submitting...' : 'Submit'}
+                            {formik.isSubmitting ? "Submitting..." : "Submit"}
                         </button>
                     </div>
-                        </form>
-                
+                </form>
             </div>
         </div>
     );

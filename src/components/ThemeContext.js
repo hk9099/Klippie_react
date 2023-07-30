@@ -11,13 +11,13 @@ const getInitialTheme = () => {
         if (userMedia.matches) {
             return 'dark'
         }
-        return 'dark' // light theme as the default;
+        return 'light' 
     }
 }
 export const ThemeContext = React.createContext()
 
 export const ThemeProvider = ({ initialTheme, children }) => {
-    const [theme, setTheme] = useState(getInitialTheme)
+    const [theme, setTheme] = useState(initialTheme || getInitialTheme());
 
     const rawSetTheme = (rawTheme) => {
         const root = window.document.documentElement

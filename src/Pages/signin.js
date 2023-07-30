@@ -20,8 +20,12 @@ import { HiOutlineMail } from 'react-icons/hi';
 
 function Signin() {
     const navigate = useNavigate();
+    useEffect(() => {
+        localStorage.setItem('color-theme', 'light');
+    }, []);
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+
 
 
     useEffect(() => {
@@ -79,7 +83,7 @@ function Signin() {
         setIsLoading(true);
         try {
             const response = await axios.post(
-                'https://api.getklippie.com/v1/auth/login',
+                process.env.REACT_APP_HOSTING_URL + '/v1/auth/login',
                 {
                     email: values.email,
                     password: values.password,
@@ -161,7 +165,7 @@ function Signin() {
                                                 name="password"
                                                 placeholder="Password"
                                                 className={`inputbox dark:bg-purple-200 text-black ${errors.password && touched.password ? 'border-red-500' : ''}`}
-                                                autocomplete="current-password"
+                                                autoComplete="current-password"
                                             />
                                             <span className="password-icon" onClick={() => setShowPassword(!showPassword)}>
                                                 {showPassword ? < BsEyeFill /> : < BsEyeSlashFill />}
