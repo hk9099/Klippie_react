@@ -123,11 +123,18 @@ const ApiCaller = () => {
     };
 
     return (
-        <div>
-            {loading && <div className="loader">Loading...</div>}
-            {message && <div className="message">{message}</div>}
-            {error && <div className="error">{error}</div>}
-            <button onClick={makeApiCalls}>Make API Calls</button>
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center">
+                {loading && <div className="mb-4 text-blue-500">Loading...</div>}
+                {message && <div className="mb-4 text-green-500">{message}</div>}
+                {error && <div className="mb-4 text-red-500">{error}</div>}
+                <button
+                    className="px-4 py-2 bg-blue-500 text-white rounded"
+                    onClick={makeApiCalls}
+                >
+                    Make API Calls
+                </button>
+            </div>
         </div>
     );
 };

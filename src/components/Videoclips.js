@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import DataGrid, {
   Column,
   Selection,
@@ -15,7 +15,7 @@ const Videoclips = ({ setVideoCount }) => {
 
   useEffect(() => {
     setVideoCount(customers.length);
-  }, [setVideoCount]); 
+  }, [setVideoCount]);
 
   return (
     <DataGrid
@@ -23,12 +23,9 @@ const Videoclips = ({ setVideoCount }) => {
       keyExpr="id"
       showBorders={true}
       columnAutoWidth={true}
-      width={"100%"}
       showRowLines={true}
       showColumnLines={true}
     >
-      <LoadPanel enabled={true} />
-      <LoadingIndicator enabled={true} />
       <Selection
         mode="multiple"
         selectAllMode="allPages"
@@ -39,26 +36,52 @@ const Videoclips = ({ setVideoCount }) => {
         showPageSizeSelector={true}
         showInfo={true}
         showNavigationButtons={true}
-        visible={true}
+        visible={false}
       />
       <Column
         dataField="video"
         caption="Video"
-        cellRender={(rowData) => <VideoPlayer src={rowData.data?.src? rowData.data.src : ""} />}
-        resizable={true}
+        cellRender={(rowData) =>
+          <div >
+            <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} />
+          </div>
+        }
+        width={460}
+      />
+      <Column
+        dataField="title"
+        className="whitespace-break-spaces"
+        width={200}
       />
       <Column
         dataField="description"
-        resizable={true}
-        className="whitespace-break-spaces"
+        width={500}
+        cellRender={(rowData) => (
+          <div style={{ textAlign: "left", fontFamily: 'sans-serif' }}>
+            {rowData.data.description}
+          </div>
+        )}
       />
-      <Column dataField="time" resizable={true} columnAutoWidth={true} />
       <Column
-
+        dataField="time"
+        columnAutoWidth={true}
+        cellRender={(rowData) => (
+          <div style={{ textAlign: "center" }}>
+            {rowData.data.time}
+          </div>
+        )}
+      />
+      <Column
         dataField="Action"
         resizable={true}
         columnAutoWidth={true}
-        cellRender={(rowData) => <DropDownButton />}
+        cellRender={(rowData) => (
+          <div style={{ textAlign: "center" }}>
+            {/* Replace DropDownButton with your action button component */}
+            <DropDownButton />
+          </div>
+        )}
+        width={200}
       />
     </DataGrid>
   );

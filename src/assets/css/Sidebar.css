@@ -101,7 +101,11 @@
 
 .dx-checkbox-icon{
     background: transparent!important;
-    border: 1px solid rgba(255, 255, 255, 0.12)!important;
+    border: 1px solid rgb(255, 255, 255)!important;
+}
+
+.dx-checkbox-checked .dx-checkbox-icon{
+  color: #fff!important;
 }
 
 /* loader */
@@ -181,35 +185,14 @@
   bottom: -4px;
   z-index: -1;
   border-radius: inherit;
-  background: linear-gradient(269.17deg, #6847FF,
-      #7F6CF3,
-      #94D8FF,
-      #3DA592,
-      #AEC4F3,
-      #B6F0FF,
-      #88B7B5,
-      #9EB9B9,
-      #F3F1F5,
-      #D3E4F5,
-      #FCE8A1,
-      #B388EB,
-      #FFC9B5,
-      #A5C7D6);
-  background-size: 300% 300%;
-  animation: gradient-border-animation 5s linear infinite;
+ background: linear-gradient(269.17deg, #6847FF 2.34%, #7F6CF3 34.2%, #94D8FF 69.21%, #3DA592 96.45%),
+linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
 }
 
-
-@keyframes gradient-border-animation {
-  0% {
-    background-position: 0 0;
-  }
-
-  100% {
-    background-position: 100% 100%;
-  }
-
+.dx-datagrid .dx-row > td{
+  padding: 18px!important;
 }
+
 
 .JoL-controls-container:after{
   background-color: transparent!important;
@@ -234,6 +217,18 @@ align-items: center;
 gap: 12px;
 }
 
-.custom-action-column{
-
+.dashborardbg::after{
+  position: absolute;
+content: '';
+top: 0;
+left: 50%;
+right: 50%;
+transform: translate(-50%, -50%);
+  width: 825px;
+height: 825px;
+flex-shrink: 0;
+border-radius: 825px;
+background: var(--background-highlight, rgba(89, 82, 130, 0.40));
+filter: blur(150px);
+/* z-index: 9999999999999999999999; */
 }

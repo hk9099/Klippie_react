@@ -49,7 +49,7 @@ export default function Dashboard() {
     <div className="h-screen">
       <div className="flex h-full">
         <Sidebar setProjectId={setProjectId} stepsRunning={stepsRunning} />
-        <div className="w-full overflow-x-auto">
+        <div className="w-full overflow-x-auto dashborardbg">
           <Navbar />
           {projectId && (
             <StepsComponent
@@ -66,7 +66,7 @@ export default function Dashboard() {
               <AccordionItem isActive={openStates[0]}>
                 <AccordionHeader
                   onClick={() => toggleAccordion(0)}
-                  className="cursor-pointer flex items-center justify-between"
+                  className="cursor-pointer flex items-center justify-between mt-2 mb-3"
                 >
                   <div className="flex items-center">
                     {openStates[0] ? (
@@ -74,7 +74,7 @@ export default function Dashboard() {
                     ) : (
                       <FiChevronRight className="mr-2 dark:text-gray-200 text-gray-600 text-lg font-bold" />
                     )}
-                    <h3 className="dark:text-gray-200 text-gray-800 text-lg font-semibold">
+                    <h3 className="dark:text-gray-200 text-gray-800 text-xl font-normal font-Satoshi ">
                       Main Video
                     </h3>
                   </div>
@@ -89,7 +89,7 @@ export default function Dashboard() {
               <AccordionItem isActive={openStates[1]}>
                 <AccordionHeader
                   onClick={() => toggleAccordion(1)}
-                  className="cursor-pointer flex items-center justify-between mt-3"
+                  className="cursor-pointer flex items-center justify-between mt-4 mb-4"
                 >
                   <div className="flex items-center">
                     {openStates[1] ? (
@@ -97,7 +97,7 @@ export default function Dashboard() {
                     ) : (
                       <FiChevronRight className="mr-2 dark:text-gray-200 text-gray-600 text-lg font-bold" />
                     )}
-                    <h3 className="dark:text-gray-200 text-gray-800 text-lg font-semibold">
+                    <h3 className="dark:text-gray-200 text-gray-800 text-xl font-normal font-Satoshi">
                       Video Clips{" "}
                       <span className="text-sm font-thin text-gray-400">
                         ({videoCount})

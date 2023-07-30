@@ -14,22 +14,6 @@ const Mainvideo = () => {
   //   }
   // };
 
-  // const handleDownload = () => {
-  //   if (selectedVideoSrc) {
-  //     fetch(selectedVideoSrc)
-  //       .then((response) => response.blob())
-  //       .then((blob) => {
-  //         const downloadLink = document.createElement('a');
-  //         downloadLink.href = URL.createObjectURL(blob);
-  //         downloadLink.download = 'video.mp4';
-  //         downloadLink.click();
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error downloading video:', error);
-  //       });
-  //   }
-  // };
-
   return (
     <div>
       <DataGrid
@@ -37,29 +21,38 @@ const Mainvideo = () => {
         keyExpr="id"
         showBorders={true}
         columnAutoWidth={true}
-        width={'100%'}
         showRowLines={true}
         showColumnLines={true}
         // onSelectionChanged={onSelectionChanged}
       >
-        <Selection mode="multiple" selectAllMode="allPages" showCheckBoxesMode="always" />
-        <Paging defaultPageSize={20} />
-        <Pager showPageSizeSelector={true} showInfo={true} showNavigationButtons={true} />
+        {/* <Selection mode="multiple" selectAllMode="allPages" showCheckBoxesMode="always" /> */}
         <Column
           dataField="video"
           caption="Video"
           cellRender={(rowData) => <VideoPlayer src={rowData.data.src} />}
-          resizable={true}
+          width={460}
         />
-        <Column dataField="description" resizable={true} className="whitespace-break-spaces" />
-        <Column dataField="time" resizable={true} columnAutoWidth={true} />
-        {/* <Column dataField="Action" resizable={true} columnAutoWidth={true} /> */}
+        <Column
+          dataField="title"
+          className="whitespace-break-spaces"
+          width={200}
+        />
+        <Column
+          dataField="description"
+          className="whitespace-break-spaces"
+          
+        />
+        <Column
+          dataField="time"
+          columnAutoWidth={true}
+          cellRender={(rowData) => (
+            <div style={{ textAlign: "center" }}>
+              {rowData.data.time}
+            </div>
+          )}
+          width={200}
+        />
       </DataGrid>
-      {/* {selectedVideoSrc && (
-        <button style={{ marginTop: '10px' }}>
-          Download Video
-        </button>
-      )} */}
     </div>
   );
 };

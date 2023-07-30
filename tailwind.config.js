@@ -30,6 +30,7 @@ module.exports = {
     fontFamily: {
       sans: ['Inter', 'sans-serif'],
       poppins: ['Poppins', 'sans-serif'],
+      Satoshi: ['Satoshi', 'sans-serif'],
     }
   },
   plugins: [

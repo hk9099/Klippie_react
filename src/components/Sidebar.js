@@ -164,7 +164,7 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
       <div
         className={`${
           open ? "w-[260px]" : "w-fit"
-        } fixed top-0 p-2  z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100 border-r border-gray-200 dark:border-gray-600 dark:bg-custom-color-dark`}
+        } fixed top-0 p-2  z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}
       >
         <BsArrowLeftCircle
           className={`${
@@ -178,7 +178,7 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
           <div
             className={`flex ${
               open && "justify-center"
-            } justify-center items-center select-none`}
+            } justify-center items-center select-none px-[10px]`}
           >
             <img
               src={Logo}
@@ -196,9 +196,9 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
             )}
           </div>
         </Link>
-        <div className="pt-6">
+        <div className="pt-3">
           <button
-            className={`flex items-center w-full gap-x-6 p-1 text-base rounded-full cursor-pointer dark:text-white  border-animation ${
+            className={`flex items-center w-full gap-x-6 p-[0.10rem] text-base rounded-full cursor-pointer dark:text-white  border-animation ${
               !open && "justify-center"
             } ${stepsRunning ? "cursor-not-allowed opacity-50" : ""}`}
             onClick={handleAddNewVideo}
@@ -219,11 +219,11 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
               <span
                 className={`${
                   !open && "hidden"
-                } origin-left duration-300 hover:block font-medium text-sm ${
+                } origin-left duration-300 hover:block font-medium text-sm font-Satoshi ${
                   stepsRunning ? "text-gray-500 dark:text-gray-300" : "" // Change color when disabled
                 }`}
               >
-                Add New Video/Audio
+                New Audio / Video
               </span>
             </div>
           </button>
@@ -237,15 +237,15 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
             setProjectId={setProjectId}
           />
         )}
-        <div className="border-t border-white/20 flex-grow overflow-y-auto backdrop-blur-xl	">
+        <div className=" flex-grow overflow-y-auto backdrop-blur-xl	">
           <div className={`overflow-hidden ${!open && "hidden"} relative`}>
             {lines.map((line, index) => (
               <div
                 key={index}
-                className="width-content row relative  my-2 rounded"
+                className="width-content row relative  my-3 "
               >
                 <p
-                  className="py-2 px-2  text-sm font-medium text-gray-700 dark:text-gray-500 rounded cursor-pointer hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                  className="py-2 px-2  text-sm font-medium text-gray-700 dark:text-gray-500 cursor-pointer hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
                   style={{
                     width: "243px",
                     whiteSpace: "nowrap",
@@ -266,7 +266,7 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
             ))}
           </div>
         </div>
-        <div className={` bottom-0 left-0 right-0 border-t border-white/20`}>
+        <div className={` bottom-0 left-0 right-0 `}>
           <div className=" flex flex-col gap-1">
             <Menu as="div" className="relative inline-block text-left">
               <Menu.Button

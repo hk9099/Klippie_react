@@ -44,7 +44,7 @@ export default function DownloadButton() {
             <div
                 id="dropdown"
                 className={`z-10 ${isDropdownOpen ? 'block' : 'hidden'
-                    } bg-black divide-y divide-gray-100 border-t-[1px] mt-2 shadow w-[8rem] dark:bg-transparent`}
+                    } bg-black divide-y divide-gray-100 border-t-[1px] mt-2 shadow w-[8rem] dark:bg-transparent m-auto mt-2`}
             >
                 <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                     <li>
