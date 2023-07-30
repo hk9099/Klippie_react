@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid, { Column, Selection, Paging, Pager } from 'devextreme-react/data-grid';
+import DataGrid, { Column } from 'devextreme-react/data-grid';
 import 'devextreme/dist/css/dx.light.css';
 import { customer } from '../components/data.js';
 import VideoPlayer from '../Pages/videoplayer.js';
