@@ -7,7 +7,7 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
     // eslint-disable-next-line no-unused-vars
     const [isLoading, setIsLoading] = useState(false); 
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
-    console.log('avatar', avatar);
+    // console.log('avatar', avatar);
 
     const validationSchema = Yup.object({
         userNickname: Yup.string().required('Required'),

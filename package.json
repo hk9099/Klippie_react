@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@emotion/react": "^11.11.1",
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
     "@react-icons/all-files": "^4.1.0",
@@ -33,6 +34,7 @@
     "react-router-dom": "^6.13.0",
     "react-scripts": "5.0.1",
     "react-sidebar": "^3.0.2",
+    "react-spinners": "^0.13.8",
     "react-step-progress": "^1.0.3",
     "react-switch": "^7.0.0",
     "react-toastify": "^9.1.3",

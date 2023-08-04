@@ -1,43 +1,20 @@
 
 
-export const customers = [{
-    id: 1,
-    src: "https://cdn.filestackcontent.com/IWkhUKnXRa6BINxeNniO",
-    title : "This is a video",
-    description: "If you want to report a bug, request a feature, or ask a question, submit an issue to this repo. Alternatively, you can contact us at the DevExpress Support Center if you own an active DevExtreme license.",
-    time: "1:00",
-    Action: "process"
-}, {
-    id: 2,
-    src: "https://cdn.filestackcontent.com/w1LcGTUR8SCJIpeP3G37",
-    title : "This is a video",
-    description: "This is a video",
-    time: "1:00",
-    Action: "process"
-}, {
-    id: 3,
-    src: "https://cdn.filestackcontent.com/IWkhUKnXRa6BINxeNniO",
-    title : "This is a video",
-    description: "This is a video",
-    time: "1:00",
-    Action: "process"
-}, {
-    id: 4,
-    src: "https://cdn.filestackcontent.com/IWkhUKnXRa6BINxeNniO",
-    title : "This is a video",
-    description: "This is a video",
-    time: "1:00",
-    Action: "process"
-    }];
+export const VideoClips = [
+    {
+        id: "38d0172b-6032-4485-9d07-7285ee8bdedc",
+        src: "https://cdn.filestackcontent.com/hvA8S3iFTuW2UpNUs8Ba",
+        title: " Importance of Developer Community",
+        description: " Importance of developer community in unlocking opportunities",
+        status: "IN_REVIEW"
+    }
+];
 
 
 
 
-export const customer = [{
-    id:5,
-    src: "https://cdn.filestackcontent.com/IWkhUKnXRa6BINxeNniO",
-    title : "This is a video",
-    description: "If you want to report a bug, request a feature, or ask a question, submit an issue to this repo. Alternatively, you can contact us at the DevExpress Support Center if you own an active DevExtreme license.",
-    time: "1:00",
-    Action: "process"
-}];
+export let MainVideo = [];
+
+export const updateMainVideo = (newMainVideo) => {
+    MainVideo = newMainVideo;
+};

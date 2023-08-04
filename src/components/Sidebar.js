@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { BsArrowLeftCircle } from "react-icons/bs";
 import { AiOutlinePlus } from "react-icons/ai";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Menu } from "@headlessui/react";
@@ -12,6 +11,7 @@ import Modal from "./Modal";
 import UserModal from "./UserModal";
 import axios from "axios";
 import DropdownMenu from "./DropdownMenu";
+import { HiArrowNarrowLeft } from "react-icons/hi";
 
 const Sidebar = ({ setProjectId, stepsRunning }) => {
   const navigate = useNavigate();
@@ -114,7 +114,7 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
           setUserNickname(userNickname);
           setUserEmailAddress(userEmailAddress);
 
-          console.log(userAvatar, "userAvatar");
+          // console.log(userAvatar, "userAvatar");
         })
         .catch((error) => {
           console.log(error);
@@ -128,7 +128,7 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
       setUserNickname(userNickname);
       setUserEmailAddress(userEmailAddress);
 
-      console.log(userAvatar, "userAvatar");
+      // console.log(userAvatar, "userAvatar");
     } else {
       userAvatar = "";
       userNickname = "";
@@ -166,7 +166,7 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
           open ? "w-[260px]" : "w-fit"
         } fixed top-0 p-2  z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}
       >
-        <BsArrowLeftCircle
+        <HiArrowNarrowLeft
           className={`${
             !open && "rotate-180"
           } absolute text-3xl bg-white fill-slate-800  rounded-full cursor-pointer top-9 -right-4 dark:fill-gray-400 dark:bg-custom-color-dark`}
@@ -178,7 +178,7 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
           <div
             className={`flex ${
               open && "justify-center"
-            } justify-center items-center select-none px-[10px]`}
+            } justify-center items-center select-none px-[10px] py-3`}
           >
             <img
               src={Logo}
@@ -196,7 +196,7 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
             )}
           </div>
         </Link>
-        <div className="pt-3">
+        <div className="pt-4 pb-3">
           <button
             className={`flex items-center w-full gap-x-6 p-[0.10rem] text-base rounded-full cursor-pointer dark:text-white  border-animation ${
               !open && "justify-center"
@@ -242,7 +242,7 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
             {lines.map((line, index) => (
               <div
                 key={index}
-                className="width-content row relative  my-3 "
+                className="width-content row relative  my-4 "
               >
                 <p
                   className="py-2 px-2  text-sm font-medium text-gray-700 dark:text-gray-500 cursor-pointer hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"

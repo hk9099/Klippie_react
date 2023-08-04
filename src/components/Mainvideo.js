@@ -1,7 +1,7 @@
 import React from 'react';
-import DataGrid, { Column } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Selection} from 'devextreme-react/data-grid';
 import 'devextreme/dist/css/dx.light.css';
-import { customer } from '../components/data.js';
+import { MainVideo } from '../components/data.js';
 import VideoPlayer from '../Pages/videoplayer.js';
 
 const Mainvideo = () => {
@@ -17,15 +17,16 @@ const Mainvideo = () => {
   return (
     <div>
       <DataGrid
-        dataSource={customer}
+        dataSource={MainVideo}
         keyExpr="id"
         showBorders={true}
         columnAutoWidth={true}
         showRowLines={true}
         showColumnLines={true}
+        sorting={{ mode: 'none' }}
         // onSelectionChanged={onSelectionChanged}
       >
-        {/* <Selection mode="multiple" selectAllMode="allPages" showCheckBoxesMode="always" /> */}
+        <Selection mode="multiple" selectAllMode="allPages" showCheckBoxesMode="always" />
         <Column
           dataField="video"
           caption="Video"
@@ -50,7 +51,7 @@ const Mainvideo = () => {
               {rowData.data.time}
             </div>
           )}
-          width={200}
+          width={150}
         />
       </DataGrid>
     </div>
