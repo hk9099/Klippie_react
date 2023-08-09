@@ -9,7 +9,7 @@ import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import Mainvideo from "./Mainvideo";
 import Videoclips from "./Videoclips";
 
-export default function AccordionSection() {
+export default function AccordionSection({ videoClips }) {
     const [openStates, setOpenStates] = useState([true, true]);
     const [videoCount, setVideoCount] = useState(0);
 
@@ -66,7 +66,7 @@ export default function AccordionSection() {
                     </AccordionHeader>
                     <AccordionBody>
                         <div className="relative w-full h-fit overflow-y-auto rounded-[10px] border border-gray-200 dark:border-gray-700 z-10">
-                            <Videoclips setVideoCount={setVideoCount} />
+                            <Videoclips setVideoCount={setVideoCount} videoClips={videoClips} />
                         </div>
                     </AccordionBody>
                 </AccordionItem>

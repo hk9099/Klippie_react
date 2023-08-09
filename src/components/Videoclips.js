@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import DataGrid, {
   Column,
   Selection,
@@ -6,18 +6,13 @@ import DataGrid, {
   Pager,
 } from "devextreme-react/data-grid";
 import "devextreme/dist/css/dx.light.css";
-import { VideoClips } from "../components/data.js";
 import VideoPlayer from "../Pages/videoplayer.js";
 import DropDownButton from "../components/GridDropdown.js";
-const Videoclips = ({ setVideoCount }) => {
-
-  useEffect(() => {
-    setVideoCount(VideoClips.length);
-  }, [setVideoCount]);
-
+const Videoclips = ({ videoClips }) => {
+  console.log("videoClips", videoClips);
   return (
     <DataGrid
-      dataSource={VideoClips}
+      dataSource={videoClips}
       keyExpr="id"
       showBorders={true}
       columnAutoWidth={true}
@@ -75,13 +70,13 @@ const Videoclips = ({ setVideoCount }) => {
         columnAutoWidth={true}
         cellRender={(rowData) => (
           <div style={{ textAlign: "center" }}>
-            {/* Replace DropDownButton with your action button component */}
             <DropDownButton />
           </div>
         )}
         width={200}
       />
     </DataGrid>
+    
   );
 };
 

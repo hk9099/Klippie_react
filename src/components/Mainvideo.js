@@ -36,7 +36,7 @@ const Mainvideo = () => {
         <Column
           dataField="title"
           className="whitespace-break-spaces"
-          width={200}
+          width={150}
         />
         <Column
           dataField="description"

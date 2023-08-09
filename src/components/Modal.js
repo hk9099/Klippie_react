@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import qs from "qs";
 import FilestackUploader from "./FileStackPicker";
-import {  updateMainVideo } from "./data";
+import { updateMainVideo } from "./data";
 const Modal = ({ onSubmit, isOpen, onClose }) => {
     const [selectedOption, setSelectedOption] = useState("upload");
     //eslint-disable-next-line
@@ -111,41 +111,21 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                 };
 
                 const response = await axios.post(apiUrl, qs.stringify(data), config);
-
                 if (response.status === 200) {
                     console.log("API call successful:", response.data);
+
                     const title = response.data.data.name;
                     const description = response.data.data.description;
                     const src = response.data.data.video_url;
                     const id = response.data.data.id;
-                    // Create a video element to load the video
-                    var videoElement = document.createElement("video");
-                    videoElement.src = src;
 
-                    videoElement.addEventListener("loadedmetadata", function () {
-                        const videoDuration = videoElement.duration;
-                        // Convert the duration to HH:MM:SS format
-                        const hours = Math.floor(videoDuration / 3600);
-                        const minutes = Math.floor((videoDuration % 3600) / 60);
-                        const seconds = Math.floor(videoDuration % 60);
-                        const time = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    const newMainVideo = [
+                        { title, description, src, id }
+                    ];
+                    updateMainVideo(newMainVideo);
 
-                        // Update the MainVideo array with new data
-                        const newMainVideo = [
-                            { title, description, src, time , id }
-                        ];
-
-                        // Call the updateMainVideo function to update the data in data.js
-                        updateMainVideo(newMainVideo);
-
-                        var projectId = response.data.data.id;
-                        onSubmit(projectId);
-                    });
-
-                    // Handle any errors that might occur during loading
-                    videoElement.addEventListener("error", function () {
-                        console.error("Error loading video:", videoElement.error);
-                    });
+                    var projectId = response.data.data.id;
+                    onSubmit(projectId); 
                 } else {
                     console.error("API call error:", response.data);
                 }
@@ -297,7 +277,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 <div className="relative">
                                     <p
                                         id="filename"
-                                        className="mt-1  w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 select-none"
+                                        className="mt-1  w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 select-none dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                                     >
                                         {uploadedFileName}
                                     </p>
@@ -306,7 +286,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                         id="file"
                                         value={uploadedFileUrl}
                                         readOnly
-                                        className="mt-1  w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden "
+                                        className="mt-1  w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                                     />
                                 </div>
                             ) : (
