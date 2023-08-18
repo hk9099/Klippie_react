@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import DataGrid, {
   Column,
   Selection,
@@ -8,28 +8,40 @@ import DataGrid, {
 import "devextreme/dist/css/dx.light.css";
 import VideoPlayer from "../Pages/videoplayer.js";
 import DropDownButton from "../components/GridDropdown.js";
-const Videoclips = ({ videoClips }) => {
-  console.log("videoClips", videoClips);
+const Videoclips = ({ videoClips, setVideoCount }) => {
+  const dataSource = {
+    store: videoClips, 
+    key: "id",
+    loadOptions: {
+      pageSize: 3,
+    },
+  };
+
+  useEffect(() => {
+    // Update the video count whenever the videoClips data changes
+    setVideoCount(videoClips.length);
+  }, [videoClips, setVideoCount]);
+
   return (
     <DataGrid
-      dataSource={videoClips}
-      keyExpr="id"
+      dataSource={dataSource}
       showBorders={true}
       columnAutoWidth={true}
       showRowLines={true}
       showColumnLines={true}
+      loadPanel={{ enabled: true }} 
     >
       <Selection
         mode="multiple"
         selectAllMode="allPages"
         showCheckBoxesMode="always"
       />
-      <Paging defaultPageSize={5} />
+      <Paging defaultPageSize={3} />
       <Pager
         showPageSizeSelector={true}
         showInfo={true}
         showNavigationButtons={true}
-        visible={false}
+        visible={true}
       />
       <Column
         dataField="video"
@@ -70,13 +82,13 @@ const Videoclips = ({ videoClips }) => {
         columnAutoWidth={true}
         cellRender={(rowData) => (
           <div style={{ textAlign: "center" }}>
-            <DropDownButton />
+              <DropDownButton status={rowData.data.status} clipId={rowData.data.id} />
           </div>
         )}
         width={200}
       />
     </DataGrid>
-    
+
   );
 };
 

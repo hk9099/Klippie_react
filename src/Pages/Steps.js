@@ -121,12 +121,26 @@ const Steps = ({ projectId }) => {
                     const response3 = await axios.request(config3);
                     console.log('API 3 success:', response3.data.data.clips);
                     if (response3.data.data.clips && Array.isArray(response3.data.data.clips)) {
-                        const newvideoClips = response3.data.data.clips.map((clip) => ({
-                            id: clip.id,
-                            src: clip.clip_url,
-                            title: clip.title,
-                            description: clip.summary,
-                            status: clip.status,
+                        const newvideoClips = await Promise.all(response3.data.data.clips.map(async (clip) => {
+                            // Split the time string into parts
+                            const timeParts = clip.duration.split(':');
+
+                            // Extract hours, minutes, seconds
+                            const hours = parseInt(timeParts[0]);
+                            const minutes = parseInt(timeParts[1]);
+                            const seconds = parseInt(timeParts[2].split('.')[0]);
+
+                            // Format the time in HH:MM:SS
+                            const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                            return {
+                                id: clip.id,
+                                src: clip.clip_url,
+                                title: clip.title,
+                                description: clip.summary,
+                                status: clip.status,
+                                time: formattedTime
+                            };
                         }));
                         setNewvideoClips(newvideoClips);
                     } else {
@@ -157,7 +171,7 @@ const Steps = ({ projectId }) => {
     }, [projectId]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-[81vh] flex items-center justify-center">
             <div className="text-center">
                 {loadingApi1 && (
                     <div className="flex items-center justify-center mb-4 text-blue-500">
@@ -166,7 +180,9 @@ const Steps = ({ projectId }) => {
                             color="#3B82F6"
                             loading={loadingApi1}
                         />
-                        <span className="ml-4">Transcribing...</span>
+                        <span className="ml-4"
+                            style={{userSelect: 'none'}}
+                        >Transcribing...</span>
                     </div>
                 )}
                 {messageApi1 && <div className="mb-4 text-green-500">{messageApi1}</div>}
@@ -178,7 +194,7 @@ const Steps = ({ projectId }) => {
                             color="#3B82F6"
                             loading={loadingApi2}
                         />
-                        <span className="ml-4">Finding clips...</span>
+                        <span className="ml-4" style={{ userSelect: 'none' }}>Finding clips...</span>
                     </div>
                 )}
                 {messageApi2 && <div className="mb-4 text-green-500">{messageApi2}</div>}
@@ -190,7 +206,7 @@ const Steps = ({ projectId }) => {
                             color="#3B82F6"
                             loading={loadingApi3}
                         />
-                        <span className="ml-4">Creating clips...</span>
+                        <span className="ml-4" style={{ userSelect: 'none' }}>Creating clips...</span>
                     </div>
                 )}
                 {messageApi3 && <div className="mb-4 text-green-500">{messageApi3}</div>}

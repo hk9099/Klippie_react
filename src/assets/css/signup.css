@@ -19,6 +19,10 @@
     overflow: hidden;
 }
 
+.dx-widget, .dx-widget *, .dx-widget ::after, .dx-widget ::before, .dx-widget::after, .dx-widget::before{
+    color: #fff!important;
+}
+
 .right_block:hover .backgroundimage {
     transform: scale(1.2);
 }
@@ -407,4 +411,8 @@
     align-items: center;
     justify-content: center;
     margin-right: 10px;
+}
+
+.fsp-drop-pane__container {
+    display: none;
 }

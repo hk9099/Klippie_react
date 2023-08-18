@@ -122,9 +122,11 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
                             value={formik.values.userEmailAddress}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.userEmailAddress && formik.errors.userEmailAddress ? 'border-red-500' : ''
+                            className={`shadow appearance-none select-none read-only:bg-gray-100 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.userEmailAddress && formik.errors.userEmailAddress ? 'border-red-500' : ''
                                 } dark:bg-gray-700 dark:text-gray-200`}
                             placeholder="Enter your email address"
+                            style={{ cursor: 'not-allowed', userSelect: 'none' }}
+                            readOnly disabled
                         />
                         {formik.touched.userEmailAddress && formik.errors.userEmailAddress && (
                             <p className="text-red-500 text-xs italic">{formik.errors.userEmailAddress}</p>
@@ -136,7 +138,7 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
                         </label>
                         <div className="flex items-center">
                             <img
-                                className="h-12 w-12 rounded-full cursor-pointer border border-gray-400"
+                                className="h-12 w-12 rounded-full cursor-pointer border border-gray-400 hover:opacity-20"
                                 src={selectedAvatar || avatar || defaultAvatarUrl}
                                 alt="Avatar"
                                 onClick={() => document.getElementById('avatar').click()}

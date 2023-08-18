@@ -247,12 +247,12 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
 
                     {selectedOption === "youtube" ? (
                         <div className="mb-4">
-                            <label
+                            {/* <label
                                 htmlFor="youtubeLink"
                                 className="block font-medium text-gray-800"
                             >
                                 YouTube Link
-                            </label>
+                            </label> */}
                             <input
                                 type="text"
                                 id="youtubeLink"

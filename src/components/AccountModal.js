@@ -62,7 +62,7 @@ const AccountModal = ({ showAccount , onclose }) => {
     } `}
     >
     <ToastContainer />
-            <div className="bg-white rounded p-4 w-auto flex flex-col gap-4 dark:bg-gray-800">
+            <div className="bg-white rounded p-4 w-[700px] flex flex-col gap-4 dark:bg-gray-800">
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-white"> Account </h2>
                     <button
@@ -97,18 +97,18 @@ const AccountModal = ({ showAccount , onclose }) => {
                         >
                             Change Password
                         </button>
-                        <button
+                        {/* <button
                             onClick={toggleExportData}
                             className={`${showExportData ? 'bg-blue-500' : 'bg-gray-400'
                                 } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
                         >
-                            EXPORT ALL DATA
-                        </button>
+            
+                        </button> */}
                     </div>
 
                     <div className="w-1 border-r border-gray-200 dark:border-gray-700 mx-3" />
 
-                    <div className="w-80">
+                    <div className="w-[72%]">
                         {showChangePassword && (
                             <Formik
                                 initialValues={{
@@ -147,7 +147,7 @@ const AccountModal = ({ showAccount , onclose }) => {
                                 }}
                             >
                                 {({ isSubmitting }) => (
-                                    <Form className="flex flex-col gap-4">
+                                    <Form className="flex flex-col gap-3">
                                         <div className="flex flex-col gap-2 relative">
                                             <label htmlFor="oldPassword" className="text-sm text-gray-600 dark:text-gray-400">
                                                 Old Password
@@ -155,7 +155,7 @@ const AccountModal = ({ showAccount , onclose }) => {
                                             <Field
                                                 type={showOldPassword ? 'text' : 'password'}
                                                 name="oldPassword"
-                                                className="px-4 py-2 border rounded-md"
+                                                className="px-4 py-2 border rounded-md relative"
                                             />
                                             <div
                                                 className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer"
@@ -163,8 +163,8 @@ const AccountModal = ({ showAccount , onclose }) => {
                                             >
                                                 {showOldPassword ? <IoMdEyeOff size={20} /> : <IoMdEye size={20} />}
                                             </div>
-                                            <ErrorMessage name="oldPassword" component="p" className="text-red-500 text-sm" />
                                         </div>
+                                            <ErrorMessage name="oldPassword" component="p" className="text-red-500 text-sm" />
                                         <div className="flex flex-col gap-2 relative">
                                             <label htmlFor="newPassword" className="text-sm text-gray-600 dark:text-gray-400">
                                                 New Password
@@ -180,8 +180,8 @@ const AccountModal = ({ showAccount , onclose }) => {
                                             >
                                                 {showNewPassword ? <IoMdEyeOff size={20} /> : <IoMdEye size={20} />}
                                             </div>
-                                            <ErrorMessage name="newPassword" component="p" className="text-red-500 text-sm" />
                                         </div>
+                                            <ErrorMessage name="newPassword" component="p" className="text-red-500 text-sm" />
 
                                         <div className="flex flex-col gap-2 relative">
                                             <label htmlFor="confirmNewPassword" className="text-sm text-gray-600 dark:text-gray-400">
@@ -198,8 +198,8 @@ const AccountModal = ({ showAccount , onclose }) => {
                                             >
                                                 {showConfirmPassword ? <IoMdEyeOff size={20} /> : <IoMdEye size={20} />}
                                             </div>
-                                            <ErrorMessage name="confirmNewPassword" component="p" className="text-red-500 text-sm" />
                                         </div>
+                                            <ErrorMessage name="confirmNewPassword" component="p" className="text-red-500 text-sm" />
                                         <button
                                             type="submit"
                                             disabled={isSubmitting}

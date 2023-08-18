@@ -11,7 +11,7 @@ import Videoclips from "./Videoclips";
 
 export default function AccordionSection({ videoClips }) {
     const [openStates, setOpenStates] = useState([true, true]);
-    const [videoCount, setVideoCount] = useState(0);
+    const [videoCount, setVideoCount] = useState(videoClips.length);
 
     const toggleAccordion = (index) => {
         setOpenStates((prev) =>

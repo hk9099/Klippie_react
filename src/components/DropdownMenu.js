@@ -12,7 +12,7 @@ const DropdownMenu = ({ isOpen, position, showLogout }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleOpenAccountModal = () => {
-        setIsLoading(true);
+        setIsLoading(false);
         setTimeout(() => {
             setIsLoading(false);
             setIsAccountModalOpen(true);
