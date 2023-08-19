@@ -33,7 +33,7 @@ const AccountModal = ({ showAccount , onclose }) => {
         setShowChangePassword(!showChangePassword);
         setShowExportData(false);
     };
-
+    //eslint-disable-next-line
     const toggleExportData = () => {
         setShowChangePassword(false);
         setShowExportData(!showExportData);
