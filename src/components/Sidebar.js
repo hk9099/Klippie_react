@@ -1,6 +1,6 @@
 import React, { useState, useEffect,useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AiOutlineMenu, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineMenu, AiOutlinePlus } from "react-icons/ai";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Menu } from "@headlessui/react";
 import Logo from "../assets/images/logo.svg";
@@ -12,7 +12,6 @@ import axios from "axios";
 import qs from "qs";
 import DropdownMenu from "./DropdownMenu";
 import { ToastContainer, toast } from "react-toastify";
-import HistorySection from "../components/HistorySection";
 import { updateMainVideo } from "./data";
 
 const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips  }) => {
@@ -199,21 +198,21 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips  }) => {
         data: data
       };
 
-      axios.request(config)
-        .then((response) => {
-          console.log(JSON.stringify(response.data));
+      try {
+        await axios.request(config);
+        // If the API call is successful, update the state
+        const updatedProjectData = projectData.filter((_, i) => i !== index);
+        setProjectData(updatedProjectData); // Update projectData state
 
-          // If the API call is successful, update the state
-          setLines((prevLines) => {
-            const updatedLines = [...prevLines];
-            updatedLines.splice(index, 1); // Remove the item at the index
-            return updatedLines;
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          // Handle error states or display an error message to the user
+        // Similarly, update lines state if needed
+        setLines((prevLines) => {
+          const updatedLines = prevLines.filter((_, i) => i !== index);
+          return updatedLines;
         });
+      } catch (error) {
+        console.log(error);
+        // Handle error states or display an error message to the user
+      }
     } catch (error) {
       console.error('Error deleting line:', error);
       // Handle error states or display an error message to the user
@@ -420,7 +419,37 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips  }) => {
           />
         )}
         <div className=" flex-grow overflow-y-auto backdrop-blur-xl history">
-          <HistorySection lines={lines} isLoading={isLoadingHistory} handleProjectClick={handleProjectClick} deleteLine={deleteLine} />
+          <div className={`overflow-hidden ${!open && "hidden"} relative`}>
+            {lines.map((line, index) => (
+              <div
+                key={index}
+                className="width-content row relative my-4"
+              >
+                <p
+                  className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                  style={{
+                    width: "243px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    userSelect: "none",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    handleProjectClick(index);
+                  }}
+                >
+                  {line}
+                </p>
+                <button
+                  onClick={() => deleteLine(index)}
+                  className="delete-button"
+                >
+                  <AiOutlineDelete />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className={` bottom-0 left-0 right-0 `}>

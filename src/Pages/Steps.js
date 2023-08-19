@@ -184,7 +184,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
                 makeApiCalls(projectId, token);
             }
         }
-    }, [projectId]);
+    }, [projectId, allApiCompleted]);
 
     return (
         <div className="min-h-[81vh] flex items-center justify-center">
