@@ -119,17 +119,30 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                     const src = response.data.data.video_url;
                     const id = response.data.data.id;
 
-                    const newMainVideo = [
-                        { title, description, src, id }
-                    ];
-                    updateMainVideo(newMainVideo);
+                    // Calculate the duration of the video (assuming src is the video URL)
+                    const videoElement = document.createElement('video');
+                    videoElement.src = src;
+                    videoElement.onloadedmetadata = () => {
+                        const durationInSeconds = Math.floor(videoElement.duration);
 
-                    var projectId = response.data.data.id;
-                    onSubmit(projectId); 
+                        // Convert duration to HH:MM:SS format
+                        const hours = Math.floor(durationInSeconds / 3600);
+                        const minutes = Math.floor((durationInSeconds % 3600) / 60);
+                        const seconds = durationInSeconds % 60;
+                        const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                        const newMainVideo = [
+                            { title, description, src, id, time: formattedDuration }
+                        ];
+                        updateMainVideo(newMainVideo);
+
+                        var projectId = response.data.data.id;
+                        onSubmit(projectId);
+                    };
+
                 } else {
                     console.error("API call error:", response.data);
                 }
-
                 resetFormAndFileStack();
             } catch (error) {
                 console.error("Error submitting form:", error);
