@@ -1,6 +1,6 @@
 import React, { useState, useEffect,useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineMenu, AiOutlinePlus } from "react-icons/ai";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Menu } from "@headlessui/react";
 import Logo from "../assets/images/logo.svg";
@@ -12,9 +12,9 @@ import UserModal from "./UserModal";
 import axios from "axios";
 import qs from "qs";
 import DropdownMenu from "./DropdownMenu";
-import { HiArrowNarrowLeft } from "react-icons/hi";
+import { ToastContainer, toast } from "react-toastify";
 
-const Sidebar = ({ setProjectId, stepsRunning }) => {
+const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -176,11 +176,11 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
 
   const deleteLine = async (index) => {
     var token = getToken();
-    try {
-      const projectIdToDelete = projectData[index].id;
-      console.log('Project ID to delete:', projectIdToDelete);
+      const clickedProject = projectData[index];
+      console.log('Clicked delete Project ID:', clickedProject.id);
+      var clickeddeleteProjectid = clickedProject.id;
       let data = qs.stringify({
-        'id': projectIdToDelete
+        'id': clickeddeleteProjectid
       });
 
       let config = {
@@ -202,8 +202,65 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
         .catch((error) => {
           console.log(error);
         });
-    } catch (error) {
-      console.error('Delete API Error:', error);
+  };
+
+  const handleProjectClick = async (index) => {
+    const token = getToken();
+    console.log('Token:', token);
+    if (token) {
+      const clickedProject = projectData[index];
+      console.log('Clicked Project ID:', clickedProject.id);
+      var clickedProjectid = clickedProject.id;
+      let data = qs.stringify({
+        'project_id': clickedProjectid
+      });
+
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.getklippie.com/v1/clip/get-by-id',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${token}`
+        },
+        data: data
+      };
+
+      try {
+        const response = await axios.request(config);
+        console.log(response.data.data);
+        if (response.data.data && Array.isArray(response.data.data)) {
+          const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
+            // Split the time string into parts
+            const timeParts = clip.duration.split(':');
+
+            // Extract hours, minutes, seconds
+            const hours = parseInt(timeParts[0]);
+            const minutes = parseInt(timeParts[1]);
+            const seconds = parseInt(timeParts[2].split('.')[0]);
+
+            // Format the time in HH:MM:SS
+            const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            return {
+              id: clip.id,
+              src: clip.clip_url,
+              title: clip.title,
+              description: clip.summary,
+              status: clip.status,
+              time: formattedTime
+            };
+          }));
+          setNewvideoClips(newvideoClips);
+        } else {
+          console.log('Invalid API response:', response.data);
+        }
+      } catch (error) {
+        toast.error('Error while fetching clips', {
+          position: toast.POSITION.TOP_RIGHT
+        });
+      }
     }
   };
 
@@ -223,53 +280,18 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
     setShowUserModal(true);
   };
 
-  const handleProjectClick = (index) => {
-    const token = getToken();
-    console.log('Token:', token);
-    if (token) {
-      const clickedProject = projectData[index];
-      console.log('Clicked Project ID:', clickedProject.id);
-      var clickedProjectid = clickedProject.id; 
-      let data = qs.stringify({
-        'project_id': clickedProjectid
-      });
-
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: 'https://api.getklippie.com/v1/clip/get-by-id',
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Bearer ${token}`
-        },
-        data: data
-      };
-
-      axios.request(config)
-        .then((response) => {
-          console.log(response.data);
-          const projectData = response.data.data; 
-          setProjectData(projectData);
-          setLines(projectData.map(project => project.name));
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-    }
-
-  };
+  
 
   return (
     <>
+      <ToastContainer />
       <div
         className={`${open ? "w-[260px]" : "w-fit"
           } fixed top-0 p-2  z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}
       >
-        <HiArrowNarrowLeft
+        <AiOutlineMenu
           className={`${!open && "rotate-180"
-            } absolute text-3xl bg-white fill-slate-800  rounded-full cursor-pointer top-9 -right-4 dark:fill-gray-400 dark:bg-custom-color-dark`}
+            } absolute text-3xl bg-white fill-slate-800   cursor-pointer top-9 -right-4 dark:fill-gray-400 dark:bg-custom-color-dark`}
           onClick={() => {
             setOpen(!open);
           }}
@@ -347,7 +369,9 @@ const Sidebar = ({ setProjectId, stepsRunning }) => {
                     userSelect: "none",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleProjectClick(index)}
+                  onClick={() => {
+                    handleProjectClick(index); 
+                  }}
                 >
                   {line}
                 </p>

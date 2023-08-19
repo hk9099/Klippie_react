@@ -4,18 +4,32 @@ import qs from 'qs';
 import { RingLoader, DotLoader, HashLoader } from 'react-spinners';
 import AccordionSection from '../components/AccordionSection';
 
-const Steps = ({ projectId }) => {
+const Steps = ({ projectId, newhistoryvideoClips }) => {
     const [loadingApi1, setLoadingApi1] = useState(false);
     const [messageApi1, setMessageApi1] = useState('');
     const [newvideoClips, setNewvideoClips] = useState([]);
     const [loadingApi2, setLoadingApi2] = useState(false);
     const [messageApi2, setMessageApi2] = useState('');
+    //eslint-disable-next-line
     const [allApiCompleted, setAllApiCompleted] = useState(false);
     const [loadingApi3, setLoadingApi3] = useState(false);
     const [messageApi3, setMessageApi3] = useState('');
     const [error, setError] = useState('');
     const apiCallsMadeRef = useRef(false);
     const prevProjectIdRef = useRef();
+    const [updatedVideoClips, setUpdatedVideoClips] = useState([]); 
+
+
+    useEffect(() => {
+        const newvideoClips = newhistoryvideoClips
+        // console.log(newvideoClips,'newvideoClipssssssssssssssssssssss')
+        setNewvideoClips(newvideoClips)
+    }, [newhistoryvideoClips])
+
+    useEffect(() => {
+        setUpdatedVideoClips(newvideoClips); 
+        console.log(updatedVideoClips,'updatedVideoClips')
+    }, [newvideoClips, updatedVideoClips]);
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -49,6 +63,7 @@ const Steps = ({ projectId }) => {
             setMessageApi1('');
             setError('');
             setLoadingApi1(true);
+            setNewvideoClips([]);
 
             let data1 = qs.stringify({
                 'project_id': projectId
@@ -143,6 +158,7 @@ const Steps = ({ projectId }) => {
                             };
                         }));
                         setNewvideoClips(newvideoClips);
+                        
                     } else {
                         console.log('Invalid API 3 response:', response3.data);
                     }
@@ -181,7 +197,7 @@ const Steps = ({ projectId }) => {
                             loading={loadingApi1}
                         />
                         <span className="ml-4"
-                            style={{userSelect: 'none'}}
+                            style={{ userSelect: 'none' }}
                         >Transcribing...</span>
                     </div>
                 )}
@@ -213,7 +229,9 @@ const Steps = ({ projectId }) => {
 
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
-            {allApiCompleted && <AccordionSection videoClips={newvideoClips} />}
+            {!loadingApi1 && !loadingApi2 && !loadingApi3 && newvideoClips.length > 0 && (
+                <AccordionSection videoClips={newvideoClips} />
+            )}
         </div>
     );
 };

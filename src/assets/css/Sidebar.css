@@ -223,12 +223,12 @@ content: '';
 top: 0;
 left: 50%;
 right: 50%;
-transform: translate(-50%, -50%);
+transform: translate(-70%, -50%);
   width: 825px;
 height: 825px;
 flex-shrink: 0;
 border-radius: 825px;
 background: var(--background-highlight, rgba(89, 82, 130, 0.40));
 filter: blur(150px);
-/* z-index: 9999999999999999999999; */
+z-index: 9;
 }
