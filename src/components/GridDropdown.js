@@ -5,8 +5,6 @@ import qs from 'qs';
 
 
 export default function DownloadButton({ status, clipId }) {
-    console.log("status", status)
-    console.log("clipId", clipId)
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     // Define the default selected item and its associated colors
@@ -41,8 +39,8 @@ export default function DownloadButton({ status, clipId }) {
         setSelectedItem(item);
         setDropdownOpen(false);
         const token = getToken();
-        console.log("token",token)
         try {
+            //eslint-disable-next-line
             const response = await axios.post('https://api.getklippie.com/v1/clip/status-update', qs.stringify({
                 'status': item,
                 'clip_id': clipId
@@ -53,7 +51,7 @@ export default function DownloadButton({ status, clipId }) {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            console.log(JSON.stringify(response.data));
+            // console.log(JSON.stringify(response.data));
         } catch (error) {
             console.log(error);
         }
