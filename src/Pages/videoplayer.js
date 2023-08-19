@@ -1,6 +1,7 @@
-import React,{useState  } from "react";
+import React, { useState, useEffect } from "react";
 import { JolPlayer } from "jol-player";
 import { HiOutlineDownload } from "react-icons/hi";
+import { PulseLoader } from 'react-spinners';
 
 
 const videoOptions = {
@@ -14,7 +15,7 @@ const videoOptions = {
     isShowBarTime: true,
     isShowBarFullScreen: true,
     theme: "#000",
-    setVolume: 50,
+    setVolume: [50],
     poster: "",
     // setEndPlayContent: "Replay",
     setBufferContent: "Buffering...",
@@ -36,7 +37,6 @@ const videoOptions = {
     isShowWebFullScreen: true,
     language: "en",
     isShowPauseButton: true,
-    quality: [],
     videoType: "h264",
     isToast: false,
     toastPosition: "",
@@ -46,6 +46,16 @@ const videoOptions = {
 };
 const VideoPlayer = ({ src }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [videoReady, setVideoReady] = useState(false);
+
+    useEffect(() => {
+        // Simulate a delay before the video is ready
+        const timeout = setTimeout(() => {
+            setVideoReady(true);
+        }, 1500); // Adjust the timeout duration as needed
+
+        return () => clearTimeout(timeout);
+    }, []);
 
     const handleDownload = async () => {
         try {
@@ -77,13 +87,19 @@ const VideoPlayer = ({ src }) => {
 
     return (
         <>
-            <JolPlayer
-                className="w-[400px!important] h-[230px!important] m-auto"
-                option={{
-                    videoSrc: [src],
-                    ...videoOptions,
-                }}
-            />
+            {videoReady ? (
+                <JolPlayer
+                    className="w-[400px!important] h-[230px!important] m-auto"
+                    option={{
+                        videoSrc: [src],
+                        ...videoOptions,
+                    }}
+                />
+            ) : (
+                    <div className="w-[400px!important] m-auto flex justify-center">
+                    <PulseLoader size={20} color="#3B82F6" />
+                    </div>
+            )}
             <button className="Download_button m-auto mt-2" onClick={handleDownload}>
                 <HiOutlineDownload />
                 {isLoading ? "Downloading..." : "Download Video"}
@@ -93,7 +109,3 @@ const VideoPlayer = ({ src }) => {
 };
 
 export default VideoPlayer;
-
-
-
-

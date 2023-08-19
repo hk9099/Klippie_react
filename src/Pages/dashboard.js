@@ -8,13 +8,10 @@ import "../assets/css/Sidebar.css";
 export default function Dashboard() {
   const [projectId, setProjectId] = useState(null);
   const [newhistoryvideoClips, setNewvideoClips] = useState([]);
-  //eslint-disable-next-line
-  const [allApiCompleted, setAllApiCompleted] = useState(false); // Add this state
-
   return (
     <div className="h-screen">
       <div className="flex h-full ">
-        <Sidebar setProjectId={setProjectId} setNewvideoClips={setNewvideoClips} setAllApiCompleted={setAllApiCompleted} />
+        <Sidebar setProjectId={setProjectId} setNewvideoClips={setNewvideoClips} />
         <div className="w-full overflow-x-auto ">
           <Navbar />
           <Modal className="z-50"/>

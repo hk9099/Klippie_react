@@ -14,7 +14,7 @@ import DropdownMenu from "./DropdownMenu";
 import { ToastContainer, toast } from "react-toastify";
 import { updateMainVideo } from "./data";
 
-const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips  }) => {
+const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -91,6 +91,7 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips  }) => {
       };
 
       fetchProjects();
+  
   }, []);
 
 
@@ -269,7 +270,7 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips  }) => {
             const newMainVideo = [
               { title, description, src, id, time: formattedDuration }
             ];
-            updateMainVideo(newMainVideo);
+              updateMainVideo(newMainVideo);
           };
         })
         .catch((error) => {
@@ -318,7 +319,9 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips  }) => {
               time: formattedTime
             };
           }));
-          setNewvideoClips(newvideoClips);
+          setTimeout(() => {
+            setNewvideoClips(newvideoClips);
+          }, 1500);
         } else {
           console.log('Invalid API response:', response.data);
         }
