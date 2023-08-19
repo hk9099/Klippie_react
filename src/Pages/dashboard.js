@@ -8,6 +8,7 @@ import "../assets/css/Sidebar.css";
 export default function Dashboard() {
   const [projectId, setProjectId] = useState(null);
   const [newhistoryvideoClips, setNewvideoClips] = useState([]);
+  
   return (
     <div className="h-screen">
       <div className="flex h-full ">

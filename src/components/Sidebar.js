@@ -6,20 +6,23 @@ import { Menu } from "@headlessui/react";
 import Logo from "../assets/images/logo.svg";
 import HamburgerButton from "./HumbergerButton";
 import ".././assets/css/Sidebar.css";
-import { AiOutlineDelete } from "react-icons/ai";
 import Modal from "./Modal";
 import UserModal from "./UserModal";
 import axios from "axios";
 import qs from "qs";
 import DropdownMenu from "./DropdownMenu";
 import { ToastContainer, toast } from "react-toastify";
+import HistorySection from "../components/HistorySection";
+import { updateMainVideo } from "./data";
 
-const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
+const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips  }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
+  //eslint-disable-next-line
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   //eslint-disable-next-line
   const [isLoading, setIsLoading] = useState(false);
   const [userEmailAddress, setUserEmailAddress] = useState("");
@@ -30,6 +33,7 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
   const [dropdownPosition, setDropdownPosition] = useState("down");
   const location = useLocation();
   const [lines, setLines] = useState([]);
+  //eslint-disable-next-line
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]); 
 
@@ -53,17 +57,15 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
   };
 
   useEffect(() => {
-    const token = getToken(); // Get the token
+    const token = getToken(); 
     if (!token) {
-      // If no token is available, you might want to handle this case
       console.error('No token available');
       return;
     }
 
-    if (!isMountedRef.current) {
-      isMountedRef.current = true;
       const fetchProjects = async () => {
         try {
+          setIsLoadingHistory(true);
           const response = await axios.post(
             'https://api.getklippie.com/v1/project/get-my-all',
             null,
@@ -82,14 +84,14 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
           if (projectData.length > 0) {
             setLines(projectData.map(project => project.name)); 
           }
+          setIsLoadingHistory(false);
         } catch (error) {
           console.error('API Error:', error);
+          setIsLoadingHistory(false);
         }
       };
 
       fetchProjects();
-
-    }
   }, []);
 
 
@@ -176,17 +178,19 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
 
   const deleteLine = async (index) => {
     var token = getToken();
+    try {
       const clickedProject = projectData[index];
-      console.log('Clicked delete Project ID:', clickedProject.id);
-      var clickeddeleteProjectid = clickedProject.id;
+      console.log('Clicked Project ID:', clickedProject.id);
+      var clickedProjectid = clickedProject.id;
+
       let data = qs.stringify({
-        'id': clickeddeleteProjectid
+        'project_id': clickedProjectid
       });
 
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://api.getklippie.com/v1/clip/delete',
+        url: 'https://api.getklippie.com/v1/project/delete',
         headers: {
           'accept': 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -198,11 +202,26 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
       axios.request(config)
         .then((response) => {
           console.log(JSON.stringify(response.data));
+
+          // If the API call is successful, update the state
+          setLines((prevLines) => {
+            const updatedLines = [...prevLines];
+            updatedLines.splice(index, 1); // Remove the item at the index
+            return updatedLines;
+          });
         })
         .catch((error) => {
           console.log(error);
+          // Handle error states or display an error message to the user
         });
+    } catch (error) {
+      console.error('Error deleting line:', error);
+      // Handle error states or display an error message to the user
+    }
   };
+
+
+
 
   const handleProjectClick = async (index) => {
     const token = getToken();
@@ -211,6 +230,54 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
       const clickedProject = projectData[index];
       console.log('Clicked Project ID:', clickedProject.id);
       var clickedProjectid = clickedProject.id;
+      //main video 
+      let maindata = JSON.stringify({
+        "id": clickedProjectid
+      });
+
+      let mainconfig = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.getklippie.com/v1/project/get-by-id',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: maindata
+      };
+
+      axios.request(mainconfig)
+        .then((response) => {
+          console.log(response.data);
+          const title = response.data.data.name;
+          const description = response.data.data.description;
+          const src = response.data.data.video_url;
+          const id = response.data.data.id;
+
+          // Calculate the duration of the video (assuming src is the video URL)
+          const videoElement = document.createElement('video');
+          videoElement.src = src;
+          videoElement.onloadedmetadata = () => {
+            const durationInSeconds = Math.floor(videoElement.duration);
+
+            // Convert duration to HH:MM:SS format
+            const hours = Math.floor(durationInSeconds / 3600);
+            const minutes = Math.floor((durationInSeconds % 3600) / 60);
+            const seconds = durationInSeconds % 60;
+            const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            const newMainVideo = [
+              { title, description, src, id, time: formattedDuration }
+            ];
+            updateMainVideo(newMainVideo);
+          };
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      //video clips
       let data = qs.stringify({
         'project_id': clickedProjectid
       });
@@ -352,38 +419,8 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
             setProjectId={setProjectId}
           />
         )}
-        <div className=" flex-grow overflow-y-auto backdrop-blur-xl ">
-          <div className={`overflow-hidden ${!open && "hidden"} relative`}>
-            {lines.map((line, index) => (
-              <div
-                key={index}
-                className="width-content row relative my-4"
-              >
-                <p
-                  className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
-                  style={{
-                    width: "243px",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    userSelect: "none",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    handleProjectClick(index); 
-                  }}
-                >
-                  {line}
-                </p>
-                <button
-                  onClick={() => deleteLine(index)}
-                  className="delete-button"
-                >
-                  <AiOutlineDelete />
-                </button>
-              </div>
-            ))}
-          </div>
+        <div className=" flex-grow overflow-y-auto backdrop-blur-xl history">
+          <HistorySection lines={lines} isLoading={isLoadingHistory} handleProjectClick={handleProjectClick} deleteLine={deleteLine} />
         </div>
 
         <div className={` bottom-0 left-0 right-0 `}>
