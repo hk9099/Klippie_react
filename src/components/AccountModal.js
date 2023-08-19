@@ -29,6 +29,7 @@ const AccountModal = ({ showAccount , onclose }) => {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
+    //eslint-disable-next-line
     const toggleChangePassword = () => {
         setShowChangePassword(!showChangePassword);
         setShowExportData(false);
@@ -91,7 +92,7 @@ const AccountModal = ({ showAccount , onclose }) => {
                 <div className="flex flex-row">
                     <div className="w-25 flex flex-col gap-2">
                         <button
-                            onClick={toggleChangePassword}
+                            // onClick={toggleChangePassword}
                             className={`${showChangePassword ? 'bg-blue-500' : 'bg-gray-400'
                                 } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
                         >
