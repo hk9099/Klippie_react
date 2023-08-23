@@ -10,11 +10,9 @@ import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { auth } from '../components/config';
-import backgroundimage from '../assets/images/round.png';
 import googleicon from '../assets/images/google.png';
 import '../assets/css/signin.css';
 import axios from 'axios';
-import bannerRight from '../assets/images/banner-right-pic.avif';
 import Hiiii from '../assets/images/hi_40x40.gif';
 import { HiOutlineMail } from 'react-icons/hi';
 
@@ -42,24 +40,46 @@ function Signin() {
         customProvider.setCustomParameters({ prompt: 'select_account' });
 
         signInWithPopup(auth, customProvider)
-            .then((result) => {
+            .then(async (result) => {
                 console.log(result.user, 'result');
-                // setToken(result.user);
-                const userGoogle = {
-                    googleToken: result.user.accessToken,
-                    googleId: result.user.uid,
-                    googleName: result.user.displayName,
-                    googleEmail: result.user.email,
-                    googleImage: result.user.photoURL,
-                };
+                // // setToken(result.user);
+                // const userGoogle = {
+                //     googleToken: result.user.accessToken,
+                //     googleId: result.user.uid,
+                //     googleName: result.user.displayName,
+                //     googleEmail: result.user.email,
+                //     googleImage: result.user.photoURL,
+                // };
 
-                const encodedUser = btoa(JSON.stringify(userGoogle));
-                console.log(encodedUser, 'encodedUser');
-                localStorage.setItem('_auth', encodedUser);
-                navigate('/dashboard');
+                // const encodedUser = btoa(JSON.stringify(userGoogle));
+                // console.log(encodedUser, 'encodedUser');
+                // localStorage.setItem('_auth', encodedUser);
+                // navigate('/dashboard');
+                const response = await axios.post(
+                    process.env.REACT_APP_HOSTING_URL + '/v1/auth/login',
+                    {
+                        email: result.user.email,
+                        password: '',
+                        is_social: true,
+                        firebase_id: 'string',
+                        id_token: result.user.accessToken,
+                        device_id: 'string'
+                    }
+                );
+
+                if (response && response.data) {
+                    const encodedUser = btoa(JSON.stringify(response.data));
+                    localStorage.setItem('_sodfhgiuhih', encodedUser);
+                    const encodedEmail = btoa(result.user.email);
+                    localStorage.setItem('_auth', encodedEmail);
+                    navigate('/dashboard');
+                } else {
+                    // Unexpected response format
+                    throw new Error('Invalid response from the server.');
+                }
             })
             .catch((error) => {
-                // console.log(error.message);
+                console.log(error.message);
                 toast.error(error.message, {
                     position: toast.POSITION.TOP_CENTER
                 });
@@ -126,7 +146,7 @@ function Signin() {
     return (
         <main>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 h-fit w-full">
+            <div className="h-fit w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
                         <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-200">
@@ -222,13 +242,6 @@ function Signin() {
                             </div>
                             <div>Sign in with Google</div>
                         </button>
-                    </div>
-                </div>
-
-                <div className="hidden sm:block right_block">
-                    <img src={backgroundimage} alt="backgroundimage" className="h-screen w-full object-cover backgroundimage" />
-                    <div className="text-overlay">
-                        <img src={bannerRight} alt="logo" className="logo" style={{ width: '90%', display: 'inline-block' }} />
                     </div>
                 </div>
             </div>

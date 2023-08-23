@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { RingLoader, DotLoader, HashLoader } from 'react-spinners';
+import { RingLoader, DotLoader, ScaleLoader } from 'react-spinners';
 import AccordionSection from '../components/AccordionSection';
 
 const Steps = ({ projectId, newhistoryvideoClips }) => {
@@ -33,16 +33,11 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
-        const userGoogle = localStorage.getItem('_auth');
 
         if (encodedToken) {
             const decodedToken = atob(encodedToken);
             const userInfo = JSON.parse(decodedToken);
             return userInfo.token.access_token;
-        } else if (userGoogle) {
-            const decodedGoogle = atob(userGoogle);
-            const googleUserInfo = JSON.parse(decodedGoogle);
-            return googleUserInfo.token.access_token;
         } else {
             return null;
         }
@@ -187,7 +182,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
     }, [projectId, allApiCompleted]);
 
     return (
-        <div className="min-h-[81vh] flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
                 {loadingApi1 && (
                     <div className="flex items-center justify-center mb-4 text-blue-500">
@@ -217,7 +212,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
 
                 {loadingApi3 && (
                     <div className="flex items-center justify-center mb-4 text-blue-500">
-                        <HashLoader
+                        <ScaleLoader
                             size={64}
                             color="#3B82F6"
                             loading={loadingApi3}

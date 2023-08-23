@@ -253,7 +253,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 htmlFor="upload"
                                 className="ml-2 text-gray-800 dark:text-gray-200"
                             >
-                                Upload Image/Video
+                                Upload Audio/Video
                             </label>
                         </div>
                     </div>
@@ -312,7 +312,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                     <span
                                         className={` origin-left duration-300 hover:block font-medium text-sm text-center`}
                                     >
-                                        Upload Image/Video
+                                        Upload Audio/Video
                                     </span>
                                 </button>
                             )}

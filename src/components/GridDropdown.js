@@ -9,7 +9,7 @@ export default function DownloadButton({ status, clipId }) {
 
     // Define the default selected item and its associated colors
     const defaultSelectedItem = status;
-    const defaultSelectedItemStyle = { backgroundColor: '#FFC34E', color: 'black' };
+    const defaultSelectedItemStyle = { backgroundColor: '#FFC34E', color: '#000!important' };
 
     // Use the default selected item as the initial state
     const [selectedItem, setSelectedItem] = useState(defaultSelectedItem);
@@ -20,16 +20,11 @@ export default function DownloadButton({ status, clipId }) {
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
-        const userGoogle = localStorage.getItem('_auth');
 
         if (encodedToken) {
             const decodedToken = atob(encodedToken);
             const userInfo = JSON.parse(decodedToken);
             return userInfo.token.access_token;
-        } else if (userGoogle) {
-            const decodedGoogle = atob(userGoogle);
-            const googleUserInfo = JSON.parse(decodedGoogle);
-            return googleUserInfo.token.access_token;
         } else {
             return null;
         }
@@ -61,13 +56,13 @@ export default function DownloadButton({ status, clipId }) {
     const getSelectedItemColor = () => {
         switch (selectedItem) {
             case 'APPROVED':
-                return { backgroundColor: '#AEF0A3', color: 'black' };
+                return { backgroundColor: '#AEF0A3', color: '#000!important' };
             case 'REJECTED':
-                return { backgroundColor: '#FF5757', color: 'black' };
+                return { backgroundColor: '#FF5757', color: '#000!important' };
             case 'IN REVIEW':
-                return { backgroundColor: '#FFC34E', color: 'black' };
+                return { backgroundColor: '#FFC34E', color: '#000!important' };
             default:
-                return { backgroundColor: null, color: 'white' };
+                return { backgroundColor: 'rgb(147 147 147)', color: '#000!important' };
         }
     };
 
@@ -82,7 +77,7 @@ export default function DownloadButton({ status, clipId }) {
                     backgroundColor: selectedItemStyle.backgroundColor || defaultSelectedItemStyle.backgroundColor,
                     color: selectedItemStyle.color || defaultSelectedItemStyle.color
                 }}
-                className="text-white w-[8rem] focus:outline-none font-medium rounded-3xl text-sm p-2 text-center inline-flex items-center justify-center dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:border-gray-700"
+                className="text-black w-[8rem] focus:outline-none font-medium rounded-3xl text-sm p-2 text-center inline-flex items-center justify-center dark:bg-gray-800 dark:text-black dark:hover:bg-gray-700 dark:border-gray-700"
                 type="button"
             >
                 {selectedItem ? selectedItem : "Status"}
@@ -92,11 +87,12 @@ export default function DownloadButton({ status, clipId }) {
                 className={`z-10 ${isDropdownOpen ? 'block' : 'hidden'
                     } bg-black divide-y divide-gray-100 border-t-[1px] mt-2 shadow w-[8rem] dark:bg-transparent m-auto mt-2`}
             >
-                <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                <ul className="py-2 text-sm text-gray-700 dark:text-gray-900" aria-labelledby="dropdownDefaultButton">
                     <li>
                         <Link
                             href="#"
-                            className={`block px-4 py-2 dark:bg-[#AEF0A3] rounded-3xl dark:text-black text-center `}
+                            id='APPROVED'
+                            className={`block px-4 py-2 dark:bg-[#AEF0A3] rounded-3xl text-black dark:text-black text-center `}
                             onClick={() => handleItemClick('APPROVED')}
                         >
                             APPROVED
@@ -105,6 +101,7 @@ export default function DownloadButton({ status, clipId }) {
                     <li>
                         <Link
                             href="#"
+                            id='REJECTED'
                             className={`block px-4 py-2 dark:bg-[#FF5757] rounded-3xl dark:text-black  text-center  mt-1`}
                             onClick={() => handleItemClick('REJECTED')}
                         >
@@ -114,16 +111,18 @@ export default function DownloadButton({ status, clipId }) {
                     <li>
                         <Link
                             href="#"
+                            id='INREVIEW'
                             className={`block px-4 py-2 dark:bg-[#FFC34E] rounded-3xl dark:text-black  text-center  mt-1`}
                             onClick={() => handleItemClick('IN REVIEW')}
                         >
-                            IN&nbsp;REVIEW
+                            IN REVIEW
                         </Link>
                     </li>
                     <li>
                         <Link
                             href="#"
-                            className="block px-4 py-4 hover:bg-gray-100  rounded-3xl dark:hover:bg-gray-600 dark:bg-gray-400 dark:text-gray-200 text-center mt-1"
+                            id='null'
+                            className="block px-4 py-4 hover:bg-gray-100  rounded-3xl dark:hover:bg-gray-600 dark:bg-gray-400 dark:text-gray-900 text-center mt-1"
                             onClick={() => handleItemClick(null)}
                         >
                         </Link>

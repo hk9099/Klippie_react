@@ -45,21 +45,39 @@ function Signup({ errors, touched }) {
     customProvider.setCustomParameters({ prompt: "select_account" });
 
     signInWithPopup(auth, customProvider)
-      .then((result) => {
+      .then(async (result) => {
         console.log(result.user, "result");
         // setToken(result.user);
-        const userGoogle = {
-          googleToken: result.user.accessToken,
-          googleId: result.user.uid,
-          googleName: result.user.displayName,
-          googleEmail: result.user.email,
-          googleImage: result.user.photoURL,
-        };
+        // const userGoogle = {
+        //   googleToken: result.user.accessToken,
+        //   googleId: result.user.uid,
+        //   googleName: result.user.displayName,
+        //   googleEmail: result.user.email,
+        //   googleImage: result.user.photoURL,
+        // };
 
-        const encodedUser = btoa(JSON.stringify(userGoogle));
-        console.log(encodedUser, "encodedUser");
-        localStorage.setItem("_auth", encodedUser);
-        navigate("/dashboard");
+        // const encodedUser = btoa(JSON.stringify(userGoogle));
+        // console.log(encodedUser, "encodedUser");
+        // localStorage.setItem("_auth", encodedUser);
+        // navigate("/dashboard");
+        const response = await axios.post(
+          process.env.REACT_APP_HOSTING_URL + '/v1/auth/signup',
+          {
+            email: result.user.email,
+            password: '',
+            is_social: true,
+            firebase_id: 'string',
+            id_token: result.user.accessToken,
+            device_id: 'string'
+          }
+        );
+
+        if (response && response.data) {
+          console.log(response, 'response.data');
+        } else {
+          // Unexpected response format
+          throw new Error('Invalid response from the server.');
+        }
       })
       .catch((error) => {
         // console.log(error.message);

@@ -48,24 +48,27 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
         caption="Video"
         cellRender={(rowData) =>
           <div >
-            <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} />
+            <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""}  title={rowData.data?.title ? rowData.data.title : ""} />
           </div>
         }
-        width={460}
+        width='auto'
+        allowSorting={false}
       />
       <Column
         dataField="title"
         className="whitespace-break-spaces"
-        width={200}
+        width='auto'
+        allowSorting={false}
       />
       <Column
         dataField="description"
-        width={500}
+        width='auto'
         cellRender={(rowData) => (
           <div style={{ textAlign: "left", fontFamily: 'sans-serif' }}>
             {rowData.data.description}
           </div>
         )}
+        allowSorting={false}
       />
       <Column
         dataField="time"
@@ -75,17 +78,20 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
             {rowData.data.time}
           </div>
         )}
+        allowSorting={false}
       />
       <Column
         dataField="Action"
+        caption="Status"
         resizable={true}
         columnAutoWidth={true}
         cellRender={(rowData) => (
-          <div style={{ textAlign: "center" }}>
+          <div style={{ textAlign: "center" , color: '#000!important'}}>
               <DropDownButton status={rowData.data.status} clipId={rowData.data.id} />
           </div>
         )}
-        width={200}
+        width='auto'
+        allowSorting={false}
       />
     </DataGrid>
 

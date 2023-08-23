@@ -32,6 +32,7 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
   const [dropdownPosition, setDropdownPosition] = useState("down");
   const location = useLocation();
   const [lines, setLines] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
   //eslint-disable-next-line
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]); 
@@ -40,22 +41,18 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
 
   const getToken = () => {
     const encodedToken = localStorage.getItem('_sodfhgiuhih');
-    const userGoogle = localStorage.getItem('_auth');
 
     if (encodedToken) {
       const decodedToken = atob(encodedToken);
       const userInfo = JSON.parse(decodedToken);
+      console.log(userInfo,'userInfo.token.access_token')
       return userInfo.token.access_token;
-    } else if (userGoogle) {
-      const decodedGoogle = atob(userGoogle);
-      const googleUserInfo = JSON.parse(decodedGoogle);
-      return googleUserInfo.token.access_token;
     } else {
       return null;
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     const token = getToken(); 
     if (!token) {
       console.error('No token available');
@@ -321,7 +318,7 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
           }));
           setTimeout(() => {
             setNewvideoClips(newvideoClips);
-          }, 1500);
+          }, 1000);
         } else {
           console.log('Invalid API response:', response.data);
         }
@@ -356,7 +353,7 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
       <ToastContainer />
       <div
         className={`${open ? "w-[260px]" : "w-fit"
-          } fixed top-0 p-2  z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}
+          } fixed top-0 p-2 dashborardbg z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark` }
       >
         <AiOutlineMenu
           className={`${!open && "rotate-180"
@@ -426,10 +423,10 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
             {lines.map((line, index) => (
               <div
                 key={index}
-                className="width-content row relative my-4"
+                className={`width-content row relative my-4 ${index === activeIndex ? 'active' : ''}`}
               >
                 <p
-                  className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                  className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
                   style={{
                     width: "243px",
                     whiteSpace: "nowrap",
@@ -439,6 +436,7 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
                     cursor: "pointer",
                   }}
                   onClick={() => {
+                    setActiveIndex(index); 
                     handleProjectClick(index);
                   }}
                 >

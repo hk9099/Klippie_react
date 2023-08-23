@@ -13,7 +13,7 @@ const videoOptions = {
     isMuted: false,
     isShowControl: true,
     isShowBarTime: true,
-    isShowBarFullScreen: true,
+    isShowBarFullScreen: false,
     theme: "#000",
     setVolume: [50],
     poster: "",
@@ -34,7 +34,7 @@ const videoOptions = {
     isShowSet: false,
     isShowScreenshot: false,
     isShowPicture: false,
-    isShowWebFullScreen: true,
+    isShowWebFullScreen: false,
     language: "en",
     isShowPauseButton: true,
     videoType: "h264",
@@ -44,15 +44,16 @@ const videoOptions = {
     progressFloatPosition: "",
     mode: "scaleToFill",
 };
-const VideoPlayer = ({ src }) => {
+const VideoPlayer = ({ src, title }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [videoReady, setVideoReady] = useState(false);
-
+    
+    console.log(title, 'title')
     useEffect(() => {
         // Simulate a delay before the video is ready
         const timeout = setTimeout(() => {
             setVideoReady(true);
-        }, 1500); // Adjust the timeout duration as needed
+        }, 1000); // Adjust the timeout duration as needed
 
         return () => clearTimeout(timeout);
     }, []);
@@ -68,7 +69,7 @@ const VideoPlayer = ({ src }) => {
 
             const downloadLink = document.createElement("a");
             downloadLink.href = blobURL;
-            downloadLink.download = `${src}.mp4`
+            downloadLink.download = `Klippie ( ${title} ).mp4`
             document.body.appendChild(downloadLink);
 
             // Programmatically click the link to trigger the download

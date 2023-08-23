@@ -23,6 +23,10 @@
     color: #fff!important;
 }
 
+#dropdownDefaultButton,#APPROVED,#REJECTED,#INREVIEW,#null{
+    color: #000!important;
+}
+
 .right_block:hover .backgroundimage {
     transform: scale(1.2);
 }
@@ -415,4 +419,29 @@
 
 .fsp-drop-pane__container {
     display: none;
+}
+
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #f0f0f0;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    background-color: #3B82F6;
 }
