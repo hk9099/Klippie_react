@@ -146,7 +146,7 @@ function Signin() {
     return (
         <main>
 
-            <div className="h-fit w-full">
+            <div className="h-full w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
                         <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-200">

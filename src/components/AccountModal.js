@@ -92,19 +92,19 @@ const AccountModal = ({ showAccount , onclose }) => {
                 <div className="flex flex-row">
                     <div className="w-25 flex flex-col gap-2">
                         <button
-                            // onClick={toggleChangePassword}
+                            onClick={toggleChangePassword}
                             className={`${showChangePassword ? 'bg-blue-500' : 'bg-gray-400'
                                 } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
                         >
                             Change Password
                         </button>
-                        {/* <button
+                        <button
                             onClick={toggleExportData}
                             className={`${showExportData ? 'bg-blue-500' : 'bg-gray-400'
                                 } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
                         >
-            
-                        </button> */}
+                            Profile
+                        </button>
                     </div>
 
                     <div className="w-1 border-r border-gray-200 dark:border-gray-700 mx-3" />
@@ -134,7 +134,6 @@ const AccountModal = ({ showAccount , onclose }) => {
                                                 },
                                             }
                                         );
-                                        console.log(response.data);
                                         toast.success(response.data.message);
                                         localStorage.removeItem('_auth');
                                         localStorage.removeItem('_sodfhgiuhih');

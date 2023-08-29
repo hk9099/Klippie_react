@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import qs from "qs";
 import FilestackUploader from "./FileStackPicker";
-import { updateMainVideo } from "./data";
+// import { updateMainVideo } from "./data";
 const Modal = ({ onSubmit, isOpen, onClose }) => {
     const [selectedOption, setSelectedOption] = useState("upload");
     //eslint-disable-next-line
@@ -24,14 +24,10 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
     };
 
     const youtubeValidationSchema = Yup.object({
-        title: Yup.string().required("Title is required"),
-        description: Yup.string().required("Description is required"),
         youtubeLink: Yup.string().required("YouTube link is required"),
     });
 
     const uploadValidationSchema = Yup.object({
-        title: Yup.string().required("Title is required"),
-        description: Yup.string().required("Description is required"),
         file: Yup.mixed().required("File is required"),
     });
 
@@ -82,14 +78,10 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                     // Convert the YouTube URL format before submitting
                     const youtubeLink = convertYouTubeUrl(values.youtubeLink);
                     data = {
-                        name: values.title,
-                        description: values.description,
                         yt_url: youtubeLink,
                     };
                 } else {
                     data = {
-                        name: values.title,
-                        description: values.description,
                         file_url: values.file,
                     };
                 }
@@ -114,31 +106,9 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                 if (response.status === 200) {
                     console.log("API call successful:", response.data);
 
-                    const title = response.data.data.name;
-                    const description = response.data.data.description;
-                    const src = response.data.data.video_url;
-                    const id = response.data.data.id;
-
-                    // Calculate the duration of the video (assuming src is the video URL)
-                    const videoElement = document.createElement('video');
-                    videoElement.src = src;
-                    videoElement.onloadedmetadata = () => {
-                        const durationInSeconds = Math.floor(videoElement.duration);
-
-                        // Convert duration to HH:MM:SS format
-                        const hours = Math.floor(durationInSeconds / 3600);
-                        const minutes = Math.floor((durationInSeconds % 3600) / 60);
-                        const seconds = durationInSeconds % 60;
-                        const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                        const newMainVideo = [
-                            { title, description, src, id, time: formattedDuration }
-                        ];
-                        updateMainVideo(newMainVideo);
-
-                        var projectId = response.data.data.id;
-                        onSubmit(projectId);
-                    };
+                   
+                    var projectId = response.data.data.id;
+                    onSubmit(projectId);
 
                 } else {
                     console.error("API call error:", response.data);
@@ -171,56 +141,6 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                 </h2>
 
                 <form onSubmit={formik.handleSubmit}>
-                    <div className="mb-4">
-                        <label
-                            htmlFor="title"
-                            className="block font-medium text-gray-800 dark:text-gray-200"
-                        >
-                            Title
-                        </label>
-                        <input
-                            type="text"
-                            id="title"
-                            name="title"
-                            className={`mt-1 block w-full border ${formik.errors.title && formik.touched.title
-                                ? "border-red-500"
-                                : "border-gray-300"
-                                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200`}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.title}
-                        />
-                        {formik.errors.title && formik.touched.title && (
-                            <p className="text-red-500 text-sm mt-1">{formik.errors.title}</p>
-                        )}
-                    </div>
-
-                    <div className="mb-4">
-                        <label
-                            htmlFor="description"
-                            className="block font-medium text-gray-800 dark:text-gray-200"
-                        >
-                            Description
-                        </label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            rows="4"
-                            className={`mt-1 block w-full border ${formik.errors.description && formik.touched.description
-                                ? "border-red-500"
-                                : "border-gray-300"
-                                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200`}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.description}
-                        />
-                        {formik.errors.description && formik.touched.description && (
-                            <p className="text-red-500 text-sm mt-1">
-                                {formik.errors.description}
-                            </p>
-                        )}
-                    </div>
-
                     <div className="mb-4 flex justify-between items-center">
                         <div className="flex items-center">
                             <input

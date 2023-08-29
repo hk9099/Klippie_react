@@ -75,7 +75,7 @@ function Logout({ showLogout }) {
                     initialFocus={cancelButtonRef}
                     onClose={() => setIsOpen(false)} // Close the modal
                 >
-                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center ">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-out duration-300"
@@ -85,7 +85,7 @@ function Logout({ showLogout }) {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-50 transition-opacity" />
                         </Transition.Child>
 
                         <Transition.Child
@@ -97,7 +97,7 @@ function Logout({ showLogout }) {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div className="inline-block align-bottom bg-[#595282] rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
                                 <div className="sm:flex sm:items-start">
                                     <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-yellow-600">
@@ -107,11 +107,11 @@ function Logout({ showLogout }) {
                                         {/* <ExclamationTriangleIcon className="h-6 w-6 text-yellow-600" aria-hidden="true" /> */}
                                     </div>
                                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                        <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
+                                        <Dialog.Title as="h3" className="text-lg leading-6  text-white font-bold">
                                             Log out account
                                         </Dialog.Title>
                                         <div className="mt-2">
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-gray-100">
                                                 Are you sure you want to Log Out?
                                             </p>
                                         </div>

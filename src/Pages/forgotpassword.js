@@ -4,7 +4,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import backgroundimage from '../assets/images/round.png';
 import '../assets/css/signin.css';
 import axios from 'axios';
 import { HiOutlineMail } from 'react-icons/hi';
@@ -12,7 +11,6 @@ import { RiInformationLine } from 'react-icons/ri';
 import { TbDeviceMobileMessage } from 'react-icons/tb';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
 import { Tooltip } from 'react-tooltip';
-import bannerRight from '../assets/images/banner-right-pic.avif';
 import think from '../assets/images/think_40x40.gif';
 
 
@@ -153,15 +151,15 @@ const MultiStepForm = () => {
 
     return (
         <main>
-            <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
+            <div className="h-full w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
-                        <h1 className="text-4xl font-bold text-gray-800 flext items-center">
+                        <h1 className="text-4xl font-bold text-gray-200 flext items-center">
                            Forgot {'  '}
                             <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">
                                 Password
                             </span>
-                                <img src={think} alt="think" className="inline-block ml-2" />
+                                <img src={think} alt="think" className="inline-block ml-2 rounded-full" />
                         </h1>
                         <p className="text-gray-500">Please Login to your account.</p>
                     </div>
@@ -178,7 +176,7 @@ const MultiStepForm = () => {
                                             <label className="text-gray-500 emailinput">
                                                 Enter your email
                                             </label>
-                                            <div className="inputbox-container">
+                                            <div className="inputbox-container mt-2">
                                                 <Field
                                                     type="text"
                                                     name="email"
@@ -392,13 +390,6 @@ const MultiStepForm = () => {
                                 </div>
                             </Form>
                         </Formik>
-                    </div>
-                </div>
-
-                <div className="hidden sm:block right_block">
-                    <img src={backgroundimage} alt="backgroundimage" className="h-screen w-full object-cover" />
-                    <div className="text-overlay">
-                        <img src={bannerRight} alt="logo" className="logo" style={{ width: '90%', display: 'inline-block' }} />
                     </div>
                 </div>
             </div>

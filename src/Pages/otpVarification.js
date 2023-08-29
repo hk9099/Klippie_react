@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import backgroundimage from '../assets/images/round.png';
 import '../assets/css/signin.css';
 import Loader from './Loader.js';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaMobileAlt } from 'react-icons/fa';
-import bannerRight from '../assets/images/banner-right-pic.avif';
 
 
 function Signin() {
@@ -192,10 +190,10 @@ function Signin() {
             <ToastContainer />
             {isLoading && <Loader />}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
+            <div className="h-full w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
-                        <h1 className="text-4xl font-bold text-gray-800">
+                        <h1 className="text-4xl font-bold text-gray-200">
                             Welcome to{' '}
                             <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">
                                 Klippie
@@ -273,13 +271,6 @@ function Signin() {
                                 </Form>
                             )}
                         </Formik>
-                    </div>
-                </div>
-
-                <div className="hidden sm:block right_block ">
-                    <img src={backgroundimage} alt="backgroundimage" className="h-screen w-full object-cover" />
-                    <div className="text-overlay">
-                        <img src={bannerRight} alt="logo" className="logo" style={{ width: '90%', display: 'inline-block' }} />
                     </div>
                 </div>
             </div>

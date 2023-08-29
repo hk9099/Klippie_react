@@ -8,13 +8,11 @@ import { RiInformationLine } from "react-icons/ri";
 import { BiSolidUser } from "react-icons/bi";
 import * as Yup from "yup";
 import axios from "axios";
-import backgroundimage from "../assets/images/round.png";
 import googleicon from "../assets/images/google.png";
 import "../assets/css/signup.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Hiiii from "../assets/images/hi_40x40.gif";
-import bannerRight from "../assets/images/banner-right-pic.avif";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../components/config";
 
@@ -146,7 +144,7 @@ function Signup({ errors, touched }) {
   return (
     <>
       <ToastContainer />
-      <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
+      <div className=" h-full w-full">
         <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
           <div className="left_heading text-center">
             <h1 className="text-4xl font-bold dark:text-gray-100 text-gray-900">
@@ -341,22 +339,6 @@ function Signup({ errors, touched }) {
               </div>
               <div>Sign up with Google</div>
             </button>
-          </div>
-        </div>
-
-        <div className="hidden sm:block right_block">
-          <img
-            src={backgroundimage}
-            alt="backgroundimage"
-            className="h-screen w-full object-cover backgroundimage"
-          />
-          <div className="text-overlay">
-            <img
-              src={bannerRight}
-              alt="logo"
-              className="logo"
-              style={{ width: "90%", display: "inline-block" }}
-            />
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ export default function DownloadButton({ status, clipId }) {
 
     // Define the default selected item and its associated colors
     const defaultSelectedItem = status;
-    const defaultSelectedItemStyle = { backgroundColor: '#FFC34E', color: '#000!important' };
+    const defaultSelectedItemStyle = { backgroundColor: '#000', color: '#000!important' };
 
     // Use the default selected item as the initial state
     const [selectedItem, setSelectedItem] = useState(defaultSelectedItem);
@@ -85,7 +85,7 @@ export default function DownloadButton({ status, clipId }) {
             <div
                 id="dropdown"
                 className={`z-10 ${isDropdownOpen ? 'block' : 'hidden'
-                    } bg-black divide-y divide-gray-100 border-t-[1px] mt-2 shadow w-[8rem] dark:bg-transparent m-auto mt-2`}
+                    } bg-black divide-y divide-gray-100 border-t-[1px] mt-2 shadow w-[8rem] dark:bg-transparent m-auto`}
             >
                 <ul className="py-2 text-sm text-gray-700 dark:text-gray-900" aria-labelledby="dropdownDefaultButton">
                     <li>

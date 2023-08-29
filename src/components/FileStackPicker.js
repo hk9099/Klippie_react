@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as filestack from 'filestack-js';
 
-const FilestackUploader = ({ setUploadedFileUrl, setUploadedFileName, onClose }) => {
+const FilestackUploader = ({ setUploadedFileUrl, setUploadedFileName, setUploadedMimeType, onClose }) => {
     const apiKey = "Ah6BGoib5TtiyxsLeCtXBz";
     const pickerRef = useRef(null);
 
@@ -9,6 +9,7 @@ const FilestackUploader = ({ setUploadedFileUrl, setUploadedFileName, onClose })
         console.log(res, "res");
         setUploadedFileUrl(res.url);
         setUploadedFileName(res.filename);
+        setUploadedMimeType(res.mimetype);
         onClose(); // Close the picker after file selection
     };
 

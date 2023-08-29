@@ -1,7 +1,6 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AiOutlineDelete, AiOutlineMenu, AiOutlinePlus } from "react-icons/ai";
-import { IoSettingsOutline } from "react-icons/io5";
+import { AiOutlineDelete, AiOutlineMenu, AiOutlinePlus, AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { Menu } from "@headlessui/react";
 import Logo from "../assets/images/logo.svg";
 import HamburgerButton from "./HumbergerButton";
@@ -11,15 +10,21 @@ import UserModal from "./UserModal";
 import axios from "axios";
 import qs from "qs";
 import DropdownMenu from "./DropdownMenu";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { updateMainVideo } from "./data";
+import { BsThreeDots } from "react-icons/bs";
+import fetchProjectsData from '../components/fetchProjectData';
+import { FiEdit2 } from "react-icons/fi";
+import { RotatingLines } from "react-loader-spinner";
+import { useSidebarContext } from '../components/SidebarContext';
 
-const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
+const Sidebar = ({ setProjectId, setNewvideoClips }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
+  const { isApiCompleted } = useSidebarContext();
   //eslint-disable-next-line
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   //eslint-disable-next-line
@@ -32,65 +37,31 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
   const [dropdownPosition, setDropdownPosition] = useState("down");
   const location = useLocation();
   const [lines, setLines] = useState([]);
+  const [tempLines, setTempLines] = useState([]); 
   const [activeIndex, setActiveIndex] = useState(null);
+  const [editIndex, setEditIndex] = useState(-1);
   //eslint-disable-next-line
   const isMountedRef = useRef(false);
-  const [projectData, setProjectData] = useState([]); 
+  const [projectData, setProjectData] = useState([]);
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
 
 
-
+  useEffect(() => {
+    fetchProjectsData(setProjectData, setLines, setIsLoadingHistory);
+  }, [isApiCompleted]);
+  
   const getToken = () => {
     const encodedToken = localStorage.getItem('_sodfhgiuhih');
 
     if (encodedToken) {
       const decodedToken = atob(encodedToken);
       const userInfo = JSON.parse(decodedToken);
-      console.log(userInfo,'userInfo.token.access_token')
+      console.log(userInfo, 'userInfo.token.access_token')
       return userInfo.token.access_token;
     } else {
       return null;
     }
   };
-
-  useEffect(() => { 
-    const token = getToken(); 
-    if (!token) {
-      console.error('No token available');
-      return;
-    }
-
-      const fetchProjects = async () => {
-        try {
-          setIsLoadingHistory(true);
-          const response = await axios.post(
-            'https://api.getklippie.com/v1/project/get-my-all',
-            null,
-            {
-              headers: {
-                'accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
-              },
-            }
-          );
-
-          console.log('Projects:', response.data);
-          const projectData = response.data.data; 
-          setProjectData(projectData);
-
-          if (projectData.length > 0) {
-            setLines(projectData.map(project => project.name)); 
-          }
-          setIsLoadingHistory(false);
-        } catch (error) {
-          console.error('API Error:', error);
-          setIsLoadingHistory(false);
-        }
-      };
-
-      fetchProjects();
-  
-  }, []);
-
 
 
   const toggleDropdown = () => {
@@ -218,7 +189,59 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
   };
 
 
+  const handleEditClick = (index) => {
+    setTempLines([...lines]); // Store the current lines before editing
+    setEditIndex(index);
+  };
 
+  const handleEditChange = (event, index) => {
+    // Update the temporary lines state while editing
+    const newTempLines = [...tempLines];
+    newTempLines[index] = event.target.value;
+    setTempLines(newTempLines);
+  };
+
+  const handleSaveClick = (index) => {
+    const token = getToken();
+    const updatedLine = tempLines[index]; 
+    // console.log('Token:', token);
+    // console.log('Updated Line:', updatedLine);
+    // console.log('Project ID:', projectData[index].id);
+    const data = qs.stringify({
+      id: projectData[index].id,
+      name: updatedLine
+    });
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://api.getklippie.com/v1/project/update',
+      headers: {
+        accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${token}`
+      },
+      data: data
+    };
+
+    axios.request(config)
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        // Update your lines state if needed
+        const newLines = [...lines];
+        newLines[index] = updatedLine;
+        setLines(newLines);
+        setEditIndex(-1); 
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleCancelClick = () => {
+    setTempLines([...lines]); // Revert temporary lines to original lines
+    setEditIndex(-1); // Reset the edit index
+  };
 
   const handleProjectClick = async (index) => {
     const token = getToken();
@@ -267,7 +290,7 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
             const newMainVideo = [
               { title, description, src, id, time: formattedDuration }
             ];
-              updateMainVideo(newMainVideo);
+            updateMainVideo(newMainVideo);
           };
         })
         .catch((error) => {
@@ -316,25 +339,23 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
               time: formattedTime
             };
           }));
-          setTimeout(() => {
             setNewvideoClips(newvideoClips);
-          }, 1000);
         } else {
           console.log('Invalid API response:', response.data);
         }
       } catch (error) {
-        toast.error('Error while fetching clips', {
-          position: toast.POSITION.TOP_RIGHT
-        });
+        // toast.error('Error while fetching clips', {
+        //   position: toast.POSITION.TOP_RIGHT
+        // });
       }
     }
   };
 
 
   const handleAddNewVideo = () => {
-    if (!stepsRunning) {
+  
       setShowModal(true);
-    }
+  
   };
 
   const handleFormSubmit = (projectId) => {
@@ -342,18 +363,18 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
     setShowModal(false);
   };
 
-  const handleUserModal = () => {
-    setShowUserModal(true);
-  };
+  // const handleUserModal = () => {
+  //   setShowUserModal(true);
+  // };
 
-  
+
 
   return (
     <>
       <ToastContainer />
       <div
         className={`${open ? "w-[260px]" : "w-fit"
-          } fixed top-0 p-2 dashborardbg z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark` }
+          } fixed top-0 p-2  z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}
       >
         <AiOutlineMenu
           className={`${!open && "rotate-180"
@@ -385,24 +406,21 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
         <div className="pt-4 pb-3">
           <button
             className={`flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full cursor-pointer dark:text-white  border-animation ${!open && "justify-center"
-              } ${stepsRunning ? "cursor-not-allowed opacity-50" : ""}`}
+              }`}
             onClick={handleAddNewVideo}
-            disabled={stepsRunning}
           >
             <div
               className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full bg-white dark:bg-gray-800 dark:text-white ${!open && "justify-center"
                 }`}
             >
               <span
-                className={`text-2xl ${stepsRunning ? "text-gray-500 dark:text-gray-300" : "" // Change color when disabled
-                  }`}
+                className={`text-2xl `}
               >
                 <AiOutlinePlus className={`${!open && "justify-center"}`} />
               </span>
               <span
                 className={`${!open && "hidden"
-                  } origin-left duration-300 hover:block font-medium text-sm font-Satoshi ${stepsRunning ? "text-gray-500 dark:text-gray-300" : "" // Change color when disabled
-                  }`}
+                  } origin-left duration-300 hover:block font-medium text-sm font-Satoshi`}
               >
                 New Audio / Video
               </span>
@@ -419,44 +437,83 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
           />
         )}
         <div className=" flex-grow overflow-y-auto backdrop-blur-xl history">
-          <div className={`overflow-hidden ${!open && "hidden"} relative`}>
-            {lines.map((line, index) => (
-              <div
-                key={index}
-                className={`width-content row relative my-4 ${index === activeIndex ? 'active' : ''}`}
-              >
-                <p
-                  className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
-                  style={{
-                    width: "243px",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    userSelect: "none",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    setActiveIndex(index); 
-                    handleProjectClick(index);
-                  }}
-                >
-                  {line}
-                </p>
-                <button
-                  onClick={() => deleteLine(index)}
-                  className="delete-button"
-                >
-                  <AiOutlineDelete />
-                </button>
+          {isLoadingHistory ? (
+            <div className="flex items-center justify-center mb-4 text-blue-500 h-[87%]">
+              <span className="" style={{ userSelect: "none" }}>
+                <RotatingLines
+                  strokeColor="grey"
+                  strokeWidth="5"
+                  animationDuration="0.75"
+                  width="25"
+                  visible={true}
+                />
+              </span>
+            </div>
+          ) : (
+              <div className={`overflow-hidden ${!open && "hidden"} relative`}>
+                {lines.map((line, index) => (
+                  <div
+                    key={index}
+                    className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(-1)}
+                  >
+                    {editIndex === index ? (
+                      <div className="width-full row relative">
+                        <input
+                          className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
+                          type="text"
+                          value={tempLines[index]}
+                          onChange={(event) => handleEditChange(event, index)}
+                        />
+                        <button onClick={() => handleSaveClick(index)} className="save-button">
+                          <AiOutlineCheck />
+                        </button>
+                        <button onClick={() => handleCancelClick()} className="cancel-button">
+                          <AiOutlineClose />
+                        </button>
+                      </div>
+                    ) : (
+                      <p
+                        className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                        style={{
+                          width: hoveredIndex === index ? "188px" : "243px",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          userSelect: "none",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setActiveIndex(index);
+                          handleProjectClick(index);
+                        }}
+                      >
+                        {line}
+                      </p>
+                    )}
+                    <div className="hover-actions" >
+                      {editIndex !== index && (
+                        <>
+                          <button onClick={() => deleteLine(index)} className="delete-button">
+                            <AiOutlineDelete />
+                          </button>
+                          <button onClick={() => handleEditClick(index)} className="edit-button">
+                            <FiEdit2 />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+          )}
         </div>
 
         <div className={` bottom-0 left-0 right-0 `}>
           <div className=" flex flex-col gap-1">
             <Menu as="div" className="relative inline-block text-left">
-              <Menu.Button
+              {/* <Menu.Button
                 onClick={toggleDropdown}
                 className={`w-full flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 mt-2
                                         ${location.pathname === "/dashboard" &&
@@ -472,7 +529,7 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
                 >
                   Settings
                 </span>
-              </Menu.Button>
+              </Menu.Button> */}
 
               <DropdownMenu
                 isOpen={dropdownOpen}
@@ -483,12 +540,13 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
             </Menu>
 
             <div
-              className="user group flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 "
-              onClick={handleUserModal}
+              className="user group flex items-center gap-x-2 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 "
+              // onClick={handleUserModal}
+              onClick={toggleDropdown}
               title={userEmailAddress}
             >
               <img
-                className="shrink-0 h-12 w-12 rounded-full"
+                className="shrink-0 h-9 w-9 rounded-sm"
                 src={userAvatar}
                 alt="Avatar"
               />
@@ -496,13 +554,13 @@ const Sidebar = ({ setProjectId, stepsRunning, setNewvideoClips }) => {
                 className={`${!open && "hidden"
                   } origin-left duration-300 hover:block text-sm overflow-hidden text-ellipsis whitespace-nowrap`}
               >
-                <p className="text-sm font-black text-gray-900 dark:text-white">
-                  {userNickname}
-                </p>
-                <p className="text-sm font-black text-gray-900 dark:text-white text-ellipsis overflow-hidden">
+                <p className="grow overflow-hidden text-ellipsis whitespace-nowrap text-left text-white font-bold">
                   {userEmailAddress}
                 </p>
+
               </div>
+
+              <BsThreeDots />
             </div>
 
             <UserModal

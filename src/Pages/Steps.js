@@ -1,23 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import { RingLoader, DotLoader, ScaleLoader } from 'react-spinners';
 import AccordionSection from '../components/AccordionSection';
+import Shuffleloader from '../components/shuffleloader.js';
+import { updateMainVideo } from "../components/data.js";
+import { useSidebarContext } from '../components/SidebarContext.js';
 
 const Steps = ({ projectId, newhistoryvideoClips }) => {
-    const [loadingApi1, setLoadingApi1] = useState(false);
-    const [messageApi1, setMessageApi1] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [newvideoClips, setNewvideoClips] = useState([]);
-    const [loadingApi2, setLoadingApi2] = useState(false);
-    const [messageApi2, setMessageApi2] = useState('');
     //eslint-disable-next-line
     const [allApiCompleted, setAllApiCompleted] = useState(false);
-    const [loadingApi3, setLoadingApi3] = useState(false);
-    const [messageApi3, setMessageApi3] = useState('');
     const [error, setError] = useState('');
     const apiCallsMadeRef = useRef(false);
     const prevProjectIdRef = useRef();
-    const [updatedVideoClips, setUpdatedVideoClips] = useState([]); 
+    const [updatedVideoClips, setUpdatedVideoClips] = useState([]);
+    const { setIsApiCompleted } = useSidebarContext();
 
 
     useEffect(() => {
@@ -27,8 +25,8 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
     }, [newhistoryvideoClips])
 
     useEffect(() => {
-        setUpdatedVideoClips(newvideoClips); 
-        console.log(updatedVideoClips,'updatedVideoClips')
+        setUpdatedVideoClips(newvideoClips);
+        console.log(updatedVideoClips, 'updatedVideoClips')
     }, [newvideoClips, updatedVideoClips]);
 
     const getToken = () => {
@@ -55,9 +53,8 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
 
             // API 1
             setAllApiCompleted(false);
-            setMessageApi1('');
             setError('');
-            setLoadingApi1(true);
+            setIsLoading(true);
             setNewvideoClips([]);
 
             let data1 = qs.stringify({
@@ -78,13 +75,39 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
 
             const response1 = await axios.request(config1);
             console.log('API 1 success:', response1.data);
-            setLoadingApi1(false);
+            const title = response1.data.data.name;
+            const description = response1.data.data.description;
+            const src = response1.data.data.video_url;
+            const id = response1.data.data.id;
+
+            // Calculate the duration of the video (assuming src is the video URL)
+            const videoElement = document.createElement('video');
+            videoElement.src = src;
+            videoElement.onloadedmetadata = async () => {
+                const durationInSeconds = Math.floor(videoElement.duration);
+
+                // Convert duration to HH:MM:SS format
+                const hours = Math.floor(durationInSeconds / 3600);
+                const minutes = Math.floor((durationInSeconds % 3600) / 60);
+                const seconds = durationInSeconds % 60;
+                const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                const newMainVideo = [
+                    { title, description, src, id, time: formattedDuration }
+                ];
+                
+                try {
+                    await updateMainVideo(newMainVideo); // Assuming updateMainVideo returns a promise
+                    setIsApiCompleted(true);
+                } catch (error) {
+                    console.error("Error updating main video:", error);
+                }
+            };
+
 
             // API 2 (Only after API 1 success)
             if (response1.data.success) {
-                setMessageApi2('');
                 setError('');
-                setLoadingApi2(true);
 
                 let data2 = qs.stringify({
                     'project_id': projectId
@@ -104,13 +127,10 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
 
                 const response2 = await axios.request(config2);
                 console.log('API 2 success:', response2.data);
-                setLoadingApi2(false);
 
                 // API 3 (Only after API 2 success)
                 if (response2.data.success) {
-                    setMessageApi3('');
                     setError('');
-                    setLoadingApi3(true);
 
                     let data3 = qs.stringify({
                         'project_id': projectId
@@ -153,20 +173,20 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
                             };
                         }));
                         setNewvideoClips(newvideoClips);
-                        
+
+
+
                     } else {
                         console.log('Invalid API 3 response:', response3.data);
                     }
-                    setLoadingApi3(false);
+                    setIsLoading(false);
                     setAllApiCompleted(true);
                 }
             }
         } catch (error) {
             console.log(error);
             setError('Something went wrong. Please try again.');
-            setLoadingApi1(false);
-            setLoadingApi2(false);
-            setLoadingApi3(false);
+            setIsLoading(false);
         }
     };
 
@@ -179,52 +199,20 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
                 makeApiCalls(projectId, token);
             }
         }
+        
     }, [projectId, allApiCompleted]);
 
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
-                {loadingApi1 && (
+                {isLoading && (
                     <div className="flex items-center justify-center mb-4 text-blue-500">
-                        <RingLoader
-                            size={64}
-                            color="#3B82F6"
-                            loading={loadingApi1}
-                        />
-                        <span className="ml-4"
-                            style={{ userSelect: 'none' }}
-                        >Transcribing...</span>
+                        <Shuffleloader />
                     </div>
                 )}
-                {messageApi1 && <div className="mb-4 text-green-500">{messageApi1}</div>}
-
-                {loadingApi2 && (
-                    <div className="flex items-center justify-center mb-4 text-blue-500">
-                        <DotLoader
-                            size={64}
-                            color="#3B82F6"
-                            loading={loadingApi2}
-                        />
-                        <span className="ml-4" style={{ userSelect: 'none' }}>Finding clips...</span>
-                    </div>
-                )}
-                {messageApi2 && <div className="mb-4 text-green-500">{messageApi2}</div>}
-
-                {loadingApi3 && (
-                    <div className="flex items-center justify-center mb-4 text-blue-500">
-                        <ScaleLoader
-                            size={64}
-                            color="#3B82F6"
-                            loading={loadingApi3}
-                        />
-                        <span className="ml-4" style={{ userSelect: 'none' }}>Creating clips...</span>
-                    </div>
-                )}
-                {messageApi3 && <div className="mb-4 text-green-500">{messageApi3}</div>}
-
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
-            {!loadingApi1 && !loadingApi2 && !loadingApi3 && newvideoClips.length > 0 && (
+            {!isLoading && newvideoClips.length > 0 && (
                 <AccordionSection videoClips={newvideoClips} />
             )}
         </div>
