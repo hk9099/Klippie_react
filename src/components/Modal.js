@@ -137,7 +137,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
         >
             <div className=" p-8 rounded-lg w-96 bg-white dark:bg-gray-800 shadow-lg">
                 <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-white font-poppins">
-                    Create a new post
+                    Create a new Project
                 </h2>
 
                 <form onSubmit={formik.handleSubmit}>

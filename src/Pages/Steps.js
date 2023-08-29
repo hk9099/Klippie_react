@@ -206,7 +206,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
         <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
                 {isLoading && (
-                    <div className="flex items-center justify-center mb-4 text-blue-500">
+                    <div className="flex items-center justify-centertext-blue-500">
                         <Shuffleloader />
                     </div>
                 )}
