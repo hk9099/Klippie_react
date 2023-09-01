@@ -14,20 +14,12 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
     const [error, setError] = useState('');
     const apiCallsMadeRef = useRef(false);
     const prevProjectIdRef = useRef();
-    const [updatedVideoClips, setUpdatedVideoClips] = useState([]);
     const { setIsApiCompleted } = useSidebarContext();
 
-
     useEffect(() => {
-        const newvideoClips = newhistoryvideoClips
-        // console.log(newvideoClips,'newvideoClipssssssssssssssssssssss')
-        setNewvideoClips(newvideoClips)
-    }, [newhistoryvideoClips])
-
-    useEffect(() => {
-        setUpdatedVideoClips(newvideoClips);
-        console.log(updatedVideoClips, 'updatedVideoClips')
-    }, [newvideoClips, updatedVideoClips]);
+        setNewvideoClips(newhistoryvideoClips);
+        console.log(newhistoryvideoClips, 'updatedVideoClips');
+    }, [newhistoryvideoClips]);
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -75,7 +67,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
 
             const response1 = await axios.request(config1);
             console.log('API 1 success:', response1.data);
-            const title = response1.data.data.name;
+            const title = response1.data.data.title;
             const description = response1.data.data.description;
             const src = response1.data.data.video_url;
             const id = response1.data.data.id;

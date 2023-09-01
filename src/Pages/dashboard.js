@@ -8,14 +8,16 @@ import "../assets/css/Sidebar.css";
 export default function Dashboard() {
   const [projectId, setProjectId] = useState(null);
   const [newhistoryvideoClips, setNewvideoClips] = useState([]);
+  const [newmainvideo, setnewMainVideo] = useState([]);
+
   return (
     <div className="h-screen dashborardbg">
       <div className="flex h-full ">
-        <Sidebar setProjectId={setProjectId} setNewvideoClips={setNewvideoClips} />
+        <Sidebar setProjectId={setProjectId} setNewvideoClips={setNewvideoClips}  setnewMainVideo={setnewMainVideo} />
         <div className="w-full overflow-x-auto pt-20 px-2">
           {/* <Navbar /> */}
           <Modal className="z-50"/>
-          {(projectId || newhistoryvideoClips) && <Steps projectId={projectId} newhistoryvideoClips={newhistoryvideoClips} />}
+          {(projectId || newhistoryvideoClips) && <Steps projectId={projectId} newhistoryvideoClips={newhistoryvideoClips}  newmainvideo={newmainvideo} />}
         </div>
       </div>
     </div>

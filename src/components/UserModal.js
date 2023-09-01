@@ -1,35 +1,20 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 
-const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, onSubmit }) => {
+const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, onSubmit }) => {
     // eslint-disable-next-line no-unused-vars
     const [isLoading, setIsLoading] = useState(false); 
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
-    // console.log('avatar', avatar);
-
+    console.log('userNickname', userNickname);
+    
     const validationSchema = Yup.object({
         userNickname: Yup.string().required('Required'),
         userEmailAddress: Yup.string().email('Invalid email').required('Required'),
     });
 
-    useEffect(() => {
-        const handleOutsideClick = (event) => {
-            const modalElement = document.querySelector('.modal-container');
-            if (modalElement && !modalElement.contains(event.target)) {
-                onClose();
-            }
-        };
-
-        if (isOpen) {
-            window.addEventListener('click', handleOutsideClick);
-        }
-
-        return () => {
-            window.removeEventListener('click', handleOutsideClick);
-        };
-    }, [isOpen, onClose]);
+ 
 
     const formik = useFormik({
         initialValues: {
@@ -41,7 +26,6 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
             setIsLoading(true);
             onSubmit(values);
             setIsLoading(false);
-            onClose();
         },
         enableReinitialize: true,
     });
@@ -89,8 +73,8 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
     const defaultAvatarUrl = avatar
 
     return (
-        <section className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50 dark:bg-gray-500 dark:bg-opacity-70`} style={{ margin: '0px' }}>
-            <div className="bg-white p-4 rounded-lg w-[400px] dark:bg-gray-800">
+        <>
+            <div className="bg-white  rounded-lg w-full dark:bg-gray-800">
                 <form onSubmit={formik.handleSubmit}>
                     <div className="mb-4">
                         <label htmlFor="userNickname" className="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-200">
@@ -100,7 +84,7 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
                             type="text"
                             id="userNickname"
                             name="userNickname"
-                            value={formik.values.userNickname}
+                            value={formik.values.userNickname || userNickname}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.userNickname && formik.errors.userNickname ? 'border-red-500' : ''
@@ -155,13 +139,6 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
                     </div>
                     <div className="flex justify-end">
                         <button
-                            type="button"
-                            className="mr-2 px-4 py-2 rounded-md border border-gray-500 bg-gray-100 text-gray-700 font-bold hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200"
-                            onClick={onClose}
-                        >
-                            Cancel
-                        </button>
-                        <button
                             type="submit"
                             className="px-4 py-2 rounded-md border border-blue-500 bg-blue-500 text-white font-bold hover:bg-blue-600 dark:bg-blue-600 dark:text-gray-200"
                         >
@@ -170,7 +147,7 @@ const UserModal = ({ isOpen, onClose, userNickname, userEmailAddress, avatar, on
                     </div>
                 </form>
             </div>
-        </section>
+        </>
     );
 };
 

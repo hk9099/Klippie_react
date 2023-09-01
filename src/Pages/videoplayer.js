@@ -57,7 +57,7 @@ const VideoPlayer = ({ src, title }) => {
 
             const downloadLink = document.createElement("a");
             downloadLink.href = blobURL;
-            downloadLink.download = `Klippie ( ${title} ).mp4`
+            downloadLink.download = `${title}.mp4`
             document.body.appendChild(downloadLink);
 
             // Programmatically click the link to trigger the download
@@ -77,7 +77,7 @@ const VideoPlayer = ({ src, title }) => {
     return (
         <>
                 <JolPlayer
-                    className="w-[400px!important] h-[230px!important] m-auto"
+                    className="w-[400px!important] h-[230px!important] m-[auto!important]"
                     option={{
                         videoSrc: [src],
                         ...videoOptions,

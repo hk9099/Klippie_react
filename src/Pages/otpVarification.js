@@ -171,7 +171,7 @@ function Signin() {
                 } else {
                     setShowResendButton(false);
                 }
-                toast.success('OTP sent successfully');
+                toast.success('New Code sent successfully');
 
                 // Update resendCount in localStorage
                 const updatedResendCount = attempts + 1;
@@ -200,7 +200,7 @@ function Signin() {
                             </span>
                             &#128075;
                         </h1>
-                        <p className="text-gray-500">Please Enter your OTP</p>
+                        <p className="text-gray-500">Please Enter The Unique Code That We Sent To Your Email</p>
                     </div>
                     <div className="mt-10 form_layout">
                         <Formik
@@ -211,12 +211,11 @@ function Signin() {
                             {({ isSubmitting }) => (
                                 <Form className="flex flex-col justify-center items-center">
                                     <div className="emailinput form_layout mb-3  ">
-                                        <label className="text-gray-500">OTP</label>
                                         <div className="inputbox-container">
                                             <Field
                                                 type="text"
                                                 name="otp"
-                                                placeholder="Enter OTP"
+                                                placeholder="Enter Code"
                                                 className={`inputbox`}
                                             />
                                             <span className="email-icon">
@@ -236,7 +235,7 @@ function Signin() {
                                         disabled={isSubmitting}
                                         className="submitbutton mt-10 bg-black text-white font-bold py-2 px-4 rounded-full"
                                     >
-                                        Verify OTP
+                                        Verify Code
                                     </button>
 
                                     {attempts >= 3 ? (
@@ -258,11 +257,11 @@ function Signin() {
                                                     onClick={handleResendOTP}
                                                     className="resendbutton mt-4 bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
                                                 >
-                                                    {resendButtonLoading ? 'Loading...' : 'Resend OTP'}
+                                                    {resendButtonLoading ? 'Loading...' : 'Resend Code'}
                                                 </button>
                                             ) : (
                                                 <div className="resend-timer mt-3">
-                                                    Resend OTP in {resendTimer} seconds
+                                                    Resend Code in {resendTimer} seconds
                                                 </div>
                                             )}
                                         </>

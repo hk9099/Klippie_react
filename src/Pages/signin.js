@@ -79,8 +79,8 @@ function Signin() {
                 }
             })
             .catch((error) => {
-                console.log(error.message);
-                toast.error(error.message, {
+                console.log(error,'error');
+                toast.error('Please Sign up First', {
                     position: toast.POSITION.TOP_CENTER
                 });
             });
@@ -126,9 +126,9 @@ function Signin() {
                 throw new Error('Invalid response from the server.');
             }
         } catch (error) {
-            console.error(error);
+            console.error(error,'error');
             if (error.response && error.response.data && error.response.data.error) {
-                const errorMessage = error.response.data.error;
+                const errorMessage = error.response.data.error.message;
                 toast.error(errorMessage, {
                     position: toast.POSITION.TOP_CENTER
                 });

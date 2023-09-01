@@ -5,7 +5,7 @@ import DataGrid, {
   Paging,
   Pager,
   Item,
-  Editing,
+  // Editing,
 } from "devextreme-react/data-grid";
 import "devextreme/dist/css/dx.light.css";
 import VideoPlayer from "../Pages/videoplayer.js";
@@ -14,23 +14,25 @@ import { Popup } from "devextreme-react/popup";
 import { Form } from "devextreme-react/form";
 
 const Videoclips = ({ videoClips, setVideoCount }) => {
+  //eslint-disable-next-line
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const isDataLoadedRef = useRef(false); // Use a ref to track data loading
 
-  const handleDescriptionCellClick = (rowData) => {
-    setSelectedRowData(rowData.data);
-    setPopupVisible(true);
-  };
+  // const handleDescriptionCellClick = (rowData) => {
+  //   setSelectedRowData(rowData.data);
+  //   setPopupVisible(true);
+  // };
 
   //eslint-disable-next-line
-  const handleClosePopup = () => {
-    setSelectedRowData(null);
-    setPopupVisible(false);
-  };
+  // const handleClosePopup = () => {
+  //   setSelectedRowData(null);
+  //   setPopupVisible(false);
+  // };
 
   const dataSource = {
     store: videoClips,
+    type: "array",
     key: "id",
   };
 
@@ -51,42 +53,14 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
       columnAutoWidth={true}
       showRowLines={true}
       showColumnLines={true}
-      loadPanel={{ enabled: true }} 
+      loadPanel={{ enabled: false }} 
     >
       <Selection
         mode="multiple"
         selectAllMode="allPages"
         showCheckBoxesMode="always"
       />
-      <Editing 
-        mode="popup"
-        useIcons={false}
-        allowUpdating={false}
-        allowDeleting={false}
-        allowAdding={false}  
-        popup={{
-          title: "Video Clip", showTitle: true, width: 700, height: 525,
-          form: {
-            colCount: 2,
-            items: [
-              {
-                dataField: "title",
-                label: { text: "Title" },
-                editorType: "dxTextBox",
-                editorOptions: { width: 300 },
-                validationRules: [{ type: "required" }],
-              },
-              {
-                dataField: "description",
-                label: { text: "Description" },
-                editorType: "dxTextArea",
-                editorOptions: { width: 300 },
-                validationRules: [{ type: "required" }],
-              },
-            ],
-          },
-        }}
-      />
+     
       <Paging defaultPageSize={3} />
       <Pager
         showPageSizeSelector={true}
@@ -122,7 +96,6 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
               fontFamily: "sans-serif",
               cursor: "pointer",
             }}
-            onClick={() => handleDescriptionCellClick(rowData)}
           >
             {rowData.data.description}
           </div>

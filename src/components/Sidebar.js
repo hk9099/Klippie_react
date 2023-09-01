@@ -18,7 +18,7 @@ import { FiEdit2 } from "react-icons/fi";
 import { RotatingLines } from "react-loader-spinner";
 import { useSidebarContext } from '../components/SidebarContext';
 
-const Sidebar = ({ setProjectId, setNewvideoClips }) => {
+const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -204,6 +204,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips }) => {
   const handleSaveClick = (index) => {
     const token = getToken();
     const updatedLine = tempLines[index]; 
+    console.log(updatedLine,'updatedLine')
     // console.log('Token:', token);
     // console.log('Updated Line:', updatedLine);
     // console.log('Project ID:', projectData[index].id);
@@ -269,8 +270,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips }) => {
 
       axios.request(mainconfig)
         .then((response) => {
-          console.log(response.data);
-          const title = response.data.data.name;
+          const title = response.data.data.title;
           const description = response.data.data.description;
           const src = response.data.data.video_url;
           const id = response.data.data.id;
@@ -291,6 +291,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips }) => {
               { title, description, src, id, time: formattedDuration }
             ];
             updateMainVideo(newMainVideo);
+            setnewMainVideo(newMainVideo);
           };
         })
         .catch((error) => {
@@ -316,7 +317,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips }) => {
 
       try {
         const response = await axios.request(config);
-        console.log(response.data.data);
+        console.log(response)
         if (response.data.data && Array.isArray(response.data.data)) {
           const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
             // Split the time string into parts
@@ -339,7 +340,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips }) => {
               time: formattedTime
             };
           }));
-            setNewvideoClips(newvideoClips);
+          setNewvideoClips(newvideoClips);
+          console.log('New video clips:', newvideoClips);
         } else {
           console.log('Invalid API response:', response.data);
         }

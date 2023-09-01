@@ -5,6 +5,7 @@ import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import axios from 'axios';
+import UserModal from '../components/UserModal.js';
 
 const ChangePasswordSchema = Yup.object().shape({
     oldPassword: Yup.string().required('Old Password is required'),
@@ -28,6 +29,7 @@ const AccountModal = ({ showAccount , onclose }) => {
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [userNickname, setUserNickname] = useState('');
     const navigate = useNavigate();
     //eslint-disable-next-line
     const toggleChangePassword = () => {
@@ -38,8 +40,36 @@ const AccountModal = ({ showAccount , onclose }) => {
     const toggleExportData = () => {
         setShowChangePassword(false);
         setShowExportData(!showExportData);
+        setUserNickname(userNickname);
     };
+
     
+    useEffect(() => {
+        var token = localStorage.getItem('_sodfhgiuhih');
+        const decodedToken = atob(token);
+        var userInfo = JSON.parse(decodedToken);
+        token = userInfo.token.access_token;
+        let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://api.getklippie.com/v1/auth/profile',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+
+        console.log(config);
+
+        axios.request(config)
+            .then((response) => {
+                console.log(response.data);
+               setUserNickname(response.data.nickname);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [ showExportData ]);
 
     useEffect(() => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -214,7 +244,11 @@ const AccountModal = ({ showAccount , onclose }) => {
                         )}
                         {showExportData && (
                             <div>
-                                <p>Export Data</p>
+                                <UserModal
+                                    isOpen={showExportData}
+                                    onClose={() => setShowExportData(false)}
+                                    userNickname={userNickname}
+                                />
                             </div>
                         )}
                     </div>

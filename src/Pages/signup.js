@@ -72,6 +72,7 @@ function Signup({ errors, touched }) {
 
         if (response && response.data) {
           console.log(response, 'response.data');
+          navigate("/");
         } else {
           // Unexpected response format
           throw new Error('Invalid response from the server.');
