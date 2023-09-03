@@ -200,7 +200,7 @@ function Signin() {
                             </span>
                             &#128075;
                         </h1>
-                        <p className="text-gray-500">Please Enter The Unique Code That We Sent To Your Email</p>
+                        <p className="text-gray-500 mt-2">Please Enter The Unique Code That We Sent To Your Email</p>
                     </div>
                     <div className="mt-10 form_layout">
                         <Formik

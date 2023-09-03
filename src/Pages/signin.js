@@ -152,7 +152,7 @@ function Signin() {
                         <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-200">
                             Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Klippie</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block', borderRadius: '50%' }} />
                         </h1>
-                        <p className="text-gray-500">Please Login to your account.</p>
+                        <p className="text-gray-500 mt-2">Please Login to your account.</p>
                     </div>
                     <div className="mt-10 form_layout">
                         <Formik

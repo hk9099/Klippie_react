@@ -164,7 +164,7 @@ function Signup({ errors, touched }) {
                 }}
               />
             </h1>
-            <p className="text-gray-500">Please Fill The Below Details</p>
+            <p className="text-gray-500 mt-2">Please Fill The Below Details</p>
           </div>
           <div className="mt-10 form_layout">
             <Formik

@@ -164,7 +164,7 @@ const MultiStepForm = () => {
                             </span>
                             <img src={think} alt="think" className="inline-block ml-2 rounded-full" />
                         </h1>
-                        <p className="text-gray-500">Please Login to your account.</p>
+                        <p className="text-gray-500 mt-2">Please Login to your account.</p>
                     </div>
                     <div className="mt-10 form_layout">
                         <Formik
