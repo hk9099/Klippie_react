@@ -6,7 +6,7 @@ import { RiAccountBoxFill } from 'react-icons/ri';
 import Logout from '../Pages/logout';
 import AccountModal from './AccountModal';
 
-const DropdownMenu = ({ isOpen, position, showLogout }) => {
+const DropdownMenu = ({ isOpen, position, showLogout, userNickname, userEmailAddress, avatar }) => {
     const location = useLocation();
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
     
@@ -36,10 +36,10 @@ const DropdownMenu = ({ isOpen, position, showLogout }) => {
                     </p>
 
                     {isAccountModalOpen && (
-                        <AccountModal showAccount={showLogout} onclose={() => setIsAccountModalOpen(false)} />
+                        <AccountModal showAccount={showLogout} onclose={() => setIsAccountModalOpen(false)} userNickname={userNickname} userEmailAddress={userEmailAddress} avatar={avatar} />
                     )}
                 </Menu.Item>
-                <Menu.Item as="div" className="mx-1">
+                {/* <Menu.Item as="div" className="mx-1">
                     <Link to="/dashboard">
                         <p
                             className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
@@ -51,7 +51,7 @@ const DropdownMenu = ({ isOpen, position, showLogout }) => {
                             </span>
                         </p>
                     </Link>
-                </Menu.Item>
+                </Menu.Item> */}
                 <hr className="dark:border-gray-500 my-1" />
                 <Menu.Item as="div" className="mx-1">
                     <Logout showLogout={showLogout} />

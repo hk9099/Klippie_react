@@ -6,7 +6,7 @@ import Logo from "../assets/images/logo.svg";
 import HamburgerButton from "./HumbergerButton";
 import ".././assets/css/Sidebar.css";
 import Modal from "./Modal";
-import UserModal from "./UserModal";
+import AccountModal from "./AccountModal";
 import axios from "axios";
 import qs from "qs";
 import DropdownMenu from "./DropdownMenu";
@@ -18,12 +18,13 @@ import { FiEdit2 } from "react-icons/fi";
 import { RotatingLines } from "react-loader-spinner";
 import { useSidebarContext } from '../components/SidebarContext';
 
-const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
+const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
+  const [initialized, setInitialized] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showUserModal, setShowUserModal] = useState(false);
+  // const [showUserModal, setShowUserModal] = useState(false);
   const { isApiCompleted } = useSidebarContext();
   //eslint-disable-next-line
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
@@ -37,7 +38,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
   const [dropdownPosition, setDropdownPosition] = useState("down");
   const location = useLocation();
   const [lines, setLines] = useState([]);
-  const [tempLines, setTempLines] = useState([]); 
+  const [tempLines, setTempLines] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [editIndex, setEditIndex] = useState(-1);
   //eslint-disable-next-line
@@ -45,18 +46,18 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
 
+  var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
   useEffect(() => {
     fetchProjectsData(setProjectData, setLines, setIsLoadingHistory);
   }, [isApiCompleted]);
-  
+
   const getToken = () => {
     const encodedToken = localStorage.getItem('_sodfhgiuhih');
 
     if (encodedToken) {
       const decodedToken = atob(encodedToken);
       const userInfo = JSON.parse(decodedToken);
-      console.log(userInfo, 'userInfo.token.access_token')
       return userInfo.token.access_token;
     } else {
       return null;
@@ -74,81 +75,118 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
   }, []);
 
   useEffect(() => {
-    const encodedEmail = localStorage.getItem("_auth");
-    if (encodedEmail) {
-      navigate("/dashboard");
-    } else {
-      navigate("/");
-    }
+    if (!initialized) {
+      const encodedEmail = localStorage.getItem("_auth");
+      if (encodedEmail) {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
 
-    const encodedToken = localStorage.getItem("_sodfhgiuhih");
-    const userGoogle = localStorage.getItem("_auth");
-
-    let userInfo;
-    let googleUserInfo;
-    let userAvatarImage;
-
-    if (encodedToken) {
-      const decodedToken = atob(encodedToken);
-      userInfo = JSON.parse(decodedToken);
-    } else if (userGoogle) {
-      const decodedGoogle = atob(userGoogle);
-      googleUserInfo = JSON.parse(decodedGoogle);
-    }
-
-    let userAvatar;
-    let userNickname;
-    let userEmailAddress;
-
-    if (userInfo?.user?.name) {
-      const userAvatarName = userInfo.user.name;
+      const token = getToken();
 
       let config = {
-        method: "get",
+        method: 'post',
         maxBodyLength: Infinity,
-        url: `https://ui-avatars.com/api/?name=${userAvatarName}&background=0D8ABC&color=fff&size=128`,
-        headers: {},
+        url: `${HOSTINGURL}/v1/auth/profile`,
+        headers: {
+          'accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
       };
 
-      axios(config)
+      // // console.log(config);
+
+      axios.request(config)
         .then((response) => {
-          userAvatarImage = response.config.url;
-
-          userAvatar = userAvatarImage;
-          userNickname = userInfo.user.name;
-          userEmailAddress = userInfo.user.email;
-
-          setUserAvatar(userAvatar);
+          // // console.log(response.data, 'response.data');
+          var userNickname = response.data.name;
           setUserNickname(userNickname);
+          const userEmailAddress = response.data.email;
           setUserEmailAddress(userEmailAddress);
+          const userAvatar = response.data.profile_image;
+          setUserAvatar(userAvatar);
 
-          // console.log(userAvatar, "userAvatar");
+          if (userAvatar === null) {
+            // Generate an avatar only if it's null
+            generateAvatar(userEmailAddress)
+              .then((avatarUrl) => {
+                setUserAvatar(avatarUrl);
+              })
+              .catch((error) => {
+                // // console.log(error);
+              });
+          } else {
+            setUserAvatar(userAvatar);
+          }
+
+
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
-    } else if (googleUserInfo?.googleImage) {
-      userAvatar = googleUserInfo.googleImage;
-      userNickname = googleUserInfo.googleName;
-      userEmailAddress = googleUserInfo.googleEmail;
-
-      setUserAvatar(userAvatar);
-      setUserNickname(userNickname);
-      setUserEmailAddress(userEmailAddress);
-
-      // console.log(userAvatar, "userAvatar");
-    } else {
-      userAvatar = "";
-      userNickname = "";
-      userEmailAddress = "";
+      setInitialized(true);
     }
-  }, [navigate]);
+    // eslint-disable-next-line
+  }, [initialized, navigate]);
 
+  // Function to generate the avatar URL
+  const generateAvatar = (emailAddress) => {
+    const userAvatar = emailAddress.split('@')[0];
+    const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
+
+    return axios.get(avatarUrl)
+      .then((response) => {
+        return response.config.url;
+      })
+      .catch((error) => {
+        // console.log(error);
+        throw error;
+      });
+  };
+
+  // Example email address
+  const emailAddress = userEmailAddress
+  var token = getToken();
+
+  generateAvatar(emailAddress)
+    .then((avatarData) => {
+      let data = JSON.stringify({
+        "avatar": avatarData,
+        "profile_image": "https://res.cloudinary.com/delkyf33p/image/upload/v1693750358/profile_image/7cbcc664-3b69-4bf9-8fe9-1d6609e19678.png",
+      });
+
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `${HOSTINGURL}/v1/auth/update-profile`,
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: data
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          // setUserAvatar(avatarData);
+        })
+        .catch((error) => {
+          // console.log(error);
+        });
+    })
+    .catch((error) => {
+      // console.log(error);
+    });
+
+  // Function to delete a line
   const deleteLine = async (index) => {
     var token = getToken();
     try {
       const clickedProject = projectData[index];
-      console.log('Clicked Project ID:', clickedProject.id);
+      //// console.log('Clicked Project ID:', clickedProject.id);
       var clickedProjectid = clickedProject.id;
 
       let data = qs.stringify({
@@ -158,7 +196,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://api.getklippie.com/v1/project/delete',
+        url: `${HOSTINGURL}/v1/project/delete`,
         headers: {
           'accept': 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -178,8 +216,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
           const updatedLines = prevLines.filter((_, i) => i !== index);
           return updatedLines;
         });
+        setAccordionVisible(false);
+        setError('');
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         // Handle error states or display an error message to the user
       }
     } catch (error) {
@@ -203,11 +243,11 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
 
   const handleSaveClick = (index) => {
     const token = getToken();
-    const updatedLine = tempLines[index]; 
-    console.log(updatedLine,'updatedLine')
-    // console.log('Token:', token);
-    // console.log('Updated Line:', updatedLine);
-    // console.log('Project ID:', projectData[index].id);
+    const updatedLine = tempLines[index];
+    // console.log(updatedLine, 'updatedLine')
+    // // console.log('Token:', token);
+    // // console.log('Updated Line:', updatedLine);
+    // // console.log('Project ID:', projectData[index].id);
     const data = qs.stringify({
       id: projectData[index].id,
       name: updatedLine
@@ -216,7 +256,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://api.getklippie.com/v1/project/update',
+      url: `${HOSTINGURL}/v1/project/update`,
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -227,15 +267,15 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
 
     axios.request(config)
       .then((response) => {
-        // console.log(JSON.stringify(response.data));
+        // // console.log(JSON.stringify(response.data));
         // Update your lines state if needed
         const newLines = [...lines];
         newLines[index] = updatedLine;
         setLines(newLines);
-        setEditIndex(-1); 
+        setEditIndex(-1);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   };
 
@@ -246,10 +286,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
 
   const handleProjectClick = async (index) => {
     const token = getToken();
-    console.log('Token:', token);
+    // console.log('Token:', token);
     if (token) {
       const clickedProject = projectData[index];
-      console.log('Clicked Project ID:', clickedProject.id);
+      //// console.log('Clicked Project ID:', clickedProject.id);
       var clickedProjectid = clickedProject.id;
       //main video 
       let maindata = JSON.stringify({
@@ -259,7 +299,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
       let mainconfig = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://api.getklippie.com/v1/project/get-by-id',
+        url: `${HOSTINGURL}/v1/project/get-by-id`,
         headers: {
           'accept': 'application/json',
           'Content-Type': 'application/json',
@@ -295,7 +335,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
           };
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
 
       //video clips
@@ -306,7 +346,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://api.getklippie.com/v1/clip/get-by-id',
+        url: `${HOSTINGURL}/v1/clip/get-by-id`,
         headers: {
           'accept': 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -317,7 +357,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
 
       try {
         const response = await axios.request(config);
-        console.log(response)
+        // console.log(response)
         if (response.data.data && Array.isArray(response.data.data)) {
           const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
             // Split the time string into parts
@@ -341,23 +381,26 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
             };
           }));
           setNewvideoClips(newvideoClips);
-          console.log('New video clips:', newvideoClips);
+          setAccordionVisible(true);
+          setError('');
+          // console.log('New video clips:', newvideoClips);
         } else {
-          console.log('Invalid API response:', response.data);
+          // console.log('Invalid API response:', response.data);
+          setAccordionVisible(false);
+          setError('We could not find the clips for this project');
         }
       } catch (error) {
-        // toast.error('Error while fetching clips', {
-        //   position: toast.POSITION.TOP_RIGHT
-        // });
+        setAccordionVisible(false);
+        setError('We could not find the clips for this project');
       }
     }
   };
 
 
   const handleAddNewVideo = () => {
-  
-      setShowModal(true);
-  
+
+    setShowModal(true);
+
   };
 
   const handleFormSubmit = (projectId) => {
@@ -452,8 +495,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
               </span>
             </div>
           ) : (
-              <div className={`overflow-hidden ${!open && "hidden"} relative`}>
-                {lines.map((line, index) => (
+            <div className={`overflow-hidden ${!open && "hidden"} relative`}>
+              {lines
+                .filter((line) => line && line.trim() !== "")
+                .map((line, index) => (
                   <div
                     key={index}
                     className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
@@ -508,7 +553,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
                     </div>
                   </div>
                 ))}
-              </div>
+            </div>
           )}
         </div>
 
@@ -538,26 +583,31 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
                 setIsOpen={setDropdownOpen}
                 position={dropdownPosition}
                 showLogout={open}
+                userNickname={userNickname}
+                userEmailAddress={userEmailAddress}
+                avatar={userAvatar}
               />
             </Menu>
 
             <div
-              className="user group flex items-center gap-x-2 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 "
+              className="user group flex items-center gap-x-2 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 justify-between "
               // onClick={handleUserModal}
               onClick={toggleDropdown}
-              title={userEmailAddress}
+              title={userNickname}
             >
-              <img
-                className="shrink-0 h-9 w-9 rounded-sm"
-                src={userAvatar}
-                alt="Avatar"
-              />
+              {userAvatar ? (
+                <img src={userAvatar} className="shrink-0 h-9 w-9 rounded-sm" alt="User Avatar" />
+              ) : (
+                <div>
+                  <RotatingLines strokeColor="grey" strokeWidth="5" animationDuration="0.75" width="25" visible={true} />
+                </div>
+              )}
               <div
                 className={`${!open && "hidden"
                   } origin-left duration-300 hover:block text-sm overflow-hidden text-ellipsis whitespace-nowrap`}
               >
                 <p className="grow overflow-hidden text-ellipsis whitespace-nowrap text-left text-white font-bold">
-                  {userEmailAddress}
+                  {userNickname}
                 </p>
 
               </div>
@@ -565,16 +615,13 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo }) => {
               <BsThreeDots />
             </div>
 
-            <UserModal
-              isOpen={showUserModal}
-              onClose={() => setShowUserModal(false)}
+            <AccountModal
               userNickname={userNickname}
               userEmailAddress={userEmailAddress}
               avatar={userAvatar}
               isLoading={isLoading}
               onSubmit={(values) => {
-                console.log(values);
-                setShowUserModal(false);
+                // console.log(values);
               }}
             />
           </div>

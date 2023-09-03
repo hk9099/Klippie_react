@@ -5,12 +5,12 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.left_backgroundinage {
+/* .left_backgroundinage {
   background-image: url(../../assets/images/background.png);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-}
+} */
 .right_block {
   border-left: 6px solid;
   border-image: linear-gradient(0deg, #f0d9ca, #c6e0f5 12.5%, #d8ceff 25%, #ffdd9b 37.5%, #f5c6cf 50%, #f0d9ca 62.5%, #c6e0f5 75%, #d8ceff 87.5%) 1;

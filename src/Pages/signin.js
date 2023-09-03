@@ -41,7 +41,7 @@ function Signin() {
 
         signInWithPopup(auth, customProvider)
             .then(async (result) => {
-                console.log(result.user, 'result');
+                // console.log(result.user, 'result');
                 // // setToken(result.user);
                 // const userGoogle = {
                 //     googleToken: result.user.accessToken,
@@ -52,7 +52,7 @@ function Signin() {
                 // };
 
                 // const encodedUser = btoa(JSON.stringify(userGoogle));
-                // console.log(encodedUser, 'encodedUser');
+                // // console.log(encodedUser, 'encodedUser');
                 // localStorage.setItem('_auth', encodedUser);
                 // navigate('/dashboard');
                 const response = await axios.post(
@@ -79,7 +79,7 @@ function Signin() {
                 }
             })
             .catch((error) => {
-                console.log(error,'error');
+                // console.log(error, 'error');
                 toast.error('Please Sign up First', {
                     position: toast.POSITION.TOP_CENTER
                 });
@@ -126,14 +126,14 @@ function Signin() {
                 throw new Error('Invalid response from the server.');
             }
         } catch (error) {
-            console.error(error,'error');
+            console.error(error, 'error');
             if (error.response && error.response.data && error.response.data.error) {
                 const errorMessage = error.response.data.error.message;
                 toast.error(errorMessage, {
                     position: toast.POSITION.TOP_CENTER
                 });
             } else {
-                toast.error('An error occurred during login.', {
+                toast.error('Something went wrong', {
                     position: toast.POSITION.TOP_CENTER
                 });
             }
@@ -150,7 +150,7 @@ function Signin() {
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
                         <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-200">
-                            Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Klippie</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block' ,borderRadius : '50%' }} />
+                            Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Klippie</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block', borderRadius: '50%' }} />
                         </h1>
                         <p className="text-gray-500">Please Login to your account.</p>
                     </div>
@@ -214,7 +214,7 @@ function Signin() {
                                     <button
                                         type="submit"
                                         className="submitbutton mt-10 bg-purple-500 text-white font-bold py-2 px-4 rounded-full"
-                                        disabled={isLoading} 
+                                        disabled={isLoading}
                                         style={{ cursor: isLoading ? 'wait' : 'pointer' }}
                                     >
                                         {isLoading ? 'Sign in...' : 'Sign in'}

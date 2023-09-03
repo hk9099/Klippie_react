@@ -104,9 +104,9 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
 
                 const response = await axios.post(apiUrl, qs.stringify(data), config);
                 if (response.status === 200) {
-                    console.log("API call successful:", response.data);
+                    // // console.log("API call successful:", response.data);
 
-                   
+
                     var projectId = response.data.data.id;
                     onSubmit(projectId);
 
@@ -136,11 +136,11 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
             style={{ margin: "0px" }}
         >
             <div className=" p-8 rounded-lg w-96 bg-white dark:bg-gray-800 shadow-lg">
-                <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-white font-poppins">
+                <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-white font-poppins text-center font-bold">
                     Create a new Project
                 </h2>
-
-                <form onSubmit={formik.handleSubmit}>
+                <hr className="dark:border-gray-500 my-1" />
+                <form onSubmit={formik.handleSubmit} className="mt-4">
                     <div className="mb-4 flex justify-between items-center">
                         <div className="flex items-center">
                             <input
@@ -150,12 +150,15 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 value="youtube"
                                 checked={selectedOption === "youtube"}
                                 onChange={() => setSelectedOption("youtube")}
-                                className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                                className="form-radio hidden h-0 w-0"
                             />
                             <label
                                 htmlFor="youtube"
-                                className="ml-2 text-gray-800 dark:text-gray-200"
+                                className="relative cursor-pointer pl-8 text-gray-800 dark:text-gray-200 select-none"
                             >
+                                <div className="absolute left-0 flex items-center justify-center w-6 h-6 border border-gray-400 dark:border-gray-600 rounded-full">
+                                    <div className={`w-3 h-3 rounded-full ${selectedOption === "youtube" ? 'bg-indigo-600' : 'bg-white'}`}></div>
+                                </div>
                                 YouTube Link
                             </label>
                         </div>
@@ -167,16 +170,20 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 value="upload"
                                 checked={selectedOption === "upload"}
                                 onChange={() => setSelectedOption("upload")}
-                                className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                                className="form-radio hidden h-0 w-0"
                             />
                             <label
                                 htmlFor="upload"
-                                className="ml-2 text-gray-800 dark:text-gray-200"
+                                className="relative cursor-pointer pl-8 text-gray-800 dark:text-gray-200 select-none"
                             >
+                                <div className="absolute left-0 flex items-center justify-center w-6 h-6 border border-gray-400 dark:border-gray-600 rounded-full">
+                                    <div className={`w-3 h-3 rounded-full ${selectedOption === "upload" ? 'bg-indigo-600' : 'bg-white'}`}></div>
+                                </div>
                                 Upload Audio/Video
                             </label>
                         </div>
                     </div>
+
 
                     {selectedOption === "youtube" ? (
                         <div className="mb-4">
@@ -193,7 +200,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 className={`mt-1 block w-full border ${formik.errors.youtubeLink && formik.touched.youtubeLink
                                     ? "border-red-500"
                                     : "border-gray-300"
-                                    } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-transparent text-white`}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.youtubeLink}
@@ -210,7 +217,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 <div className="relative">
                                     <p
                                         id="filename"
-                                        className="mt-1  w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 select-none dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                                        className="mt-1  w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 select-none dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200 whitespace-nowrap overflow-hidden overflow-ellipsis"
                                     >
                                         {uploadedFileName}
                                     </p>
@@ -245,10 +252,11 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                             setUploadedFileName={setUploadedFileName}
                         />
                     )}
-                    <div className="flex justify-end">
+                    <hr className="dark:border-gray-500 my-1" />
+                    <div className="flex justify-end mt-4">
                         <button
                             type="button"
-                            className="mr-2 px-4 py-2 rounded-lg font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="mr-2 w-full px-4 py-2 rounded-lg font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             onClick={() => {
                                 resetFormAndFileStack();
                                 onClose();
@@ -258,10 +266,10 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                         </button>
                         <button
                             type="submit"
-                            className={`px-4 py-2 bg-blue-500 text-white rounded-lg font-medium ${formik.isSubmitting
+                            className={`px-4 py-2 w-full bg-gray-500 text-white rounded-lg font-medium ${formik.isSubmitting
                                 ? "opacity-75 cursor-wait"
-                                : "hover:bg-blue-600 dark:hover:bg-blue-600 cursor-pointer grab:cursor grab:transition-all grab:duration-200"
-                                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                : "hover:bg-gray-600 dark:hover:bg-gray-600 cursor-pointer grab:cursor grab:transition-all grab:duration-200"
+                                } focus:outline-none focus:ring-2 focus:ring-gray-500`}
                             disabled={
                                 formik.isSubmitting ||
                                 (selectedOption === "youtube" && !formik.values.youtubeLink) ||

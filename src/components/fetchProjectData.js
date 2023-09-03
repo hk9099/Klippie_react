@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+var HOSTINGURL = 'https://api.getklippie.com';
+
 const getToken = () => {
     const encodedToken = localStorage.getItem('_sodfhgiuhih');
 
@@ -22,7 +24,7 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory) 
     setIsLoadingHistory(true);
     try {
         const response = await axios.post(
-            'https://api.getklippie.com/v1/project/get-my-all',
+            `${HOSTINGURL}/v1/project/get-my-all`,
             null,
             {
                 headers: {
@@ -30,9 +32,9 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory) 
                     'Authorization': `Bearer ${token}`,
                 },
             }
-            );
-            
-            console.log('Projects:', response.data);
+        );
+
+        // // console.log('Projects:', response.data);
         const projectData = response.data.data;
         setProjectData(projectData);
 
@@ -40,7 +42,7 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory) 
             setLines(projectData.map(project => project.name));
         }
         setIsLoadingHistory(false);
- 
+
     } catch (error) {
         console.error('API Error:', error);
         setIsLoadingHistory(false);

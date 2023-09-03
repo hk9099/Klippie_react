@@ -6,7 +6,8 @@ import Shuffleloader from '../components/shuffleloader.js';
 import { updateMainVideo } from "../components/data.js";
 import { useSidebarContext } from '../components/SidebarContext.js';
 
-const Steps = ({ projectId, newhistoryvideoClips }) => {
+
+const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [newvideoClips, setNewvideoClips] = useState([]);
     //eslint-disable-next-line
@@ -14,11 +15,12 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
     const [error, setError] = useState('');
     const apiCallsMadeRef = useRef(false);
     const prevProjectIdRef = useRef();
+    //eslint-disable-next-line
+    const [accordionVisible, setAccordionVisible] = useState(true);
     const { setIsApiCompleted } = useSidebarContext();
-
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
-        console.log(newhistoryvideoClips, 'updatedVideoClips');
+        // console.log(newhistoryvideoClips, 'updatedVideoClips');
     }, [newhistoryvideoClips]);
 
     const getToken = () => {
@@ -34,16 +36,18 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
     };
 
     const makeApiCalls = async (projectId, token) => {
+        setIsApiCompleted(false);
         try {
-            console.log('projectId:', projectId);
-            console.log('Token:', token);
-            console.log('API 1 started');
+            // console.log('projectId:', projectId);
+            // console.log('Token:', token);
+            // console.log('API 1 started');
 
             if (!projectId || !token) {
                 return;
             }
 
             // API 1
+            setAccordionVisible(true);
             setAllApiCompleted(false);
             setError('');
             setIsLoading(true);
@@ -66,7 +70,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
             };
 
             const response1 = await axios.request(config1);
-            console.log('API 1 success:', response1.data);
+            // console.log('API 1 success:', response1.data);
             const title = response1.data.data.title;
             const description = response1.data.data.description;
             const src = response1.data.data.video_url;
@@ -87,7 +91,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
                 const newMainVideo = [
                     { title, description, src, id, time: formattedDuration }
                 ];
-                
+
                 try {
                     await updateMainVideo(newMainVideo); // Assuming updateMainVideo returns a promise
                     setIsApiCompleted(true);
@@ -118,7 +122,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
                 };
 
                 const response2 = await axios.request(config2);
-                console.log('API 2 success:', response2.data);
+                // console.log('API 2 success:', response2.data);
 
                 // API 3 (Only after API 2 success)
                 if (response2.data.success) {
@@ -141,7 +145,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
                     };
 
                     const response3 = await axios.request(config3);
-                    console.log('API 3 success:', response3.data.data.clips);
+                    // console.log('API 3 success:', response3.data.data.clips);
                     if (response3.data.data.clips && Array.isArray(response3.data.data.clips)) {
                         const newvideoClips = await Promise.all(response3.data.data.clips.map(async (clip) => {
                             // Split the time string into parts
@@ -165,19 +169,19 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
                             };
                         }));
                         setNewvideoClips(newvideoClips);
-
-
-
+                        setIsApiCompleted(false);
                     } else {
-                        console.log('Invalid API 3 response:', response3.data);
+                        // console.log('Invalid API 3 response:', response3.data);
                     }
                     setIsLoading(false);
                     setAllApiCompleted(true);
                 }
             }
         } catch (error) {
-            console.log(error);
-            setError('Something went wrong. Please try again.');
+            // console.log(error);
+            setTimeout(() => {
+                setError('Something went wrong. Please try again.');
+            }, 3000);
             setIsLoading(false);
         }
     };
@@ -196,6 +200,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
 
     return (
         <div className="min-h-screen flex items-center justify-center">
+            {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
             <div className="text-center">
                 {isLoading && (
                     <div className="flex items-center justify-centertext-blue-500">
@@ -204,7 +209,7 @@ const Steps = ({ projectId, newhistoryvideoClips }) => {
                 )}
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
-            {!isLoading && newvideoClips.length > 0 && (
+            {!isLoading && newvideoClips.length > 0 && accordionVisible && (
                 <AccordionSection videoClips={newvideoClips} />
             )}
         </div>

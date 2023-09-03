@@ -1,19 +1,23 @@
 import React, { useState } from 'react'
-import Toggle from './ThemeToggle'
+// import Toggle from './ThemeToggle'
+//eslint-disable-next-line
 import { Link, useLocation } from 'react-router-dom'
-import { AiOutlineShareAlt } from 'react-icons/ai'
+// import { AiOutlineShareAlt } from 'react-icons/ai'
 
 const Navbar = () => {
+    //eslint-disable-next-line
     const [open] = useState(true)
+    //eslint-disable-next-line
     const location = useLocation()
 
     return (
-        <nav className='bg-white border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-[#0D0E20] sticky top-0 z-20 dashborardbg'>
+        <>
+        <nav className='bg-white border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent h-[90px] sticky top-0 z-20 dashborardbg'>
             <div className=' flex justify-between items-center mx-auto pt-3'>
-                <div className='flex items-center mx-auto'>
-                    {/* <span className='text-xl font-medium whitespace-nowrap dark:text-white'>
+                {/* <div className='flex items-center mx-auto'>
+                    <span className='text-xl font-medium whitespace-nowrap dark:text-white'>
                         Welcome
-                    </span> */}
+                    </span>
                 </div>
                 <div className='flex justify-end pr-4'>
                     <Link to="/dashboard">
@@ -27,9 +31,10 @@ const Navbar = () => {
                         </p>
                     </Link>
                     <Toggle />
-                </div>
+                </div> */}
             </div>
-        </nav>
+            </nav>
+        </>
     )
 }
 

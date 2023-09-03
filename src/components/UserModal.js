@@ -2,29 +2,91 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { Form, Field, ErrorMessage } from 'formik';
+import { FiEdit2 } from 'react-icons/fi';
 
-const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, onSubmit }) => {
+const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) => {
     // eslint-disable-next-line no-unused-vars
-    const [isLoading, setIsLoading] = useState(false); 
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
-    console.log('userNickname', userNickname);
-    
     const validationSchema = Yup.object({
         userNickname: Yup.string().required('Required'),
-        userEmailAddress: Yup.string().email('Invalid email').required('Required'),
     });
 
- 
+    var HOSTINGURL = 'https://api.getklippie.com';
+
+    const getToken = () => {
+        const encodedToken = localStorage.getItem('_sodfhgiuhih');
+
+        if (encodedToken) {
+            const decodedToken = atob(encodedToken);
+            const userInfo = JSON.parse(decodedToken);
+            return userInfo.token.access_token;
+        } else {
+            return null;
+        }
+    };
+
+    const token = getToken();
+
 
     const formik = useFormik({
         initialValues: {
             userNickname,
             userEmailAddress,
+            avatar,
         },
         validationSchema,
         onSubmit: (values) => {
             setIsLoading(true);
-            onSubmit(values);
+            // console.log('values', values);
+            let data = new FormData();
+            data.append('file', values.avatar);
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://api.getklippie.com/v1/auth/upload-profile-image',
+                headers: {
+                    'accept': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                data: data
+            };
+
+            axios.request(config)
+                .then((response) => {
+                    var profile_image = response.data.data.profile_image;
+                    // console.log(profile_image);
+                    let data = JSON.stringify({
+                        "name": values.userNickname,
+                        "profile_image": profile_image
+                    });
+
+                    let config = {
+                        method: 'post',
+                        maxBodyLength: Infinity,
+                        url: `${HOSTINGURL}/v1/auth/update-profile`,
+                        headers: {
+                            'accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        data: data
+                    };
+
+                    axios
+                        .request(config)
+                        .then((response) => {
+                            // console.log(response);
+                            window.location.reload();
+                        })
+                        .catch((error) => {
+                            // console.log(error);
+                        });
+                })
+                .catch((error) => {
+                    // console.log(error);
+                });
             setIsLoading(false);
         },
         enableReinitialize: true,
@@ -32,35 +94,11 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, onSubmit })
 
     const handleAvatarChange = (event) => {
         const file = event.currentTarget.files[0];
+        setSelectedAvatar(URL.createObjectURL(file));
+        formik.setFieldValue('avatar', file);
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedAvatar(reader.result);
-                formik.setFieldValue('avatar', file);
 
-                const data = new FormData();    
-                data.append('file', file);
 
-                let config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: 'https://api.getklippie.com/v1/auth/upload-profile-image',
-                    headers: {
-                        'accept': 'application/json',
-                        ...data.getHeaders()
-                    },
-                    data: data
-                };
-
-                axios.request(config)
-                    .then((response) => {
-                        console.log(JSON.stringify(response.data));
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            };
-            reader.readAsDataURL(file);
         } else {
             setSelectedAvatar(avatar);
             formik.setFieldValue('avatar', null);
@@ -70,82 +108,64 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, onSubmit })
 
     if (!isOpen) return null;
 
-    const defaultAvatarUrl = avatar
 
     return (
         <>
-            <div className="bg-white  rounded-lg w-full dark:bg-gray-800">
-                <form onSubmit={formik.handleSubmit}>
-                    <div className="mb-4">
-                        <label htmlFor="userNickname" className="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-200">
-                            Nickname
-                        </label>
-                        <input
-                            type="text"
-                            id="userNickname"
-                            name="userNickname"
-                            value={formik.values.userNickname || userNickname}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.userNickname && formik.errors.userNickname ? 'border-red-500' : ''
-                                } dark:bg-gray-700 dark:text-gray-200`}
-                            placeholder="Enter your nickname"
-                        />
-                        {formik.touched.userNickname && formik.errors.userNickname && (
-                            <p className="text-red-500 text-xs italic">{formik.errors.userNickname}</p>
-                        )}
+            <div className="bg-white rounded-lg w-full dark:bg-gray-800">
+                <Form onSubmit={formik.handleSubmit} >
+                    <div className="mb-4 text-center">
+                        <div className="flex items-center justify-center text-center relative">
+                            <img
+                                className="h-20 w-20 rounded-full cursor-pointer hover:opacity-20"
+                                src={selectedAvatar || avatar}
+                                alt="Avatar"
+                                onClick={() => document.getElementById('avatar').click()}
+                            />
+                            <Field type="file" id="avatar" name="avatar" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+                            {/* Add the edit icon here */}
+                            <div className={`absolute bottom-0  p-1 bg-white rounded-full ${social ? 'right-[9rem]' : 'right-[10rem]'}`}>
+                                {/* Replace this with your React Icon */}
+                                <FiEdit2 className="text-gray-500 cursor-pointer " onClick={() => document.getElementById('avatar').click()} />
+                            </div>
+                        </div>
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="userEmailAddress" className="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-200">
-                            Email Address
-                        </label>
-                        <input
+                        <Field
+                            type="text"
+                            id="userNickname"
+                            value={formik.values.userNickname}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            name="userNickname"
+                            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.userNickname && formik.errors.userNickname ? 'border-red-500' : ''} dark:bg-gray-700 dark:text-gray-200`}
+                            placeholder="Enter your nickname"
+                        /> {/* Step 4: Use Field component */}
+                        <ErrorMessage name="userNickname" component="p" className="text-red-500 text-xs italic" /> {/* Step 5: Display validation errors */}
+                    </div>
+                    <div className="mb-4">
+                        <Field
                             type="text"
                             id="userEmailAddress"
                             name="userEmailAddress"
                             value={formik.values.userEmailAddress}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            className={`shadow appearance-none select-none read-only:bg-gray-100 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.userEmailAddress && formik.errors.userEmailAddress ? 'border-red-500' : ''
-                                } dark:bg-gray-700 dark:text-gray-200`}
+                            className={`shadow appearance-none select-none read-only:bg-gray-100 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.userEmailAddress && formik.errors.userEmailAddress ? 'border-red-500' : ''} dark:bg-gray-700 dark:text-gray-200`}
                             placeholder="Enter your email address"
                             style={{ cursor: 'not-allowed', userSelect: 'none' }}
-                            readOnly disabled
+                            readOnly
+                            disabled
                         />
-                        {formik.touched.userEmailAddress && formik.errors.userEmailAddress && (
-                            <p className="text-red-500 text-xs italic">{formik.errors.userEmailAddress}</p>
-                        )}
+                        <ErrorMessage name="userEmailAddress" component="p" className="text-red-500 text-xs italic" /> {/* Step 5: Display validation errors */}
                     </div>
-                    <div className="mb-4">
-                        <label htmlFor="avatar" className="block text-gray-700 text-sm font-bold mb-2">
-                            Avatar
-                        </label>
-                        <div className="flex items-center">
-                            <img
-                                className="h-12 w-12 rounded-full cursor-pointer border border-gray-400 hover:opacity-20"
-                                src={selectedAvatar || avatar || defaultAvatarUrl}
-                                alt="Avatar"
-                                onClick={() => document.getElementById('avatar').click()}
-                            />
-                            <input
-                                type="file"
-                                id="avatar"
-                                name="avatar"
-                                accept="image/*"
-                                onChange={handleAvatarChange}
-                                className="hidden"
-                            />
-                        </div>
-                    </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-end mt-7">
                         <button
                             type="submit"
-                            className="px-4 py-2 rounded-md border border-blue-500 bg-blue-500 text-white font-bold hover:bg-blue-600 dark:bg-blue-600 dark:text-gray-200"
+                            className={`${isLoading ? 'bg-gray-400 cursor-wait' : 'bg-blue-500'} w-full text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
+                            disabled={isLoading}
                         >
-                            Save Changes
+                            {isLoading ? 'Loading...' : 'Submit'}
                         </button>
                     </div>
-                </form>
+                </Form>
             </div>
         </>
     );

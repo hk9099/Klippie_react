@@ -44,7 +44,7 @@ function Signup({ errors, touched }) {
 
     signInWithPopup(auth, customProvider)
       .then(async (result) => {
-        console.log(result.user, "result");
+        // console.log(result.user, "result");
         // setToken(result.user);
         // const userGoogle = {
         //   googleToken: result.user.accessToken,
@@ -55,7 +55,7 @@ function Signup({ errors, touched }) {
         // };
 
         // const encodedUser = btoa(JSON.stringify(userGoogle));
-        // console.log(encodedUser, "encodedUser");
+        // // console.log(encodedUser, "encodedUser");
         // localStorage.setItem("_auth", encodedUser);
         // navigate("/dashboard");
         const response = await axios.post(
@@ -71,7 +71,7 @@ function Signup({ errors, touched }) {
         );
 
         if (response && response.data) {
-          console.log(response, 'response.data');
+          // console.log(response, 'response.data');
           navigate("/");
         } else {
           // Unexpected response format
@@ -79,7 +79,7 @@ function Signup({ errors, touched }) {
         }
       })
       .catch((error) => {
-        // console.log(error.message);
+        // // console.log(error.message);
         toast.error(error.message, {
           position: toast.POSITION.TOP_CENTER,
         });
@@ -126,17 +126,17 @@ function Signup({ errors, touched }) {
     axios
       .post(process.env.REACT_APP_HOSTING_URL + "/v1/auth/signup", payload)
       .then((response) => {
-        console.log(response, "response");
+        // console.log(response, "response");
         var signupToken = response.data.data;
         localStorage.setItem("signupToken", signupToken);
         navigate("/otpVarification");
       })
       .catch((error) => {
-        console.log(error.response.data);
+        // console.log(error.response.data);
         toast.error(error.response.data.detail);
       })
       .finally(() => {
-        console.log("finally");
+        // console.log("finally");
         setLoading(false);
         setSubmitting(false);
       });
@@ -181,9 +181,8 @@ function Signup({ errors, touched }) {
                         type="text"
                         name="name"
                         placeholder="Name"
-                        className={`inputbox dark:bg-purple-200 text-black ${
-                          errors.name && touched.name ? "border-red-500" : ""
-                        } dark:text-white`}
+                        className={`inputbox dark:bg-purple-200 text-black ${errors.name && touched.name ? "border-red-500" : ""
+                          } dark:text-white`}
                       />
                       <span className="email-icon">
                         <BiSolidUser className="dark:text-gray-800 text-gray-500" />
@@ -205,9 +204,8 @@ function Signup({ errors, touched }) {
                         type="text"
                         name="email"
                         placeholder="Email"
-                        className={`inputbox dark:bg-purple-200 text-black ${
-                          errors.email && touched.email ? "border-red-500" : ""
-                        }`}
+                        className={`inputbox dark:bg-purple-200 text-black ${errors.email && touched.email ? "border-red-500" : ""
+                          }`}
                       />
                       <span className="email-icon">
                         <HiOutlineMail className="dark:text-gray-800 text-gray-500" />
@@ -237,11 +235,10 @@ function Signup({ errors, touched }) {
                         type={showPassword ? "text" : "password"}
                         name="password"
                         placeholder="Password"
-                        className={`inputbox dark:bg-purple-200 text-black ${
-                          errors.password && touched.password
-                            ? "border-red-500"
-                            : ""
-                        }`}
+                        className={`inputbox dark:bg-purple-200 text-black ${errors.password && touched.password
+                          ? "border-red-500"
+                          : ""
+                          }`}
                         autoComplete="current-password"
                       />
                       <span
@@ -279,11 +276,10 @@ function Signup({ errors, touched }) {
                         type={showConfirmPassword ? "text" : "password"}
                         name="confirmPassword"
                         placeholder="Confirm Password"
-                        className={`inputbox dark:bg-purple-200 text-black ${
-                          errors.confirmPassword && touched.confirmPassword
-                            ? "border-red-500"
-                            : ""
-                        }`}
+                        className={`inputbox dark:bg-purple-200 text-black ${errors.confirmPassword && touched.confirmPassword
+                          ? "border-red-500"
+                          : ""
+                          }`}
                       />
                       <span
                         className="password-icon"

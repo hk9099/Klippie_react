@@ -32,7 +32,7 @@ const MultiStepForm = () => {
     const [passwordLoading, setPasswordLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -72,6 +72,8 @@ const MultiStepForm = () => {
         setLoading(true);
         setOtpLoading(true);
         try {
+
+            //eslint-disable-next-line
             const response = await axios.post(
                 'https://api.getklippie.com/v1/auth/verify-otp',
                 {
@@ -80,13 +82,13 @@ const MultiStepForm = () => {
                     type: 'fp',
                 }
             );
-            console.log(JSON.stringify(response.data));
+            // console.log(JSON.stringify(response.data));
             setOtpVerified(true);
             setLoading(false);
             setStep(3);
             showToast('OTP verification successful!');
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setLoading(false);
             setError('OTP verification failed. Please try again.');
             showToast('OTP verification failed. Please try again.');
@@ -100,6 +102,7 @@ const MultiStepForm = () => {
         setLoading(true);
         setPasswordLoading(true);
         try {
+            //eslint-disable-next-line
             const response = await axios.post(
                 'https://api.getklippie.com/v1/auth/reset-forgot-password',
                 {
@@ -107,19 +110,19 @@ const MultiStepForm = () => {
                     new_password: formData.password,
                 }
             );
-            console.log(JSON.stringify(response.data));
+            // console.log(JSON.stringify(response.data));
             setLoading(false);
             setSuccess('Password reset successful!');
             showToast('Password reset successful!');
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setLoading(false);
             setError('Failed to reset password. Please try again.');
             showToast('Failed to reset password. Please try again.');
         } finally {
             setPasswordLoading(false);
         }
-        
+
     };
 
     const prevStep = () => {
@@ -147,7 +150,7 @@ const MultiStepForm = () => {
         toast(message, { position: toast.POSITION.TOP_CENTER });
     };
 
-  
+
 
     return (
         <main>
@@ -155,11 +158,11 @@ const MultiStepForm = () => {
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
                         <h1 className="text-4xl font-bold text-gray-200 flext items-center">
-                           Forgot {'  '}
+                            Forgot {'  '}
                             <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">
                                 Password
                             </span>
-                                <img src={think} alt="think" className="inline-block ml-2 rounded-full" />
+                            <img src={think} alt="think" className="inline-block ml-2 rounded-full" />
                         </h1>
                         <p className="text-gray-500">Please Login to your account.</p>
                     </div>
@@ -232,7 +235,7 @@ const MultiStepForm = () => {
                                                 <span className="email-icon">
                                                     <TbDeviceMobileMessage />
                                                 </span>
-                                                
+
                                             </div>
                                             <ErrorMessage
                                                 name="email"
@@ -314,7 +317,7 @@ const MultiStepForm = () => {
                                                     className={`inputbox`}
                                                     onChange={handleChange}
                                                     value={formData.password || ''}
-                                                    autoComplete="current-password"                                                />
+                                                    autoComplete="current-password" />
                                                 <span
                                                     className="password-icon"
                                                     onClick={() => setShowPassword(!showPassword)}
@@ -378,11 +381,11 @@ const MultiStepForm = () => {
                                             {passwordLoading ? 'Resetting Password...' : 'Reset Password'}
                                         </button>
                                     </div>
-                                      
+
                                 )}
                                 <div className="flex flex-col justify-center items-center mt-2">
                                     <p className="signup_create_acp" style={{ justifyContent: 'space-between!important' }}   >
-                                       
+
                                         <Link to="/" className="create_ac ml-2">
                                             Back to Login
                                         </Link>

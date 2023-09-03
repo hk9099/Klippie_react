@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
   };
 } else {
   // Disable the message in development mode
-  console.log("Disabling React DevTools in development mode");
+  // // console.log("Disabling React DevTools in development mode");
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
     ...window.__REACT_DEVTOOLS_GLOBAL_HOOK__,
     renderers: [],

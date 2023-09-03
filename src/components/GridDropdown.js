@@ -9,7 +9,7 @@ export default function DownloadButton({ status, clipId }) {
 
     // Define the default selected item and its associated colors
     const defaultSelectedItem = status;
-    const defaultSelectedItemStyle = { backgroundColor: '#000', color: '#000!important' };
+    const defaultSelectedItemStyle = { backgroundColor: '', color: 'transparent!important' };
 
     // Use the default selected item as the initial state
     const [selectedItem, setSelectedItem] = useState(defaultSelectedItem);
@@ -46,9 +46,9 @@ export default function DownloadButton({ status, clipId }) {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            // console.log(JSON.stringify(response.data));
+            // // console.log(JSON.stringify(response.data));
         } catch (error) {
-            console.log(error);
+            // // console.log(error);
         }
     };
 
@@ -62,7 +62,7 @@ export default function DownloadButton({ status, clipId }) {
             case 'IN REVIEW':
                 return { backgroundColor: '#FFC34E', color: '#000!important' };
             default:
-                return { backgroundColor: 'rgb(147 147 147)', color: '#000!important' };
+                return { backgroundColor: 'rgb(147 147 147)', color: 'transparent!important' };
         }
     };
 
@@ -77,10 +77,10 @@ export default function DownloadButton({ status, clipId }) {
                     backgroundColor: selectedItemStyle.backgroundColor || defaultSelectedItemStyle.backgroundColor,
                     color: selectedItemStyle.color || defaultSelectedItemStyle.color
                 }}
-                className="text-black w-[8rem] focus:outline-none font-medium rounded-3xl text-sm p-2 text-center inline-flex items-center justify-center dark:bg-gray-800 dark:text-black dark:hover:bg-gray-700 dark:border-gray-700"
+                className="text-black w-[8rem] h-9 focus:outline-none font-medium rounded-3xl text-sm p-2 text-center inline-flex items-center justify-center dark:bg-gray-800 dark:text-black dark:hover:bg-gray-700 dark:border-gray-700"
                 type="button"
             >
-                {selectedItem ? selectedItem : "Status"}
+                {selectedItem ? selectedItem : ""}
             </button>
             <div
                 id="dropdown"

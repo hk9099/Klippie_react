@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { ToastContainer, toast } from 'react-toastify';
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import axios from 'axios';
 import UserModal from '../components/UserModal.js';
+
+var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
 const ChangePasswordSchema = Yup.object().shape({
     oldPassword: Yup.string().required('Old Password is required'),
@@ -21,55 +23,21 @@ const ChangePasswordSchema = Yup.object().shape({
         .required('Confirm New Password is required'),
 });
 
-const AccountModal = ({ showAccount , onclose }) => {
-    const [showChangePassword, setShowChangePassword] = useState(true);
-    const [showExportData, setShowExportData] = useState(false);
+const AccountModal = ({
+    showAccount,
+    onclose,
+    userNickname,
+    userEmailAddress,
+    avatar,
+}) => {
     const [token, setToken] = useState(null);
     const [googleToken, setGoogleToken] = useState(null);
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [userNickname, setUserNickname] = useState('');
+    const [social, setSocial] = useState(false);
     const navigate = useNavigate();
-    //eslint-disable-next-line
-    const toggleChangePassword = () => {
-        setShowChangePassword(!showChangePassword);
-        setShowExportData(false);
-    };
-    //eslint-disable-next-line
-    const toggleExportData = () => {
-        setShowChangePassword(false);
-        setShowExportData(!showExportData);
-        setUserNickname(userNickname);
-    };
-
-    
-    useEffect(() => {
-        var token = localStorage.getItem('_sodfhgiuhih');
-        const decodedToken = atob(token);
-        var userInfo = JSON.parse(decodedToken);
-        token = userInfo.token.access_token;
-        let config = {
-            method: 'post',
-            maxBodyLength: Infinity,
-            url: 'https://api.getklippie.com/v1/auth/profile',
-            headers: {
-                'accept': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        };
-
-        console.log(config);
-
-        axios.request(config)
-            .then((response) => {
-                console.log(response.data);
-               setUserNickname(response.data.nickname);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, [ showExportData ]);
+    const [activeTab, setActiveTab] = useState(!social ? 'profile' : 'changePassword');
 
     useEffect(() => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -78,28 +46,30 @@ const AccountModal = ({ showAccount , onclose }) => {
         if (encodedToken) {
             const decodedToken = atob(encodedToken);
             var userInfo = JSON.parse(decodedToken);
+            var social = userInfo.user.is_social
+            setSocial(social);
             setToken(userInfo.token.access_token);
+            
         } else if (userGoogle) {
             const decodedGoogle = atob(userGoogle);
             var googleUserInfo = JSON.parse(decodedGoogle);
             setGoogleToken(googleUserInfo.token.access_token);
         }
-        
     }, []);
 
     return (
         <div
-        className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50 ${showAccount ? '' : 'hidden'
-    } `}
-    >
-    <ToastContainer />
-            <div className="bg-white rounded p-4 w-[700px] flex flex-col gap-4 dark:bg-gray-800">
+            className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50 ${showAccount ? '' : 'hidden'
+                } `}
+        >
+            <ToastContainer />
+            <div className={`bg-white rounded p-4 flex flex-col gap-4 dark:bg-gray-800 ${!social ? 'w-[600px]' : 'w-[400px]'} `}>
                 <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white"> Account </h2>
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                        
+                    </h2>
                     <button
                         onClick={() => {
-                            setShowChangePassword(false);
-                            setShowExportData(false);
                             onclose();
                         }}
                         className="text-gray-600 hover:text-gray-800 dark:text-gray-200 dark:hover:text-gray-300"
@@ -121,26 +91,32 @@ const AccountModal = ({ showAccount , onclose }) => {
                 </div>
                 <div className="flex flex-row">
                     <div className="w-25 flex flex-col gap-2">
+                        {!social && (
+                            <button
+                                onClick={() => setActiveTab('changePassword')}
+                                className={`${activeTab === 'changePassword' ? 'bg-blue-500' : 'bg-gray-400'
+                                    } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
+                            >
+                                Change&nbsp;Password
+                            </button>
+                        )} 
+                        {!social && (
                         <button
-                            onClick={toggleChangePassword}
-                            className={`${showChangePassword ? 'bg-blue-500' : 'bg-gray-400'
-                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
-                        >
-                            Change Password
-                        </button>
-                        <button
-                            onClick={toggleExportData}
-                            className={`${showExportData ? 'bg-blue-500' : 'bg-gray-400'
+                            onClick={() => setActiveTab('profile')}
+                            className={`${activeTab === 'profile' ? 'bg-blue-500' : 'bg-gray-400'
                                 } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
                         >
                             Profile
-                        </button>
+                            </button>
+                        )}
                     </div>
 
+                    {!social && (
                     <div className="w-1 border-r border-gray-200 dark:border-gray-700 mx-3" />
+                    )}
 
-                    <div className="w-[72%]">
-                        {showChangePassword && (
+                    <div className="w-[100%]">
+                        {activeTab === 'changePassword' && (
                             <Formik
                                 initialValues={{
                                     oldPassword: '',
@@ -151,16 +127,16 @@ const AccountModal = ({ showAccount , onclose }) => {
                                 onSubmit={async (values, { setSubmitting }) => {
                                     try {
                                         const response = await axios.post(
-                                            'https://api.getklippie.com/v1/auth/change-password',
+                                            `${HOSTINGURL}/v1/auth/change-password`,
                                             {
                                                 old_password: values.oldPassword,
                                                 new_password: values.confirmNewPassword,
                                             },
                                             {
                                                 headers: {
-                                                    'accept': 'application/json',
+                                                    accept: 'application/json',
                                                     'Content-Type': 'application/json',
-                                                    'Authorization':`Bearer ${token ? token : googleToken}`
+                                                    Authorization: `Bearer ${token ? token : googleToken}`,
                                                 },
                                             }
                                         );
@@ -176,10 +152,13 @@ const AccountModal = ({ showAccount , onclose }) => {
                                     }
                                 }}
                             >
-                                {({ isSubmitting }) => (
+                                {(formikProps) => (
                                     <Form className="flex flex-col gap-3">
                                         <div className="flex flex-col gap-2 relative">
-                                            <label htmlFor="oldPassword" className="text-sm text-gray-600 dark:text-gray-400">
+                                            <label
+                                                htmlFor="oldPassword"
+                                                className="text-sm text-gray-600 dark:text-gray-400"
+                                            >
                                                 Old Password
                                             </label>
                                             <Field
@@ -189,14 +168,27 @@ const AccountModal = ({ showAccount , onclose }) => {
                                             />
                                             <div
                                                 className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer"
-                                                onClick={() => setShowOldPassword((prev) => !prev)}
+                                                onClick={() =>
+                                                    setShowOldPassword((prev) => !prev)
+                                                }
                                             >
-                                                {showOldPassword ? <IoMdEyeOff size={20} /> : <IoMdEye size={20} />}
+                                                {showOldPassword ? (
+                                                    <IoMdEyeOff size={20} />
+                                                ) : (
+                                                    <IoMdEye size={20} />
+                                                )}
                                             </div>
                                         </div>
-                                            <ErrorMessage name="oldPassword" component="p" className="text-red-500 text-sm" />
+                                        <ErrorMessage
+                                            name="oldPassword"
+                                            component="p"
+                                            className="text-red-500 text-sm"
+                                        />
                                         <div className="flex flex-col gap-2 relative">
-                                            <label htmlFor="newPassword" className="text-sm text-gray-600 dark:text-gray-400">
+                                            <label
+                                                htmlFor="newPassword"
+                                                className="text-sm text-gray-600 dark:text-gray-400"
+                                            >
                                                 New Password
                                             </label>
                                             <Field
@@ -206,15 +198,28 @@ const AccountModal = ({ showAccount , onclose }) => {
                                             />
                                             <div
                                                 className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer"
-                                                onClick={() => setShowNewPassword((prev) => !prev)}
+                                                onClick={() =>
+                                                    setShowNewPassword((prev) => !prev)
+                                                }
                                             >
-                                                {showNewPassword ? <IoMdEyeOff size={20} /> : <IoMdEye size={20} />}
+                                                {showNewPassword ? (
+                                                    <IoMdEyeOff size={20} />
+                                                ) : (
+                                                    <IoMdEye size={20} />
+                                                )}
                                             </div>
                                         </div>
-                                            <ErrorMessage name="newPassword" component="p" className="text-red-500 text-sm" />
+                                        <ErrorMessage
+                                            name="newPassword"
+                                            component="p"
+                                            className="text-red-500 text-sm"
+                                        />
 
                                         <div className="flex flex-col gap-2 relative">
-                                            <label htmlFor="confirmNewPassword" className="text-sm text-gray-600 dark:text-gray-400">
+                                            <label
+                                                htmlFor="confirmNewPassword"
+                                                className="text-sm text-gray-600 dark:text-gray-400"
+                                            >
                                                 Confirm New Password
                                             </label>
                                             <Field
@@ -224,33 +229,48 @@ const AccountModal = ({ showAccount , onclose }) => {
                                             />
                                             <div
                                                 className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer"
-                                                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                                                onClick={() =>
+                                                    setShowConfirmPassword((prev) => !prev)
+                                                }
                                             >
-                                                {showConfirmPassword ? <IoMdEyeOff size={20} /> : <IoMdEye size={20} />}
+                                                {showConfirmPassword ? (
+                                                    <IoMdEyeOff size={20} />
+                                                ) : (
+                                                    <IoMdEye size={20} />
+                                                )}
                                             </div>
                                         </div>
-                                            <ErrorMessage name="confirmNewPassword" component="p" className="text-red-500 text-sm" />
+                                        <ErrorMessage
+                                            name="confirmNewPassword"
+                                            component="p"
+                                            className="text-red-500 text-sm"
+                                        />
                                         <button
                                             type="submit"
-                                            disabled={isSubmitting}
-                                            className={`${isSubmitting ? 'bg-gray-400 cursor-wait' : 'bg-blue-500'
-                                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}    
+                                            disabled={formikProps.isSubmitting}
+                                            className={`${formikProps.isSubmitting
+                                                    ? 'bg-gray-400 cursor-wait'
+                                                    : 'bg-blue-500'
+                                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
                                         >
-                                            {isSubmitting ? 'Loading...' : 'Submit'}
+                                            {formikProps.isSubmitting ? 'Loading...' : 'Submit'}
                                         </button>
                                     </Form>
                                 )}
                             </Formik>
                         )}
-                        {showExportData && (
-                            <div>
+                        {activeTab === 'profile' && (
+                            <Formik initialValues={{}} onSubmit={() => { }}>
                                 <UserModal
-                                    isOpen={showExportData}
-                                    onClose={() => setShowExportData(false)}
+                                    isOpen={true} // Always show the UserModal when the "Profile" tab is active
                                     userNickname={userNickname}
+                                    userEmailAddress={userEmailAddress}
+                                    avatar={avatar}
+                                    social={social}
                                 />
-                            </div>
+                            </Formik>
                         )}
+
                     </div>
                 </div>
             </div>
