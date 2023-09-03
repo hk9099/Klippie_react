@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Menu } from '@headlessui/react';
+//eslint-disable-next-line
 import { Link, useLocation } from 'react-router-dom';
-import { IoSettingsOutline } from 'react-icons/io5';
+// import { IoSettingsOutline } from 'react-icons/io5';
 import { RiAccountBoxFill } from 'react-icons/ri';
 import Logout from '../Pages/logout';
 import AccountModal from './AccountModal';
