@@ -494,6 +494,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 />
               </span>
             </div>
+            
           ) : (
             <div className={`overflow-hidden ${!open && "hidden"} relative`}>
               {lines
