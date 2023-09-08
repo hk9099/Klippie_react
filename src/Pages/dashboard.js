@@ -14,7 +14,6 @@ export default function Dashboard() {
   const setError = (message) => {
     setErrorMessage(message);
   };
-  // console.log(projectId, "projectIddddddddddddddddddddddddddd");
 
   // useEffect to hide error message when projectId becomes available
   useEffect(() => {

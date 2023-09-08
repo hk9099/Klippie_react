@@ -20,7 +20,7 @@ function Signin() {
 
     useEffect(() => {
         const encodedEmail = localStorage.getItem('_auth');
-        // console.log(encodedEmail, 'encodedEmail');
+        console.log(encodedEmail, 'encodedEmail');
         if (encodedEmail) {
             setIsLoading(true);
             // const email = atob(encodedEmail); // Decode email
@@ -83,7 +83,7 @@ function Signin() {
             .then((response) => {
                 // Handle successful verification
                 toast.success('OTP verified successfully');
-                // console.log(response.data);
+                console.log(response.data);
                 navigate('/');
             })
             .catch((error) => {
@@ -105,7 +105,7 @@ function Signin() {
     //     setResendButtonLoading(true);
     //     localStorage.setItem('resendClicked', 'true');
     //     var getemail = localStorage.getItem('_authemail');
-    //     // console.log(getemail, 'getemail');
+    //     console.log(getemail, 'getemail');
     //     const data = JSON.stringify({
     //         email: getemail,
     //     });
@@ -124,14 +124,14 @@ function Signin() {
     //     axios
     //         .request(config)
     //         .then((response) => {
-    //             // console.log(JSON.stringify(response.data));
+    //             console.log(JSON.stringify(response.data));
     //             setResendButtonLoading(false);
     //             startResendTimer();
     //             toast.success('OTP sent successfully');
     //         })
     //         .catch((error) => {
     //             toast.error('Too many attempts. Please try again later.');
-    //             // console.log(error);
+    //             console.log(error);
     //             setResendButtonLoading(false);
     //         });
     // };
@@ -145,7 +145,7 @@ function Signin() {
         if (resendButtonLoading) return;
         setResendButtonLoading(true);
         var getemail = atob(localStorage.getItem('_authemail'));
-        // console.log(getemail, 'getemail');
+        console.log(getemail, 'getemail');
         const data = JSON.stringify({
             email: getemail,
         });
@@ -164,7 +164,7 @@ function Signin() {
         axios
             .request(config)
             .then((response) => {
-                // console.log(JSON.stringify(response.data));
+                console.log(JSON.stringify(response.data));
                 setResendButtonLoading(false);
                 if (attempts < 2) {
                     startResendTimer();
@@ -180,7 +180,7 @@ function Signin() {
             })
             .catch((error) => {
                 toast.error('Too many attempts. Please try again later.');
-                // console.log(error);
+                console.log(error);
                 setResendButtonLoading(false);
             });
     };

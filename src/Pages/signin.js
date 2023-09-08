@@ -41,7 +41,7 @@ function Signin() {
 
         signInWithPopup(auth, customProvider)
             .then(async (result) => {
-                // console.log(result.user, 'result');
+                console.log(result.user, 'result');
                 // // setToken(result.user);
                 // const userGoogle = {
                 //     googleToken: result.user.accessToken,
@@ -52,7 +52,7 @@ function Signin() {
                 // };
 
                 // const encodedUser = btoa(JSON.stringify(userGoogle));
-                // // console.log(encodedUser, 'encodedUser');
+                // console.log(encodedUser, 'encodedUser');
                 // localStorage.setItem('_auth', encodedUser);
                 // navigate('/dashboard');
                 const response = await axios.post(
@@ -79,7 +79,7 @@ function Signin() {
                 }
             })
             .catch((error) => {
-                // console.log(error, 'error');
+                console.log(error, 'error');
                 toast.error('Please Sign up First', {
                     position: toast.POSITION.TOP_CENTER
                 });

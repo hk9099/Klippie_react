@@ -12,16 +12,18 @@ import { TbDeviceMobileMessage } from 'react-icons/tb';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
 import { Tooltip } from 'react-tooltip';
 import think from '../assets/images/think_40x40.gif';
-
+import { useNavigate } from 'react-router-dom';
 
 
 const MultiStepForm = () => {
+    const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({});
     const [emailSent, setEmailSent] = useState(false);
     const [otpVerified, setOtpVerified] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const [loading, setLoading] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [error, setError] = useState(null);
     // eslint-disable-next-line no-unused-vars
     const [success, setSuccess] = useState(null);
@@ -82,13 +84,13 @@ const MultiStepForm = () => {
                     type: 'fp',
                 }
             );
-            // console.log(JSON.stringify(response.data));
+            console.log(JSON.stringify(response.data));
             setOtpVerified(true);
             setLoading(false);
             setStep(3);
             showToast('OTP verification successful!');
         } catch (error) {
-            // console.log(error);
+            console.log(error);
             setLoading(false);
             setError('OTP verification failed. Please try again.');
             showToast('OTP verification failed. Please try again.');
@@ -110,12 +112,13 @@ const MultiStepForm = () => {
                     new_password: formData.password,
                 }
             );
-            // console.log(JSON.stringify(response.data));
+            console.log(JSON.stringify(response.data));
             setLoading(false);
             setSuccess('Password reset successful!');
             showToast('Password reset successful!');
+            navigate('/');
         } catch (error) {
-            // console.log(error);
+            console.log(error);
             setLoading(false);
             setError('Failed to reset password. Please try again.');
             showToast('Failed to reset password. Please try again.');
@@ -164,7 +167,7 @@ const MultiStepForm = () => {
                             </span>
                             <img src={think} alt="think" className="inline-block ml-2 rounded-full" />
                         </h1>
-                        <p className="text-gray-500 mt-2">Please Login to your account.</p>
+                        {/* <p className="text-gray-500 mt-2">Please Login to your account.</p> */}
                     </div>
                     <div className="mt-10 form_layout">
                         <Formik
@@ -213,21 +216,21 @@ const MultiStepForm = () => {
 
                                 {step === 2 && emailSent && (
                                     <div className="emailinput form_layout mb-10">
-                                        <p className="text-gray-500 mt-3 font-medium">
+                                        <p className="text-gray-500 mt-3 font-medium text-center">
                                             {' '}
-                                            we have sent an OTP to your <span className="font-extrabold text-[#917bea]">{formData.email}</span>{' '}
-                                            email address
+                                            Please Enter The Unique Code That We Sent To  <span className="font-extrabold text-[#917bea]">{formData.email}</span>{' '}
+                                            Email
                                         </p>
                                         {/* <h1 className="text-2xl font-bold text-gray-800 text-center">Step 2</h1> */}
                                         <div className="emailinput form_layout mb-5 mt-5">
-                                            <label className="text-gray-500 emailinput">
+                                            {/* <label className="text-gray-500 emailinput">
                                                 Enter OTP
-                                            </label>
+                                            </label> */}
                                             <div className="inputbox-container">
                                                 <Field
                                                     type="text"
                                                     name="otp"
-                                                    placeholder="OTP"
+                                                    placeholder="Enter Code"
                                                     onChange={handleChange}
                                                     value={formData.otp || ''}
                                                     className={`inputbox`}
@@ -249,7 +252,7 @@ const MultiStepForm = () => {
                                             onClick={handleOtpVerifySubmit}
                                             className="submitbutton mt-10 bg-black text-white font-bold py-2 px-4 rounded-full"
                                         >
-                                            {otpLoading ? 'Verifying OTP...' : 'Verify OTP'}
+                                            {otpLoading ? 'Verifying Code...' : 'Verify Code'}
                                         </button>
                                         <button
                                             type="button"
@@ -262,43 +265,10 @@ const MultiStepForm = () => {
                                 )}
 
                                 {step === 3 && otpVerified && (
-                                    <div className="emailinput form_layout mb-10">
-                                        {/* <h1 className="text-2xl font-bold text-gray-800 text-center">Step 3</h1> */}
-                                        <label className="text-gray-500 mt-4">Enter your new password</label>
-                                        <Field
-                                            type="password"
-                                            name="password"
-                                            placeholder="New Password"
-                                            className={`px-2 py-1 focus:outline-none bg-transparent ${error && error.password ? 'border-red-500' : ''
-                                                }`}
-                                            onChange={handleChange}
-                                            value={formData.password || ''}
-                                        />
-                                        <ErrorMessage
-                                            name="password"
-                                            component="div"
-                                            className="text-red-500 mt-2"
-                                        />
-                                        <label className="text-gray-500 mt-4">Confirm your new password</label>
-                                        <Field
-                                            type="password"
-                                            name="confirm_password"
-                                            placeholder="Confirm Password"
-                                            className={`px-2 py-1 focus:outline-none bg-transparent ${error && error.confirm_password ? 'border-red-500' : ''
-                                                }`}
-                                            onChange={handleChange}
-                                            value={formData.confirm_password || ''}
-                                            ref={inputRef}
-                                        />
-                                        <ErrorMessage
-                                            name="confirm_password"
-                                            component="div"
-                                            className="text-red-500 mt-2"
-                                        />
-
+                                    <>
                                         <div className="passwordinput form_layout mb-5">
                                             <label className="text-gray-500 mt-2">
-                                                Enter your password{' '}
+                                                Enter your new password{' '}
                                                 <RiInformationLine
                                                     data-tooltip-id="password-tooltip"
                                                     className="password-tooltip ml-2"
@@ -325,51 +295,47 @@ const MultiStepForm = () => {
                                                     {showPassword ? <BsEyeFill /> : <BsEyeSlashFill />}
                                                 </span>
                                             </div>
-                                            <ErrorMessage
-                                                name="password"
-                                                component="div"
-                                                className="error-message mt-2"
-                                            />
                                         </div>
                                         <div className="passwordinput form_layout mb-5">
-                                            <label className="text-gray-500 mt-2">
-                                                Confirm your password{' '}
-                                                <RiInformationLine
-                                                    data-tooltip-id="confirm-password-tooltip"
-                                                    className="password-tooltip ml-2"
-                                                />
-                                            </label>
-                                            <Tooltip
-                                                id="confirm-password-tooltip"
-                                                content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
-                                                className="custom-tooltip"
+                                        <label className="text-gray-500 mt-2">
+                                            Confirm your password{' '}
+                                            <RiInformationLine
+                                                data-tooltip-id="confirm-password-tooltip"
+                                                className="password-tooltip ml-2"
                                             />
-                                            <div className="inputbox-container">
-                                                <Field
-                                                    type={showConfirmPassword ? 'text' : 'password'}
-                                                    name="confirmPassword"
-                                                    placeholder="Confirm Password"
-                                                    className={`inputbox`}
-                                                    value={formData.confirm_password || ''}
-                                                    ref={inputRef}
-                                                />
-                                                <span
-                                                    className="password-icon"
-                                                    onClick={() =>
-                                                        setShowConfirmPassword(!showConfirmPassword)
-                                                    }
-                                                >
-                                                    {showConfirmPassword ? (
-                                                        <BsEyeFill />
-                                                    ) : (
-                                                        <BsEyeSlashFill />
-                                                    )}
-                                                </span>
-                                            </div>
-                                            <ErrorMessage
-                                                name="confirmPassword"
-                                                component="div"
-                                                className="error-message mt-2"
+                                        </label>
+                                        <Tooltip
+                                            id="confirm-password-tooltip"
+                                            content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
+                                            className="custom-tooltip"
+                                        />
+                                        <div className="inputbox-container">
+                                            <Field
+                                                type={showConfirmPassword ? 'text' : 'password'}
+                                                name="confirm_password"
+                                                placeholder="Confirm Password"
+                                                className={`inputbox`}
+                                                onChange={handleChange}
+                                                value={formData.confirm_password || ''}
+                                                ref={inputRef}
+                                            />
+                                            <span
+                                                className="password-icon"
+                                                onClick={() =>
+                                                    setShowConfirmPassword(!showConfirmPassword)
+                                                }
+                                            >
+                                                {showConfirmPassword ? (
+                                                    <BsEyeFill />
+                                                ) : (
+                                                    <BsEyeSlashFill />
+                                                )}
+                                            </span>
+                                        </div>
+                                        <ErrorMessage
+                                            name="confirm_password"
+                                            component="div"
+                                            className="text-red-500 mt-2"
                                             />
                                         </div>
                                         <button
@@ -380,7 +346,7 @@ const MultiStepForm = () => {
                                         >
                                             {passwordLoading ? 'Resetting Password...' : 'Reset Password'}
                                         </button>
-                                    </div>
+                                    </>
 
                                 )}
                                 <div className="flex flex-col justify-center items-center mt-2">

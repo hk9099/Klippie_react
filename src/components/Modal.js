@@ -104,7 +104,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
 
                 const response = await axios.post(apiUrl, qs.stringify(data), config);
                 if (response.status === 200) {
-                    // // console.log("API call successful:", response.data);
+                    // console.log("API call successful:", response.data);
 
 
                     var projectId = response.data.data.id;

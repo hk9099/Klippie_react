@@ -18,6 +18,7 @@ import { FiEdit2 } from "react-icons/fi";
 import { RotatingLines } from "react-loader-spinner";
 import { useSidebarContext } from '../components/SidebarContext';
 
+
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
@@ -44,11 +45,25 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   //eslint-disable-next-line
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
-  const [hoveredIndex, setHoveredIndex] = useState(-1);
+  // const [hoveredIndex, setHoveredIndex] = useState(-1);
+  // const [UpdateProfile, setupdateProfile] = useState(false);
+  const [isProfileUpdated, setIsProfileUpdated] = useState(false);
+  
+  const handleUpdateProfile = () => {
+    // Update profile logic here
+    // ...
+
+    // Set isProfileUpdated to true
+    setIsProfileUpdated(true);
+  };
+
+ 
+
 
   var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
   useEffect(() => {
+    console.log('isApiCompleted', isApiCompleted);
     fetchProjectsData(setProjectData, setLines, setIsLoadingHistory);
   }, [isApiCompleted]);
 
@@ -64,17 +79,18 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     }
   };
 
-
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
     setDropdownPosition("up");
   };
 
   useEffect(() => {
+    console.log('useEffect');
     localStorage.setItem("color-theme", "dark");
   }, []);
 
   useEffect(() => {
+    console.log('profile start');
     if (!initialized) {
       const encodedEmail = localStorage.getItem("_auth");
       if (encodedEmail) {
@@ -95,98 +111,110 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         }
       };
 
-      // // console.log(config);
+      // console.log(config);
 
       axios.request(config)
         .then((response) => {
-          // // console.log(response.data, 'response.data');
+          console.log('fetch profile');
+          // console.log(response.data, 'response.data');
           var userNickname = response.data.name;
           setUserNickname(userNickname);
           const userEmailAddress = response.data.email;
           setUserEmailAddress(userEmailAddress);
           const userAvatar = response.data.profile_image;
+          console.log(userAvatar, 'userAvatar');
           setUserAvatar(userAvatar);
+          const userAvatarUrl = response.data.avatar;
+          console.log(userAvatarUrl, 'userAvatarUrl');
+          setUserAvatar(userAvatarUrl);
+
+          console.log('got profile')
 
           if (userAvatar === null) {
-            // Generate an avatar only if it's null
-            generateAvatar(userEmailAddress)
-              .then((avatarUrl) => {
-                setUserAvatar(avatarUrl);
-              })
-              .catch((error) => {
-                // // console.log(error);
-              });
+            console.log('userAvatar is null');
+            if (userAvatarUrl) {
+              console.log('userAvatarUrl is not null');
+              setUserAvatar(userAvatarUrl);
+            } else {
+              console.log('userAvatarUrl is null');
+              console.log(userEmailAddress);
+              generateAvatar(userEmailAddress)
+                .then((avatarUrl) => {
+                  setUserAvatar(avatarUrl);
+                })
+                .catch((error) => {
+                  // console.log(error);
+                });
+            }
+
           } else {
             setUserAvatar(userAvatar);
           }
-
-
         })
         .catch((error) => {
-          // console.log(error);
+          console.log(error);
         });
       setInitialized(true);
+      console.log('profile end');
     }
     // eslint-disable-next-line
-  }, [initialized, navigate]);
+  }, []);
 
   // Function to generate the avatar URL
   const generateAvatar = (emailAddress) => {
+    console.log('generate avatar start')
     const userAvatar = emailAddress.split('@')[0];
     const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
 
     return axios.get(avatarUrl)
       .then((response) => {
-        return response.config.url;
+        setUserAvatar(response.config.url);
+        var token = getToken();
+
+        let data = JSON.stringify({
+          "avatar": response.config.url,
+        });
+        console.log('account update start')
+
+        let config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: `${HOSTINGURL}/v1/auth/update-profile`,
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          data: data
+        };
+
+        axios
+          .request(config)
+          .then((response) => {
+            console.log(response.data);
+            console.log('account update end')
+            // setUserAvatar(avatarData);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+
       })
       .catch((error) => {
-        // console.log(error);
+        console.log(error);
         throw error;
       });
   };
 
-  // Example email address
-  const emailAddress = userEmailAddress
-  var token = getToken();
 
-  generateAvatar(emailAddress)
-    .then((avatarData) => {
-      let data = JSON.stringify({
-        "avatar": avatarData,
-        "profile_image": "https://res.cloudinary.com/delkyf33p/image/upload/v1693750358/profile_image/7cbcc664-3b69-4bf9-8fe9-1d6609e19678.png",
-      });
-
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${HOSTINGURL}/v1/auth/update-profile`,
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        data: data
-      };
-
-      axios
-        .request(config)
-        .then((response) => {
-          // setUserAvatar(avatarData);
-        })
-        .catch((error) => {
-          // console.log(error);
-        });
-    })
-    .catch((error) => {
-      // console.log(error);
-    });
 
   // Function to delete a line
   const deleteLine = async (index) => {
     var token = getToken();
     try {
       const clickedProject = projectData[index];
-      //// console.log('Clicked Project ID:', clickedProject.id);
+      //console.log('Clicked Project ID:', clickedProject.id);
       var clickedProjectid = clickedProject.id;
 
       let data = qs.stringify({
@@ -219,7 +247,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         setAccordionVisible(false);
         setError('');
       } catch (error) {
-        // console.log(error);
+        console.log(error);
         // Handle error states or display an error message to the user
       }
     } catch (error) {
@@ -244,10 +272,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const handleSaveClick = (index) => {
     const token = getToken();
     const updatedLine = tempLines[index];
-    // console.log(updatedLine, 'updatedLine')
-    // // console.log('Token:', token);
-    // // console.log('Updated Line:', updatedLine);
-    // // console.log('Project ID:', projectData[index].id);
+    console.log(updatedLine, 'updatedLine')
+    // console.log('Token:', token);
+    // console.log('Updated Line:', updatedLine);
+    // console.log('Project ID:', projectData[index].id);
     const data = qs.stringify({
       id: projectData[index].id,
       name: updatedLine
@@ -267,7 +295,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
     axios.request(config)
       .then((response) => {
-        // // console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response.data));
         // Update your lines state if needed
         const newLines = [...lines];
         newLines[index] = updatedLine;
@@ -275,7 +303,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         setEditIndex(-1);
       })
       .catch((error) => {
-        // console.log(error);
+        console.log(error);
       });
   };
 
@@ -286,10 +314,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   const handleProjectClick = async (index) => {
     const token = getToken();
-    // console.log('Token:', token);
+    console.log('Token:', token);
     if (token) {
       const clickedProject = projectData[index];
-      //// console.log('Clicked Project ID:', clickedProject.id);
+      //console.log('Clicked Project ID:', clickedProject.id);
       var clickedProjectid = clickedProject.id;
       //main video 
       let maindata = JSON.stringify({
@@ -335,7 +363,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           };
         })
         .catch((error) => {
-          // console.log(error);
+          console.log(error);
         });
 
       //video clips
@@ -357,7 +385,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
       try {
         const response = await axios.request(config);
-        // console.log(response)
+        console.log(response)
         if (response.data.data && Array.isArray(response.data.data)) {
           const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
             // Split the time string into parts
@@ -383,9 +411,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           setNewvideoClips(newvideoClips);
           setAccordionVisible(true);
           setError('');
-          // console.log('New video clips:', newvideoClips);
+          console.log('New video clips:', newvideoClips);
         } else {
-          // console.log('Invalid API response:', response.data);
+          console.log('Invalid API response:', response.data);
           setAccordionVisible(false);
           setError('We could not find the clips for this project');
         }
@@ -494,7 +522,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 />
               </span>
             </div>
-            
+
           ) : (
             <div className={`overflow-hidden ${!open && "hidden"} relative`}>
               {lines
@@ -503,8 +531,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                   <div
                     key={index}
                     className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
-                    onMouseEnter={() => setHoveredIndex(index)}
-                    onMouseLeave={() => setHoveredIndex(-1)}
+                  // onMouseEnter={() => setHoveredIndex(index)}
+                  // onMouseLeave={() => setHoveredIndex(-1)}
                   >
                     {editIndex === index ? (
                       <div className="width-full row relative">
@@ -525,7 +553,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                       <p
                         className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
                         style={{
-                          width: hoveredIndex === index ? "188px" : "243px",
+                          // width: hoveredIndex === index ? "188px" : "243px",
+                          width: "100%",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
@@ -621,9 +650,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               userEmailAddress={userEmailAddress}
               avatar={userAvatar}
               isLoading={isLoading}
-              onSubmit={(values) => {
-                // console.log(values);
-              }}
+              onUpdateProfile={handleUpdateProfile} // Pass the function
             />
           </div>
         </div>

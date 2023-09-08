@@ -34,7 +34,7 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory) 
             }
         );
 
-        // // console.log('Projects:', response.data);
+        // console.log('Projects:', response.data);
         const projectData = response.data.data;
         setProjectData(projectData);
 

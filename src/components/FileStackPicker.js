@@ -8,14 +8,14 @@ const FilestackUploader = ({ setUploadedFileUrl, setUploadedFileName, onClose })
     const pickerRef = useRef(null);
 
     const handleFileUploadFinished = async (res) => {
-        // // console.log(res, "res");
+        // console.log(res, "res");
         setUploadedFileUrl(res.url);
         setUploadedFileName(res.filename);
         onClose(); // Close the picker after file selection
     };
 
     const handleFileUploadFailed = (res) => {
-        // // console.log(res);
+        // console.log(res);
         // Handle file upload failure if needed
     };
 

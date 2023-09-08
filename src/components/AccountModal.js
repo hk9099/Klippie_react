@@ -9,6 +9,8 @@ import UserModal from '../components/UserModal.js';
 
 var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
+
+
 const ChangePasswordSchema = Yup.object().shape({
     oldPassword: Yup.string().required('Old Password is required'),
     newPassword: Yup.string()
@@ -29,6 +31,7 @@ const AccountModal = ({
     userNickname,
     userEmailAddress,
     avatar,
+    onUpdateProfile,
 }) => {
     const [token, setToken] = useState(null);
     const [googleToken, setGoogleToken] = useState(null);
@@ -38,8 +41,16 @@ const AccountModal = ({
     const [social, setSocial] = useState(false);
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(!social ? 'profile' : 'changePassword');
+    const [profileUpdate, setProfileUpdate] = useState(false);
+    
+    const handleProfileUpdate = () => {
+        setProfileUpdate(true);
+        console.log('profileUpdate', profileUpdate);
+        // onUpdateProfile();
+    };
 
     useEffect(() => {
+        // console.log('profileUpdate', profileUpdate);
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
         const userGoogle = localStorage.getItem('_auth');
 
@@ -267,6 +278,9 @@ const AccountModal = ({
                                     userEmailAddress={userEmailAddress}
                                     avatar={avatar}
                                     social={social}
+                                    // setProfileUpdate={setProfileUpdate}
+                                    // profileUpdate={profileUpdate}
+                                    onProfileUpdate={handleProfileUpdate}
                                 />
                             </Formik>
                         )}

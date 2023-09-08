@@ -5,13 +5,17 @@ import axios from 'axios';
 import { Form, Field, ErrorMessage } from 'formik';
 import { FiEdit2 } from 'react-icons/fi';
 
-const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) => {
+const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social, onProfileUpdate }) => {
     // eslint-disable-next-line no-unused-vars
     const [isLoading, setIsLoading] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
     const validationSchema = Yup.object({
         userNickname: Yup.string().required('Required'),
     });
+
+    
 
     var HOSTINGURL = 'https://api.getklippie.com';
 
@@ -39,7 +43,7 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
         validationSchema,
         onSubmit: (values) => {
             setIsLoading(true);
-            // console.log('values', values);
+            console.log('values', values);
             let data = new FormData();
             data.append('file', values.avatar);
             let config = {
@@ -56,7 +60,7 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
             axios.request(config)
                 .then((response) => {
                     var profile_image = response.data.data.profile_image;
-                    // console.log(profile_image);
+                    console.log(profile_image);
                     let data = JSON.stringify({
                         "name": values.userNickname,
                         "profile_image": profile_image
@@ -77,15 +81,26 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
                     axios
                         .request(config)
                         .then((response) => {
-                            // console.log(response);
-                            window.location.reload();
+                            onProfileUpdate();
+                            setSuccessMessage('Profile updated successfully');
+                            setTimeout(() => {
+                                setSuccessMessage(null);
+                            }, 3000);
                         })
                         .catch((error) => {
-                            // console.log(error);
-                        });
+                            console.log(error);
+                            setErrorMessage('Something went wrong');
+                            setTimeout(() => {
+                                setErrorMessage(null);
+                            }, 3000);
+                        })
                 })
                 .catch((error) => {
-                    // console.log(error);
+                    console.log(error);
+                    setErrorMessage('Something went wrong');
+                    setTimeout(() => {
+                        setErrorMessage(null);
+                    }, 3000);
                 });
             setIsLoading(false);
         },
@@ -112,6 +127,16 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
     return (
         <>
             <div className="bg-white rounded-lg w-full dark:bg-gray-800">
+                {successMessage && (
+                    <div className="bg-green-200 p-2 text-green-800 mb-2 rounded">
+                        {successMessage}
+                    </div>
+                )}
+                {errorMessage && (
+                    <div className="bg-red-200 p-2 text-red-800 mb-2 rounded">
+                        {errorMessage}
+                    </div>
+                )}
                 <Form onSubmit={formik.handleSubmit} >
                     <div className="mb-4 text-center">
                         <div className="flex items-center justify-center text-center relative">

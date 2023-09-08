@@ -44,7 +44,7 @@ function Signup({ errors, touched }) {
 
     signInWithPopup(auth, customProvider)
       .then(async (result) => {
-        // console.log(result.user, "result");
+        console.log(result.user, "result");
         // setToken(result.user);
         // const userGoogle = {
         //   googleToken: result.user.accessToken,
@@ -55,7 +55,7 @@ function Signup({ errors, touched }) {
         // };
 
         // const encodedUser = btoa(JSON.stringify(userGoogle));
-        // // console.log(encodedUser, "encodedUser");
+        // console.log(encodedUser, "encodedUser");
         // localStorage.setItem("_auth", encodedUser);
         // navigate("/dashboard");
         const response = await axios.post(
@@ -71,7 +71,7 @@ function Signup({ errors, touched }) {
         );
 
         if (response && response.data) {
-          // console.log(response, 'response.data');
+          console.log(response, 'response.data');
           navigate("/");
         } else {
           // Unexpected response format
@@ -79,7 +79,7 @@ function Signup({ errors, touched }) {
         }
       })
       .catch((error) => {
-        // // console.log(error.message);
+        // console.log(error.message);
         toast.error(error.message, {
           position: toast.POSITION.TOP_CENTER,
         });
@@ -126,17 +126,17 @@ function Signup({ errors, touched }) {
     axios
       .post(process.env.REACT_APP_HOSTING_URL + "/v1/auth/signup", payload)
       .then((response) => {
-        // console.log(response, "response");
+        console.log(response, "response");
         var signupToken = response.data.data;
         localStorage.setItem("signupToken", signupToken);
         navigate("/otpVarification");
       })
       .catch((error) => {
-        // console.log(error.response.data);
+        console.log(error.response.data);
         toast.error(error.response.data.detail);
       })
       .finally(() => {
-        // console.log("finally");
+        console.log("finally");
         setLoading(false);
         setSubmitting(false);
       });
