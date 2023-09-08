@@ -79,8 +79,8 @@ function Signin() {
                 }
             })
             .catch((error) => {
-                console.log(error, 'error');
-                toast.error('Please Sign up First', {
+                console.log(error.response.data.detail, 'error');
+                toast.error(error.response.data.detail, {
                     position: toast.POSITION.TOP_CENTER
                 });
             });
@@ -126,17 +126,10 @@ function Signin() {
                 throw new Error('Invalid response from the server.');
             }
         } catch (error) {
-            console.error(error, 'error');
-            if (error.response && error.response.data && error.response.data.error) {
-                const errorMessage = error.response.data.error.message;
-                toast.error(errorMessage, {
-                    position: toast.POSITION.TOP_CENTER
-                });
-            } else {
-                toast.error('Something went wrong', {
-                    position: toast.POSITION.TOP_CENTER
-                });
-            }
+            console.error(error.response.data.detail, 'error');
+            toast.error(error.response.data.detail, {
+                position: toast.POSITION.TOP_CENTER
+            });
         }
         setIsLoading(false);
         setSubmitting(false);

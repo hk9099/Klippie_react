@@ -85,6 +85,7 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social, onP
                             setSuccessMessage('Profile updated successfully');
                             setTimeout(() => {
                                 setSuccessMessage(null);
+                                window.location.reload();
                             }, 3000);
                         })
                         .catch((error) => {

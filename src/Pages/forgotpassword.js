@@ -62,7 +62,7 @@ const MultiStepForm = () => {
         } catch (error) {
             var err = error.response.data.detail;
             setLoading(false);
-            setError('Failed to send email. Please try again.');
+            setError(err);
             showToast(err);
         } finally {
             setEmailLoading(false);
@@ -90,10 +90,10 @@ const MultiStepForm = () => {
             setStep(3);
             showToast('OTP verification successful!');
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data.detail);
             setLoading(false);
-            setError('OTP verification failed. Please try again.');
-            showToast('OTP verification failed. Please try again.');
+            setError(error.response.data.detail);
+            showToast(error.response.data.detail);
         } finally {
             setOtpLoading(false);
         }
@@ -118,10 +118,10 @@ const MultiStepForm = () => {
             showToast('Password reset successful!');
             navigate('/');
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data.detail);
             setLoading(false);
-            setError('Failed to reset password. Please try again.');
-            showToast('Failed to reset password. Please try again.');
+            setError(error.response.data.detail);
+            showToast(error.response.data.detail);
         } finally {
             setPasswordLoading(false);
         }
@@ -142,7 +142,7 @@ const MultiStepForm = () => {
 
     const validationSchema = Yup.object({
         email: Yup.string().email('Invalid email address').required('Email is required'),
-        otp: Yup.string().required('OTP is required'),
+        otp: Yup.string().required('OTP is required').min(6, 'OTP must be 6 digits').max(6, 'OTP must be 6 digits').matches(/^[0-9]+$/, "Must be only digits").typeError('Must be a number'),
         password: Yup.string().required('Password is required'),
         confirm_password: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -241,7 +241,7 @@ const MultiStepForm = () => {
 
                                             </div>
                                             <ErrorMessage
-                                                name="email"
+                                                name="otp"
                                                 component="div"
                                                 className="error-message mt-2"
                                             />
@@ -297,45 +297,45 @@ const MultiStepForm = () => {
                                             </div>
                                         </div>
                                         <div className="passwordinput form_layout mb-5">
-                                        <label className="text-gray-500 mt-2">
-                                            Confirm your password{' '}
-                                            <RiInformationLine
-                                                data-tooltip-id="confirm-password-tooltip"
-                                                className="password-tooltip ml-2"
+                                            <label className="text-gray-500 mt-2">
+                                                Confirm your password{' '}
+                                                <RiInformationLine
+                                                    data-tooltip-id="confirm-password-tooltip"
+                                                    className="password-tooltip ml-2"
+                                                />
+                                            </label>
+                                            <Tooltip
+                                                id="confirm-password-tooltip"
+                                                content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
+                                                className="custom-tooltip"
                                             />
-                                        </label>
-                                        <Tooltip
-                                            id="confirm-password-tooltip"
-                                            content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
-                                            className="custom-tooltip"
-                                        />
-                                        <div className="inputbox-container mt-2">
-                                            <Field
-                                                type={showConfirmPassword ? 'text' : 'password'}
+                                            <div className="inputbox-container mt-2">
+                                                <Field
+                                                    type={showConfirmPassword ? 'text' : 'password'}
+                                                    name="confirm_password"
+                                                    placeholder="Confirm Password"
+                                                    className={`inputbox`}
+                                                    onChange={handleChange}
+                                                    value={formData.confirm_password || ''}
+                                                    ref={inputRef}
+                                                />
+                                                <span
+                                                    className="password-icon"
+                                                    onClick={() =>
+                                                        setShowConfirmPassword(!showConfirmPassword)
+                                                    }
+                                                >
+                                                    {showConfirmPassword ? (
+                                                        <BsEyeFill />
+                                                    ) : (
+                                                        <BsEyeSlashFill />
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <ErrorMessage
                                                 name="confirm_password"
-                                                placeholder="Confirm Password"
-                                                className={`inputbox`}
-                                                onChange={handleChange}
-                                                value={formData.confirm_password || ''}
-                                                ref={inputRef}
-                                            />
-                                            <span
-                                                className="password-icon"
-                                                onClick={() =>
-                                                    setShowConfirmPassword(!showConfirmPassword)
-                                                }
-                                            >
-                                                {showConfirmPassword ? (
-                                                    <BsEyeFill />
-                                                ) : (
-                                                    <BsEyeSlashFill />
-                                                )}
-                                            </span>
-                                        </div>
-                                        <ErrorMessage
-                                            name="confirm_password"
-                                            component="div"
-                                            className="text-red-500 mt-2"
+                                                component="div"
+                                                className="text-red-500 mt-2"
                                             />
                                         </div>
                                         <button

@@ -79,8 +79,8 @@ function Signup({ errors, touched }) {
         }
       })
       .catch((error) => {
-        // console.log(error.message);
-        toast.error(error.message, {
+        console.log(error.response.data.detail);
+        toast.error(error.response.data.detail, {
           position: toast.POSITION.TOP_CENTER,
         });
       });
@@ -132,7 +132,7 @@ function Signup({ errors, touched }) {
         navigate("/otpVarification");
       })
       .catch((error) => {
-        console.log(error.response.data);
+        console.log(error);
         toast.error(error.response.data.detail);
       })
       .finally(() => {
