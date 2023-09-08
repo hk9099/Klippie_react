@@ -47,6 +47,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [projectData, setProjectData] = useState([]);
   // const [hoveredIndex, setHoveredIndex] = useState(-1);
   // const [UpdateProfile, setupdateProfile] = useState(false);
+  //eslint-disable-next-line
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
   
   const handleUpdateProfile = () => {
