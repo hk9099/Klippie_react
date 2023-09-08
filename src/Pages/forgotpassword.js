@@ -279,7 +279,7 @@ const MultiStepForm = () => {
                                                 content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
                                                 className="custom-tooltip"
                                             />
-                                            <div className="inputbox-container">
+                                            <div className="inputbox-container mt-2">
                                                 <Field
                                                     type={showPassword ? 'text' : 'password'}
                                                     name="password"
@@ -309,7 +309,7 @@ const MultiStepForm = () => {
                                             content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
                                             className="custom-tooltip"
                                         />
-                                        <div className="inputbox-container">
+                                        <div className="inputbox-container mt-2">
                                             <Field
                                                 type={showConfirmPassword ? 'text' : 'password'}
                                                 name="confirm_password"
