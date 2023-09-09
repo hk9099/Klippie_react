@@ -17,12 +17,16 @@ import fetchProjectsData from '../components/fetchProjectData';
 import { FiEdit2 } from "react-icons/fi";
 import { RotatingLines } from "react-loader-spinner";
 import { useSidebarContext } from '../components/SidebarContext';
-
+import fetchUserProfile from '../components/fetchUserProfile';
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
+  const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const navigate = useNavigate();
+  const [initialized] = useState(false);
+  const [userEmailAddress, setUserEmailAddress] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
+  const [userNickname, setUserNickname] = useState("");
   const [open, setOpen] = useState(true);
-  const [initialized, setInitialized] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   // const [showUserModal, setShowUserModal] = useState(false);
@@ -31,9 +35,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   //eslint-disable-next-line
   const [isLoading, setIsLoading] = useState(false);
-  const [userEmailAddress, setUserEmailAddress] = useState("");
-  const [userNickname, setUserNickname] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [projectId] = useState(null);
   const [dropdownPosition, setDropdownPosition] = useState("down");
@@ -45,20 +46,23 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   //eslint-disable-next-line
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
-  // const [hoveredIndex, setHoveredIndex] = useState(-1);
-  // const [UpdateProfile, setupdateProfile] = useState(false);
-  //eslint-disable-next-line
-  const [isProfileUpdated, setIsProfileUpdated] = useState(false);
-  
-  const handleUpdateProfile = () => {
-    // Update profile logic here
-    // ...
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
 
-    // Set isProfileUpdated to true
-    setIsProfileUpdated(true);
-  };
+  useEffect(() => {
+    if (!initialized) {
+    fetchUserProfile(
+      initialized,
+      navigate,
+      setUserNickname,
+      setUserEmailAddress,
+      setUserAvatar,
+      HOSTINGURL
+    );
+      setRefreshProfile(false);
+    }
+    // eslint-disable-next-line
+  }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
 
- 
 
 
   var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
@@ -68,6 +72,18 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     fetchProjectsData(setProjectData, setLines, setIsLoadingHistory);
   }, [isApiCompleted]);
 
+  const handleUpdateProfileSuccess = () => {
+    // Call fetchUserProfile to refresh the user's profile
+    fetchUserProfile(
+      initialized,
+      navigate,
+      setUserNickname,
+      setUserEmailAddress,
+      setUserAvatar,
+      HOSTINGURL
+    );
+    console.log('handleUpdateProfileSuccess');
+  };
   const getToken = () => {
     const encodedToken = localStorage.getItem('_sodfhgiuhih');
 
@@ -90,123 +106,123 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     localStorage.setItem("color-theme", "dark");
   }, []);
 
-  useEffect(() => {
-    console.log('profile start');
-    if (!initialized) {
-      const encodedEmail = localStorage.getItem("_auth");
-      if (encodedEmail) {
-        navigate("/dashboard");
-      } else {
-        navigate("/");
-      }
+  // useEffect(() => {
+  //   console.log('profile start');
+  //   if (!initialized) {
+  //     const encodedEmail = localStorage.getItem("_auth");
+  //     if (encodedEmail) {
+  //       navigate("/dashboard");
+  //     } else {
+  //       navigate("/");
+  //     }
 
-      const token = getToken();
+  //     const token = getToken();
 
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${HOSTINGURL}/v1/auth/profile`,
-        headers: {
-          'accept': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      };
+  //     let config = {
+  //       method: 'post',
+  //       maxBodyLength: Infinity,
+  //       url: `${HOSTINGURL}/v1/auth/profile`,
+  //       headers: {
+  //         'accept': 'application/json',
+  //         'Authorization': `Bearer ${token}`
+  //       }
+  //     };
 
-      // console.log(config);
+  //     // console.log(config);
 
-      axios.request(config)
-        .then((response) => {
-          console.log('fetch profile');
-          // console.log(response.data, 'response.data');
-          var userNickname = response.data.name;
-          setUserNickname(userNickname);
-          const userEmailAddress = response.data.email;
-          setUserEmailAddress(userEmailAddress);
-          const userAvatar = response.data.profile_image;
-          console.log(userAvatar, 'userAvatar');
-          setUserAvatar(userAvatar);
-          const userAvatarUrl = response.data.avatar;
-          console.log(userAvatarUrl, 'userAvatarUrl');
-          setUserAvatar(userAvatarUrl);
+  //     axios.request(config)
+  //       .then((response) => {
+  //         console.log('fetch profile');
+  //         // console.log(response.data, 'response.data');
+  //         var userNickname = response.data.name;
+  //         setUserNickname(userNickname);
+  //         const userEmailAddress = response.data.email;
+  //         setUserEmailAddress(userEmailAddress);
+  //         const userAvatar = response.data.profile_image;
+  //         console.log(userAvatar, 'userAvatar');
+  //         setUserAvatar(userAvatar);
+  //         const userAvatarUrl = response.data.avatar;
+  //         console.log(userAvatarUrl, 'userAvatarUrl');
+  //         setUserAvatar(userAvatarUrl);
 
-          console.log('got profile')
+  //         console.log('got profile')
 
-          if (userAvatar === null) {
-            console.log('userAvatar is null');
-            if (userAvatarUrl) {
-              console.log('userAvatarUrl is not null');
-              setUserAvatar(userAvatarUrl);
-            } else {
-              console.log('userAvatarUrl is null');
-              console.log(userEmailAddress);
-              generateAvatar(userEmailAddress)
-                .then((avatarUrl) => {
-                  setUserAvatar(avatarUrl);
-                })
-                .catch((error) => {
-                  // console.log(error);
-                });
-            }
+  //         if (userAvatar === null) {
+  //           console.log('userAvatar is null');
+  //           if (userAvatarUrl) {
+  //             console.log('userAvatarUrl is not null');
+  //             setUserAvatar(userAvatarUrl);
+  //           } else {
+  //             console.log('userAvatarUrl is null');
+  //             console.log(userEmailAddress);
+  //             generateAvatar(userEmailAddress)
+  //               .then((avatarUrl) => {
+  //                 setUserAvatar(avatarUrl);
+  //               })
+  //               .catch((error) => {
+  //                 // console.log(error);
+  //               });
+  //           }
 
-          } else {
-            setUserAvatar(userAvatar);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      setInitialized(true);
-      console.log('profile end');
-    }
-    // eslint-disable-next-line
-  }, []);
+  //         } else {
+  //           setUserAvatar(userAvatar);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //     setInitialized(true);
+  //     console.log('profile end');
+  //   }
+  //   // eslint-disable-next-line
+  // }, []);
 
-  // Function to generate the avatar URL
-  const generateAvatar = (emailAddress) => {
-    console.log('generate avatar start')
-    const userAvatar = emailAddress.split('@')[0];
-    const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
+  // // Function to generate the avatar URL
+  // const generateAvatar = (emailAddress) => {
+  //   console.log('generate avatar start')
+  //   const userAvatar = emailAddress.split('@')[0];
+  //   const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
 
-    return axios.get(avatarUrl)
-      .then((response) => {
-        setUserAvatar(response.config.url);
-        var token = getToken();
+  //   return axios.get(avatarUrl)
+  //     .then((response) => {
+  //       setUserAvatar(response.config.url);
+  //       var token = getToken();
 
-        let data = JSON.stringify({
-          "avatar": response.config.url,
-        });
-        console.log('account update start')
+  //       let data = JSON.stringify({
+  //         "avatar": response.config.url,
+  //       });
+  //       console.log('account update start')
 
-        let config = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: `${HOSTINGURL}/v1/auth/update-profile`,
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          data: data
-        };
+  //       let config = {
+  //         method: 'post',
+  //         maxBodyLength: Infinity,
+  //         url: `${HOSTINGURL}/v1/auth/update-profile`,
+  //         headers: {
+  //           'accept': 'application/json',
+  //           'Content-Type': 'application/json',
+  //           'Authorization': `Bearer ${token}`
+  //         },
+  //         data: data
+  //       };
 
-        axios
-          .request(config)
-          .then((response) => {
-            console.log(response.data);
-            console.log('account update end')
-            // setUserAvatar(avatarData);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+  //       axios
+  //         .request(config)
+  //         .then((response) => {
+  //           console.log(response.data);
+  //           console.log('account update end')
+  //           // setUserAvatar(avatarData);
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         });
 
 
-      })
-      .catch((error) => {
-        console.log(error);
-        throw error;
-      });
-  };
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       throw error;
+  //     });
+  // };
 
 
 
@@ -532,8 +548,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                   <div
                     key={index}
                     className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
-                  // onMouseEnter={() => setHoveredIndex(index)}
-                  // onMouseLeave={() => setHoveredIndex(-1)}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(-1)}
                   >
                     {editIndex === index ? (
                       <div className="width-full row relative">
@@ -554,8 +570,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                       <p
                         className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
                         style={{
-                          // width: hoveredIndex === index ? "188px" : "243px",
-                          width: "100%",
+                          width: hoveredIndex === index ? "188px" : "243px",
+                          // width: "100%",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
@@ -611,11 +627,11 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
               <DropdownMenu
                 isOpen={dropdownOpen}
+                userNickname={userNickname}
+                userEmailAddress={userEmailAddress}
                 setIsOpen={setDropdownOpen}
                 position={dropdownPosition}
                 showLogout={open}
-                userNickname={userNickname}
-                userEmailAddress={userEmailAddress}
                 avatar={userAvatar}
               />
             </Menu>
@@ -647,11 +663,14 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             </div>
 
             <AccountModal
-              userNickname={userNickname}
-              userEmailAddress={userEmailAddress}
               avatar={userAvatar}
               isLoading={isLoading}
-              onUpdateProfile={handleUpdateProfile} // Pass the function
+                userNickname={userNickname}
+              userEmailAddress={userEmailAddress}
+              setUserNickname={setUserNickname}
+              setUserEmailAddress={setUserEmailAddress}
+              setUserAvatar={setUserAvatar}
+              onUpdateProfileSuccess={handleUpdateProfileSuccess}
             />
           </div>
         </div>

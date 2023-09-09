@@ -4,8 +4,10 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { Form, Field, ErrorMessage } from 'formik';
 import { FiEdit2 } from 'react-icons/fi';
+import { useSidebarContext } from './SidebarContext';
 
-const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social, onProfileUpdate }) => {
+const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) => {
+    const { setRefreshProfile } = useSidebarContext();
     // eslint-disable-next-line no-unused-vars
     const [isLoading, setIsLoading] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
@@ -81,11 +83,10 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social, onP
                     axios
                         .request(config)
                         .then((response) => {
-                            onProfileUpdate();
+                            setRefreshProfile(true); 
                             setSuccessMessage('Profile updated successfully');
                             setTimeout(() => {
                                 setSuccessMessage(null);
-                                window.location.reload();
                             }, 3000);
                         })
                         .catch((error) => {
