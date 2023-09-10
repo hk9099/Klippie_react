@@ -13,24 +13,24 @@ import VideoPlayer from "../Pages/videoplayer.js";
 import DropDownButton from "../components/GridDropdown.js";
 import { Popup } from "devextreme-react/popup";
 import { Form } from "devextreme-react/form";
-import { LuDownload } from "react-icons/lu";
-import VideoDownload from "./VideoDownload.js";
+// import { LuDownload } from "react-icons/lu";
+// import VideoDownload from "./VideoDownload.js";
 
 const Videoclips = ({ videoClips, setVideoCount }) => {
   //eslint-disable-next-line
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const isDataLoadedRef = useRef(false); 
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  // const [selectedRows, setSelectedRows] = useState([]);
+  // const [modalVisible, setModalVisible] = useState(false);
 
-  const handleDownloadClick = () => {
-    setModalVisible(true); // Show the download modal
-  };
+  // const handleDownloadClick = () => {
+  //   setModalVisible(true); // Show the download modal
+  // };
 
-  const handleDownloadComplete = () => {
-    setModalVisible(false); // Hide the download modal when download is complete
-  };
+  // const handleDownloadComplete = () => {
+  //   setModalVisible(false); // Hide the download modal when download is complete
+  // };
 
   // const handleDescriptionCellClick = (rowData) => {
   //   setSelectedRowData(rowData.data);
@@ -82,9 +82,9 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
       showBorders={true}
       columnAutoWidth={true}
       showRowLines={true}
-      onSelectionChanged={(e) => {
-        setSelectedRows(e.selectedRowsData);
-      }}
+      // onSelectionChanged={(e) => {
+      //   setSelectedRows(e.selectedRowsData);
+      // }}
     >
       <LoadPanel enabled={false} />
       <Selection
