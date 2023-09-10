@@ -82,9 +82,9 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
       showBorders={true}
       columnAutoWidth={true}
       showRowLines={true}
-      // onSelectionChanged={(e) => {
-      //   setSelectedRows(e.selectedRowsData);
-      // }}
+      onSelectionChanged={(e) => {
+        setSelectedRows(e.selectedRowsData);
+      }}
     >
       <LoadPanel enabled={false} />
       <Selection
