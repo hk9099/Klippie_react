@@ -2,8 +2,7 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useSnackbar } from 'notistack';
 import '../assets/css/signin.css';
 import axios from 'axios';
 import { HiOutlineMail } from 'react-icons/hi';
@@ -17,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 const MultiStepForm = () => {
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({});
     const [emailSent, setEmailSent] = useState(false);
@@ -54,16 +54,17 @@ const MultiStepForm = () => {
                 }
             );
             const emailtoken = response.data.data;
+            console.log(JSON.stringify(response.data));
             setEmailSent(true);
             setLoading(false);
             setStep(2);
             setEmailToken(emailtoken);
-            showToast('Email sent successfully!');
+            enqueueSnackbar('Email sent successfully!', { variant: 'success' , autoHideDuration: 1000});
         } catch (error) {
             var err = error.response.data.detail;
             setLoading(false);
             setError(err);
-            showToast(err);
+            enqueueSnackbar(err, { variant: 'error' , autoHideDuration: 1000});
         } finally {
             setEmailLoading(false);
         }
@@ -88,12 +89,12 @@ const MultiStepForm = () => {
             setOtpVerified(true);
             setLoading(false);
             setStep(3);
-            showToast('OTP verification successful!');
+            enqueueSnackbar('Code verified successfully!', { variant: 'success' , autoHideDuration: 1000});
         } catch (error) {
             console.log(error.response.data.detail);
             setLoading(false);
             setError(error.response.data.detail);
-            showToast(error.response.data.detail);
+            enqueueSnackbar(error.response.data.detail, { variant: 'error' , autoHideDuration: 1000});
         } finally {
             setOtpLoading(false);
         }
@@ -115,13 +116,13 @@ const MultiStepForm = () => {
             console.log(JSON.stringify(response.data));
             setLoading(false);
             setSuccess('Password reset successful!');
-            showToast('Password reset successful!');
+            enqueueSnackbar('Password reset successful!', { variant: 'success' , autoHideDuration: 1000});
             navigate('/');
         } catch (error) {
             console.log(error.response.data.detail);
             setLoading(false);
             setError(error.response.data.detail);
-            showToast(error.response.data.detail);
+            enqueueSnackbar(error.response.data.detail, { variant: 'error' , autoHideDuration: 1000});
         } finally {
             setPasswordLoading(false);
         }
@@ -142,18 +143,12 @@ const MultiStepForm = () => {
 
     const validationSchema = Yup.object({
         email: Yup.string().email('Invalid email address').required('Email is required'),
-        otp: Yup.string().required('OTP is required').min(6, 'OTP must be 6 digits').max(6, 'OTP must be 6 digits').matches(/^[0-9]+$/, "Must be only digits").typeError('Must be a number'),
+        otp: Yup.string().required('Code is required').min(6, 'Code must be 6 digits').max(6, 'Code must be 6 digits').matches(/^[0-9]+$/, "Must be only digits").typeError('Must be a number'),
         password: Yup.string().required('Password is required'),
         confirm_password: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
             .required('Confirm Password is required'),
     });
-
-    const showToast = (message) => {
-        toast(message, { position: toast.POSITION.TOP_CENTER });
-    };
-
-
 
     return (
         <main>
@@ -209,7 +204,7 @@ const MultiStepForm = () => {
                                                 handleEmailSubmit(e);
                                             }}
                                         >
-                                            {emailLoading ? 'Sending Email...' : 'Send OTP'}
+                                            {emailLoading ? 'Sending Email...' : 'Send Code'}
                                         </button>
                                     </div>
                                 )}
@@ -362,7 +357,6 @@ const MultiStepForm = () => {
                     </div>
                 </div>
             </div>
-            <ToastContainer />
         </main>
     );
 };

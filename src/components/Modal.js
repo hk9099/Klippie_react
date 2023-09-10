@@ -135,22 +135,23 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
             className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
             style={{ margin: "0px" }}
         >
-            <div className=" p-8 rounded-lg w-96 bg-white dark:bg-gray-800 shadow-lg">
-                <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-white font-poppins text-center font-bold">
+            <div className=" p-8 rounded-lg w-[25%] bg-white dark:bg-gray-800 shadow-lg">
+                <h2 className="text-xl  mb-4 text-gray-800 dark:text-white font-poppins text-center font-bold">
                     Create a new Project
                 </h2>
                 <hr className="dark:border-gray-500 my-1" />
                 <form onSubmit={formik.handleSubmit} className="mt-4">
-                    <div className="mb-4 flex justify-between items-center">
+                    <div className="mb-4 flex justify-evenly items-center">
                         <div className="flex items-center">
                             <input
                                 type="radio"
                                 id="youtube"
                                 name="option"
                                 value="youtube"
+                                placeholder="Paste YouTube Link Here"
                                 checked={selectedOption === "youtube"}
                                 onChange={() => setSelectedOption("youtube")}
-                                className="form-radio hidden h-0 w-0"
+                                className="form-radio hidden h-0 w-0 text-gray-800 dark:text-gray-200"
                             />
                             <label
                                 htmlFor="youtube"
@@ -159,7 +160,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 <div className="absolute left-0 flex items-center justify-center w-6 h-6 border border-gray-400 dark:border-gray-600 rounded-full">
                                     <div className={`w-3 h-3 rounded-full ${selectedOption === "youtube" ? 'bg-indigo-600' : 'bg-white'}`}></div>
                                 </div>
-                                YouTube Link
+                                Paste YouTube Link Here
                             </label>
                         </div>
                         <div className="flex items-center">

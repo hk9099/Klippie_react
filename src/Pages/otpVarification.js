@@ -7,11 +7,13 @@ import Loader from './Loader.js';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSnackbar } from 'notistack';
 import { FaMobileAlt } from 'react-icons/fa';
 
 
 function Signin() {
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
     const [resendTimer, setResendTimer] = useState(30);
     const [attempts, setAttempts] = useState(0);
@@ -83,6 +85,7 @@ function Signin() {
             .then((response) => {
                 // Handle successful verification
                 toast.success('OTP verified successfully');
+                enqueueSnackbar('OTP verified successfully', { variant: 'success', autoHideDuration: 1500 });
                 console.log(response.data);
                 navigate('/');
             })

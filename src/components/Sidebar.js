@@ -10,7 +10,6 @@ import AccountModal from "./AccountModal";
 import axios from "axios";
 import qs from "qs";
 import DropdownMenu from "./DropdownMenu";
-import { ToastContainer } from "react-toastify";
 import { updateMainVideo } from "./data";
 import { BsThreeDots } from "react-icons/bs";
 import fetchProjectsData from '../components/fetchProjectData';
@@ -18,9 +17,11 @@ import { FiEdit2 } from "react-icons/fi";
 import { RotatingLines } from "react-loader-spinner";
 import { useSidebarContext } from '../components/SidebarContext';
 import fetchUserProfile from '../components/fetchUserProfile';
+import { useSnackbar } from 'notistack';
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [initialized] = useState(false);
   const [userEmailAddress, setUserEmailAddress] = useState("");
@@ -432,11 +433,29 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         } else {
           console.log('Invalid API response:', response.data);
           setAccordionVisible(false);
-          setError('We could not find the clips for this project');
+          setProjectId('');
+          // setError('We could not find the clips for this project');
+          enqueueSnackbar('We could not find the clips for this project', {
+            variant: 'error',
+            autoHideDuration: 1500,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          });
         }
       } catch (error) {
         setAccordionVisible(false);
-        setError('We could not find the clips for this project');
+        setProjectId('');
+        // setError('We could not find the clips for this project');
+        enqueueSnackbar('We could not find the clips for this project', {
+          variant: 'error',
+          autoHideDuration: 1500,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+        });
       }
     }
   };
@@ -461,7 +480,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   return (
     <>
-      <ToastContainer />
       <div
         className={`${open ? "w-[260px]" : "w-fit"
           } fixed top-0 p-2  z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}

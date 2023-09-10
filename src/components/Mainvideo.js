@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid, { Column, Selection} from 'devextreme-react/data-grid';
+import DataGrid, { Column} from 'devextreme-react/data-grid';
 import 'devextreme/dist/css/dx.light.css';
 import { MainVideo } from '../components/data.js';
 import VideoPlayer from '../Pages/videoplayer.js';
@@ -26,32 +26,40 @@ const Mainvideo = () => {
         sorting={{ mode: 'none' }}
         // onSelectionChanged={onSelectionChanged}
       >
-        <Selection mode="multiple" selectAllMode="allPages" showCheckBoxesMode="always" />
+        {/* <Selection mode="multiple" selectAllMode="allPages" showCheckBoxesMode="always" visible={false} /> */}
         <Column
           dataField="video"
           caption="Video"
+          alignment='center'
+          cssClass='Video'
           cellRender={(rowData) => <VideoPlayer src={rowData.data.src} />}
           width={460}
         />
         <Column
           dataField="title"
+          alignment='center'
+          cssClass='Title'
           className="whitespace-break-spaces"
-          width={150}
+          width='auto'
         />
         <Column
           dataField="description"
           className="whitespace-break-spaces"
-          
+          alignment='center'
+          cssClass='Description'
         />
         <Column
           dataField="time"
+          caption="Duration"
+          alignment='center'
+          cssClass='Duration'
           columnAutoWidth={true}
           cellRender={(rowData) => (
             <div style={{ textAlign: "center" }}>
               {rowData.data.time}
             </div>
           )}
-          width={150}
+          width='auto'
         />
       </DataGrid>
     </div>

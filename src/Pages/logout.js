@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { BiLogOut } from 'react-icons/bi';
 import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { useSnackbar } from 'notistack';
 // import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 function Logout({ showLogout }) {
+    const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +15,13 @@ function Logout({ showLogout }) {
     const cancelButtonRef = useRef(null);
 
     const handleLogout = () => {
+        enqueueSnackbar('Logged out successfully', {
+            variant: 'info',
+            anchorOrigin: {
+                vertical: 'bottom',
+                horizontal: 'center',
+            },
+        });
         setIsLoading(true);
     };
 
@@ -97,7 +106,7 @@ function Logout({ showLogout }) {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <div className="inline-block align-bottom bg-[#595282] rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
+                            <div className="inline-block align-bottom bg-[#58575a] rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
                                 <div className="sm:flex sm:items-start">
                                     <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-yellow-600">

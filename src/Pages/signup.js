@@ -8,16 +8,16 @@ import { RiInformationLine } from "react-icons/ri";
 import { BiSolidUser } from "react-icons/bi";
 import * as Yup from "yup";
 import axios from "axios";
-import googleicon from "../assets/images/google.png";
+// import googleicon from "../assets/images/google.png";
 import "../assets/css/signup.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useSnackbar } from 'notistack';
 import Hiiii from "../assets/images/hi_40x40.gif";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "../components/config";
+// import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+// import { auth } from "../components/config";
 
 function Signup({ errors, touched }) {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   // eslint-disable-next-line no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -38,53 +38,54 @@ function Signup({ errors, touched }) {
     }
   }, [navigate]);
 
-  const handleGoogleLogin = () => {
-    const customProvider = new GoogleAuthProvider();
-    customProvider.setCustomParameters({ prompt: "select_account" });
+  // const handleGoogleLogin = () => {
+  //   const customProvider = new GoogleAuthProvider();
+  //   customProvider.setCustomParameters({ prompt: "select_account" });
 
-    signInWithPopup(auth, customProvider)
-      .then(async (result) => {
-        console.log(result.user, "result");
-        // setToken(result.user);
-        // const userGoogle = {
-        //   googleToken: result.user.accessToken,
-        //   googleId: result.user.uid,
-        //   googleName: result.user.displayName,
-        //   googleEmail: result.user.email,
-        //   googleImage: result.user.photoURL,
-        // };
+  //   signInWithPopup(auth, customProvider)
+  //     .then(async (result) => {
+  //       console.log(result.user, "result");
+  //       // setToken(result.user);
+  //       // const userGoogle = {
+  //       //   googleToken: result.user.accessToken,
+  //       //   googleId: result.user.uid,
+  //       //   googleName: result.user.displayName,
+  //       //   googleEmail: result.user.email,
+  //       //   googleImage: result.user.photoURL,
+  //       // };
 
-        // const encodedUser = btoa(JSON.stringify(userGoogle));
-        // console.log(encodedUser, "encodedUser");
-        // localStorage.setItem("_auth", encodedUser);
-        // navigate("/dashboard");
-        const response = await axios.post(
-          process.env.REACT_APP_HOSTING_URL + '/v1/auth/signup',
-          {
-            email: result.user.email,
-            password: '',
-            is_social: true,
-            firebase_id: 'string',
-            id_token: result.user.accessToken,
-            device_id: 'string'
-          }
-        );
+  //       // const encodedUser = btoa(JSON.stringify(userGoogle));
+  //       // console.log(encodedUser, "encodedUser");
+  //       // localStorage.setItem("_auth", encodedUser);
+  //       // navigate("/dashboard");
+  //       const response = await axios.post(
+  //         process.env.REACT_APP_HOSTING_URL + '/v1/auth/signup',
+  //         {
+  //           email: result.user.email,
+  //           password: '',
+  //           is_social: true,
+  //           firebase_id: 'string',
+  //           id_token: result.user.accessToken,
+  //           device_id: 'string'
+  //         }
+  //       );
 
-        if (response && response.data) {
-          console.log(response, 'response.data');
-          navigate("/");
-        } else {
-          // Unexpected response format
-          throw new Error('Invalid response from the server.');
-        }
-      })
-      .catch((error) => {
-        console.log(error.response.data.detail);
-        toast.error(error.response.data.detail, {
-          position: toast.POSITION.TOP_CENTER,
-        });
-      });
-  };
+  //       if (response && response.data) {
+  //         console.log(response, 'response.data');
+  //         navigate("/");
+  //       } else {
+  //         // Unexpected response format
+  //         throw new Error('Invalid response from the server.');
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.response.data.detail);
+  //      enqueueSnackbar(error.response.data.detail, {
+  //   variant: 'error',
+  //     autoHideDuration: 1500
+  // });
+  //     });
+  // };
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -127,13 +128,20 @@ function Signup({ errors, touched }) {
       .post(process.env.REACT_APP_HOSTING_URL + "/v1/auth/signup", payload)
       .then((response) => {
         console.log(response, "response");
+        enqueueSnackbar(response.data.detail, {
+          variant: 'success',
+          autoHideDuration: 1500
+        });
         var signupToken = response.data.data;
         localStorage.setItem("signupToken", signupToken);
         navigate("/otpVarification");
       })
       .catch((error) => {
         console.log(error);
-        toast.error(error.response.data.detail);
+        enqueueSnackbar(error.response.data.detail, {
+          variant: 'error',
+          autoHideDuration: 1500
+        });
       })
       .finally(() => {
         console.log("finally");
@@ -144,7 +152,6 @@ function Signup({ errors, touched }) {
 
   return (
     <>
-      <ToastContainer />
       <div className=" h-full w-full">
         <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
           <div className="left_heading text-center">
@@ -322,7 +329,7 @@ function Signup({ errors, touched }) {
                 </Link>
               </p>
             </div>
-            <div title="OR" className="or_block">
+            {/* <div title="OR" className="or_block">
               <div className="line"></div>
               <p>OR</p>
             </div>
@@ -335,7 +342,7 @@ function Signup({ errors, touched }) {
                 <img src={googleicon} alt="google" />
               </div>
               <div>Sign up with Google</div>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

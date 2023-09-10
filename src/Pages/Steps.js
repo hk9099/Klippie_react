@@ -5,15 +5,20 @@ import AccordionSection from '../components/AccordionSection';
 import Shuffleloader from '../components/shuffleloader.js';
 import { updateMainVideo } from "../components/data.js";
 import { useSidebarContext } from '../components/SidebarContext.js';
+import { useSnackbar } from 'notistack';
+import { AiOutlineClose } from 'react-icons/ai';
+
 
 
 const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
+    const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
     const [newvideoClips, setNewvideoClips] = useState([]);
     //eslint-disable-next-line
     const [allApiCompleted, setAllApiCompleted] = useState(false);
     const [error, setError] = useState('');
     const apiCallsMadeRef = useRef(false);
+    
     const prevProjectIdRef = useRef();
     //eslint-disable-next-line
     const [accordionVisible, setAccordionVisible] = useState(true);
@@ -22,6 +27,25 @@ const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
     }, [newhistoryvideoClips]);
+    
+    const controller = useRef(new AbortController());
+
+
+    const handleCloseClick = () => {
+        // When close button is clicked, cancel the ongoing API calls
+        controller.current.abort();
+        setIsLoading(false);
+    };
+    const closeButton = isLoading ? (
+        <button
+            className="absolute top-10 right-10 text-white font-bold  px-2 py-1 text-3xl rounded-full"
+            onClick={handleCloseClick}
+        >
+            <AiOutlineClose />
+        </button>
+    ) : null;
+
+  
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -36,6 +60,7 @@ const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
     };
 
     const makeApiCalls = async (projectId, token) => {
+        controller.current = new AbortController();
         setIsApiCompleted(false);
         try {
             console.log('projectId:', projectId);
@@ -51,7 +76,6 @@ const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
             setAllApiCompleted(false);
             setError('');
             setIsLoading(true);
-            setNewvideoClips([]);
 
             let data1 = qs.stringify({
                 'project_id': projectId
@@ -66,7 +90,8 @@ const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': `Bearer ${token}`
                 },
-                data: data1
+                data: data1,
+                signal: controller.current.signal,
             };
 
             const response1 = await axios.request(config1);
@@ -118,7 +143,8 @@ const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'Authorization': `Bearer ${token}`
                     },
-                    data: data2
+                    data: data2,
+                    signal: controller.current.signal,
                 };
 
                 const response2 = await axios.request(config2);
@@ -141,7 +167,8 @@ const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
                             'Content-Type': 'application/x-www-form-urlencoded',
                             'Authorization': `Bearer ${token}`
                         },
-                        data: data3
+                        data: data3,
+                        signal: controller.current.signal,
                     };
 
                     const response3 = await axios.request(config3);
@@ -178,10 +205,19 @@ const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
                 }
             }
         } catch (error) {
-            console.log(error);
-            setTimeout(() => {
-                setError('Something went wrong. Please try again.');
-            }, 3000);
+            if (error.name === 'AbortError') {
+                enqueueSnackbar('API call aborted',
+                    { variant: 'info', autoHideDuration: 1000 });
+            } else {
+                // Handle error
+                console.error('API call failed:', error.message);
+                enqueueSnackbar('Clip creation Stoped',
+                    { variant: 'error', autoHideDuration: 1500 ,anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right',
+                    },});
+            }   
+        } finally {
             setIsLoading(false);
         }
     };
@@ -209,6 +245,7 @@ const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
                 )}
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
+            {closeButton}
             {!isLoading && newvideoClips.length > 0 && accordionVisible && (
                 <AccordionSection videoClips={newvideoClips} />
             )}

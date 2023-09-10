@@ -4,13 +4,12 @@ import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css'
 import { RiInformationLine } from 'react-icons/ri';
 import * as Yup from 'yup';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { useSnackbar } from 'notistack';
+// import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { auth } from '../components/config';
-import googleicon from '../assets/images/google.png';
+// import { auth } from '../components/config';
+// import googleicon from '../assets/images/google.png';
 import '../assets/css/signin.css';
 import axios from 'axios';
 import Hiiii from '../assets/images/hi_40x40.gif';
@@ -18,6 +17,7 @@ import { HiOutlineMail } from 'react-icons/hi';
 
 function Signin() {
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
     useEffect(() => {
         localStorage.setItem('color-theme', 'light');
     }, []);
@@ -35,56 +35,61 @@ function Signin() {
         }
     }, [navigate]);
 
-    const handleGoogleLogin = () => {
-        const customProvider = new GoogleAuthProvider();
-        customProvider.setCustomParameters({ prompt: 'select_account' });
+    // const handleGoogleLogin = () => {
+    //     const customProvider = new GoogleAuthProvider();
+    //     customProvider.setCustomParameters({ prompt: 'select_account' });
 
-        signInWithPopup(auth, customProvider)
-            .then(async (result) => {
-                console.log(result.user, 'result');
-                // // setToken(result.user);
-                // const userGoogle = {
-                //     googleToken: result.user.accessToken,
-                //     googleId: result.user.uid,
-                //     googleName: result.user.displayName,
-                //     googleEmail: result.user.email,
-                //     googleImage: result.user.photoURL,
-                // };
+    //     signInWithPopup(auth, customProvider)
+    //         .then(async (result) => {
+    //             console.log(result.user, 'result');
+    //             // // setToken(result.user);
+    //             // const userGoogle = {
+    //             //     googleToken: result.user.accessToken,
+    //             //     googleId: result.user.uid,
+    //             //     googleName: result.user.displayName,
+    //             //     googleEmail: result.user.email,
+    //             //     googleImage: result.user.photoURL,
+    //             // };
 
-                // const encodedUser = btoa(JSON.stringify(userGoogle));
-                // console.log(encodedUser, 'encodedUser');
-                // localStorage.setItem('_auth', encodedUser);
-                // navigate('/dashboard');
-                const response = await axios.post(
-                    process.env.REACT_APP_HOSTING_URL + '/v1/auth/login',
-                    {
-                        email: result.user.email,
-                        password: '',
-                        is_social: true,
-                        firebase_id: 'string',
-                        id_token: result.user.accessToken,
-                        device_id: 'string'
-                    }
-                );
+    //             // const encodedUser = btoa(JSON.stringify(userGoogle));
+    //             // console.log(encodedUser, 'encodedUser');
+    //             // localStorage.setItem('_auth', encodedUser);
+    //             // navigate('/dashboard');
+    //             const response = await axios.post(
+    //                 process.env.REACT_APP_HOSTING_URL + '/v1/auth/login',
+    //                 {
+    //                     email: result.user.email,
+    //                     password: '',
+    //                     is_social: true,
+    //                     firebase_id: 'string',
+    //                     id_token: result.user.accessToken,
+    //                     device_id: 'string'
+    //                 }
+    //             );
 
-                if (response && response.data) {
-                    const encodedUser = btoa(JSON.stringify(response.data));
-                    localStorage.setItem('_sodfhgiuhih', encodedUser);
-                    const encodedEmail = btoa(result.user.email);
-                    localStorage.setItem('_auth', encodedEmail);
-                    navigate('/dashboard');
-                } else {
-                    // Unexpected response format
-                    throw new Error('Invalid response from the server.');
-                }
-            })
-            .catch((error) => {
-                console.log(error.response.data.detail, 'error');
-                toast.error(error.response.data.detail, {
-                    position: toast.POSITION.TOP_CENTER
-                });
-            });
-    };
+    //             if (response && response.data) {
+    //                 const encodedUser = btoa(JSON.stringify(response.data));
+    //                 localStorage.setItem('_sodfhgiuhih', encodedUser);
+    //                 const encodedEmail = btoa(result.user.email);
+    //                 localStorage.setItem('_auth', encodedEmail);
+    //                 navigate('/dashboard');
+    //             } else {
+    //                 // Unexpected response format
+    //                 throw new Error('Invalid response from the server.');
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.log(error.response.data.detail, 'error');
+    //              enqueueSnackbar(error.response.data.detail, {
+    // variant: 'error',
+    //     anchorOrigin: {
+    //     vertical: 'bottom',
+    //         horizontal: 'center',
+    //             },
+    // autoHideDuration: 1500,
+    //         });
+    //         });
+    // };
 
     const initialValues = {
         email: '',
@@ -116,19 +121,38 @@ function Signin() {
 
             if (response && response.data) {
                 // Successful login
+                enqueueSnackbar('Login Successful', {
+                    variant: 'success',
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    },
+                    autoHideDuration: 1500,
+                });
                 const encodedUser = btoa(JSON.stringify(response.data));
                 localStorage.setItem('_sodfhgiuhih', encodedUser);
                 const encodedEmail = btoa(values.email);
                 localStorage.setItem('_auth', encodedEmail);
                 navigate('/dashboard');
             } else {
-                // Unexpected response format
-                throw new Error('Invalid response from the server.');
+                enqueueSnackbar('Invalid response from the server.', {
+                    variant: 'error',
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    },
+                    autoHideDuration: 1500,
+                });
             }
         } catch (error) {
             console.error(error.response.data.detail, 'error');
-            toast.error(error.response.data.detail, {
-                position: toast.POSITION.TOP_CENTER
+            enqueueSnackbar(error.response.data.detail, {
+                variant: 'error',
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                },
+                autoHideDuration: 1500,
             });
         }
         setIsLoading(false);
@@ -221,7 +245,7 @@ function Signin() {
                                 Create New Account
                             </Link>
                         </p>
-                        <div title="OR" className="or_block">
+                        {/* <div title="OR" className="or_block">
                             <div className="line"></div>
                             <p>OR</p>
                         </div>
@@ -234,11 +258,10 @@ function Signin() {
                                 <img src={googleicon} alt="google" />
                             </div>
                             <div>Sign in with Google</div>
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>
-            <ToastContainer />
         </main>
     );
 }

@@ -3,6 +3,7 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RotatingLines } from "react-loader-spinner";
 import { SidebarProvider } from './components/SidebarContext.js';
+import { SnackbarProvider } from 'notistack';
 const Signin = lazy(() => import('./Pages/signin.js'));
 const Signup = lazy(() => import('./Pages/signup.js'));
 const Forgotpassword = lazy(() => import('./Pages/forgotpassword.js'));
@@ -26,21 +27,22 @@ function App() {
           />
         </div>
       }>
-        <SidebarProvider>
-        <Routes>
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgotpassword" element={<Forgotpassword />} />
-          <Route path="*" element={<h1>Not Found</h1>} />
-          <Route
-            path="/dashboard"
-            element={<Layout><Dashboard /></Layout>}
-          />
-          <Route path="/otpVarification" element={<OtpVarification />} />
-          <Route path="/steps" element={<Steps />} />
-          {/* Route for Signin with light theme */}
-          <Route path="/" element={<Signin />} />
-          </Routes>
+        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={1500}>
+          <SidebarProvider>
+            <Routes>
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgotpassword" element={<Forgotpassword />} />
+              <Route path="*" element={<h1>Not Found</h1>} />
+              <Route
+                path="/dashboard"
+                element={<Layout><Dashboard /></Layout>}
+              />
+              <Route path="/otpVarification" element={<OtpVarification />} />
+              <Route path="/steps" element={<Steps />} />
+              <Route path="/" element={<Signin />} />
+            </Routes>
           </SidebarProvider>
+        </SnackbarProvider>
       </Suspense>
     </Router>
   );
