@@ -47,6 +47,11 @@ const Mainvideo = () => {
           className="whitespace-break-spaces"
           alignment='center'
           cssClass='Description'
+          cellRender={(rowData) => (
+            <div style={{ textAlign: "left" }}>
+              {rowData.data.description}
+            </div>
+          )}
         />
         <Column
           dataField="time"

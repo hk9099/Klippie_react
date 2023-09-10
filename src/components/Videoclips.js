@@ -62,8 +62,7 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
   }, [videoClips, setVideoCount]);
 
   return (<>
-    {/* Download button */}
-    {selectedRows.length > 0 && (
+    {/* {selectedRows.length > 0 && (
       <button
         className="fixed bottom-0 right-0 m-4 p-4 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 z-[9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999]"
         onClick={handleDownloadClick}
@@ -71,13 +70,12 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
       </button>
     )}
 
-    {/* Render the VideoDownload component when the modal is visible */}
     {modalVisible && (
       <VideoDownload
         selectedRows={selectedRows}
         onComplete={handleDownloadComplete}
       />
-    )}
+    )} */}
 
     <DataGrid
       dataSource={dataSource}
