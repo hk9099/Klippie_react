@@ -48,7 +48,7 @@ const VideoDownload = ({ selectedRows, onComplete }) => {
         }
     }, [selectedRows, onComplete]);
     return (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-[999999999999999999999999999999999999999999999999]">
+        <div className="absolute inset-0 rounded-lg downloadmodal flex items-center justify-center bg-gray-900 bg-opacity-75 ">
             <div className="bg-white rounded-lg p-4 max-w-2xl w-full">
                 <ZipLoader progress={progress} onComplete={onComplete} />
             </div>

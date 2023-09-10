@@ -396,3 +396,7 @@ z-index: 9;
 .loader-text {
   margin-top: 10px;
 }
+
+.downloadmodal{
+  z-index: 9999999999999999999999999999;
+}
