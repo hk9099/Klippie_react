@@ -4,7 +4,7 @@ const ShuffleLoader = () => {
     const titles = [
         "Finding the best clips",
         "This may take up to 15 minutes",
-        "We’ll send you an email when your clips are ready",
+        "Do not exit out of this screen",
     ];
 
     const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
