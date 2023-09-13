@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import Modal from "../components/Modal";
 import Steps from "../Pages/Steps";
 import "../assets/css/Sidebar.css";
+import { Analytics } from '@vercel/analytics/react';
 
 export default function Dashboard() {
   const [projectId, setProjectId] = useState(null);
@@ -43,6 +44,7 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+      <Analytics />
     </div>
   );
 }
