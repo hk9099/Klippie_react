@@ -31,7 +31,6 @@ export default function Dashboard() {
       <div className="flex h-full ">
         <Sidebar setProjectId={setProjectId} setNewvideoClips={setNewvideoClips} setnewMainVideo={setnewMainVideo} setAccordionVisible={setAccordionVisible} setError={setError} />
         <div className="w-full overflow-x-auto px-2">
-          <p className="text-3xl text-center font-bold text-white pt-20"></p>
           {/* <Navbar /> */}
           <Modal className="z-50" />
           {accordionVisible && (projectId || newhistoryvideoClips) && <Steps projectId={projectId} newhistoryvideoClips={newhistoryvideoClips} newmainvideo={newmainvideo} errorMessage={errorMessage} accordionVisible={accordionVisible} />}

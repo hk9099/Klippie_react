@@ -33,7 +33,7 @@ const Mainvideo = () => {
           alignment='center'
           cssClass='Video'
           cellRender={(rowData) => <VideoPlayer src={rowData.data.src} />}
-          width={460}
+          width='auto'
         />
         <Column
           dataField="title"
