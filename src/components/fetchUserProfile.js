@@ -16,13 +16,13 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
         }
     };
     if (!initialized) {
-        const encodedEmail = localStorage.getItem("_auth");
+        // const encodedEmail = localStorage.getItem("_auth");
 
-        if (encodedEmail) {
-            navigate("/dashboard");
-        } else {
-            navigate("/");
-        }
+        // if (encodedEmail) {
+        //     navigate("/dashboard");
+        // } else {
+        //     navigate("/");
+        // }
 
         const token = getToken();
 

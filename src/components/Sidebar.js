@@ -429,7 +429,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           setNewvideoClips(newvideoClips);
           setAccordionVisible(true);
           setError('');
-          console.log('New video clips:', newvideoClips);
+          console.log('projectData[index].id', projectData[index].id);
+          navigate(`/dashboard/${projectData[index].id}`);
         } else {
           console.log('Invalid API response:', response.data);
           setAccordionVisible(false);
@@ -557,7 +558,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 />
               </span>
             </div>
-
           ) : (
             <div className={`overflow-hidden ${!open && "hidden"} relative`}>
               {lines
@@ -566,8 +566,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                   <div
                     key={index}
                     className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(-1)}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(-1)}
                   >
                     {editIndex === index ? (
                       <div className="width-full row relative">
@@ -585,24 +585,24 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                         </button>
                       </div>
                     ) : (
-                      <p
-                        className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
-                        style={{
-                          width: hoveredIndex === index ? "188px" : "243px",
-                          // width: "100%",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          userSelect: "none",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          setActiveIndex(index);
-                          handleProjectClick(index);
-                        }}
-                      >
-                        {line}
-                      </p>
+                      < Link
+                          to={`/dashboard/${projectData[index].id}`} // Use the project's ID in the URL
+                    className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                    style={{
+                      width: hoveredIndex === index ? "188px" : "243px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      userSelect: "none",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      setActiveIndex(index);
+                      handleProjectClick(index);
+                    }}
+                        >
+                    {line}
+                  </Link>
                     )}
                     <div className="hover-actions" >
                       {editIndex !== index && (
