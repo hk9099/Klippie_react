@@ -5,8 +5,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import '../assets/css/signin.css';
 import Loader from './Loader.js';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useSnackbar } from 'notistack';
 import { FaMobileAlt } from 'react-icons/fa';
 
@@ -68,8 +66,8 @@ function Signin() {
 
     const validationSchema = Yup.object({
         otp: Yup.string()
-            .required('OTP is required')
-            .max(6, 'OTP must be 6 characters')
+            .required('Uniqe Code is required')
+            .max(6, 'Uniqe Code must be 6 characters')
             .matches(/^[0-9]+$/, 'Must be only digits'),
     });
 
@@ -83,14 +81,12 @@ function Signin() {
         axios
             .post('https://api.getklippie.com/v1/auth/verify-otp', payload)
             .then((response) => {
-                // Handle successful verification
-                toast.success('OTP verified successfully');
-                enqueueSnackbar('OTP verified successfully', { variant: 'success', autoHideDuration: 1500 });
+                enqueueSnackbar('Code verified successfully', { variant: 'success', autoHideDuration: 1500 });
                 console.log(response.data);
                 navigate('/');
             })
             .catch((error) => {
-                toast.error(error.message);
+                enqueueSnackbar('Invalid Code', { variant: 'error', autoHideDuration: 1500 });
                 setAttempts((prevAttempts) => prevAttempts + 1);
                 if (attempts + 1 >= 3) {
                     setShowResendButton(false);
@@ -174,7 +170,7 @@ function Signin() {
                 } else {
                     setShowResendButton(false);
                 }
-                toast.success('New Code sent successfully');
+                enqueueSnackbar('New Code sent successfully', { variant: 'success', autoHideDuration: 1500 });
 
                 // Update resendCount in localStorage
                 const updatedResendCount = attempts + 1;
@@ -182,15 +178,16 @@ function Signin() {
                 setAttempts(updatedResendCount); // Update attempts state
             })
             .catch((error) => {
-                toast.error('Too many attempts. Please try again later.');
-                console.log(error);
+                enqueueSnackbar('Too many attempts. Please try again later.', {
+                    variant: 'error',
+                    autoHideDuration: 1500,
+                });
                 setResendButtonLoading(false);
             });
     };
 
     return (
         <main>
-            <ToastContainer />
             {isLoading && <Loader />}
 
             <div className="h-full w-full">

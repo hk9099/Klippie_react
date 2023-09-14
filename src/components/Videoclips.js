@@ -121,6 +121,17 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
         className="whitespace-break-spaces"
         width='auto'
         allowSorting={false}
+        cellRender={(rowData) => (
+          <div
+            style={{
+              textAlign: "left",
+              fontFamily: "sans-serif",
+              cursor: "pointer",
+            }}
+          >
+            {rowData.data.title}
+          </div>
+        )}
       />
      <Column
         dataField="description"
