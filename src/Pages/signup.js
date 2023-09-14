@@ -128,7 +128,7 @@ function Signup({ errors, touched }) {
       .post(process.env.REACT_APP_HOSTING_URL + "/v1/auth/signup", payload)
       .then((response) => {
         console.log(response, "response");
-        enqueueSnackbar(response.data.detail, {
+        enqueueSnackbar(response.data.message, {
           variant: 'success',
           autoHideDuration: 1500
         });
@@ -138,10 +138,10 @@ function Signup({ errors, touched }) {
       })
       .catch((error) => {
         console.log(error);
-        enqueueSnackbar(error.response.data.detail, {
-          variant: 'error',
-          autoHideDuration: 1500
-        });
+        // enqueueSnackbar(error.response.data.message, {
+        //   variant: 'error',
+        //   autoHideDuration: 1500
+        // });
       })
       .finally(() => {
         console.log("finally");
@@ -309,7 +309,7 @@ function Signup({ errors, touched }) {
                   </div>
                   <button
                     type="submit"
-                    className="submitbutton mt-10 dark:bg-purple-500 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline bg-gray-200 hover:bg-gray-300 hover:shadow-lg transition duration-300 ease-in-out"
+                    className="submitbutton mt-10 dark:bg-purple-500 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline bg-gray-200 transition duration-300 ease-in-out"
                     disabled={isSubmitting || loading}
                   >
                     {loading ? "Signing Up..." : "Sign Up"}

@@ -33,7 +33,7 @@ const Mainvideo = () => {
           alignment='center'
           cssClass='Video'
           cellRender={(rowData) => <VideoPlayer src={rowData.data.src} />}
-          width={460}
+          width='auto'
         />
         <Column
           dataField="title"
@@ -41,6 +41,11 @@ const Mainvideo = () => {
           cssClass='Title'
           className="whitespace-break-spaces"
           width='auto'
+          cellRender={(rowData) => (
+            <div style={{ textAlign: "left" }}>
+              {rowData.data.title}
+            </div>
+          )}
         />
         <Column
           dataField="description"

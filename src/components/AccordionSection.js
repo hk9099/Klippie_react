@@ -20,7 +20,7 @@ export default function AccordionSection({ videoClips }) {
     };
 
     return (
-        <div className="flex-grow-0 flex-shrink-0 w-[100%] h-[90%] overflow-y-auto overflow-x-scroll">
+        <div className="flex-grow-0 flex-shrink-0 w-[100%] h-[90%] overflow-y-auto overflow-x-scroll m-20">
             <Accordion alwaysOpen={true} className="p-4">
                 <AccordionItem isActive={openStates[0]}>
                     <AccordionHeader

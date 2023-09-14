@@ -6,6 +6,7 @@ import qs from "qs";
 import FilestackUploader from "./FileStackPicker";
 // import { updateMainVideo } from "./data";
 const Modal = ({ onSubmit, isOpen, onClose }) => {
+    //eslint-disable-next-line
     const [selectedOption, setSelectedOption] = useState("upload");
     //eslint-disable-next-line
     const [isLoading, setIsLoading] = useState(false);
@@ -141,26 +142,25 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                 </h2>
                 <hr className="dark:border-gray-500 my-1" />
                 <form onSubmit={formik.handleSubmit} className="mt-4">
-                    <div className="mb-4 flex justify-evenly items-center">
+                    {/* <div className="mb-4 flex justify-evenly items-center">
                         <div className="flex items-center">
                             <input
                                 type="radio"
                                 id="youtube"
                                 name="option"
                                 value="youtube"
-                                placeholder="Paste YouTube Link Here"
                                 checked={selectedOption === "youtube"}
                                 onChange={() => setSelectedOption("youtube")}
-                                className="form-radio hidden h-0 w-0 text-gray-800 dark:text-gray-200"
+                                className="form-radio hidden h-0 w-0 text-gray-200 dark:text-gray-200"
                             />
                             <label
                                 htmlFor="youtube"
                                 className="relative cursor-pointer pl-8 text-gray-800 dark:text-gray-200 select-none"
                             >
-                                <div className="absolute left-0 flex items-center justify-center w-6 h-6 border border-gray-400 dark:border-gray-600 rounded-full">
+                                <div className="absolute left-0 flex items-center justify-center w-6 h-6 border border-gray-400 dark:border-gray-600 rounded-full ">
                                     <div className={`w-3 h-3 rounded-full ${selectedOption === "youtube" ? 'bg-indigo-600' : 'bg-white'}`}></div>
                                 </div>
-                                Paste YouTube Link Here
+                                YouTube Link
                             </label>
                         </div>
                         <div className="flex items-center">
@@ -183,7 +183,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 Upload Audio/Video
                             </label>
                         </div>
-                    </div>
+                    </div> */}
 
 
                     {selectedOption === "youtube" ? (
@@ -198,7 +198,8 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                                 type="text"
                                 id="youtubeLink"
                                 name="youtubeLink"
-                                className={`mt-1 block w-full border ${formik.errors.youtubeLink && formik.touched.youtubeLink
+                                placeholder="Paste YouTube Link Here"
+                                className={`mt-1  placeholder:text-slate-500 block w-full border ${formik.errors.youtubeLink && formik.touched.youtubeLink
                                     ? "border-red-500"
                                     : "border-gray-300"
                                     } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-transparent text-white`}

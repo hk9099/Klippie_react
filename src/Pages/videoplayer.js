@@ -49,8 +49,9 @@ const VideoPlayer = ({ src, title }) => {
     const handleDownload = async () => {
         try {
             setIsLoading(true);
-
+            
             const response = await fetch(src);
+            console.log(response);
             const videoBlob = await response.blob();
 
             const blobURL = URL.createObjectURL(videoBlob);
@@ -85,7 +86,7 @@ const VideoPlayer = ({ src, title }) => {
                 />
             <button className="Download_button m-auto mt-2" onClick={handleDownload}>
                 <HiOutlineDownload />
-                {isLoading ? "Downloading..." : "Download Video"}
+                {isLoading ? "Downloading..." : "Download"}
             </button>
         </>
     );

@@ -165,21 +165,22 @@ const AccountModal = ({
                                                 htmlFor="oldPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
-                                                Old Password
+                                                Current Password
                                             </label>
                                             <Field
                                                 type={showOldPassword ? 'text' : 'password'}
                                                 name="oldPassword"
-                                                className="px-4 py-2 border rounded-md relative"
+                                                className="px-4 py-2 border rounded-md relative placeholder:text-gray-400 bg-transparent"
+                                                placeholder="Enter your current password"
                                             />
                                             <div
-                                                className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer"
+                                                className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer text-gray-400"
                                                 onClick={() =>
                                                     setShowOldPassword((prev) => !prev)
                                                 }
                                             >
                                                 {showOldPassword ? (
-                                                    <IoMdEyeOff size={20} />
+                                                    <IoMdEyeOff size={20} className='text-gray-400' />
                                                 ) : (
                                                     <IoMdEye size={20} />
                                                 )}
@@ -200,10 +201,11 @@ const AccountModal = ({
                                             <Field
                                                 type={showNewPassword ? 'text' : 'password'}
                                                 name="newPassword"
-                                                className="px-4 py-2 border rounded-md"
+                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent"
+                                                placeholder="Enter your new password"
                                             />
                                             <div
-                                                className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer"
+                                                className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer text-gray-400"
                                                 onClick={() =>
                                                     setShowNewPassword((prev) => !prev)
                                                 }
@@ -231,10 +233,11 @@ const AccountModal = ({
                                             <Field
                                                 type={showConfirmPassword ? 'text' : 'password'}
                                                 name="confirmNewPassword"
-                                                className="px-4 py-2 border rounded-md"
+                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent"
+                                                placeholder="Confirm your new password"
                                             />
                                             <div
-                                                className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer"
+                                                className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer text-gray-400"
                                                 onClick={() =>
                                                     setShowConfirmPassword((prev) => !prev)
                                                 }
