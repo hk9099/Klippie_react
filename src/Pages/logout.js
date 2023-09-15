@@ -15,7 +15,7 @@ function Logout({ showLogout }) {
     const cancelButtonRef = useRef(null);
 
     const handleLogout = () => {
-        enqueueSnackbar('Logged out successfully', {
+        enqueueSnackbar('Logging out...', {
             variant: 'info',
             anchorOrigin: {
                 vertical: 'bottom',
