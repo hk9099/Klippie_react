@@ -356,10 +356,12 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
       axios.request(mainconfig)
         .then((response) => {
+          console.log(response.data, 'response.data');
           const title = response.data.data.title;
           const description = response.data.data.description;
           const src = response.data.data.video_url;
           const id = response.data.data.id;
+          const type = response.data.data.type;
 
           // Calculate the duration of the video (assuming src is the video URL)
           const videoElement = document.createElement('video');
@@ -374,7 +376,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             const newMainVideo = [
-              { title, description, src, id, time: formattedDuration }
+              { title, description, src, id, time: formattedDuration , type}
             ];
             updateMainVideo(newMainVideo);
             setnewMainVideo(newMainVideo);
@@ -423,7 +425,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               title: clip.title,
               description: clip.summary,
               status: clip.status,
-              time: formattedTime
+              time: formattedTime,
+              type: clip.type,
             };
           }));
           setNewvideoClips(newvideoClips);

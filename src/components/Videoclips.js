@@ -21,6 +21,7 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const isDataLoadedRef = useRef(false); 
+  console.log(videoClips);
   // const [selectedRows, setSelectedRows] = useState([]);
   // const [modalVisible, setModalVisible] = useState(false);
 
@@ -108,7 +109,7 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
         cssClass="Video"
         cellRender={(rowData) =>
           <div >
-            <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""}  title={rowData.data?.title ? rowData.data.title : ""} />
+            <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} />
           </div>
         }
         width='auto'
