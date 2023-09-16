@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { JolPlayer } from "jol-player";
 import { HiOutlineDownload } from "react-icons/hi";
+import { useSnackbar } from 'notistack';
 
 
 const videoOptions = {
@@ -43,13 +44,19 @@ const videoOptions = {
     progressFloatPosition: "",
     mode: "scaleToFill",
 };
-const VideoPlayer = ({ src, title }) => {
+const VideoPlayer = ({ src, title,type }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
   
     const handleDownload = async () => {
         try {
             setIsLoading(true);
-            
+
+            if (!src) {
+               enqueueSnackbar("No video source found", { variant: "error" }, { preventDuplicate: true }, { autoHideDuration: 2000 });
+            }
+
+            if (type === "mp4") {
             const response = await fetch(src);
             console.log(response);
             const videoBlob = await response.blob();
@@ -67,6 +74,25 @@ const VideoPlayer = ({ src, title }) => {
             // Clean up: Remove the download link and revoke the Blob object URL
             document.body.removeChild(downloadLink);
             URL.revokeObjectURL(blobURL);
+            } else {
+                const response = await fetch(src);
+                console.log(response);
+                const videoBlob = await response.blob();
+
+                const blobURL = URL.createObjectURL(videoBlob);
+
+                const downloadLink = document.createElement("a");
+                downloadLink.href = blobURL;
+                downloadLink.download = `${title}.mp3`
+                document.body.appendChild(downloadLink);
+
+                // Programmatically click the link to trigger the download
+                downloadLink.click();
+
+                // Clean up: Remove the download link and revoke the Blob object URL
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(blobURL);
+            }
 
             setIsLoading(false);
         } catch (error) {
@@ -74,6 +100,7 @@ const VideoPlayer = ({ src, title }) => {
             console.error("Error while downloading the video:", error);
         }
     };
+
 
     return (
         <>
@@ -86,7 +113,7 @@ const VideoPlayer = ({ src, title }) => {
                 />
             <button className="Download_button m-auto mt-2" onClick={handleDownload}>
                 <HiOutlineDownload />
-                {isLoading ? "Downloading..." : "Download"}
+                {isLoading ? "Downloading..." : `Download ${type}`}
             </button>
         </>
     );

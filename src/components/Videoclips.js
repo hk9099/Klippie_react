@@ -21,8 +21,14 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const isDataLoadedRef = useRef(false); 
+<<<<<<< HEAD
   const [selectedRows, setSelectedRows] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+=======
+  console.log(videoClips);
+  // const [selectedRows, setSelectedRows] = useState([]);
+  // const [modalVisible, setModalVisible] = useState(false);
+>>>>>>> 81ee8edd970e9c18226cd4aee9339ba348fb22b4
 
   const handleDownloadClick = () => {
     setModalVisible(true); // Show the download modal
@@ -108,7 +114,7 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
         cssClass="Video"
         cellRender={(rowData) =>
           <div >
-            <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""}  title={rowData.data?.title ? rowData.data.title : ""} />
+            <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} />
           </div>
         }
         width='auto'

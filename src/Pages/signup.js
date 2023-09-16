@@ -137,11 +137,11 @@ function Signup({ errors, touched }) {
         navigate("/otpVarification");
       })
       .catch((error) => {
-        console.log(error);
-        // enqueueSnackbar(error.response.data.message, {
-        //   variant: 'error',
-        //   autoHideDuration: 1500
-        // });
+        console.log(error,);
+        enqueueSnackbar(error.response.data.detail, {
+          variant: 'error',
+          autoHideDuration: 1500
+        });
       })
       .finally(() => {
         console.log("finally");

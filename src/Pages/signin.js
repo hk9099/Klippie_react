@@ -145,15 +145,26 @@ function Signin() {
                 });
             }
         } catch (error) {
-            console.error(error.response.data.detail, 'error');
-            enqueueSnackbar(error.response.data.detail, {
-                variant: 'error',
-                anchorOrigin: {
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                },
-                autoHideDuration: 1500,
-            });
+            if (error.response.data.detail) {
+                enqueueSnackbar(error.response.data.detail, {
+                    variant: 'error',
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    },
+                    autoHideDuration: 1500,
+                });
+            } else {
+                navigate("/otpVarification");
+                enqueueSnackbar(error.response.data.message, {
+                    variant: 'error',
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    },
+                    autoHideDuration: 1500,
+                });
+            }
         }
         setIsLoading(false);
         setSubmitting(false);

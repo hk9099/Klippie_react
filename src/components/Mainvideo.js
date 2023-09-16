@@ -32,7 +32,7 @@ const Mainvideo = () => {
           caption="Video"
           alignment='center'
           cssClass='Video'
-          cellRender={(rowData) => <VideoPlayer src={rowData.data.src} />}
+          cellRender={(rowData) => <VideoPlayer src={rowData.data.src} title={rowData.data.title} type={rowData.data.type} />}
           width='auto'
         />
         <Column

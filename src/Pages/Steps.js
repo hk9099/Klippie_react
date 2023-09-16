@@ -192,7 +192,8 @@ const Steps = ({ projectId, newhistoryvideoClips, errorMessage }) => {
                                 title: clip.title,
                                 description: clip.summary,
                                 status: clip.status,
-                                time: formattedTime
+                                time: formattedTime,
+                                type: clip.type,
                             };
                         }));
                         setNewvideoClips(newvideoClips);
