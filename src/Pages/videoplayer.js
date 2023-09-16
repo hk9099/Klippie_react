@@ -113,7 +113,7 @@ const VideoPlayer = ({ src, title,type }) => {
                 />
             <button className="Download_button m-auto mt-2" onClick={handleDownload}>
                 <HiOutlineDownload />
-                {isLoading ? "Downloading..." : `Download ${type}`}
+                {isLoading ? "Downloading..." : `Download ${type === 'mp4' ? 'Video' : 'Audio'}`}
             </button>
         </>
     );
