@@ -64,8 +64,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     // eslint-disable-next-line
   }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
 
-
-
   var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
   useEffect(() => {
@@ -255,7 +253,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         await axios.request(config);
         // If the API call is successful, update the state
         const updatedProjectData = projectData.filter((_, i) => i !== index);
-        setProjectData(updatedProjectData); // Update projectData state
+        setProjectData(updatedProjectData); 
 
         // Similarly, update lines state if needed
         setLines((prevLines) => {
@@ -407,32 +405,31 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         const response = await axios.request(config);
         console.log(response)
         if (response.data.data && Array.isArray(response.data.data)) {
-          const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
-            // Split the time string into parts
-            const timeParts = clip.duration.split(':');
+          // const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
+          //   // Split the time string into parts
+          //   const timeParts = clip.duration.split(':');
 
-            // Extract hours, minutes, seconds
-            const hours = parseInt(timeParts[0]);
-            const minutes = parseInt(timeParts[1]);
-            const seconds = parseInt(timeParts[2].split('.')[0]);
+          //   // Extract hours, minutes, seconds
+          //   const hours = parseInt(timeParts[0]);
+          //   const minutes = parseInt(timeParts[1]);
+          //   const seconds = parseInt(timeParts[2].split('.')[0]);
 
-            // Format the time in HH:MM:SS
-            const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+          //   // Format the time in HH:MM:SS
+          //   const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-            return {
-              id: clip.id,
-              src: clip.clip_url,
-              title: clip.title,
-              description: clip.summary,
-              status: clip.status,
-              time: formattedTime,
-              type: clip.type,
-            };
-          }));
-          setNewvideoClips(newvideoClips);
-          setAccordionVisible(true);
-          setError('');
-          console.log('projectData[index].id', projectData[index].id);
+          //   return {
+          //     id: clip.id,
+          //     src: clip.clip_url,
+          //     title: clip.title,
+          //     description: clip.summary,
+          //     status: clip.status,
+          //     time: formattedTime,
+          //     type: clip.type,
+          //   };
+          // }));
+          // setNewvideoClips(newvideoClips);
+          // setAccordionVisible(true);
+          // setError('');
           navigate(`/dashboard/${projectData[index].id}`);
         } else {
           console.log('Invalid API response:', response.data);

@@ -83,8 +83,8 @@ function App() {
               element={<Layout><Dashboard /></Layout>}
             />
             <Route
-              path="/dashboard/:projectId" // Define a dynamic parameter
-              element={<Layout><Dashboard /></Layout>}
+                path="/dashboard/:projectId" // Define a dynamic parameter
+                element={<Layout><Dashboard /></Layout>}
             />
 
             <Route path="/otpVarification" element={<OtpVarification />} />
