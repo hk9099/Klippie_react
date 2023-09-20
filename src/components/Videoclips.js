@@ -9,7 +9,7 @@ import DataGrid, {
   // Editing,
 } from "devextreme-react/data-grid";
 import "devextreme/dist/css/dx.light.css";
-import VideoPlayer from "../Pages/videoplayer.js";
+import VideoPlayer from "../components/videoplayer.js";
 import DropDownButton from "../components/GridDropdown.js";
 import { Popup } from "devextreme-react/popup";
 import { Form } from "devextreme-react/form";
