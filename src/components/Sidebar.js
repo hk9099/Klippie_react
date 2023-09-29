@@ -16,11 +16,13 @@ import fetchProjectsData from '../components/fetchProjectData';
 import { FiEdit2 } from "react-icons/fi";
 import { RotatingLines } from "react-loader-spinner";
 import { useSidebarContext } from '../components/SidebarContext';
+import { useUserNickname } from "./userNicknameContext";
 import fetchUserProfile from '../components/fetchUserProfile';
 import { useSnackbar } from 'notistack';
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
+  const { userName, setUserName } = useUserNickname(); 
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [initialized] = useState(false);
@@ -44,7 +46,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [tempLines, setTempLines] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [editIndex, setEditIndex] = useState(-1);
-  //eslint-disable-next-line
+  //eslint-disable-next-line  
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
@@ -62,9 +64,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
-  }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
+  }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile ]);
 
-
+  setUserName(userNickname);
+  // console.log(userName, 'userNickname')
 
   var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
@@ -512,8 +515,16 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 Klippie
               </span>
             )}
+            {open && (
+              <span
+                className={`text-sm ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`}
+              >
+                Beta
+              </span>
+            )}
           </div>
         </Link>
+
         <div className="pt-4 pb-3">
           <button
             className={`flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full cursor-pointer dark:text-white  border-animation ${!open && "justify-center"
@@ -724,3 +735,4 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 };
 
 export default Sidebar;
+

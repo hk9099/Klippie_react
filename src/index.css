@@ -1,10 +1,105 @@
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
+  @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400&family=Mooli&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200;1,300;1,400;1,500;1,600&family=Raleway:ital,wght@0,100;1,100&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 @layer base {
     html {
         @apply text-gray-800;
         font-family: 'Poppins', sans-serif;
     }
 }
-@tailwind components;
-@tailwind utilities;
 
+.font-mooli {
+    font-family: 'Mooli', cursive;
+}
+
+.font-raleway {
+    font-family: 'Raleway', sans-serif;
+}
+
+.font-jost {
+    font-family: 'Jost', sans-serif;
+}
+
+.font-ubuntu {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.font-worksans {
+    font-family: 'Work Sans', sans-serif;
+}
+
+
+
+/* Add this CSS to your stylesheet */
+.fullscreen-dropzone {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999; /* Ensure it's on top of other content */
+}
+
+
+/* Define linear gradient for the "Create" title */
+.text-gradient-create {
+    background-image: linear-gradient(to right, #ff6600, #ff00ff);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* Define linear gradient for the "Ideas" title */
+.text-gradient-ideas {
+    background-image: linear-gradient(to right, #00ffcc, #ff3300);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* Define linear gradient for the "Tips" title */
+/* Define a new linear gradient for the "Tips" title */
+.text-gradient-tips {
+    background-image: linear-gradient(to right, #ffcc00, #ff0066);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* Define a common animation for all titles */
+@keyframes titleAnimation {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Apply the animation to all titles */
+.text-gradient-create,
+.text-gradient-ideas,
+.text-gradient-tips {
+    animation: titleAnimation 0.5s ease-in-out;
+}
+
+/* Define a common animation for all elements inside the div */
+@keyframes elementAnimation {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Apply the animation to the containing div */
+.flex > div {
+    animation: elementAnimation 0.5s ease-in-out;
+}

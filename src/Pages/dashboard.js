@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
-// import Navbar from "../components/Navbar";
 import Modal from "../components/Modal";
 import Steps from "../Pages/Steps";
+import HomeScreen from "../Pages/HomeScreen";
+import Navbar from "../components/Navbar";
 import "../assets/css/Sidebar.css";
 import { Analytics } from '@vercel/analytics/react';
 
@@ -30,10 +31,14 @@ export default function Dashboard() {
     <div className="h-screen dashborardbg">
       <div className="flex h-full ">
         <Sidebar setProjectId={setProjectId} setNewvideoClips={setNewvideoClips} setnewMainVideo={setnewMainVideo} setAccordionVisible={setAccordionVisible} setError={setError} />
-        <div className="w-full overflow-x-auto px-2">
-          {/* <Navbar /> */}
+        <div className="w-full overflow-x-auto px-2 z-30">
           <Modal className="z-50" />
-          {accordionVisible && (projectId || newhistoryvideoClips) && <Steps projectId={projectId} newhistoryvideoClips={newhistoryvideoClips} newmainvideo={newmainvideo} errorMessage={errorMessage} accordionVisible={accordionVisible} />}
+          <Navbar />
+          {accordionVisible ? (
+            <Steps projectId={projectId} newhistoryvideoClips={newhistoryvideoClips} newmainvideo={newmainvideo} errorMessage={errorMessage} accordionVisible={accordionVisible} />
+          ) : (
+              <HomeScreen />
+          )}
           {!accordionVisible && errorMessage && (
             <div className="flex justify-center h-screen items-center ">
               <div className="text-red-500 text-center  inline-block p-2 font-bold text-lg">
@@ -47,4 +52,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

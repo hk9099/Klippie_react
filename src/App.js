@@ -2,6 +2,7 @@ import 'devextreme/dist/css/dx.light.css';
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RotatingLines } from "react-loader-spinner";
+import { UserNicknameProvider } from './components/userNicknameContext.js';
 import { SidebarProvider } from './components/SidebarContext.js';
 import { SnackbarProvider } from 'notistack';
 const Signin = lazy(() => import('./Pages/signin.js'));
@@ -11,7 +12,8 @@ const Dashboard = lazy(() => import('./Pages/dashboard.js'));
 const OtpVarification = lazy(() => import('./Pages/otpVarification.js'));
 const Layout = lazy(() => import('./Pages/Layout.js'));
 const Steps = lazy(() => import('./Pages/Steps.js'));
-
+const VideoInfo = lazy(() => import('./components/youtubevideo.js'));
+const HomeScreen = lazy(() => import('./Pages/HomeScreen.js'));
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
       }>
         <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={1500}>
           <SidebarProvider>
+          <UserNicknameProvider> 
             <Routes>
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgotpassword" element={<Forgotpassword />} />
@@ -40,8 +43,11 @@ function App() {
               <Route path="/otpVarification" element={<OtpVarification />} />
               <Route path="/steps" element={<Steps />} />
               <Route path="/" element={<Signin />} />
+                <Route path="/youtubevideo" element={<VideoInfo />} />
+                <Route path="/homescreen" element={<HomeScreen />} />
             </Routes>
-          </SidebarProvider>
+          </UserNicknameProvider>
+            </SidebarProvider>
         </SnackbarProvider>
       </Suspense>
     </Router>

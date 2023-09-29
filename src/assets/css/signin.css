@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
 }
 
 /* .left_backgroundinage {
@@ -450,3 +449,42 @@ width: 100%;
   justify-content: center;
   margin-right: 10px;
 }
+
+/* Add this CSS to your stylesheet or component's styles */
+.rotating-word {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.rotating-word.visible {
+  opacity: 1;
+  animation: fadeInOut 4s linear infinite;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+

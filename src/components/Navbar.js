@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 // import Toggle from './ThemeToggle'
 //eslint-disable-next-line
 import { Link, useLocation } from 'react-router-dom'
-// import { AiOutlineShareAlt } from 'react-icons/ai'
+import { BsStopwatch } from 'react-icons/bs'
 
 const Navbar = () => {
     //eslint-disable-next-line
@@ -12,26 +12,16 @@ const Navbar = () => {
 
     return (
         <>
-        <nav className='bg-white border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent h-[90px] sticky top-0 z-20 '>
-            <div className=' flex justify-between items-center mx-auto pt-3'>
-                {/* <div className='flex items-center mx-auto'>
-                    <span className='text-xl font-medium whitespace-nowrap dark:text-white'>
-                        Welcome
-                    </span>
-                </div>
-                <div className='flex justify-end pr-4'>
-                    <Link to="/dashboard">
-                        <p className={`flex items-center gap-x-2 p-3 px-4 text-base font-normal rounded-full dark:bg-gray-700 bg-gray-200 cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 
-                        ${location.pathname === "/dashboard" && ''}`}
-                        >
-                            <span className='text-2xl'><AiOutlineShareAlt /></span>
-                            <span className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}>
-                                Share
-                            </span>
-                        </p>
-                    </Link>
-                    <Toggle />
-                </div> */}
+        <nav className=' border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent h-[90px] sticky top-0 z-20 '>
+            <div className=' flex justify-end items-center mx-auto'>
+                    <div className="flex justify-end items-center w-100">
+                        <div className="text-green-600  px-3 py-2 font-bold text-lg flex justify-center items-center m-3 ">
+                            <BsStopwatch className='mr-2'/> 2h 00m
+                        </div>
+                        <button className="text-gray-300 text-center  inline-block px-3 py-2 font-bold text-lg dark:bg-[#ffffff3a] m-3 rounded-lg">
+                            Add More Credit
+                        </button>
+                    </div>
             </div>
             </nav>
         </>
