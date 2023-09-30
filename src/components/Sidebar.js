@@ -22,7 +22,7 @@ import { useSnackbar } from 'notistack';
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
-  const { userName, setUserName } = useUserNickname(); 
+  const { setUserName } = useUserNickname();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [initialized] = useState(false);
@@ -52,21 +52,23 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [hoveredIndex, setHoveredIndex] = useState(-1);
 
   useEffect(() => {
+    setUserName(userNickname);
+  }, [userNickname, setUserName]);
+  useEffect(() => {
     if (!initialized) {
-    fetchUserProfile(
-      initialized,
-      navigate,
-      setUserNickname,
-      setUserEmailAddress,
-      setUserAvatar,
-      HOSTINGURL
-    );
+      fetchUserProfile(
+        initialized,
+        navigate,
+        setUserNickname,
+        setUserEmailAddress,
+        setUserAvatar,
+        HOSTINGURL
+      );
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
-  }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile ]);
+  }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
 
-  setUserName(userNickname);
   // console.log(userName, 'userNickname')
 
   var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
@@ -379,7 +381,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             const newMainVideo = [
-              { title, description, src, id, time: formattedDuration , type}
+              { title, description, src, id, time: formattedDuration, type }
             ];
             updateMainVideo(newMainVideo);
             setnewMainVideo(newMainVideo);
@@ -580,8 +582,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                   <div
                     key={index}
                     className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(-1)}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(-1)}
                   >
                     {editIndex === index ? (
                       <div className="width-full row relative">
@@ -697,7 +699,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             <AccountModal
               avatar={userAvatar}
               isLoading={isLoading}
-                userNickname={userNickname}
+              userNickname={userNickname}
               userEmailAddress={userEmailAddress}
               setUserNickname={setUserNickname}
               setUserEmailAddress={setUserEmailAddress}

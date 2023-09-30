@@ -3,9 +3,10 @@ import Sidebar from "../components/Sidebar";
 import Modal from "../components/Modal";
 import Steps from "../Pages/Steps";
 import HomeScreen from "../Pages/HomeScreen";
-import Navbar from "../components/Navbar";
 import "../assets/css/Sidebar.css";
 import { Analytics } from '@vercel/analytics/react';
+import { useUserNickname } from '../components/userNicknameContext.js';
+
 
 export default function Dashboard() {
   const [projectId, setProjectId] = useState(null);
@@ -13,6 +14,7 @@ export default function Dashboard() {
   const [newmainvideo, setnewMainVideo] = useState([]);
   const [accordionVisible, setAccordionVisible] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const { userName } = useUserNickname();
   const setError = (message) => {
     setErrorMessage(message);
   };
@@ -31,13 +33,12 @@ export default function Dashboard() {
     <div className="h-screen dashborardbg">
       <div className="flex h-full ">
         <Sidebar setProjectId={setProjectId} setNewvideoClips={setNewvideoClips} setnewMainVideo={setnewMainVideo} setAccordionVisible={setAccordionVisible} setError={setError} />
-        <div className="w-full overflow-x-auto px-2 z-30">
+        <div className="w-full overflow-x-auto px-3 z-30">
           <Modal className="z-50" />
-          <Navbar />
           {accordionVisible ? (
             <Steps projectId={projectId} newhistoryvideoClips={newhistoryvideoClips} newmainvideo={newmainvideo} errorMessage={errorMessage} accordionVisible={accordionVisible} />
           ) : (
-              <HomeScreen />
+              <HomeScreen userName={userName} />
           )}
           {!accordionVisible && errorMessage && (
             <div className="flex justify-center h-screen items-center ">

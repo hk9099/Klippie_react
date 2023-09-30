@@ -488,3 +488,58 @@ width: 100%;
   }
 }
 
+/* Unique Swiper Navigation Styles */
+/* Next button */
+.swiper-button-next {
+    background-color: #ff6b6b; /* Background color */
+    color: white; /* Text color */
+    border-radius: 50%; /* Round shape */
+    padding: 10px 15px; /* Size */
+    font-size: 24px; /* Text size */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for next button */
+.swiper-button-next:hover {
+    background-color: #ff5252; /* Hover background color */
+    transform: scale(1.1); /* Zoom effect */
+}
+
+/* Previous button */
+.swiper-button-prev {
+    background-color: #4CAF50; /* Background color */
+    color: white; /* Text color */
+    border-radius: 50%; /* Round shape */
+    padding: 10px 15px; /* Size */
+    font-size: 24px; /* Text size */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for previous button */
+.swiper-button-prev:hover {
+    background-color: #45a049; /* Hover background color */
+    transform: scale(1.1); /* Zoom effect */
+}
+
+/* Pagination dots */
+.swiper-pagination-bullet {
+    background-color: #3498db; /* Dot color */
+    width: 12px; /* Dot width */
+    height: 12px; /* Dot height */
+    border-radius: 50%; /* Round shape */
+    margin: 0 5px; /* Spacing between dots */
+    opacity: 0.7; /* Initial opacity */
+    transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+}
+
+/* Active dot */
+.swiper-pagination-bullet-active {
+    background-color: #e74c3c; /* Active dot color */
+    transform: scale(1.2); /* Scale effect */
+    opacity: 1; /* Full opacity */
+}
+
+.hovered {
+    background-image: linear-gradient(to bottom, #FF5733, #FFC300);
+    color: white; /* You can adjust the text color as needed */
+}
