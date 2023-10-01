@@ -19,6 +19,7 @@ import { useSidebarContext } from '../components/SidebarContext';
 import { useUserNickname } from "./userNicknameContext";
 import fetchUserProfile from '../components/fetchUserProfile';
 import { useSnackbar } from 'notistack';
+// import Example from "./testDropdown";
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
@@ -50,6 +51,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
+
+  const closeDropdown = () => {
+    setDropdownOpen(false);
+  };
 
   useEffect(() => {
     setUserName(userNickname);
@@ -637,30 +642,14 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             </div>
           )}
         </div>
+        {/* <Example /> */}
 
         <div className={` bottom-0 left-0 right-0 `}>
           <div className=" flex flex-col gap-1">
             <Menu as="div" className="relative inline-block text-left">
-              {/* <Menu.Button
-                onClick={toggleDropdown}
-                className={`w-full flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 mt-2
-                                        ${location.pathname === "/dashboard" &&
-                  ""
-                  } ${!open && "justify-center"}`}
-              >
-                <span className="text-2xl h-6 w-12 flex items-center justify-center">
-                  <IoSettingsOutline />
-                </span>
-                <span
-                  className={`${!open && "hidden"
-                    } origin-left duration-300 hover:block text-sm`}
-                >
-                  Settings
-                </span>
-              </Menu.Button> */}
-
               <DropdownMenu
                 isOpen={dropdownOpen}
+                onClose={closeDropdown}
                 userNickname={userNickname}
                 userEmailAddress={userEmailAddress}
                 setIsOpen={setDropdownOpen}

@@ -543,3 +543,9 @@ width: 100%;
     background-image: linear-gradient(to bottom, #FF5733, #FFC300);
     color: white; /* You can adjust the text color as needed */
 }
+
+/* Navbar.css */
+.hovered-text {
+  cursor: pointer; /* Change cursor to a pointer on hover */
+  color: green; /* Change text color on hover */
+}

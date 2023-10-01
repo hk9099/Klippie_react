@@ -7,15 +7,16 @@ import { RiAccountBoxFill } from 'react-icons/ri';
 import Logout from '../Pages/logout';
 import AccountModal from './AccountModal';
 
-const DropdownMenu = ({ isOpen, position, showLogout, userNickname, userEmailAddress, avatar }) => {
+const DropdownMenu = ({ isOpen, position, showLogout, userNickname, userEmailAddress, avatar ,onClose }) => {
     const location = useLocation();
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+
     
     //eslint-disable-next-line
     const [isLoading, setIsLoading] = useState(false);
 
     const handleOpenAccountModal = () => {
-            setIsAccountModalOpen(true);
+        setIsAccountModalOpen(true);
     };
 
     return isOpen ? (
@@ -37,22 +38,10 @@ const DropdownMenu = ({ isOpen, position, showLogout, userNickname, userEmailAdd
                     </p>
 
                     {isAccountModalOpen && (
-                        <AccountModal showAccount={showLogout} onclose={() => setIsAccountModalOpen(false)} userNickname={userNickname} userEmailAddress={userEmailAddress} avatar={avatar} />
+                        <AccountModal showAccount={showLogout} onclose={() => setIsAccountModalOpen(false)}
+                            userNickname={userNickname} userEmailAddress={userEmailAddress} avatar={avatar} />
                     )}
                 </Menu.Item>
-                {/* <Menu.Item as="div" className="mx-1">
-                    <Link to="/dashboard">
-                        <p
-                            className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700
-                                ${location.pathname === "/dashboard" && ''} ${!showLogout && 'justify-center'}`}
-                        >
-                            <span className='text-2xl h-6 w-12 flex items-center justify-center'><IoSettingsOutline /></span>
-                            <span className={`${!showLogout && 'hidden'} origin-left duration-300 hover:block text-sm`}>
-                                Settings
-                            </span>
-                        </p>
-                    </Link>
-                </Menu.Item> */}
                 <hr className="dark:border-gray-500 my-1" />
                 <Menu.Item as="div" className="mx-1">
                     <Logout showLogout={showLogout} />
