@@ -24,7 +24,7 @@ const Navbar = () => {
                                 onMouseOver={handleTextHover}
                                 onMouseLeave={handleTextLeave}
                             >
-                                <BsStopwatch className={`text-content ${isHovered ? 'hidden' : ''}`} />
+                                <BsStopwatch className={`me-2 ${isHovered ? 'hidden' : ''}`} />
                                 <span className={`text-content ${isHovered ? 'hidden' : ''}`}>2h 00m</span>
                                 <span className={`text-content ${isHovered ? '' : 'hidden'}`}>Free</span>
                             </div>
