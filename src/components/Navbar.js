@@ -19,7 +19,7 @@ const Navbar = () => {
                     <div className='flex justify-end items-center w-100'>
                         <div className='p-3'>
                             <div
-                                className={`text-green-600 px-3 py-2 font-bold text-lg flex justify-center items-center p-3 ${isHovered ? 'hovered-text' : ''}`}
+                                className={`text-green-600 px-3 py-2 w-[150px] font-bold text-lg flex justify-center items-center p-3 ${isHovered ? 'hovered-text' : ''}`}
                                 onMouseEnter={handleTextHover}
                                 onMouseOver={handleTextHover}
                                 onMouseLeave={handleTextLeave}

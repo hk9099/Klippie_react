@@ -171,7 +171,7 @@ function HomeScreen({ userName }) {
                         <div className="text-white select-none cursor-pointer text-center font-bold text-lg w-[50%] inline-block border-dashed border-2 border-gray-500 rounded-lg py-10" {...getRootProps()}>
                             <input {...getInputProps()} onClick={(e) => e.stopPropagation()} />
                             <label htmlFor="file" className="relative items-center text-base cursor-pointer text-center text-white hover:bg-opacity-70 hover:text-opacity-90">
-                                Choose a File (mov, mp3, mp4), or Drag Here
+                                Choose a File ( mp3, mp4), or Drag Here
                             </label>
                         </div>
                         <div className="text-white select-none cursor-pointer px-3 py-2 font-bold text-lg w-[52%] inline-block">
