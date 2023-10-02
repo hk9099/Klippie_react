@@ -1,41 +1,48 @@
-import React, { useState } from 'react'
-// import Toggle from './ThemeToggle'
-//eslint-disable-next-line
-import { Link, useLocation } from 'react-router-dom'
-// import { AiOutlineShareAlt } from 'react-icons/ai'
+import React, { useState } from 'react';
+import { BsStopwatch } from 'react-icons/bs';
 
 const Navbar = () => {
-    //eslint-disable-next-line
-    const [open] = useState(true)
-    //eslint-disable-next-line
-    const location = useLocation()
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleTextHover = () => {
+        setIsHovered(true);
+    };
+
+    const handleTextLeave = () => {
+        setIsHovered(false);
+    };
 
     return (
         <>
-        <nav className='bg-white border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent h-[90px] sticky top-0 z-20 '>
-            <div className=' flex justify-between items-center mx-auto pt-3'>
-                {/* <div className='flex items-center mx-auto'>
-                    <span className='text-xl font-medium whitespace-nowrap dark:text-white'>
-                        Welcome
-                    </span>
-                </div>
-                <div className='flex justify-end pr-4'>
-                    <Link to="/dashboard">
-                        <p className={`flex items-center gap-x-2 p-3 px-4 text-base font-normal rounded-full dark:bg-gray-700 bg-gray-200 cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 
-                        ${location.pathname === "/dashboard" && ''}`}
+            <nav className='border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent h-[90px]'>
+                <div className='flex justify-end items-center mx-auto'>
+                    <div className='flex justify-end items-center w-100'>
+                        <div className='p-3'>
+                            <div
+                                className={`text-green-600 px-3 py-2 font-bold text-lg flex justify-center items-center p-3 ${isHovered ? 'hovered-text' : ''}`}
+                                onMouseEnter={handleTextHover}
+                                onMouseOver={handleTextHover}
+                                onMouseLeave={handleTextLeave}
+                            >
+                                <BsStopwatch className={`me-2 ${isHovered ? 'hidden' : ''}`} />
+                                <span className={`text-content ${isHovered ? 'hidden' : ''}`}>2h 00m</span>
+                                <span className={`text-content ${isHovered ? '' : 'hidden'}`}>Free</span>
+                            </div>
+                        </div>
+                        <button
+                            className='text-gray-300 w-[250px] text-center inline-block px-3 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg                                                      '
+                            onMouseEnter={handleTextHover}
+                            onMouseOver={handleTextHover}
+                            onMouseLeave={handleTextLeave}
                         >
-                            <span className='text-2xl'><AiOutlineShareAlt /></span>
-                            <span className={`${!open && 'hidden'} origin-left duration-300 hover:block text-sm`}>
-                                Share
-                            </span>
-                        </p>
-                    </Link>
-                    <Toggle />
-                </div> */}
-            </div>
+                            <span className={`text-content ${isHovered ? 'hidden' : ''}`}>Add More Credit</span>
+                            <span className={`text-content ${isHovered ? '' : 'hidden'}`}>Coming soon</span>
+                        </button>
+                    </div>
+                </div>
             </nav>
         </>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;

@@ -16,11 +16,14 @@ import fetchProjectsData from '../components/fetchProjectData';
 import { FiEdit2 } from "react-icons/fi";
 import { RotatingLines } from "react-loader-spinner";
 import { useSidebarContext } from '../components/SidebarContext';
+import { useUserNickname } from "./userNicknameContext";
 import fetchUserProfile from '../components/fetchUserProfile';
 import { useSnackbar } from 'notistack';
+// import Example from "./testDropdown";
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
+  const { setUserName } = useUserNickname();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [initialized] = useState(false);
@@ -44,27 +47,34 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [tempLines, setTempLines] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [editIndex, setEditIndex] = useState(-1);
-  //eslint-disable-next-line
+  //eslint-disable-next-line  
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
 
+  const closeDropdown = () => {
+    setDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    setUserName(userNickname);
+  }, [userNickname, setUserName]);
   useEffect(() => {
     if (!initialized) {
-    fetchUserProfile(
-      initialized,
-      navigate,
-      setUserNickname,
-      setUserEmailAddress,
-      setUserAvatar,
-      HOSTINGURL
-    );
+      fetchUserProfile(
+        initialized,
+        navigate,
+        setUserNickname,
+        setUserEmailAddress,
+        setUserAvatar,
+        HOSTINGURL
+      );
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
   }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
 
-
+  // console.log(userName, 'userNickname')
 
   var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
@@ -376,7 +386,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             const newMainVideo = [
-              { title, description, src, id, time: formattedDuration , type}
+              { title, description, src, id, time: formattedDuration, type }
             ];
             updateMainVideo(newMainVideo);
             setnewMainVideo(newMainVideo);
@@ -512,8 +522,16 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 Klippie
               </span>
             )}
+            {open && (
+              <span
+                className={`text-sm ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`}
+              >
+                Beta
+              </span>
+            )}
           </div>
         </Link>
+
         <div className="pt-4 pb-3">
           <button
             className={`flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full cursor-pointer dark:text-white  border-animation ${!open && "justify-center"
@@ -569,8 +587,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                   <div
                     key={index}
                     className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(-1)}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(-1)}
                   >
                     {editIndex === index ? (
                       <div className="width-full row relative">
@@ -624,30 +642,14 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             </div>
           )}
         </div>
+        {/* <Example /> */}
 
         <div className={` bottom-0 left-0 right-0 `}>
           <div className=" flex flex-col gap-1">
             <Menu as="div" className="relative inline-block text-left">
-              {/* <Menu.Button
-                onClick={toggleDropdown}
-                className={`w-full flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 mt-2
-                                        ${location.pathname === "/dashboard" &&
-                  ""
-                  } ${!open && "justify-center"}`}
-              >
-                <span className="text-2xl h-6 w-12 flex items-center justify-center">
-                  <IoSettingsOutline />
-                </span>
-                <span
-                  className={`${!open && "hidden"
-                    } origin-left duration-300 hover:block text-sm`}
-                >
-                  Settings
-                </span>
-              </Menu.Button> */}
-
               <DropdownMenu
                 isOpen={dropdownOpen}
+                onClose={closeDropdown}
                 userNickname={userNickname}
                 userEmailAddress={userEmailAddress}
                 setIsOpen={setDropdownOpen}
@@ -686,7 +688,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             <AccountModal
               avatar={userAvatar}
               isLoading={isLoading}
-                userNickname={userNickname}
+              userNickname={userNickname}
               userEmailAddress={userEmailAddress}
               setUserNickname={setUserNickname}
               setUserEmailAddress={setUserEmailAddress}
@@ -724,3 +726,4 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 };
 
 export default Sidebar;
+
