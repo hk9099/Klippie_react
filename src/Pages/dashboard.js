@@ -8,10 +8,12 @@ import "../assets/css/Sidebar.css";
 import { Analytics } from '@vercel/analytics/react';
 import axios from "axios";
 import qs from "qs";
-import { navigate } from "@reach/router";
+import { useNavigate } from 'react-router-dom';
+
 
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams();
   console.log(routeProjectId);
   const [projectId, setProjectId] = useState(null);
