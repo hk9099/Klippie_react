@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-// import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar";
 import Modal from "../components/Modal";
 import Steps from "../Pages/Steps";
 import "../assets/css/Sidebar.css";
+import { updateMainVideo } from "../components/data";
 import { Analytics } from '@vercel/analytics/react';
 import axios from "axios";
 import qs from "qs";
@@ -78,9 +79,10 @@ export default function Dashboard() {
               const seconds = durationInSeconds % 60;
               const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-              const newMainVideo = [
+              var newMainVideo = [
                 { title, description, src, id, time: formattedDuration, type }
               ];
+              updateMainVideo(newMainVideo);
               setnewMainVideo(newMainVideo);
             };
           })
@@ -132,6 +134,7 @@ export default function Dashboard() {
               };
             }));
             setNewvideoClips(newvideoClips);
+           console.log(newvideoClips, 'newvideoClips fetch');
             setAccordionVisible(true);
             navigate(`/dashboard/${routeProjectId}`);
           } else {
@@ -144,14 +147,13 @@ export default function Dashboard() {
           setAccordionVisible(false);
           setProjectId('');
           // setError('We could not find the clips for this project');
-      
         }
       }
     };
 
     handleProjectClick()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeProjectId , setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo]);
+  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo ]);
 
   useEffect(() => {
     if (projectId) {
@@ -168,7 +170,7 @@ export default function Dashboard() {
       <div className="flex h-full ">
         <Sidebar setProjectId={setProjectId} setNewvideoClips={setNewvideoClips} setnewMainVideo={setnewMainVideo} setAccordionVisible={setAccordionVisible} setError={setErrorMessage} />
         <div className="w-full overflow-x-auto px-2">
-          {/* <Navbar /> */}
+          <Navbar />
           <Modal className="z-50" />
           {accordionVisible && (projectId || newvideoClips) && <Steps projectId={projectId} newhistoryvideoClips={newvideoClips} newmainvideo={newmainvideo} errorMessage={errorMessage} accordionVisible={accordionVisible} />}
           {!accordionVisible && errorMessage && (

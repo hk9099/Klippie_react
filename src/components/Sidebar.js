@@ -23,7 +23,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [initialized] = useState(false);
+  const [initialized , setInitialized] = useState(false);
   const [userEmailAddress, setUserEmailAddress] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
   const [userNickname, setUserNickname] = useState("");
@@ -105,123 +105,123 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     localStorage.setItem("color-theme", "dark");
   }, []);
 
-  // useEffect(() => {
-  //   console.log('profile start');
-  //   if (!initialized) {
-  //     const encodedEmail = localStorage.getItem("_auth");
-  //     if (encodedEmail) {
-  //       navigate("/dashboard");
-  //     } else {
-  //       navigate("/");
-  //     }
+  useEffect(() => {
+    console.log('profile start');
+    if (!initialized) {
+      const encodedEmail = localStorage.getItem("_auth");
+      if (encodedEmail) {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
 
-  //     const token = getToken();
+      const token = getToken();
 
-  //     let config = {
-  //       method: 'post',
-  //       maxBodyLength: Infinity,
-  //       url: `${HOSTINGURL}/v1/auth/profile`,
-  //       headers: {
-  //         'accept': 'application/json',
-  //         'Authorization': `Bearer ${token}`
-  //       }
-  //     };
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `${HOSTINGURL}/v1/auth/profile`,
+        headers: {
+          'accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      };
 
-  //     // console.log(config);
+      // console.log(config);
 
-  //     axios.request(config)
-  //       .then((response) => {
-  //         console.log('fetch profile');
-  //         // console.log(response.data, 'response.data');
-  //         var userNickname = response.data.name;
-  //         setUserNickname(userNickname);
-  //         const userEmailAddress = response.data.email;
-  //         setUserEmailAddress(userEmailAddress);
-  //         const userAvatar = response.data.profile_image;
-  //         console.log(userAvatar, 'userAvatar');
-  //         setUserAvatar(userAvatar);
-  //         const userAvatarUrl = response.data.avatar;
-  //         console.log(userAvatarUrl, 'userAvatarUrl');
-  //         setUserAvatar(userAvatarUrl);
+      axios.request(config)
+        .then((response) => {
+          console.log('fetch profile');
+          // console.log(response.data, 'response.data');
+          var userNickname = response.data.name;
+          setUserNickname(userNickname);
+          const userEmailAddress = response.data.email;
+          setUserEmailAddress(userEmailAddress);
+          const userAvatar = response.data.profile_image;
+          console.log(userAvatar, 'userAvatar');
+          setUserAvatar(userAvatar);
+          const userAvatarUrl = response.data.avatar;
+          console.log(userAvatarUrl, 'userAvatarUrl');
+          setUserAvatar(userAvatarUrl);
 
-  //         console.log('got profile')
+          console.log('got profile')
 
-  //         if (userAvatar === null) {
-  //           console.log('userAvatar is null');
-  //           if (userAvatarUrl) {
-  //             console.log('userAvatarUrl is not null');
-  //             setUserAvatar(userAvatarUrl);
-  //           } else {
-  //             console.log('userAvatarUrl is null');
-  //             console.log(userEmailAddress);
-  //             generateAvatar(userEmailAddress)
-  //               .then((avatarUrl) => {
-  //                 setUserAvatar(avatarUrl);
-  //               })
-  //               .catch((error) => {
-  //                 // console.log(error);
-  //               });
-  //           }
+          if (userAvatar === null) {
+            console.log('userAvatar is null');
+            if (userAvatarUrl) {
+              console.log('userAvatarUrl is not null');
+              setUserAvatar(userAvatarUrl);
+            } else {
+              console.log('userAvatarUrl is null');
+              console.log(userEmailAddress);
+              generateAvatar(userEmailAddress)
+                .then((avatarUrl) => {
+                  setUserAvatar(avatarUrl);
+                })
+                .catch((error) => {
+                  // console.log(error);
+                });
+            }
 
-  //         } else {
-  //           setUserAvatar(userAvatar);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //     setInitialized(true);
-  //     console.log('profile end');
-  //   }
-  //   // eslint-disable-next-line
-  // }, []);
+          } else {
+            setUserAvatar(userAvatar);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      setInitialized(true);
+      console.log('profile end');
+    }
+    // eslint-disable-next-line
+  }, []);
 
-  // // Function to generate the avatar URL
-  // const generateAvatar = (emailAddress) => {
-  //   console.log('generate avatar start')
-  //   const userAvatar = emailAddress.split('@')[0];
-  //   const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
+  // Function to generate the avatar URL
+  const generateAvatar = (emailAddress) => {
+    console.log('generate avatar start')
+    const userAvatar = emailAddress.split('@')[0];
+    const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
 
-  //   return axios.get(avatarUrl)
-  //     .then((response) => {
-  //       setUserAvatar(response.config.url);
-  //       var token = getToken();
+    return axios.get(avatarUrl)
+      .then((response) => {
+        setUserAvatar(response.config.url);
+        var token = getToken();
 
-  //       let data = JSON.stringify({
-  //         "avatar": response.config.url,
-  //       });
-  //       console.log('account update start')
+        let data = JSON.stringify({
+          "avatar": response.config.url,
+        });
+        console.log('account update start')
 
-  //       let config = {
-  //         method: 'post',
-  //         maxBodyLength: Infinity,
-  //         url: `${HOSTINGURL}/v1/auth/update-profile`,
-  //         headers: {
-  //           'accept': 'application/json',
-  //           'Content-Type': 'application/json',
-  //           'Authorization': `Bearer ${token}`
-  //         },
-  //         data: data
-  //       };
+        let config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: `${HOSTINGURL}/v1/auth/update-profile`,
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          data: data
+        };
 
-  //       axios
-  //         .request(config)
-  //         .then((response) => {
-  //           console.log(response.data);
-  //           console.log('account update end')
-  //           // setUserAvatar(avatarData);
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //         });
+        axios
+          .request(config)
+          .then((response) => {
+            console.log(response.data);
+            console.log('account update end')
+            // setUserAvatar(avatarData);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
 
 
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       throw error;
-  //     });
-  // };
+      })
+      .catch((error) => {
+        console.log(error);
+        throw error;
+      });
+  };
 
 
 
@@ -405,31 +405,31 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         const response = await axios.request(config);
         console.log(response)
         if (response.data.data && Array.isArray(response.data.data)) {
-          // const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
-          //   // Split the time string into parts
-          //   const timeParts = clip.duration.split(':');
+          const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
+            // Split the time string into parts
+            const timeParts = clip.duration.split(':');
 
-          //   // Extract hours, minutes, seconds
-          //   const hours = parseInt(timeParts[0]);
-          //   const minutes = parseInt(timeParts[1]);
-          //   const seconds = parseInt(timeParts[2].split('.')[0]);
+            // Extract hours, minutes, seconds
+            const hours = parseInt(timeParts[0]);
+            const minutes = parseInt(timeParts[1]);
+            const seconds = parseInt(timeParts[2].split('.')[0]);
 
-          //   // Format the time in HH:MM:SS
-          //   const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            // Format the time in HH:MM:SS
+            const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-          //   return {
-          //     id: clip.id,
-          //     src: clip.clip_url,
-          //     title: clip.title,
-          //     description: clip.summary,
-          //     status: clip.status,
-          //     time: formattedTime,
-          //     type: clip.type,
-          //   };
-          // }));
-          // setNewvideoClips(newvideoClips);
-          // setAccordionVisible(true);
-          // setError('');
+            return {
+              id: clip.id,
+              src: clip.clip_url,
+              title: clip.title,
+              description: clip.summary,
+              status: clip.status,
+              time: formattedTime,
+              type: clip.type,
+            };
+          }));
+          setNewvideoClips(newvideoClips);
+          setAccordionVisible(true);
+          setError('');
           navigate(`/dashboard/${projectData[index].id}`);
         } else {
           console.log('Invalid API response:', response.data);
@@ -463,9 +463,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
 
   const handleAddNewVideo = () => {
-
-    setShowModal(true);
-
+    // setShowModal(true);
+    navigate('/dashboard');
   };
 
   const handleFormSubmit = (projectId) => {
@@ -585,9 +584,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                         </button>
                       </div>
                     ) : (
-                      < Link
-                          to={`/dashboard/${projectData[index].id}`} // Use the project's ID in the URL
-                    className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                      <p className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
                     style={{
                       width: hoveredIndex === index ? "188px" : "243px",
                       whiteSpace: "nowrap",
@@ -602,7 +599,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                     }}
                         >
                     {line}
-                  </Link>
+                  </p>
                     )}
                     <div className="hover-actions" >
                       {editIndex !== index && (
