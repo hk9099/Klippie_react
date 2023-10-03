@@ -17,9 +17,9 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
         userNickname: Yup.string().required('Required'),
     });
 
-    
 
-    var HOSTINGURL = 'https://api.getklippie.com';
+
+    var HOSTINGURL = 'https://dev-api.getklippie.com';
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -51,7 +51,7 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
             let config = {
                 method: 'post',
                 maxBodyLength: Infinity,
-                url: 'https://api.getklippie.com/v1/auth/upload-profile-image',
+                url: 'https://dev-api.getklippie.com/v1/auth/upload-profile-image',
                 headers: {
                     'accept': 'application/json',
                     'Authorization': `Bearer ${token}`,
@@ -83,7 +83,7 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
                     axios
                         .request(config)
                         .then((response) => {
-                            setRefreshProfile(true); 
+                            setRefreshProfile(true);
                             setSuccessMessage('Profile updated successfully');
                             setTimeout(() => {
                                 setSuccessMessage(null);

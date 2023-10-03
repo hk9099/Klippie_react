@@ -39,7 +39,7 @@ export default function Dashboard() {
     }
   };
 
-  var HOSTINGURL = 'https://api.getklippie.com';
+  var HOSTINGURL = 'https://dev-api.getklippie.com';
   useEffect(() => {
     console.log('routeProjectId', routeProjectId);
     const handleProjectClick = async (index) => {
@@ -139,7 +139,7 @@ export default function Dashboard() {
               };
             }));
             setNewvideoClips(newvideoClips);
-           console.log(newvideoClips, 'newvideoClips fetch');
+            console.log(newvideoClips, 'newvideoClips fetch');
             setAccordionVisible(true);
             navigate(`/dashboard/${routeProjectId}`);
           } else {
@@ -158,7 +158,7 @@ export default function Dashboard() {
 
     handleProjectClick()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo ]);
+  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo]);
 
   useEffect(() => {
     if (projectId) {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-var HOSTINGURL = 'https://api.getklippie.com';
+var HOSTINGURL = 'https://dev-api.getklippie.com';
 
 const getToken = () => {
     const encodedToken = localStorage.getItem('_sodfhgiuhih');

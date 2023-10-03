@@ -48,7 +48,7 @@ const MultiStepForm = () => {
 
         try {
             const response = await axios.post(
-                'https://api.getklippie.com/v1/auth/forgot-password-send-otp',
+                'https://dev-api.getklippie.com/v1/auth/forgot-password-send-otp',
                 {
                     email: formData.email,
                 }
@@ -59,12 +59,12 @@ const MultiStepForm = () => {
             setLoading(false);
             setStep(2);
             setEmailToken(emailtoken);
-            enqueueSnackbar('Email sent successfully!', { variant: 'success' , autoHideDuration: 1000});
+            enqueueSnackbar('Email sent successfully!', { variant: 'success', autoHideDuration: 1000 });
         } catch (error) {
             var err = error.response.data.detail;
             setLoading(false);
             setError(err);
-            enqueueSnackbar(err, { variant: 'error' , autoHideDuration: 1000});
+            enqueueSnackbar(err, { variant: 'error', autoHideDuration: 1000 });
         } finally {
             setEmailLoading(false);
         }
@@ -78,7 +78,7 @@ const MultiStepForm = () => {
 
             //eslint-disable-next-line
             const response = await axios.post(
-                'https://api.getklippie.com/v1/auth/verify-otp',
+                'https://dev-api.getklippie.com/v1/auth/verify-otp',
                 {
                     token: emailToken,
                     otp: formData.otp,
@@ -89,12 +89,12 @@ const MultiStepForm = () => {
             setOtpVerified(true);
             setLoading(false);
             setStep(3);
-            enqueueSnackbar('Code verified successfully!', { variant: 'success' , autoHideDuration: 1000});
+            enqueueSnackbar('Code verified successfully!', { variant: 'success', autoHideDuration: 1000 });
         } catch (error) {
             console.log(error.response.data.detail);
             setLoading(false);
             setError(error.response.data.detail);
-            enqueueSnackbar(error.response.data.detail, { variant: 'error' , autoHideDuration: 1000});
+            enqueueSnackbar(error.response.data.detail, { variant: 'error', autoHideDuration: 1000 });
         } finally {
             setOtpLoading(false);
         }
@@ -107,7 +107,7 @@ const MultiStepForm = () => {
         try {
             //eslint-disable-next-line
             const response = await axios.post(
-                'https://api.getklippie.com/v1/auth/reset-forgot-password',
+                'https://dev-api.getklippie.com/v1/auth/reset-forgot-password',
                 {
                     token: emailToken,
                     new_password: formData.password,
@@ -116,13 +116,13 @@ const MultiStepForm = () => {
             console.log(JSON.stringify(response.data));
             setLoading(false);
             setSuccess('Password reset successful!');
-            enqueueSnackbar('Password reset successful!', { variant: 'success' , autoHideDuration: 1000});
+            enqueueSnackbar('Password reset successful!', { variant: 'success', autoHideDuration: 1000 });
             navigate('/');
         } catch (error) {
             console.log(error.response.data.detail);
             setLoading(false);
             setError(error.response.data.detail);
-            enqueueSnackbar(error.response.data.detail, { variant: 'error' , autoHideDuration: 1000});
+            enqueueSnackbar(error.response.data.detail, { variant: 'error', autoHideDuration: 1000 });
         } finally {
             setPasswordLoading(false);
         }

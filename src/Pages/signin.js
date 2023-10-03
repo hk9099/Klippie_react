@@ -108,7 +108,7 @@ function Signin() {
         setIsLoading(true);
         try {
             const response = await axios.post(
-                process.env.REACT_APP_HOSTING_URL + '/v1/auth/login',
+               'https://dev-api.getklippie.com/v1/auth/login',
                 {
                     email: values.email,
                     password: values.password,

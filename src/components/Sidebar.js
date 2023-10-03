@@ -23,7 +23,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [initialized , setInitialized] = useState(false);
+  const [initialized, setInitialized] = useState(false);
   const [userEmailAddress, setUserEmailAddress] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
   const [userNickname, setUserNickname] = useState("");
@@ -51,20 +51,20 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   useEffect(() => {
     if (!initialized) {
-    fetchUserProfile(
-      initialized,
-      navigate,
-      setUserNickname,
-      setUserEmailAddress,
-      setUserAvatar,
-      HOSTINGURL
-    );
+      fetchUserProfile(
+        initialized,
+        navigate,
+        setUserNickname,
+        setUserEmailAddress,
+        setUserAvatar,
+        HOSTINGURL
+      );
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
   }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
 
-  var HOSTINGURL = 'https://api.klippitapp.com'
+  var HOSTINGURL = 'https://dev-api.getklippie.com'
 
   useEffect(() => {
     console.log('isApiCompleted', isApiCompleted);
@@ -253,7 +253,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         await axios.request(config);
         // If the API call is successful, update the state
         const updatedProjectData = projectData.filter((_, i) => i !== index);
-        setProjectData(updatedProjectData); 
+        setProjectData(updatedProjectData);
 
         // Similarly, update lines state if needed
         setLines((prevLines) => {
@@ -374,7 +374,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             const newMainVideo = [
-              { title, description, src, id, time: formattedDuration , type}
+              { title, description, src, id, time: formattedDuration, type }
             ];
             updateMainVideo(newMainVideo);
             setnewMainVideo(newMainVideo);
@@ -585,21 +585,21 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                       </div>
                     ) : (
                       <p className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
-                    style={{
-                      width: hoveredIndex === index ? "188px" : "243px",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      userSelect: "none",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      setActiveIndex(index);
-                      handleProjectClick(index);
-                    }}
-                        >
-                    {line}
-                  </p>
+                        style={{
+                          width: hoveredIndex === index ? "188px" : "243px",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          userSelect: "none",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setActiveIndex(index);
+                          handleProjectClick(index);
+                        }}
+                      >
+                        {line}
+                      </p>
                     )}
                     <div className="hover-actions" >
                       {editIndex !== index && (
@@ -680,7 +680,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             <AccountModal
               avatar={userAvatar}
               isLoading={isLoading}
-                userNickname={userNickname}
+              userNickname={userNickname}
               userEmailAddress={userEmailAddress}
               setUserNickname={setUserNickname}
               setUserEmailAddress={setUserEmailAddress}

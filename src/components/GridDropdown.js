@@ -36,7 +36,7 @@ export default function DownloadButton({ status, clipId }) {
         const token = getToken();
         try {
             //eslint-disable-next-line
-            const response = await axios.post('https://api.getklippie.com/v1/clip/status-update', qs.stringify({
+            const response = await axios.post('https://dev-api.getklippie.com/v1/clip/status-update', qs.stringify({
                 'status': item,
                 'clip_id': clipId
             }), {

@@ -79,7 +79,7 @@ function Signin() {
         };
         localStorage.removeItem('signupToken');
         axios
-            .post('https://api.getklippie.com/v1/auth/verify-otp', payload)
+            .post('https://dev-api.getklippie.com/v1/auth/verify-otp', payload)
             .then((response) => {
                 enqueueSnackbar('Code verified successfully', { variant: 'success', autoHideDuration: 1500 });
                 console.log(response.data);
@@ -112,7 +112,7 @@ function Signin() {
     //     const config = {
     //         method: 'post',
     //         maxBodyLength: Infinity,
-    //         url: 'https://api.getklippie.com/v1/auth/signup-resend-otp',
+    //         url: 'https://dev-api.getklippie.com/v1/auth/signup-resend-otp',
     //         headers: {
     //             accept: 'application/json',
     //             'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ function Signin() {
         const config = {
             method: 'post',
             maxBodyLength: Infinity,
-            url: 'https://api.getklippie.com/v1/auth/signup-resend-otp',
+            url: 'https://dev-api.getklippie.com/v1/auth/signup-resend-otp',
             headers: {
                 accept: 'application/json',
                 'Content-Type': 'application/json',

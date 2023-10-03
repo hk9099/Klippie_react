@@ -1,76 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactEmoji from 'react-emoji-render';
-// import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// // Import Swiper styles
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
-// import 'swiper/css/scrollbar';
-
-// import Logo from '../assets/images/logo.svg';
-import { useDropzone } from 'react-dropzone';
 import Navbar from '../components/Navbar';
+import { useSnackbar } from 'notistack';
+
 function HomeScreen({ userName }) {
-  
-    const onDrop = (acceptedFiles) => {
-        const processFile = async (file) => { // Use the passed file argument instead of e.target.files[0]
-            // Set your cloud name and unsigned upload preset here:
-            const YOUR_CLOUD_NAME = "delkyf33p";
-            const YOUR_UNSIGNED_UPLOAD_PRESET = "klippie";
+    const [isDragging, setIsDragging] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
 
-            const POST_URL = `https://api.cloudinary.com/v1_1/${YOUR_CLOUD_NAME}/auto/upload`;
+    const handleDragEnter = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
 
-            const XUniqueUploadId = +new Date();
-            const sliceSize = 50 * 1024 * 1024; // Send chunks of 50MB
-            let start = 0;
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
 
-            while (start < file.size) {
-                const end = Math.min(start + sliceSize, file.size);
-                const chunk = file.slice(start, end);
-                await sendChunk(chunk, start, end - 1, file.size, XUniqueUploadId, POST_URL, YOUR_CLOUD_NAME, YOUR_UNSIGNED_UPLOAD_PRESET);
-                start = end;
-            }
-        };
+    const handleDragLeave = () => {
+        setIsDragging(false);
+    };
 
-        const sendChunk = async (chunk, start, end, size, XUniqueUploadId, POST_URL, YOUR_CLOUD_NAME, YOUR_UNSIGNED_UPLOAD_PRESET) => {
-            console.log(`Sending chunk ${start}-${end} out of ${size}`);
-            const formdata = new FormData();
-            formdata.append("file", chunk);
-            formdata.append("cloud_name", YOUR_CLOUD_NAME);
-            formdata.append("upload_preset", YOUR_UNSIGNED_UPLOAD_PRESET);
-            formdata.append("public_id", "test" + XUniqueUploadId);
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
 
-            const headers = {
-                "X-Unique-Upload-Id": XUniqueUploadId,
-            };
+        const droppedFiles = e.dataTransfer.files;
 
-            try {
-                const response = await fetch(POST_URL, {
-                    method: "POST",
-                    headers,
-                    body: formdata,
-                });
+        // Check if any of the dropped files have the correct extensions
+        const allowedExtensions = ['.mp3', '.mp4'];
+        const hasAllowedExtension = Array.from(droppedFiles).some((file) =>
+            allowedExtensions.includes(file.name.toLowerCase().slice(-4))
+        );
 
-                if (response.ok) {
-                    console.log(`Uploaded chunk ${start}-${end}`);
-                    const responseData = await response.json();
-                    console.log(responseData); // Log Cloudinary's response
-                } else {
-                    console.error(`Failed to upload chunk ${start}-${end}`);
-                    console.error(await response.text()); // Log the error response
-                }
-            } catch (error) {
-                console.error(`Error uploading chunk ${start}-${end}: ${error.message}`);
-            }
-        };
-        processFile(acceptedFiles[0]);
-    }
-    const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
-    const handleSectionClick = (e) => {
-        // Prevent click event propagation for the section
-        e.stopPropagation();
+        if (hasAllowedExtension) {
+            // Successfully uploaded the file
+            enqueueSnackbar(`File uploaded successfully: ${droppedFiles[0].name}`, {
+                variant: 'success',
+                autoHideDuration : 1300
+            });
+        } else {
+            // Show an error notification
+            enqueueSnackbar('Error: Only .mp3 and .mp4 files are allowed.', {
+                variant: 'error',
+                autoHideDuration : 1500
+            });
+        }
     };
 
     return (
@@ -78,37 +53,22 @@ function HomeScreen({ userName }) {
             <div className="flex flex-col h-screen">
                 <div className="">
                     <Navbar />
-                    {/* Your Navbar component here */}
                 </div>
-                <div className="flex-grow flex flex-col overflow-hidden dark:bg-transparent rounded-[60px]">
+                <div className={`flex-grow flex flex-col overflow-hidden dark:bg-transparent rounded-[60px] ${isDragging ? 'bg-blue-100 dark:bg-[#ffffff2a]' : 'bg-transparent'}`}
+                    onDragEnter={handleDragEnter}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                >
                     <section
                         className="overflow-y-auto flex-grow"
-                        draggable="true"
-                        onClick={handleSectionClick}
                     >
                         <div className="px-16 h-[99%] flex flex-col justify-evenly select-none cursor-auto">
-                            {/* <div className="w-full">
-                        <img src={Logo} alt="logo" className="text-left w-12 h-12 dark:bg-white rounded-full" />
-                    </div> */}
                             <h1 className=" text-white text-6xl text-left block font-normal w-full font-montserrat">
                                 Hello, {userName}
                             </h1>
-                            {/* <div className="flex justify-center items-center select-none cursor-pointer">
-                        <div className="text-white  py-4 font-normal text-lg inline-block font-worksans tracking-tight">
-                            Welcome to Klippie! We harness AI to effortlessly distill lengthy videos into captivating short clips. Ideal for crafting dynamic content across social media, websites, and the digital realm. Share your
-                            <span className="mx-2 rotating-text font-worksans tracking-tight space-y-2 text-green-600 w-auto text-gradient bg-gradient-to-r from-sky-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%  font-bold text-xl inline-block rounded-2xl bg-clip-text text-transparent font-Satoshi">
-                                {rotatingWords.map((word, index) => (
-                                    <span key={index} className={`rotating-word ${index === currentWordIndex ? 'visible' : 'hidden'}`}>
-                                        {word}
-                                    </span>
-                                ))}
-                            </span>
-                            {currentEmoji}
-                            video, and I'll uncover intriguing moments. While I'm not flawless, your feedback guides my evolution.
-                        </div>
-                    </div> */}
 
-                            <div className='flex justify-start items-center w-full prompt-card'>
+                            <div className='flex justify-start items-center h-[450px] w-full prompt-card'>
                                 <div className="text-white select-none cursor-pointer px-4 py-5 w-full  font-bold text-lg inline-block  dark:bg-[#ffffff2a] rounded-[50px] me-4">
                                     <div className="flex justify-center items-center px-3 mb-3  ">
                                         <span className="text-2xl font-bold text-white">🚀</span>
@@ -116,24 +76,58 @@ function HomeScreen({ userName }) {
                                             Find the best clips for your....
                                         </h2>
                                     </div>
-                                    <div className="flex justify-center items-start flex-col">
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20 font-InclusiveSans  ">
+                                    <div className="flex justify-start items-start flex-wrap flex-row">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20 font-InclusiveSans  ">
                                             <ReactEmoji text=":studio_microphone: Podcasts" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":computer: Webinars" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":female-technologist: Product Demos" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
-                                            <ReactEmoji text=":mega: Speeches" />
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="📢 Speeches" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":books: Lectures" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":earth_americas: And much more!" />
+                                        </div>
+
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="💻 Online Courses" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="🌐  News Shows" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":raising_hand: Panel Discussions" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":office: Corporate Meetings" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="🏅 Sports Shows" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":microphone: Comedy Shows" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":mega: Political Speeches" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="🏛 Town Hall Meetings" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="💬 Talk shows" />
+                                        </div> 
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":pray: Religious events" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":cake: Cooking shows" />
                                         </div>
                                     </div>
                                 </div>
@@ -172,8 +166,14 @@ function HomeScreen({ userName }) {
                         </div>
                     </section>
                     <div className="flex justify-center items-center flex-col select-none cursor-pointer file-input mt-2" >
-                        <div className="text-white select-none cursor-pointer text-center font-bold text-lg w-[50%] inline-block border-dashed border-2 border-gray-500 rounded-lg py-10" {...getRootProps()}>
-                            <input {...getInputProps()} accept=".mp3, .mp4" onClick={(e) => e.stopPropagation()} />
+                        <div
+                            className={`text-white select-none cursor-pointer text-center font-bold text-lg w-[50%] inline-block border-dashed border-2 rounded-lg py-10 ${isDragging ? 'border-blue-500 bg-blue-100 dark:bg-[#ffffff2a]' : 'border-gray-500 dark:bg-transparent'}`}
+                            onDragEnter={handleDragEnter}
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                        >
+                            <input type='file' accept=".mp3, .mp4, .wav, .ogg, .webm, .flac, .aac, .mkv, .avi, .mov, .wmv, .mpg, .mpeg" />
                             <label htmlFor="file" className="relative items-center text-base cursor-pointer text-center text-white hover:bg-opacity-70 hover:text-opacity-90">
                                 Choose a File (MP3, MP4), or Drag Here
                             </label>
