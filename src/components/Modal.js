@@ -94,7 +94,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                     var Token = userInfo.token.access_token;
                 }
 
-                const apiUrl = "https://api.getklippie.com/v1/project/create";
+                const apiUrl = `${process.env.REACT_APP_DEV_HOSTING_URL}/v1/project/create`;
                 const config = {
                     headers: {
                         accept: "application/json",

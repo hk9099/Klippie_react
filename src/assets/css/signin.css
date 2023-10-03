@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
 }
 
 /* .left_backgroundinage {
@@ -322,21 +321,21 @@ width: 100%;
   right: auto;
 }
 
-.emailinput:hover label,
+/* .emailinput:hover label,
 .emailinput:hover input::placeholder {
   color: #917bea;
-}
+} */
 
-.emailinput:hover input {
+/* .emailinput:hover input {
   border-bottom-color: #917bea;
 }
 
 .emailinput:hover input:focus {
   background-color: #b7a9f185;
   color: #000;
-}
+} */
 
-.passwordinput:hover label,
+/* .passwordinput:hover label,
 .passwordinput:hover input::placeholder {
   color: #917bea;
 }
@@ -362,7 +361,7 @@ width: 100%;
 .nameinput:hover input:focus {
   background-color: #b7a9f185;
   color: #000;
-}
+} */
 
 
 
@@ -449,4 +448,104 @@ width: 100%;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+}
+
+/* Add this CSS to your stylesheet or component's styles */
+.rotating-word {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.rotating-word.visible {
+  opacity: 1;
+  animation: fadeInOut 4s linear infinite;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Unique Swiper Navigation Styles */
+/* Next button */
+.swiper-button-next {
+    background-color: #ff6b6b; /* Background color */
+    color: white; /* Text color */
+    border-radius: 50%; /* Round shape */
+    padding: 10px 15px; /* Size */
+    font-size: 24px; /* Text size */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for next button */
+.swiper-button-next:hover {
+    background-color: #ff5252; /* Hover background color */
+    transform: scale(1.1); /* Zoom effect */
+}
+
+/* Previous button */
+.swiper-button-prev {
+    background-color: #4CAF50; /* Background color */
+    color: white; /* Text color */
+    border-radius: 50%; /* Round shape */
+    padding: 10px 15px; /* Size */
+    font-size: 24px; /* Text size */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for previous button */
+.swiper-button-prev:hover {
+    background-color: #45a049; /* Hover background color */
+    transform: scale(1.1); /* Zoom effect */
+}
+
+/* Pagination dots */
+.swiper-pagination-bullet {
+    background-color: #3498db; /* Dot color */
+    width: 12px; /* Dot width */
+    height: 12px; /* Dot height */
+    border-radius: 50%; /* Round shape */
+    margin: 0 5px; /* Spacing between dots */
+    opacity: 0.7; /* Initial opacity */
+    transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+}
+
+/* Active dot */
+.swiper-pagination-bullet-active {
+    background-color: #e74c3c; /* Active dot color */
+    transform: scale(1.2); /* Scale effect */
+    opacity: 1; /* Full opacity */
+}
+
+.hovered {
+    background-image: linear-gradient(to bottom, #FF5733, #FFC300);
+    color: white; /* You can adjust the text color as needed */
+}
+
+/* Navbar.css */
+.hovered-text {
+  cursor: pointer; /* Change cursor to a pointer on hover */
+  color: green; /* Change text color on hover */
 }

@@ -302,7 +302,7 @@
     right: auto;
 }
 
-.emailinput:hover label,
+/* .emailinput:hover label,
 .emailinput:hover input::placeholder {
     color: #917bea;
 }
@@ -328,7 +328,7 @@
 .passwordinput:hover input:focus {
     background-color: #b7a9f185;
     color: #000;
-}
+} */
 
 .or_block {
     margin: 15px 0;

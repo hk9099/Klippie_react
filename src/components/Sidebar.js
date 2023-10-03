@@ -64,7 +64,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     // eslint-disable-next-line
   }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
 
-  var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
+  var HOSTINGURL = 'https://api.klippitapp.com'
 
   useEffect(() => {
     console.log('isApiCompleted', isApiCompleted);

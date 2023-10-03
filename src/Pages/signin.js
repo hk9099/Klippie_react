@@ -172,8 +172,8 @@ function Signin() {
 
 
     return (
+        <>
         <main>
-
             <div className="h-full w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
@@ -221,7 +221,7 @@ function Signin() {
                                         </div>
                                     </div>
 
-                                    <p className="create_acp">
+                                    <div className="create_acp">
                                         {errors.password && (
                                             <ErrorMessage
                                                 name="password"
@@ -238,7 +238,7 @@ function Signin() {
                                         <Link to="/forgotpassword" className="create_ac">
                                             Forgot Password?
                                         </Link>
-                                    </p>
+                                    </div>
                                     <button
                                         type="submit"
                                         className="submitbutton mt-10 bg-purple-500 text-white font-bold py-2 px-4 rounded-full"
@@ -251,11 +251,11 @@ function Signin() {
                             )}
                         </Formik>
 
-                        <p className="mt-3 text-center">
+                        <div className="mt-3 text-center">
                             <Link to="/signup" className="create_ac">
                                 Create New Account
                             </Link>
-                        </p>
+                        </div>
                         {/* <div title="OR" className="or_block">
                             <div className="line"></div>
                             <p>OR</p>
@@ -273,7 +273,8 @@ function Signin() {
                     </div>
                 </div>
             </div>
-        </main>
+            </main>
+        </>
     );
 }
 
