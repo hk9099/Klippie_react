@@ -104,7 +104,7 @@ function HomeScreen({ userName }) {
                         </div>
                     </div> */}
 
-                            <div className='flex justify-start items-center w-full prompt-card'>
+                            <div className='flex justify-start items-center h-[450px] w-full prompt-card'>
                                 <div className="text-white select-none cursor-pointer px-4 py-5 w-full  font-bold text-lg inline-block  dark:bg-[#ffffff2a] rounded-[50px] me-4">
                                     <div className="flex justify-center items-center px-3 mb-3  ">
                                         <span className="text-2xl font-bold text-white">🚀</span>
@@ -112,24 +112,58 @@ function HomeScreen({ userName }) {
                                             Find the best clips for your....
                                         </h2>
                                     </div>
-                                    <div className="flex justify-center items-start flex-col">
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20 font-InclusiveSans  ">
+                                    <div className="flex justify-start items-start flex-wrap flex-row">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20 font-InclusiveSans  ">
                                             <ReactEmoji text=":studio_microphone: Podcasts" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":computer: Webinars" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":female-technologist: Product Demos" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
-                                            <ReactEmoji text=":mega: Speeches" />
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="📢 Speeches" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":books: Lectures" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":earth_americas: And much more!" />
+                                        </div>
+
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="💻 Online Courses" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="🌐  News Shows" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":raising_hand: Panel Discussions" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":office: Corporate Meetings" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="🏅 Sports Shows" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":microphone: Comedy Shows" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":mega: Political Speeches" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="🏛 Town Hall Meetings" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text="💬 Talk shows" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":pray: Religious events" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":cake: Cooking shows" />
                                         </div>
                                     </div>
                                 </div>
