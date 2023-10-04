@@ -51,6 +51,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
+  //eslint-disable-next-line
+  const [newlyAddedLines, setNewlyAddedLines] = useState([]);
+  const [previousLines, setPreviousLines] = useState([]);
 
   const closeDropdown = () => {
     setDropdownOpen(false);
@@ -79,9 +82,17 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
   useEffect(() => {
-    console.log('isApiCompleted', isApiCompleted);
-    fetchProjectsData(setProjectData, setLines, setIsLoadingHistory);
+    fetchProjectsData(setProjectData, setLines, setIsLoadingHistory)
+      .then(newLines => {
+        if (newLines.length > 0) {
+          const newlyAdded = newLines.filter(line => !previousLines.includes(line));
+          console.log("Newly added lines:", newlyAdded);
+          setPreviousLines(newLines); // Update the previous lines
+        }
+      });
+    //eslint-disable-next-line
   }, [isApiCompleted]);
+
 
   const handleUpdateProfileSuccess = () => {
     // Call fetchUserProfile to refresh the user's profile
@@ -343,109 +354,155 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const handleProjectClick = async (index) => {
     const token = getToken();
     console.log('Token:', token);
-    if (token) {
-      const clickedProject = projectData[index];
-      //console.log('Clicked Project ID:', clickedProject.id);
-      var clickedProjectid = clickedProject.id;
-      //main video 
-      let maindata = JSON.stringify({
-        "id": clickedProjectid
-      });
+    const data = JSON.stringify({
+      "id": projectData[index].id
+    });
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://api.getklippie.com/v1/project/stats',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: data
+    };
 
-      let mainconfig = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${HOSTINGURL}/v1/project/get-by-id`,
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+    const response = await axios.request(config);
+    console.log(response.data, 'response.data');
+    const message = response.data.data;
+
+    if (message === "Transcribing video completed") {
+      enqueueSnackbar('We are processing your video. Once done, We will send you an email.', {
+        variant: 'success',
+        autoHideDuration: 3000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
         },
-        data: maindata
-      };
+      });
+    }
 
-      axios.request(mainconfig)
-        .then((response) => {
-          console.log(response.data, 'response.data');
-          const title = response.data.data.title;
-          const description = response.data.data.description;
-          const src = response.data.data.video_url;
-          const id = response.data.data.id;
-          const type = response.data.data.type;
-
-          // Calculate the duration of the video (assuming src is the video URL)
-          const videoElement = document.createElement('video');
-          videoElement.src = src;
-          videoElement.onloadedmetadata = () => {
-            const durationInSeconds = Math.floor(videoElement.duration);
-
-            // Convert duration to HH:MM:SS format
-            const hours = Math.floor(durationInSeconds / 3600);
-            const minutes = Math.floor((durationInSeconds % 3600) / 60);
-            const seconds = durationInSeconds % 60;
-            const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-            const newMainVideo = [
-              { title, description, src, id, time: formattedDuration, type }
-            ];
-            updateMainVideo(newMainVideo);
-            setnewMainVideo(newMainVideo);
-          };
-        })
-        .catch((error) => {
-          console.log(error);
+    if (message === 'Clips Founded') {
+      if (token) {
+        const clickedProject = projectData[index];
+        //console.log('Clicked Project ID:', clickedProject.id);
+        var clickedProjectid = clickedProject.id;
+        //main video
+        let maindata = JSON.stringify({
+          "id": clickedProjectid
         });
 
-      //video clips
-      let data = qs.stringify({
-        'project_id': clickedProjectid
-      });
+        let mainconfig = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: `${HOSTINGURL}/v1/project/get-by-id`,
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          data: maindata
+        };
 
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${HOSTINGURL}/v1/clip/get-by-id`,
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Bearer ${token}`
-        },
-        data: data
-      };
+        axios.request(mainconfig)
+          .then((response) => {
+            console.log(response.data, 'response.data');
+            const title = response.data.data.title;
+            const description = response.data.data.description;
+            const src = response.data.data.video_url;
+            const id = response.data.data.id;
+            const type = response.data.data.type;
 
-      try {
-        const response = await axios.request(config);
-        console.log(response)
-        if (response.data.data && Array.isArray(response.data.data)) {
-          const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
-            // Split the time string into parts
-            const timeParts = clip.duration.split(':');
+            // Calculate the duration of the video (assuming src is the video URL)
+            const videoElement = document.createElement('video');
+            videoElement.src = src;
+            videoElement.onloadedmetadata = () => {
+              const durationInSeconds = Math.floor(videoElement.duration);
 
-            // Extract hours, minutes, seconds
-            const hours = parseInt(timeParts[0]);
-            const minutes = parseInt(timeParts[1]);
-            const seconds = parseInt(timeParts[2].split('.')[0]);
+              // Convert duration to HH:MM:SS format
+              const hours = Math.floor(durationInSeconds / 3600);
+              const minutes = Math.floor((durationInSeconds % 3600) / 60);
+              const seconds = durationInSeconds % 60;
+              const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-            // Format the time in HH:MM:SS
-            const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-            return {
-              id: clip.id,
-              src: clip.clip_url,
-              title: clip.title,
-              description: clip.summary,
-              status: clip.status,
-              time: formattedTime,
-              type: clip.type,
+              const newMainVideo = [
+                { title, description, src, id, time: formattedDuration, type }
+              ];
+              updateMainVideo(newMainVideo);
+              setnewMainVideo(newMainVideo);
             };
-          }));
-          setNewvideoClips(newvideoClips);
-          setAccordionVisible(true);
-          setError('');
-          console.log('New video clips:', newvideoClips);
-        } else {
-          console.log('Invalid API response:', response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        //video clips
+        let data = qs.stringify({
+          'project_id': clickedProjectid
+        });
+
+        let config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: `${HOSTINGURL}/v1/clip/get-by-id`,
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${token}`
+          },
+          data: data
+        };
+
+        try {
+          const response = await axios.request(config);
+          console.log(response)
+          if (response.data.data && Array.isArray(response.data.data)) {
+            const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
+              // Split the time string into parts
+              const timeParts = clip.duration.split(':');
+
+              // Extract hours, minutes, seconds
+              const hours = parseInt(timeParts[0]);
+              const minutes = parseInt(timeParts[1]);
+              const seconds = parseInt(timeParts[2].split('.')[0]);
+
+              // Format the time in HH:MM:SS
+              const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+              return {
+                id: clip.id,
+                src: clip.clip_url,
+                title: clip.title,
+                description: clip.summary,
+                status: clip.status,
+                time: formattedTime,
+                type: clip.type,
+              };
+            }));
+            setNewvideoClips(newvideoClips);
+            setAccordionVisible(true);
+            setError('');
+            console.log('New video clips:', newvideoClips);
+          } else {
+            console.log('Invalid API response:', response.data);
+            setAccordionVisible(false);
+            console.log(clickedProjectid, 'clickedProjectid')
+            setProjectId('');
+            // setError('We could not find the clips for this project');
+            enqueueSnackbar('We could not find the clips for this project', {
+              variant: 'error',
+              autoHideDuration: 1500,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            });
+          }
+        } catch (error) {
           setAccordionVisible(false);
+          console.log(clickedProjectid, 'clickedProjectid')
           setProjectId('');
           // setError('We could not find the clips for this project');
           enqueueSnackbar('We could not find the clips for this project', {
@@ -457,20 +514,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             },
           });
         }
-      } catch (error) {
-        setAccordionVisible(false);
-        setProjectId('');
-        // setError('We could not find the clips for this project');
-        enqueueSnackbar('We could not find the clips for this project', {
-          variant: 'error',
-          autoHideDuration: 1500,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
       }
     }
+
+   
   };
 
 
@@ -578,18 +625,18 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 />
               </span>
             </div>
-
           ) : (
             <div className={`overflow-hidden ${!open && "hidden"} relative`}>
-              {lines
-                .filter((line) => line && line.trim() !== "")
-                .map((line, index) => (
-                  <div
-                    key={index}
-                    className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
-                    onMouseEnter={() => setHoveredIndex(index)}
-                    onMouseLeave={() => setHoveredIndex(-1)}
-                  >
+                {lines
+                  .filter((line) => line && line.trim() !== "")
+                  .map((line, index) => (
+                    <div
+                      key={index}
+                      className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""
+                        } ${newlyAddedLines.includes(line) ? "animate-fade-in" : ""}`}
+                      onMouseEnter={() => setHoveredIndex(index)}
+                      onMouseLeave={() => setHoveredIndex(-1)}
+                    >
                     {editIndex === index ? (
                       <div className="width-full row relative">
                         <input
@@ -642,7 +689,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             </div>
           )}
         </div>
-        {/* <Example /> */}
 
         <div className={` bottom-0 left-0 right-0 `}>
           <div className=" flex flex-col gap-1">

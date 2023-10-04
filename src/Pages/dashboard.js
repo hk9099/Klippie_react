@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Modal from "../components/Modal";
 import Steps from "../Pages/Steps";
 import HomeScreen from "../Pages/HomeScreen";
+// import Navbar from "../components/Navbar";
 import "../assets/css/Sidebar.css";
 import { Analytics } from '@vercel/analytics/react';
 import { useUserNickname } from '../components/userNicknameContext.js';
@@ -38,7 +39,7 @@ export default function Dashboard() {
           {accordionVisible ? (
             <Steps projectId={projectId} newhistoryvideoClips={newhistoryvideoClips} newmainvideo={newmainvideo} errorMessage={errorMessage} accordionVisible={accordionVisible} />
           ) : (
-              <HomeScreen userName={userName} />
+            <HomeScreen userName={userName} />
           )}
           {!accordionVisible && errorMessage && (
             <div className="flex justify-center h-screen items-center ">

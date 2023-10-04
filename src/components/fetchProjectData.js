@@ -14,14 +14,13 @@ const getToken = () => {
     }
 };
 
-async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory) {
+async function fetchProjectsData(setProjectData, setLines) {
     const token = getToken();
     if (!token) {
         console.error('No token available');
-        return;
+        return [];
     }
 
-    setIsLoadingHistory(true);
     try {
         const response = await axios.post(
             `${HOSTINGURL}/v1/project/get-my-all`,
@@ -39,14 +38,18 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory) 
         setProjectData(projectData);
 
         if (projectData.length > 0) {
-            setLines(projectData.map(project => project.name));
+            const newLines = projectData.map(project => project.name);
+            console.log('New Lines:', newLines);
+            setLines(newLines);
+            return newLines;
         }
-        setIsLoadingHistory(false);
 
+        return [];
     } catch (error) {
         console.error('API Error:', error);
-        setIsLoadingHistory(false);
+        return [];
     }
 }
 
 export default fetchProjectsData;
+

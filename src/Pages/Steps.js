@@ -7,6 +7,7 @@ import { updateMainVideo } from "../components/data.js";
 import { useSidebarContext } from '../components/SidebarContext.js';
 import { useSnackbar } from 'notistack';
 import { AiOutlineClose } from 'react-icons/ai';
+import HomeScreen from './HomeScreen';
 var getToken = () => {
     const encodedToken = localStorage.getItem('_sodfhgiuhih');
 
@@ -21,6 +22,7 @@ var getToken = () => {
 var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
 const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage }) => {
+    //eslint-disable-next-line
     const [currentProjectId, setProjectId] = useState(propProjectId);
     const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
@@ -58,10 +60,6 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
         </button>
     ) : null;
 
-
-
-
-
     const makeApiCalls = async (propProjectId, token) => {
         controller.current = new AbortController();
         setIsApiCompleted(false);
@@ -96,9 +94,17 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
 
             const response1 = await axios.request(config1);
             console.log('API 1 success:', response1.data);
-            
+            enqueueSnackbar(response1.data.message,
+                {
+                    variant: 'success',
+                    autoHideDuration: 1500, anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right',
+                    },
+                });
             setIsLoading(false);
             setAllApiCompleted(true);
+            setAccordionVisible(false);
             setError('');
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -121,13 +127,14 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
     };
     useEffect(() => {
         const token = getToken();
-        if (currentProjectId && token) {
+        console.log(propProjectId, 'propProjectId')
+        if (propProjectId && token) {
             // Step 3: Poll the project/stats API every 10 seconds
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
                     try {
                         const data = JSON.stringify({
-                            "id": currentProjectId,
+                            "id": propProjectId,
                         });
                         const config = {
                             method: 'post',
@@ -151,61 +158,8 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
 
                         if (message === 'Clips Founded') {
                             let data = qs.stringify({
-                                'project_id': currentProjectId
+                                'project_id': propProjectId
                             });
-
-                            let data1 = JSON.stringify({
-                                "id": currentProjectId,
-                            });
-
-                            let config1 = {
-                            method: 'post',
-                            maxBodyLength: Infinity,
-                            url: 'https://api.getklippie.com/v1/project/get-by-id',
-                            headers: {
-                                'accept': 'application/json',
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + token
-                            },
-                            data: data1
-                        };
-
-                        axios.request(config1)
-                            .then((response1) => {
-                                console.log(JSON.stringify(response.data));
-                                const title = response1.data.data.title;
-                                const description = response1.data.data.description;
-                                const src = response1.data.data.video_url;
-                                const id = response1.data.data.id;
-
-                                // Calculate the duration of the video (assuming src is the video URL)
-                                const videoElement = document.createElement('video');
-                                videoElement.src = src;
-                                videoElement.onloadedmetadata = async () => {
-                                    const durationInSeconds = Math.floor(videoElement.duration);
-
-                                    // Convert duration to HH:MM:SS format
-                                    const hours = Math.floor(durationInSeconds / 3600);
-                                    const minutes = Math.floor((durationInSeconds % 3600) / 60);
-                                    const seconds = durationInSeconds % 60;
-                                    const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                                    const newMainVideo = [
-                                        { title, description, src, id, time: formattedDuration }
-                                    ];
-
-                                    try {
-                                        await updateMainVideo(newMainVideo); // Assuming updateMainVideo returns a promise
-                                        // setIsApiCompleted(true);
-                                    } catch (error) {
-                                        console.error("Error updating main video:", error);
-                                    }
-                                };
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
-
                             let config = {
                                 method: 'post',
                                 maxBodyLength: Infinity,
@@ -218,50 +172,101 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                                 data: data
                             };
 
-                                const response = await axios.request(config);
-                                console.log(response)
-                                if (response.data.data && Array.isArray(response.data.data)) {
-                                    const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
-                                        // Split the time string into parts
-                                        const timeParts = clip.duration.split(':');
+                            const response = await axios.request(config);
+                            console.log(response)
+                            if (response.data.data && Array.isArray(response.data.data)) {
+                                const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
+                                    // Split the time string into parts
+                                    const timeParts = clip.duration.split(':');
 
-                                        // Extract hours, minutes, seconds
-                                        const hours = parseInt(timeParts[0]);
-                                        const minutes = parseInt(timeParts[1]);
-                                        const seconds = parseInt(timeParts[2].split('.')[0]);
+                                    // Extract hours, minutes, seconds
+                                    const hours = parseInt(timeParts[0]);
+                                    const minutes = parseInt(timeParts[1]);
+                                    const seconds = parseInt(timeParts[2].split('.')[0]);
 
-                                        // Format the time in HH:MM:SS
-                                        const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                                    // Format the time in HH:MM:SS
+                                    const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-                                        return {
-                                            id: clip.id,
-                                            src: clip.clip_url,
-                                            title: clip.title,
-                                            description: clip.summary,
-                                            status: clip.status,
-                                            time: formattedTime,
-                                            type: clip.type,
+                                    return {
+                                        id: clip.id,
+                                        src: clip.clip_url,
+                                        title: clip.title,
+                                        description: clip.summary,
+                                        status: clip.status,
+                                        time: formattedTime,
+                                        type: clip.type,
+                                    };
+                                }));
+                                setNewvideoClips(newvideoClips);
+                                let data1 = JSON.stringify({
+                                    "id": propProjectId,
+                                });
+
+                                let config1 = {
+                                    method: 'post',
+                                    maxBodyLength: Infinity,
+                                    url: 'https://api.getklippie.com/v1/project/get-by-id',
+                                    headers: {
+                                        'accept': 'application/json',
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer ' + token
+                                    },
+                                    data: data1
+                                };
+
+                                axios.request(config1)
+                                    .then((response1) => {
+                                        console.log(JSON.stringify(response.data));
+                                        const title = response1.data.data.title;
+                                        const description = response1.data.data.description;
+                                        const src = response1.data.data.video_url;
+                                        const id = response1.data.data.id;
+
+                                        // Calculate the duration of the video (assuming src is the video URL)
+                                        const videoElement = document.createElement('video');
+                                        videoElement.src = src;
+                                        videoElement.onloadedmetadata = async () => {
+                                            const durationInSeconds = Math.floor(videoElement.duration);
+
+                                            // Convert duration to HH:MM:SS format
+                                            const hours = Math.floor(durationInSeconds / 3600);
+                                            const minutes = Math.floor((durationInSeconds % 3600) / 60);
+                                            const seconds = durationInSeconds % 60;
+                                            const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                                            const newMainVideo = [
+                                                { title, description, src, id, time: formattedDuration }
+                                            ];
+
+                                            try {
+                                                await updateMainVideo(newMainVideo); // Assuming updateMainVideo returns a promise
+                                                // setIsApiCompleted(true);
+                                            } catch (error) {
+                                                console.error("Error updating main video:", error);
+                                            }
                                         };
-                                    }));
-                                    setNewvideoClips(newvideoClips);
-                                    setAccordionVisible(true);
-                                    setError('');
-                                    setProjectId(null);
-                                    console.log('New video clips:', newvideoClips);
-                                } else {
-                                    console.log('Invalid API response:', response.data);
-                                    setAccordionVisible(false);
-                                    setProjectId('');
-                                    // setError('We could not find the clips for this project');
-                                    enqueueSnackbar('We could not find the clips for this project', {
-                                        variant: 'error',
-                                        autoHideDuration: 1500,
-                                        anchorOrigin: {
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        },
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
                                     });
-                                }
+                                setAccordionVisible(true);
+                                setError('');
+                                setProjectId(null);
+                                console.log('New video clips:', newvideoClips);
+                            } else {
+                                console.log('Invalid API response:', response.data);
+                                setAccordionVisible(false);
+                                setProjectId('');
+                                // setError('We could not find the clips for this project');
+                                enqueueSnackbar('We could not find the clips for this project', {
+                                    variant: 'error',
+                                    autoHideDuration: 1500,
+                                    anchorOrigin: {
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    },
+                                });
+                            }
                         }
 
                         // Check if the message is not in the list of unique messages
@@ -270,7 +275,7 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                             setUniqueMessages([...uniqueMessages, message]);
 
                             // Display the message (you can do this in your UI as needed)
-                            enqueueSnackbar(message, { variant: 'info', autoHideDuration: 1000 });
+                            enqueueSnackbar(message, { variant: 'info', autoHideDuration: 2000 });
                         }
                     } catch (error) {
                         console.log(error);
@@ -283,7 +288,7 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
             // Clean up the interval when the component unmounts or when projectId/token change
             return () => clearInterval(intervalId);
         }
-    }, [currentProjectId, uniqueMessages, enqueueSnackbar , setIsApiCompleted]);
+    }, [propProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted]);
 
     // useEffect(() => {
     //     setProjectId(propProjectId);
@@ -305,11 +310,9 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
         <div className="min-h-screen flex items-center justify-center">
             {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
             <div className="text-center">
-                {/* {isLoading && (
-                    <div className="flex items-center justify-centertext-blue-500">
-                        <Shuffleloader />
-                    </div>
-                )} */}
+                {!accordionVisible && (
+                    <HomeScreen />
+                )}
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
             {closeButton}

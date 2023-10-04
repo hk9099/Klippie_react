@@ -74,7 +74,6 @@ function HomeScreen({ userName }) {
             <div className="flex flex-col h-screen">
                 <div className="">
                     <Navbar />
-                    {/* Your Navbar component here */}
                 </div>
                 <div className="flex-grow flex flex-col overflow-hidden dark:bg-transparent rounded-[60px]">
                     <section
