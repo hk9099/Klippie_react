@@ -48,6 +48,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
+  const isDashboard = window.location.pathname === '/dashboard';
+
 
   useEffect(() => {
     if (!initialized) {
@@ -463,8 +465,11 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
 
   const handleAddNewVideo = () => {
-    // setShowModal(true);
-    navigate('/dashboard');
+    if (isDashboard) {
+      return;
+    }
+    setShowModal(true); 
+    // navigate('/dashboard');
   };
 
   const handleFormSubmit = (projectId) => {
@@ -514,8 +519,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         <div className="pt-4 pb-3">
           <button
             className={`flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full cursor-pointer dark:text-white  border-animation ${!open && "justify-center"
-              }`}
+              } ${isDashboard ? "dark:bg-gray-800 dark:text-white cursur-not-allowed" : "bg-transparent"}`}
             onClick={handleAddNewVideo}
+            disabled={isDashboard} 
           >
             <div
               className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full bg-white dark:bg-gray-800 dark:text-white ${!open && "justify-center"
@@ -530,7 +536,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 className={`${!open && "hidden"
                   } origin-left duration-300 hover:block font-medium text-sm font-Satoshi`}
               >
-                New Audio / Video
+                New Project
               </span>
             </div>
           </button>

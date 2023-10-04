@@ -3,6 +3,7 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RotatingLines } from "react-loader-spinner";
 import { UserNicknameProvider } from './components/userNicknameContext.js';
+import { CloudinaryProvider } from './components/CloudinaryContext.js';
 import { SidebarProvider } from './components/SidebarContext.js';
 import { SnackbarProvider } from 'notistack';
 import { useParams } from 'react-router-dom';
@@ -77,7 +78,8 @@ function App() {
        
         <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={1500}>
           <SidebarProvider>
-          <UserNicknameProvider> 
+            <UserNicknameProvider> 
+            <CloudinaryProvider>
             <Routes>
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgotpassword" element={<Forgotpassword />} />
@@ -95,7 +97,8 @@ function App() {
               <Route path="/" element={<Signin />} />
                 <Route path="/youtubevideo" element={<VideoInfo />} />
                 <Route path="/homescreen" element={<HomeScreen />} />
-            </Routes>
+                </Routes>
+                </CloudinaryProvider>
           </UserNicknameProvider>
             </SidebarProvider>
         </SnackbarProvider>

@@ -42,6 +42,11 @@ export default function Dashboard() {
   var HOSTINGURL = 'https://dev-api.getklippie.com';
   useEffect(() => {
     console.log('routeProjectId', routeProjectId);
+    if (!routeProjectId) {
+      setAccordionVisible(false);
+      setProjectId('');
+      return;
+    }
     const handleProjectClick = async (index) => {
       const token = getToken();
       console.log('Token:', token);

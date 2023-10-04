@@ -26,14 +26,14 @@ function Signin() {
 
 
 
-    // useEffect(() => {
-    //     const encodedEmail = localStorage.getItem('_auth');
-    //     if (encodedEmail) {
-    //         setIsLoading(true);
-    //         // const email = atob(encodedEmail); // Decode email
-    //         navigate('/dashboard');
-    //     }
-    // }, [navigate]);
+    useEffect(() => {
+        const encodedEmail = localStorage.getItem('_auth');
+        if (encodedEmail) {
+            setIsLoading(true);
+            // const email = atob(encodedEmail); // Decode email
+            navigate('/dashboard');
+        }
+    }, [navigate]);
 
     // const handleGoogleLogin = () => {
     //     const customProvider = new GoogleAuthProvider();
