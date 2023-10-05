@@ -127,9 +127,7 @@ function HomeScreen({ userName }) {
                                         <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":books: Lectures" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
-                                            <ReactEmoji text=":earth_americas: And much more!" />
-                                        </div>
+                                        
 
                                         <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text="💻 Online Courses" />
@@ -163,6 +161,9 @@ function HomeScreen({ userName }) {
                                         </div>
                                         <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":cake: Cooking shows" />
+                                        </div>
+                                        <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <ReactEmoji text=":earth_americas: And much more!" />
                                         </div>
                                     </div>
                                 </div>

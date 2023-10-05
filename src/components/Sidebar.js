@@ -51,9 +51,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
-  //eslint-disable-next-line
-  const [newlyAddedLines, setNewlyAddedLines] = useState([]);
-  const [previousLines, setPreviousLines] = useState([]);
 
   const closeDropdown = () => {
     setDropdownOpen(false);
@@ -82,17 +79,11 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
   useEffect(() => {
-    fetchProjectsData(setProjectData, setLines, setIsLoadingHistory)
-      .then(newLines => {
-        if (newLines.length > 0) {
-          const newlyAdded = newLines.filter(line => !previousLines.includes(line));
-          console.log("Newly added lines:", newlyAdded);
-          setPreviousLines(newLines); // Update the previous lines
-        }
-      });
-    //eslint-disable-next-line
-  }, [isApiCompleted]);
-
+    console.log('isApiCompleted', isApiCompleted);
+    fetchProjectsData(setProjectData, setLines, setIsLoadingHistory);
+    for (let i = 0; i < Math.min(3, projectData.length); i++) {
+    }
+  }, [isApiCompleted, projectData.length]);
 
   const handleUpdateProfileSuccess = () => {
     // Call fetchUserProfile to refresh the user's profile
@@ -626,67 +617,83 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               </span>
             </div>
           ) : (
-            <div className={`overflow-hidden ${!open && "hidden"} relative`}>
-                {lines
-                  .filter((line) => line && line.trim() !== "")
-                  .map((line, index) => (
-                    <div
-                      key={index}
-                      className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""
-                        } ${newlyAddedLines.includes(line) ? "animate-fade-in" : ""}`}
-                      onMouseEnter={() => setHoveredIndex(index)}
-                      onMouseLeave={() => setHoveredIndex(-1)}
-                    >
-                    {editIndex === index ? (
-                      <div className="width-full row relative">
-                        <input
-                          className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
-                          type="text"
-                          value={tempLines[index]}
-                          onChange={(event) => handleEditChange(event, index)}
-                        />
-                        <button onClick={() => handleSaveClick(index)} className="save-button">
-                          <AiOutlineCheck />
-                        </button>
-                        <button onClick={() => handleCancelClick()} className="cancel-button">
-                          <AiOutlineClose />
-                        </button>
-                      </div>
-                    ) : (
-                      <p
-                        className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
-                        style={{
-                          width: hoveredIndex === index ? "188px" : "243px",
-                          // width: "100%",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          userSelect: "none",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          setActiveIndex(index);
-                          handleProjectClick(index);
-                        }}
-                      >
-                        {line}
-                      </p>
-                    )}
-                    <div className="hover-actions" >
-                      {editIndex !== index && (
-                        <>
-                          <button onClick={() => deleteLine(index)} className="delete-button">
-                            <AiOutlineDelete />
-                          </button>
-                          <button onClick={() => handleEditClick(index)} className="edit-button">
-                            <FiEdit2 />
-                          </button>
-                        </>
-                      )}
-                    </div>
+              <div className=" flex-grow overflow-y-auto backdrop-blur-xl history">
+                {isLoadingHistory ? (
+                  <div className="flex items-center justify-center mb-4 text-blue-500 h-[87%]">
+                    <span className="" style={{ userSelect: "none" }}>
+                      <RotatingLines
+                        strokeColor="grey"
+                        strokeWidth="5"
+                        animationDuration="0.75"
+                        width="25"
+                        visible={true}
+                      />
+                    </span>
                   </div>
-                ))}
-            </div>
+
+                ) : (
+                  <div className={`overflow-hidden ${!open && "hidden"} relative`}>
+                    {lines
+                      .filter((line) => line && line.trim() !== "")
+                      .map((line, index) => (
+                        <div
+                          key={index}
+                          className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
+                          onMouseEnter={() => setHoveredIndex(index)}
+                          onMouseLeave={() => setHoveredIndex(-1)}
+                        >
+                          {editIndex === index ? (
+                            <div className="width-full row relative">
+                              <input
+                                className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
+                                type="text"
+                                value={tempLines[index]}
+                                onChange={(event) => handleEditChange(event, index)}
+                              />
+                              <button onClick={() => handleSaveClick(index)} className="save-button">
+                                <AiOutlineCheck />
+                              </button>
+                              <button onClick={() => handleCancelClick()} className="cancel-button">
+                                <AiOutlineClose />
+                              </button>
+                            </div>
+                          ) : (
+                            <p
+                              className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                              style={{
+                                width: hoveredIndex === index ? "188px" : "243px",
+                                // width: "100%",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                userSelect: "none",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                setActiveIndex(index);
+                                handleProjectClick(index);
+                              }}
+                            >
+                              {line}
+                            </p>
+                          )}
+                          <div className="hover-actions" >
+                            {editIndex !== index && (
+                              <>
+                                <button onClick={() => deleteLine(index)} className="delete-button">
+                                  <AiOutlineDelete />
+                                </button>
+                                <button onClick={() => handleEditClick(index)} className="edit-button">
+                                  <FiEdit2 />
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
           )}
         </div>
 

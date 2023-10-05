@@ -37,7 +37,7 @@ export default function Dashboard() {
         <div className="w-full overflow-x-auto px-3 z-30">
           <Modal className="z-50" />
           {accordionVisible ? (
-            <Steps projectId={projectId} newhistoryvideoClips={newhistoryvideoClips} newmainvideo={newmainvideo} errorMessage={errorMessage} accordionVisible={accordionVisible} />
+            <Steps projectId={projectId} newhistoryvideoClips={newhistoryvideoClips} setProjectId={setProjectId} newmainvideo={newmainvideo} errorMessage={errorMessage} accordionVisible={accordionVisible} />
           ) : (
             <HomeScreen userName={userName} />
           )}

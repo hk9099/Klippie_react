@@ -8,6 +8,7 @@ import { useSidebarContext } from '../components/SidebarContext.js';
 import { useSnackbar } from 'notistack';
 import { AiOutlineClose } from 'react-icons/ai';
 import HomeScreen from './HomeScreen';
+import Suggetionpopup from '../components/Suggetionpopup';
 var getToken = () => {
     const encodedToken = localStorage.getItem('_sodfhgiuhih');
 
@@ -19,7 +20,6 @@ var getToken = () => {
         return null;
     }
 };
-var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
 const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage }) => {
     //eslint-disable-next-line
@@ -36,8 +36,9 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
     //eslint-disable-next-line
     const [accordionVisible, setAccordionVisible] = useState(true);
     const { setIsApiCompleted } = useSidebarContext();
-
-
+    const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
+    console.log(propProjectId, 'propProjectId');
+    console.log(currentProjectId, 'currentProjectId');
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
@@ -104,7 +105,9 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                 });
             setIsLoading(false);
             setAllApiCompleted(true);
-            setAccordionVisible(false);
+            setIsSuggetionpopupOpen(true);
+            setAccordionVisible(true);
+            setProjectId(propProjectId);
             setError('');
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -127,14 +130,14 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
     };
     useEffect(() => {
         const token = getToken();
-        console.log(propProjectId, 'propProjectId')
-        if (propProjectId && token) {
+        console.log(currentProjectId, 'currentProjectId')
+        if (currentProjectId && token) {
             // Step 3: Poll the project/stats API every 10 seconds
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
                     try {
                         const data = JSON.stringify({
-                            "id": propProjectId,
+                            "id": currentProjectId,
                         });
                         const config = {
                             method: 'post',
@@ -157,13 +160,14 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                         }
 
                         if (message === 'Clips Founded') {
+                            console.log('Clips Founded');
                             let data = qs.stringify({
-                                'project_id': propProjectId
+                                'project_id': currentProjectId
                             });
                             let config = {
                                 method: 'post',
                                 maxBodyLength: Infinity,
-                                url: `${HOSTINGURL}/v1/clip/get-by-id`,
+                                url: `https://api.getklippie.com/v1/clip/get-by-id`,
                                 headers: {
                                     'accept': 'application/json',
                                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -199,7 +203,7 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                                 }));
                                 setNewvideoClips(newvideoClips);
                                 let data1 = JSON.stringify({
-                                    "id": propProjectId,
+                                    "id": currentProjectId,
                                 });
 
                                 let config1 = {
@@ -239,8 +243,9 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                                             ];
 
                                             try {
-                                                await updateMainVideo(newMainVideo); // Assuming updateMainVideo returns a promise
-                                                // setIsApiCompleted(true);
+                                                updateMainVideo(newMainVideo); 
+                                                setProjectId(null);
+                                                setIsSuggetionpopupOpen(false);
                                             } catch (error) {
                                                 console.error("Error updating main video:", error);
                                             }
@@ -251,7 +256,6 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                                     });
                                 setAccordionVisible(true);
                                 setError('');
-                                setProjectId(null);
                                 console.log('New video clips:', newvideoClips);
                             } else {
                                 console.log('Invalid API response:', response.data);
@@ -270,13 +274,13 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                         }
 
                         // Check if the message is not in the list of unique messages
-                        if (!uniqueMessages.includes(message)) {
-                            // Add the message to the list of unique messages
-                            setUniqueMessages([...uniqueMessages, message]);
+                        // if (!uniqueMessages.includes(message)) {
+                        //     // Add the message to the list of unique messages
+                        //     setUniqueMessages([...uniqueMessages, message]);
 
-                            // Display the message (you can do this in your UI as needed)
-                            enqueueSnackbar(message, { variant: 'info', autoHideDuration: 2000 });
-                        }
+                        //     // Display the message (you can do this in your UI as needed)
+                        //     enqueueSnackbar(message, { variant: 'info', autoHideDuration: 2000 });
+                        // }
                     } catch (error) {
                         console.log(error);
                     }
@@ -288,7 +292,7 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
             // Clean up the interval when the component unmounts or when projectId/token change
             return () => clearInterval(intervalId);
         }
-    }, [propProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted]);
+    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted]);
 
     // useEffect(() => {
     //     setProjectId(propProjectId);
@@ -310,6 +314,9 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
         <div className="min-h-screen flex items-center justify-center">
             {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
             <div className="text-center">
+                {isSuggetionpopupOpen && (
+                    <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
+                )}
                 {!accordionVisible && (
                     <HomeScreen />
                 )}

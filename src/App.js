@@ -12,8 +12,9 @@ const Dashboard = lazy(() => import('./Pages/dashboard.js'));
 const OtpVarification = lazy(() => import('./Pages/otpVarification.js'));
 const Layout = lazy(() => import('./Pages/Layout.js'));
 const Steps = lazy(() => import('./Pages/Steps.js'));
-const VideoInfo = lazy(() => import('./components/youtubevideo.js'));
+// const VideoInfo = lazy(() => import('./components/youtubevideo.js'));
 const HomeScreen = lazy(() => import('./Pages/HomeScreen.js'));
+const Suggetionpopup = lazy(() => import('./components/Suggetionpopup.js'));
 
 function App() {
   return (
@@ -43,7 +44,7 @@ function App() {
               <Route path="/otpVarification" element={<OtpVarification />} />
               <Route path="/steps" element={<Steps />} />
               <Route path="/" element={<Signin />} />
-                <Route path="/youtubevideo" element={<VideoInfo />} />
+                <Route path="/suggetionpopup" element={<Suggetionpopup />} />
                 <Route path="/homescreen" element={<HomeScreen />} />
             </Routes>
           </UserNicknameProvider>
