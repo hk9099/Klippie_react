@@ -31,6 +31,7 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
     const [allApiCompleted, setAllApiCompleted] = useState(false);
     const [error, setError] = useState('');
     const apiCallsMadeRef = useRef(false);
+    //eslint-disable-next-line
     const [uniqueMessages, setUniqueMessages] = useState([]);
     const prevProjectIdRef = useRef();
     //eslint-disable-next-line
