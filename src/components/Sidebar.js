@@ -79,7 +79,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     // eslint-disable-next-line
   }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile ]);
 
-  // console.log(userName, 'userNickname')
 
   var HOSTINGURL = process.env.REACT_APP_DEV_HOSTING_URL;
 
