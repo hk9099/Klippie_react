@@ -271,7 +271,7 @@ const AccountModal = ({
                         {activeTab === 'profile' && (
                             <Formik initialValues={{}} onSubmit={() => { }}>
                                 <UserModal
-                                    isOpen={true} // Always show the UserModal when the "Profile" tab is active
+                                    isOpen={true} 
                                     userNickname={userNickname}
                                     userEmailAddress={userEmailAddress}
                                     avatar={avatar}

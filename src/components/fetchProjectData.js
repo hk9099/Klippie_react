@@ -14,7 +14,7 @@ const getToken = () => {
     }
 };
 
-async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory) {
+async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setLinesId) {
     const token = getToken();
     if (!token) {
         console.error('No token available');
@@ -37,7 +37,6 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory) 
         // console.log('Projects:', response.data);
         const projectData = response.data.data;
         setProjectData(projectData);
-
         if (projectData.length > 0) {
             setLines(projectData.map(project => project.name));
         }

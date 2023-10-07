@@ -112,6 +112,29 @@
 }
 
 /* Apply the animation to the containing div */
-.flex > div {
+/* .flex > div {
     animation: elementAnimation 0.5s ease-in-out;
+} */
+
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 1s ease-in-out;
+}
+
+/* Custom CSS */
+.custom-progress::after {
+    color: white !important; /* Change text color to white */
+}
+
+.react-sweet-progress-symbol{
+    color: white !important; /* Change text color to white */
 }

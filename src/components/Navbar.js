@@ -14,7 +14,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className='border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent h-[90px]'>
+            <nav className='border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent h-[90px] '>
                 <div className='flex justify-end items-center mx-auto'>
                     <div className='flex justify-end items-center w-100'>
                         <div className='p-3'>

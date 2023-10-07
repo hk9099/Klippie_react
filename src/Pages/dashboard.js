@@ -12,12 +12,14 @@ import axios from "axios";
 import qs from "qs";
 import { useNavigate } from 'react-router-dom';
 import { useUserNickname } from '../components/userNicknameContext.js';
+import { useCloudinary } from '../components/CloudinaryContext.js';
 
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams();
-  console.log(routeProjectId);
+  const { cloudinaryResponse } = useCloudinary();
+  console.log('cloudinaryResponse', cloudinaryResponse);
   const [projectId, setProjectId] = useState(null);
   const [newvideoClips, setNewvideoClips] = useState([]);
   const [newmainvideo, setnewMainVideo] = useState([]);
@@ -195,6 +197,7 @@ export default function Dashboard() {
               newmainvideo={newmainvideo}
               errorMessage={errorMessage}
               accordionVisible={accordionVisible}
+              cloudinaryResponse={cloudinaryResponse}
             />
           ) : (
             <HomeScreen userName={userName} />
