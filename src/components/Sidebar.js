@@ -27,7 +27,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const { setUserName } = useUserNickname();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [initialized, setInitialized] = useState(false);
+  const [initialized] = useState(false);
   const [userEmailAddress, setUserEmailAddress] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
   const [userNickname, setUserNickname] = useState("");
@@ -188,7 +188,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         .catch((error) => {
           console.log(error);
         });
-      setInitialized(true);
       console.log('profile end');
     }
     // eslint-disable-next-line
