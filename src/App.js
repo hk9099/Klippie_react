@@ -7,6 +7,7 @@ import { CloudinaryProvider } from './components/CloudinaryContext.js';
 import { SidebarProvider } from './components/SidebarContext.js';
 import { SnackbarProvider } from 'notistack';
 import { useParams } from 'react-router-dom';
+import Test from './components/ContectUs.js';
 const Signin = lazy(() => import('./Pages/signin.js'));
 const Signup = lazy(() => import('./Pages/signup.js'));
 const Forgotpassword = lazy(() => import('./Pages/forgotpassword.js'));
@@ -33,10 +34,10 @@ function App() {
         </div>
       }>
 
-        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={1500}>
-          <SidebarProvider>
+        <UserNicknameProvider>
+          <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={1500}>
+            <SidebarProvider>
               <CloudinaryProvider>
-            <UserNicknameProvider>
                 <Routes>
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/forgotpassword" element={<Forgotpassword />} />
@@ -53,11 +54,12 @@ function App() {
                   <Route path="/steps" element={<Steps />} />
                   <Route path="/" element={<Signin />} />
                   <Route path="/homescreen" element={<HomeScreen />} />
+                  <Route path="/Test" element={<Test />} />
                 </Routes>
-            </UserNicknameProvider>
               </CloudinaryProvider>
-          </SidebarProvider>
-        </SnackbarProvider>
+            </SidebarProvider>
+          </SnackbarProvider>
+        </UserNicknameProvider>
       </Suspense>
     </Router>
   );

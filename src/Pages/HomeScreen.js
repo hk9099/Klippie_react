@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef ,useEffect } from 'react';
 import ReactEmoji from 'react-emoji-render';
 import Navbar from '../components/Navbar';
 import { useSnackbar } from 'notistack';
 import { useCloudinary } from '../components/CloudinaryContext.js';
 import { Progress } from 'react-sweet-progress';
 import "react-sweet-progress/lib/style.css";
-import axios from 'axios';
+// import axios from 'axios';
 
 function MyProgressBar({ bytesUploaded, totalBytes }) {
     const percent = Math.round((bytesUploaded / totalBytes) * 100) || 0;
@@ -43,29 +43,30 @@ function MyProgressBar({ bytesUploaded, totalBytes }) {
     );
 }
 
-var getToken = () => {
-    const encodedToken = localStorage.getItem('_sodfhgiuhih');
+// var getToken = () => {
+//     const encodedToken = localStorage.getItem('_sodfhgiuhih');
 
-    if (encodedToken) {
-        const decodedToken = atob(encodedToken);
-        const userInfo = JSON.parse(decodedToken);
-        return userInfo.token.access_token;
-    } else {
-        return null;
-    }
-};
+//     if (encodedToken) {
+//         const decodedToken = atob(encodedToken);
+//         const userInfo = JSON.parse(decodedToken);
+//         return userInfo.token.access_token;
+//     } else {
+//         return null;
+//     }
+// };
 
 function HomeScreen({ userName }) {
-    console.log('userName', userName);
     const [isDragging, setIsDragging] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
-    const { setCloudinaryResponse } = useCloudinary(); // Access the Cloudinary context
+    const { setCloudinaryResponse } = useCloudinary(); 
+    const [firstChunkResponse, setFirstChunkResponse] = useState(null);
     const [isFileUploaded, setIsFileUploaded] = useState();
     const [isFileUploadedInput, setIsFileUploadedInput] = useState();
     const [isFirstChunkLogged, setIsFirstChunkLogged] = useState(false);
     const [isNewVideoUpload, setIsNewVideoUpload] = useState(false);
     const [bytesUploaded, setBytesUploaded] = useState(0);
     const [totalBytes, setTotalBytes] = useState(0);
+    const [conditionMet, setConditionMet] = useState(false); // Flag to track the condition
 
 
     const fileInputRef = useRef(null);
@@ -179,41 +180,8 @@ function HomeScreen({ userName }) {
                 const responseData = await response.json();
 
                 if (start === 0 && !isFirstChunkLogged) {
-                    console.log(responseData);
                     setIsFirstChunkLogged(true);
-                    setCloudinaryResponse(responseData);
-                    // let data = JSON.stringify({
-                    //     "public_id": responseData.public_id,
-                    //     "width": responseData.width,
-                    //     "height": responseData.height,
-                    //     "format": responseData.format,
-                    //     "resource_type": responseData.resource_type,
-                    //     "duration": responseData.duration,
-                    //     "secure_url": responseData.secure_url,
-                    //     "asset_foler": responseData.asset_foler,
-                    //     "audio": responseData.audio,
-                    //     "video": responseData.video,
-                    // });
-
-                    // let config = {
-                    //     method: 'post',
-                    //     maxBodyLength: Infinity,
-                    //     url: 'https://dev-api.getklippie.com/v1/project/create',
-                    //     headers: {
-                    //         'accept': 'application/json',
-                    //         'Content-Type': 'application/json',
-                    //         'Authorization': 'Bearer ' + getToken()
-                    //     },
-                    //     data: data
-                    // };
-
-                    // try {
-                    //     const response = await axios.request(config);
-                    //     console.log(response.data);
-                    // } catch (error) {
-                    //     console.error(error);
-                    // }
-
+                    setFirstChunkResponse(responseData); // Set firstChunkResponse here
                 }
 
                 if (isNewVideoUpload) {
@@ -223,13 +191,17 @@ function HomeScreen({ userName }) {
                 setTotalBytes(size);
 
                 if (end + 1 === size) {
+                    setConditionMet(true); // Set the flag when the condition is met
                     setIsFileUploaded(false);
                     setIsFileUploadedInput(false);
                     setIsFileUploaded(false);
                     setBytesUploaded(0);
                     setTotalBytes(0);
                     setIsFirstChunkLogged(false);
+                    setCloudinaryResponse(firstChunkResponse); // Send firstChunkResponse here
                 }
+
+                
             } else {
                 console.error(`Failed to upload chunk ${start}-${end}`);
                 console.error(await response.text()); // Log the error response
@@ -238,8 +210,18 @@ function HomeScreen({ userName }) {
             console.error(`Error uploading chunk ${start}-${end}: ${error.message}`);
         }
     };
-
-
+    useEffect(() => {
+        if (conditionMet && firstChunkResponse) {
+            console.log(firstChunkResponse);
+            setIsFileUploaded(false);
+            setIsFileUploadedInput(false);
+            setIsFileUploaded(false);
+            setBytesUploaded(0);
+            setTotalBytes(0);
+            setIsFirstChunkLogged(false);
+            setCloudinaryResponse(firstChunkResponse);
+        }
+    }, [conditionMet, firstChunkResponse , setCloudinaryResponse]);
     return (
         <>
             <div className="flex flex-col h-screen " onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>

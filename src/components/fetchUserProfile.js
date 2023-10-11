@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Define the async function to fetch user profile
 const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL) => {
-    console.log('profile start');
+    // console.log('profile start');
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -44,38 +44,38 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
             const userEmailAddress = response.data.email;
             setUserEmailAddress(userEmailAddress);
             const userAvatar = response.data.profile_image;
-            console.log(userAvatar, 'userAvatarrrrrrrrrrrr');
+            // console.log(userAvatar, 'userAvatarrrrrrrrrrrr');
             setUserAvatar(userAvatar);
             const userAvatarUrl = response.data.avatar;
-            console.log(userAvatarUrl, 'userAvatarUrllllllllllllllllll');
+            // console.log(userAvatarUrl, 'userAvatarUrllllllllllllllllll');
             setUserAvatar(userAvatarUrl);
 
             console.log('got profile');
 
             if (userAvatar === null) {
-                console.log('userAvatar is null');
+                // console.log('userAvatar is null');
                 if (userAvatarUrl) {
-                    console.log('userAvatarUrl is not null');
+                    // console.log('userAvatarUrl is not null');
                     setUserAvatar(userAvatarUrl);
                 } else {
-                    console.log('userAvatarUrl is null');
-                    console.log(userEmailAddress);
+                    // console.log('userAvatarUrl is null');
+                    // console.log(userEmailAddress);
                     await generateAvatar(userEmailAddress, setUserAvatar, getToken, HOSTINGURL);
                 }
             } else {
                 setUserAvatar(userAvatar);
             }
 
-            console.log('profile end');
+            // console.log('profile end');
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 };
 
 // Define the async function to generate the avatar URL
 const generateAvatar = async (emailAddress, setUserAvatar, getToken, HOSTINGURL) => {
-    console.log('generate avatar start');
+    // console.log('generate avatar start');
     const userAvatar = emailAddress.split('@')[0];
     const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
 
@@ -102,8 +102,8 @@ const generateAvatar = async (emailAddress, setUserAvatar, getToken, HOSTINGURL)
         };
 
         const updateResponse = await axios.request(config);
-        console.log(updateResponse.data);
-        console.log('account update end');
+        // console.log(updateResponse.data);
+        // console.log('account update end');
     } catch (error) {
         console.log(error);
         throw error;

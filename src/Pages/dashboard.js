@@ -14,16 +14,15 @@ import { useNavigate } from 'react-router-dom';
 import { useUserNickname } from '../components/userNicknameContext.js';
 import { useCloudinary } from '../components/CloudinaryContext.js';
 
-
 export default function Dashboard() {
   const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams();
   const { cloudinaryResponse } = useCloudinary();
-  console.log('cloudinaryResponse', cloudinaryResponse);
   const [projectId, setProjectId] = useState(null);
   const [newvideoClips, setNewvideoClips] = useState([]);
   const [newmainvideo, setnewMainVideo] = useState([]);
   const [accordionVisible, setAccordionVisible] = useState(true);
+  console.log(accordionVisible, 'accordionVisible');
   const [errorMessage, setErrorMessage] = useState("");
   const { userName } = useUserNickname();
   const setError = (message) => {
@@ -167,6 +166,8 @@ export default function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo]);
 
+
+
   useEffect(() => {
     if (projectId) {
       setErrorMessage("");
@@ -186,22 +187,22 @@ export default function Dashboard() {
           setnewMainVideo={setnewMainVideo}
           setAccordionVisible={setAccordionVisible}
           setError={setError}
-        />
+          />
         <div className="w-full overflow-x-auto px-3 z-30">
           <Modal className="z-50" />
           {accordionVisible && <Navbar />}
-          {accordionVisible ? (
+          {accordionVisible || cloudinaryResponse ? (
             <Steps
-              projectId={projectId}
-              newhistoryvideoClips={newvideoClips}
-              newmainvideo={newmainvideo}
-              errorMessage={errorMessage}
-              accordionVisible={accordionVisible}
-              cloudinaryResponse={cloudinaryResponse}
+            projectId={projectId}
+            newhistoryvideoClips={newvideoClips}
+            newmainvideo={newmainvideo}
+            errorMessage={errorMessage}
+            accordionVisible={accordionVisible}
+            cloudinaryResponse={cloudinaryResponse}
             />
-          ) : (
-            <HomeScreen userName={userName} />
-          )}
+            ) : (
+              <HomeScreen userName={userName} />
+              )}
           {!accordionVisible && errorMessage && (
             <div className="flex justify-center h-screen items-center ">
               <div className="text-red-500 text-center  inline-block p-2 font-bold text-lg">

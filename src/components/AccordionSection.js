@@ -9,7 +9,7 @@ import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import Mainvideo from "./Mainvideo";
 import Videoclips from "./Videoclips";
 
-export default function AccordionSection({ videoClips }) {
+export default function AccordionSection({ videoClips , videoURl ,clips }) {
     const [openStates, setOpenStates] = useState([true, true]);
     const [videoCount, setVideoCount] = useState(videoClips.length);
 

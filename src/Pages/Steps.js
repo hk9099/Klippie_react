@@ -3,7 +3,7 @@ import axios from 'axios';
 import qs from 'qs';
 import AccordionSection from '../components/AccordionSection';
 // import Shuffleloader from '../components/shuffleloader.js';
-import { updateMainVideo } from "../components/data.js";
+import { updateMainVideo } from '../components/data';
 import { useSidebarContext } from '../components/SidebarContext.js';
 import { useSnackbar } from 'notistack';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -21,9 +21,9 @@ var getToken = () => {
     }
 };
 
-const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage }) => {
+const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
     //eslint-disable-next-line
-    const [currentProjectId, setProjectId] = useState(propProjectId);
+    const [currentProjectId, setProjectId] = useState();
     const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
     const [newvideoClips, setNewvideoClips] = useState([]);
@@ -38,19 +38,16 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
     const [accordionVisible, setAccordionVisible] = useState(true);
     const { setIsApiCompleted } = useSidebarContext();
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
-    console.log(propProjectId, 'propProjectId');
-    console.log(currentProjectId, 'currentProjectId');
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
     }, [newhistoryvideoClips]);
 
-    const controller = useRef(new AbortController());
 
 
     const handleCloseClick = () => {
         // When close button is clicked, cancel the ongoing API calls
-        controller.current.abort();
+    
         setIsLoading(false);
     };
     const closeButton = isLoading ? (
@@ -62,12 +59,12 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
         </button>
     ) : null;
 
-    const makeApiCalls = async (propProjectId, token) => {
-        controller.current = new AbortController();
+    const makeApiCalls = async (cloudinaryResponse, token) => {
+
         setIsApiCompleted(false);
         try {
 
-            if (!propProjectId || !token) {
+            if (!cloudinaryResponse || !token) {
                 return;
             }
 
@@ -76,39 +73,58 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
             setAllApiCompleted(false);
             setError('');
             setIsLoading(true);
-
-            let data1 = qs.stringify({
-                'project_id': propProjectId
-            });
-
-            let config1 = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: 'https://api.getklippie.com/v1/project/test',
-                headers: {
-                    'accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': `Bearer ${token}`
-                },
-                data: data1,
-                signal: controller.current.signal,
-            };
-
-            const response1 = await axios.request(config1);
-            console.log('API 1 success:', response1.data);
-            enqueueSnackbar(response1.data.message,
-                {
-                    variant: 'success',
-                    autoHideDuration: 1500, anchorOrigin: {
-                        vertical: 'top',
-                        horizontal: 'right',
-                    },
+            try {
+                let data = JSON.stringify({
+                    "public_id": cloudinaryResponse.public_id,
+                    "width": cloudinaryResponse.width,
+                    "height": cloudinaryResponse.height,
+                    "format": cloudinaryResponse.format,
+                    "resource_type": cloudinaryResponse.resource_type,
+                    "duration": cloudinaryResponse.duration,
+                    "secure_url": cloudinaryResponse.secure_url,
+                    "audio": cloudinaryResponse.audio,
+                    "video": cloudinaryResponse.video,
                 });
+
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://dev-api.getklippie.com/v1/project/create',
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    data: data
+                };
+
+                const response = await axios.request(config);
+     
+                let data1 = qs.stringify({
+                    'project_id': response.data.data.id
+                });
+
+                let config1 = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://dev-api.getklippie.com/v1/project/c',
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    data: data1
+                };
+
+                const response1 = await axios.request(config1);
+                setProjectId(response1.data.data.id);
+            } catch (error) {
+                console.log(error);
+            }
             setIsLoading(false);
             setAllApiCompleted(true);
             setIsSuggetionpopupOpen(true);
             setAccordionVisible(true);
-            setProjectId(propProjectId);
             setError('');
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -142,7 +158,7 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                         const config = {
                             method: 'post',
                             maxBodyLength: Infinity,
-                            url: 'https://api.getklippie.com/v1/project/stats',
+                            url: 'https://dev-api.getklippie.com/v1/project/stats',
                             headers: {
                                 'accept': 'application/json',
                                 'Content-Type': 'application/json',
@@ -160,117 +176,60 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                         }
 
                         if (message === 'Clips Founded') {
-                            console.log('Clips Founded');
-                            let data = qs.stringify({
-                                'project_id': currentProjectId
+                            let data1 = JSON.stringify({
+                                "id": currentProjectId,
                             });
-                            let config = {
+
+                            let config1 = {
                                 method: 'post',
                                 maxBodyLength: Infinity,
-                                url: `https://api.getklippie.com/v1/clip/get-by-id`,
+                                url: 'https://dev-api.getklippie.com/v1/project/get-by-id',
                                 headers: {
                                     'accept': 'application/json',
-                                    'Content-Type': 'application/x-www-form-urlencoded',
-                                    'Authorization': `Bearer ${token}`
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + token
                                 },
-                                data: data
+                                data: data1
                             };
 
-                            const response = await axios.request(config);
-                            console.log(response)
-                            if (response.data.data && Array.isArray(response.data.data)) {
-                                const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
-                                    // Split the time string into parts
-                                    const timeParts = clip.duration.split(':');
+                            axios.request(config1)
+                                .then((response1) => {
+                                    console.log(JSON.stringify(response.data));
+                                    const title = response1.data.data.title;
+                                    const description = response1.data.data.description;
+                                    const src = response1.data.data.video_url;
+                                    const id = response1.data.data.id;
 
-                                    // Extract hours, minutes, seconds
-                                    const hours = parseInt(timeParts[0]);
-                                    const minutes = parseInt(timeParts[1]);
-                                    const seconds = parseInt(timeParts[2].split('.')[0]);
+                                    // Calculate the duration of the video (assuming src is the video URL)
+                                    const videoElement = document.createElement('video');
+                                    videoElement.src = src;
+                                    videoElement.onloadedmetadata = async () => {
+                                        const durationInSeconds = Math.floor(videoElement.duration);
 
-                                    // Format the time in HH:MM:SS
-                                    const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                                        // Convert duration to HH:MM:SS format
+                                        const hours = Math.floor(durationInSeconds / 3600);
+                                        const minutes = Math.floor((durationInSeconds % 3600) / 60);
+                                        const seconds = durationInSeconds % 60;
+                                        const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-                                    return {
-                                        id: clip.id,
-                                        src: clip.clip_url,
-                                        title: clip.title,
-                                        description: clip.summary,
-                                        status: clip.status,
-                                        time: formattedTime,
-                                        type: clip.type,
+                                        const newMainVideo = [
+                                            { title, description, src, id, time: formattedDuration }
+                                        ];
+
+                                        try {
+                                            updateMainVideo(newMainVideo);
+                                            setProjectId(null);
+                                            setIsSuggetionpopupOpen(false);
+                                        } catch (error) {
+                                            console.error("Error updating main video:", error);
+                                        }
                                     };
-                                }));
-                                setNewvideoClips(newvideoClips);
-                                let data1 = JSON.stringify({
-                                    "id": currentProjectId,
+                                })
+                                .catch((error) => {
+                                    console.log(error);
                                 });
-
-                                let config1 = {
-                                    method: 'post',
-                                    maxBodyLength: Infinity,
-                                    url: 'https://api.getklippie.com/v1/project/get-by-id',
-                                    headers: {
-                                        'accept': 'application/json',
-                                        'Content-Type': 'application/json',
-                                        'Authorization': 'Bearer ' + token
-                                    },
-                                    data: data1
-                                };
-
-                                axios.request(config1)
-                                    .then((response1) => {
-                                        console.log(JSON.stringify(response.data));
-                                        const title = response1.data.data.title;
-                                        const description = response1.data.data.description;
-                                        const src = response1.data.data.video_url;
-                                        const id = response1.data.data.id;
-
-                                        // Calculate the duration of the video (assuming src is the video URL)
-                                        const videoElement = document.createElement('video');
-                                        videoElement.src = src;
-                                        videoElement.onloadedmetadata = async () => {
-                                            const durationInSeconds = Math.floor(videoElement.duration);
-
-                                            // Convert duration to HH:MM:SS format
-                                            const hours = Math.floor(durationInSeconds / 3600);
-                                            const minutes = Math.floor((durationInSeconds % 3600) / 60);
-                                            const seconds = durationInSeconds % 60;
-                                            const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                                            const newMainVideo = [
-                                                { title, description, src, id, time: formattedDuration }
-                                            ];
-
-                                            try {
-                                                updateMainVideo(newMainVideo); 
-                                                setProjectId(null);
-                                                setIsSuggetionpopupOpen(false);
-                                            } catch (error) {
-                                                console.error("Error updating main video:", error);
-                                            }
-                                        };
-                                    })
-                                    .catch((error) => {
-                                        console.log(error);
-                                    });
-                                setAccordionVisible(true);
-                                setError('');
-                                console.log('New video clips:', newvideoClips);
-                            } else {
-                                console.log('Invalid API response:', response.data);
-                                setAccordionVisible(false);
-                                setProjectId('');
-                                // setError('We could not find the clips for this project');
-                                enqueueSnackbar('We could not find the clips for this project', {
-                                    variant: 'error',
-                                    autoHideDuration: 1500,
-                                    anchorOrigin: {
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    },
-                                });
-                            }
+                            setAccordionVisible(true);
+                            setError('');
                         }
 
                         // Check if the message is not in the list of unique messages
@@ -294,21 +253,21 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
         }
     }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted]);
 
-    // useEffect(() => {
-    //     setProjectId(propProjectId);
-    // }, [propProjectId])
+    useEffect(() => {
+        setProjectId(currentProjectId);
+    }, [currentProjectId])
 
     useEffect(() => {
         const token = getToken();
-        if (propProjectId && token) {
-            if (!apiCallsMadeRef.current || prevProjectIdRef.current !== propProjectId) {
+        if (cloudinaryResponse && token) {
+            if (!apiCallsMadeRef.current || prevProjectIdRef.current !== cloudinaryResponse) {
                 apiCallsMadeRef.current = true;
-                prevProjectIdRef.current = propProjectId;
-                makeApiCalls(propProjectId, token);
+                prevProjectIdRef.current = cloudinaryResponse;
+                makeApiCalls(cloudinaryResponse, token);
             }
         }
         //eslint-disable-next-line
-    }, [propProjectId, allApiCompleted]);
+    }, [cloudinaryResponse, allApiCompleted]);
 
     return (
         <div className="min-h-screen flex items-center justify-center">
@@ -317,7 +276,7 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                 {isSuggetionpopupOpen && (
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
                 )}
-                {!accordionVisible && (
+                {accordionVisible && (
                     <HomeScreen />
                 )}
                 {error && <div className="mb-4 text-red-500">{error}</div>}

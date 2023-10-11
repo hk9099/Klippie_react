@@ -21,10 +21,10 @@ import fetchUserProfile from '../components/fetchUserProfile';
 import { useSnackbar } from 'notistack';
 // import Example from "./testDropdown";
 
-const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
+const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError  }) => {
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
-  console.log(refreshProfile, 'refreshProfile');
   const { setUserName } = useUserNickname();
+  const { setUserEmail } = useUserNickname();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [initialized] = useState(false);
@@ -61,7 +61,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   useEffect(() => {
     setUserName(userNickname);
-  }, [userNickname, setUserName]);
+    setUserEmail(userEmailAddress);
+  }, [userNickname, setUserName, userEmailAddress, setUserEmail]);
   
   useEffect(() => {
     if (!initialized) {
@@ -74,7 +75,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         HOSTINGURL
       );
       setRefreshProfile(false);
-      console.log('fetchUserProfile');
     }
     // eslint-disable-next-line
   }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile ]);
@@ -119,12 +119,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   };
 
   useEffect(() => {
-    console.log('useEffect');
     localStorage.setItem("color-theme", "dark");
   }, []);
 
   useEffect(() => {
-    console.log('profile start');
     if (!initialized) {
       const encodedEmail = localStorage.getItem("_auth");
       if (encodedEmail) {
@@ -149,29 +147,21 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
       axios.request(config)
         .then((response) => {
-          console.log('fetch profile');
           // console.log(response.data, 'response.data');
           var userNickname = response.data.name;
           setUserNickname(userNickname);
           const userEmailAddress = response.data.email;
           setUserEmailAddress(userEmailAddress);
           const userAvatar = response.data.profile_image;
-          console.log(userAvatar, 'userAvatar');
           setUserAvatar(userAvatar);
           const userAvatarUrl = response.data.avatar;
-          console.log(userAvatarUrl, 'userAvatarUrl');
           setUserAvatar(userAvatarUrl);
 
-          console.log('got profile')
 
           if (userAvatar === null) {
-            console.log('userAvatar is null');
             if (userAvatarUrl) {
-              console.log('userAvatarUrl is not null');
               setUserAvatar(userAvatarUrl);
             } else {
-              console.log('userAvatarUrl is null');
-              console.log(userEmailAddress);
               generateAvatar(userEmailAddress)
                 .then((avatarUrl) => {
                   setUserAvatar(avatarUrl);
@@ -188,7 +178,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         .catch((error) => {
           console.log(error);
         });
-      console.log('profile end');
     }
     // eslint-disable-next-line
   }, []);
@@ -354,7 +343,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://api.getklippie.com/v1/project/stats',
+      url: 'https://dev-api.getklippie.com/v1/project/stats',
       headers: {
         'accept': 'application/json',
         'Content-Type': 'application/json',
@@ -432,82 +421,82 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             console.log(error);
           });
 
-        //video clips
-        let data = qs.stringify({
-          'project_id': clickedProjectid
-        });
+        // //video clips
+        // let data = qs.stringify({
+        //   'project_id': clickedProjectid
+        // });
 
-        let config = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: `${HOSTINGURL}/v1/clip/get-by-id`,
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${token}`
-          },
-          data: data
-        };
+        // let config = {
+        //   method: 'post',
+        //   maxBodyLength: Infinity,
+        //   url: `${HOSTINGURL}/v1/clip/get-by-id`,
+        //   headers: {
+        //     'accept': 'application/json',
+        //     'Content-Type': 'application/x-www-form-urlencoded',
+        //     'Authorization': `Bearer ${token}`
+        //   },
+        //   data: data
+        // };
 
-        try {
-          const response = await axios.request(config);
-          console.log(response)
-          if (response.data.data && Array.isArray(response.data.data)) {
-            const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
-              // Split the time string into parts
-              const timeParts = clip.duration.split(':');
+        // try {
+        //   const response = await axios.request(config);
+        //   console.log(response)
+        //   if (response.data.data && Array.isArray(response.data.data)) {
+        //     const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
+        //       // Split the time string into parts
+        //       const timeParts = clip.duration.split(':');
 
-              // Extract hours, minutes, seconds
-              const hours = parseInt(timeParts[0]);
-              const minutes = parseInt(timeParts[1]);
-              const seconds = parseInt(timeParts[2].split('.')[0]);
+        //       // Extract hours, minutes, seconds
+        //       const hours = parseInt(timeParts[0]);
+        //       const minutes = parseInt(timeParts[1]);
+        //       const seconds = parseInt(timeParts[2].split('.')[0]);
 
-              // Format the time in HH:MM:SS
-              const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        //       // Format the time in HH:MM:SS
+        //       const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-              return {
-                id: clip.id,
-                src: clip.clip_url,
-                title: clip.title,
-                description: clip.summary,
-                status: clip.status,
-                time: formattedTime,
-                type: clip.type,
-              };
-            }));
-            setNewvideoClips(newvideoClips);
-            setAccordionVisible(true);
-            setError('');
-            navigate(`/dashboard/${projectData[index].id}`);
-          } else {
-            console.log('Invalid API response:', response.data);
-            setAccordionVisible(false);
-            console.log(clickedProjectid, 'clickedProjectid')
-            setProjectId('');
-            // setError('We could not find the clips for this project');
-            enqueueSnackbar('We could not find the clips for this project', {
-              variant: 'error',
-              autoHideDuration: 1500,
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right',
-              },
-            });
-          }
-        } catch (error) {
-          setAccordionVisible(false);
-          console.log(clickedProjectid, 'clickedProjectid')
-          setProjectId('');
-          // setError('We could not find the clips for this project');
-          enqueueSnackbar('We could not find the clips for this project', {
-            variant: 'error',
-            autoHideDuration: 1500,
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'right',
-            },
-          });
-        }
+        //       return {
+        //         id: clip.id,
+        //         src: clip.clip_url,
+        //         title: clip.title,
+        //         description: clip.summary,
+        //         status: clip.status,
+        //         time: formattedTime,
+        //         type: clip.type,
+        //       };
+        //     }));
+        //     setNewvideoClips(newvideoClips);
+        //     setAccordionVisible(true);
+        //     setError('');
+        //     navigate(`/dashboard/${projectData[index].id}`);
+        //   } else {
+        //     console.log('Invalid API response:', response.data);
+        //     setAccordionVisible(false);
+        //     console.log(clickedProjectid, 'clickedProjectid')
+        //     setProjectId('');
+        //     // setError('We could not find the clips for this project');
+        //     enqueueSnackbar('We could not find the clips for this project', {
+        //       variant: 'error',
+        //       autoHideDuration: 1500,
+        //       anchorOrigin: {
+        //         vertical: 'top',
+        //         horizontal: 'right',
+        //       },
+        //     });
+        //   }
+        // } catch (error) {
+        //   setAccordionVisible(false);
+        //   console.log(clickedProjectid, 'clickedProjectid')
+        //   setProjectId('');
+        //   // setError('We could not find the clips for this project');
+        //   enqueueSnackbar('We could not find the clips for this project', {
+        //     variant: 'error',
+        //     autoHideDuration: 1500,
+        //     anchorOrigin: {
+        //       vertical: 'top',
+        //       horizontal: 'right',
+        //     },
+        //   });
+        // }
       }
     }
 
@@ -516,11 +505,13 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
 
   const handleAddNewVideo = () => {
-    if (isDashboard) {
-      return;
-    }
-    setShowModal(true); 
-    // navigate('/dashboard');
+      console.log('isDashboard', isDashboard);
+      setAccordionVisible(false);
+      setProjectId('');
+
+    
+    // setShowModal(true); 
+    navigate('/dashboard');
   };
 
   const handleFormSubmit = (projectId) => {
@@ -639,7 +630,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 ) : (
                   <div className={`overflow-hidden ${!open && "hidden"} relative`}>
                     {lines
-                      .filter((line) => line && line.trim() !== "")
+                      .filter((line) => line && line.trim())
                       .map((line, index) => (
                         <div
                           key={index}

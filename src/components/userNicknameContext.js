@@ -9,8 +9,10 @@ export function useUserNickname() {
 
 export function UserNicknameProvider({ children }) {
     const [userName, setUserName] = useState("");
+    const [userEmail, setUserEmail] = useState("");
+    
     return (
-        <UserNicknameContext.Provider value={{ userName, setUserName }}>
+        <UserNicknameContext.Provider value={{ userName, setUserName ,userEmail, setUserEmail}}>
             {children}
         </UserNicknameContext.Provider>
     );
