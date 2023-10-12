@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import qs from 'qs';
 import AccordionSection from '../components/AccordionSection';
@@ -22,6 +23,8 @@ var getToken = () => {
 };
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
+    const navigate = useNavigate();
+    const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
     const [currentProjectId, setProjectId] = useState();
     const { enqueueSnackbar } = useSnackbar();
@@ -69,7 +72,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
             }
 
             // API 1
-            setAccordionVisible(true);
+            setAccordionVisible(false);
             setAllApiCompleted(false);
             setError('');
             setIsLoading(true);
@@ -124,7 +127,6 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
             setIsLoading(false);
             setAllApiCompleted(true);
             setIsSuggetionpopupOpen(true);
-            setAccordionVisible(true);
             setError('');
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -148,7 +150,6 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
     useEffect(() => {
         const token = getToken();
         if (currentProjectId && token) {
-            // Step 3: Poll the project/stats API every 10 seconds
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
                     try {
@@ -171,64 +172,14 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                         console.log(response.data, 'response.data');
                         const message = response.data.data;
 
+                        setAccordionVisible(true);
                         if (message === "Transcribing video completed") {
                             setIsApiCompleted(true);
                         }
 
                         if (message === 'Clips Founded') {
-                            let data1 = JSON.stringify({
-                                "id": currentProjectId,
-                            });
-
-                            let config1 = {
-                                method: 'post',
-                                maxBodyLength: Infinity,
-                                url: 'https://dev-api.getklippie.com/v1/project/get-by-id',
-                                headers: {
-                                    'accept': 'application/json',
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer ' + token
-                                },
-                                data: data1
-                            };
-
-                            axios.request(config1)
-                                .then((response1) => {
-                                    console.log(JSON.stringify(response.data));
-                                    const title = response1.data.data.title;
-                                    const description = response1.data.data.description;
-                                    const src = response1.data.data.video_url;
-                                    const id = response1.data.data.id;
-
-                                    // Calculate the duration of the video (assuming src is the video URL)
-                                    const videoElement = document.createElement('video');
-                                    videoElement.src = src;
-                                    videoElement.onloadedmetadata = async () => {
-                                        const durationInSeconds = Math.floor(videoElement.duration);
-
-                                        // Convert duration to HH:MM:SS format
-                                        const hours = Math.floor(durationInSeconds / 3600);
-                                        const minutes = Math.floor((durationInSeconds % 3600) / 60);
-                                        const seconds = durationInSeconds % 60;
-                                        const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                                        const newMainVideo = [
-                                            { title, description, src, id, time: formattedDuration }
-                                        ];
-
-                                        try {
-                                            updateMainVideo(newMainVideo);
-                                            setProjectId(null);
-                                            setIsSuggetionpopupOpen(false);
-                                        } catch (error) {
-                                            console.error("Error updating main video:", error);
-                                        }
-                                    };
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                });
-                            setAccordionVisible(true);
+                            navigate(`/dashboard/${currentProjectId}`);
+                            setProjectId('')
                             setError('');
                         }
 
@@ -251,7 +202,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
             // Clean up the interval when the component unmounts or when projectId/token change
             return () => clearInterval(intervalId);
         }
-    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted]);
+    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted , routeProjectId]);
 
     useEffect(() => {
         setProjectId(currentProjectId);
@@ -276,13 +227,13 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                 {isSuggetionpopupOpen && (
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
                 )}
-                {accordionVisible && (
+                {/* {!accordionVisible && (
                     <HomeScreen />
-                )}
+                )} */}
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
             {closeButton}
-            {!isLoading && newvideoClips.length > 0 && accordionVisible && (
+            {!isLoading  && accordionVisible && (
                 <AccordionSection videoClips={newvideoClips} />
             )}
         </div>

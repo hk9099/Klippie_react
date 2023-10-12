@@ -1,4 +1,4 @@
-import React, { useState, useRef ,useEffect } from 'react';
+import React, { useState, useRef  } from 'react';
 import ReactEmoji from 'react-emoji-render';
 import Navbar from '../components/Navbar';
 import { useSnackbar } from 'notistack';
@@ -43,30 +43,16 @@ function MyProgressBar({ bytesUploaded, totalBytes }) {
     );
 }
 
-// var getToken = () => {
-//     const encodedToken = localStorage.getItem('_sodfhgiuhih');
-
-//     if (encodedToken) {
-//         const decodedToken = atob(encodedToken);
-//         const userInfo = JSON.parse(decodedToken);
-//         return userInfo.token.access_token;
-//     } else {
-//         return null;
-//     }
-// };
-
 function HomeScreen({ userName }) {
     const [isDragging, setIsDragging] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const { setCloudinaryResponse } = useCloudinary(); 
-    const [firstChunkResponse, setFirstChunkResponse] = useState(null);
     const [isFileUploaded, setIsFileUploaded] = useState();
     const [isFileUploadedInput, setIsFileUploadedInput] = useState();
     const [isFirstChunkLogged, setIsFirstChunkLogged] = useState(false);
     const [isNewVideoUpload, setIsNewVideoUpload] = useState(false);
     const [bytesUploaded, setBytesUploaded] = useState(0);
     const [totalBytes, setTotalBytes] = useState(0);
-    const [conditionMet, setConditionMet] = useState(false); // Flag to track the condition
 
 
     const fileInputRef = useRef(null);
@@ -144,7 +130,7 @@ function HomeScreen({ userName }) {
         const POST_URL = `https://api.cloudinary.com/v1_1/${YOUR_CLOUD_NAME}/auto/upload`;
 
         const XUniqueUploadId = +new Date();
-        const sliceSize = 2 * 1024 * 1024; // Send chunks of 50MB
+        const sliceSize = 5 * 1024 * 1024; // Send chunks of 50MB
         let start = 0;
 
         // Calculate the total number of chunks
@@ -159,6 +145,7 @@ function HomeScreen({ userName }) {
     };
 
     const sendChunk = async (chunk, start, end, size, XUniqueUploadId, POST_URL, YOUR_CLOUD_NAME, YOUR_UNSIGNED_UPLOAD_PRESET) => {
+        console.log(`bytes ${start}-${end}/${size}`)
         const formdata = new FormData();
         formdata.append("file", chunk);
         formdata.append("cloud_name", YOUR_CLOUD_NAME);
@@ -167,6 +154,7 @@ function HomeScreen({ userName }) {
 
         const headers = {
             "X-Unique-Upload-Id": XUniqueUploadId,
+            "Content-Range": `bytes ${start}-${end}/${size}`,
         };
 
         try {
@@ -178,10 +166,9 @@ function HomeScreen({ userName }) {
 
             if (response.ok) {
                 const responseData = await response.json();
-
+                console.log(responseData);
                 if (start === 0 && !isFirstChunkLogged) {
                     setIsFirstChunkLogged(true);
-                    setFirstChunkResponse(responseData); // Set firstChunkResponse here
                 }
 
                 if (isNewVideoUpload) {
@@ -191,37 +178,25 @@ function HomeScreen({ userName }) {
                 setTotalBytes(size);
 
                 if (end + 1 === size) {
-                    setConditionMet(true); // Set the flag when the condition is met
+                    console.log(responseData);
                     setIsFileUploaded(false);
                     setIsFileUploadedInput(false);
                     setIsFileUploaded(false);
                     setBytesUploaded(0);
                     setTotalBytes(0);
                     setIsFirstChunkLogged(false);
-                    setCloudinaryResponse(firstChunkResponse); // Send firstChunkResponse here
+                    setCloudinaryResponse(responseData);
                 }
 
                 
             } else {
                 console.error(`Failed to upload chunk ${start}-${end}`);
-                console.error(await response.text()); // Log the error response
+                console.error(await response.text());
             }
         } catch (error) {
             console.error(`Error uploading chunk ${start}-${end}: ${error.message}`);
         }
     };
-    useEffect(() => {
-        if (conditionMet && firstChunkResponse) {
-            console.log(firstChunkResponse);
-            setIsFileUploaded(false);
-            setIsFileUploadedInput(false);
-            setIsFileUploaded(false);
-            setBytesUploaded(0);
-            setTotalBytes(0);
-            setIsFirstChunkLogged(false);
-            setCloudinaryResponse(firstChunkResponse);
-        }
-    }, [conditionMet, firstChunkResponse , setCloudinaryResponse]);
     return (
         <>
             <div className="flex flex-col h-screen " onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>

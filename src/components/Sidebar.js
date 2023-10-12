@@ -87,7 +87,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     fetchProjectsData(setProjectData, setLines, setIsLoadingHistory);
     for (let i = 0; i < Math.min(3, projectData.length); i++) {
     }
-  }, [isApiCompleted, projectData.length]);
+    // eslint-disable-next-line
+  }, [isApiCompleted]);
 
   const handleUpdateProfileSuccess = () => {
     // Call fetchUserProfile to refresh the user's profile
@@ -368,136 +369,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     }
 
     if (message === 'Clips Founded') {
-      if (token) {
-        const clickedProject = projectData[index];
-        //console.log('Clicked Project ID:', clickedProject.id);
-        var clickedProjectid = clickedProject.id;
-        //main video
-        let maindata = JSON.stringify({
-          "id": clickedProjectid
-        });
-
-        let mainconfig = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: `${HOSTINGURL}/v1/project/get-by-id`,
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          data: maindata
-        };
-
-        axios.request(mainconfig)
-          .then((response) => {
-            console.log(response.data, 'response.data');
-            const title = response.data.data.title;
-            const description = response.data.data.description;
-            const src = response.data.data.video_url;
-            const id = response.data.data.id;
-            const type = response.data.data.type;
-
-            // Calculate the duration of the video (assuming src is the video URL)
-            const videoElement = document.createElement('video');
-            videoElement.src = src;
-            videoElement.onloadedmetadata = () => {
-              const durationInSeconds = Math.floor(videoElement.duration);
-
-              // Convert duration to HH:MM:SS format
-              const hours = Math.floor(durationInSeconds / 3600);
-              const minutes = Math.floor((durationInSeconds % 3600) / 60);
-              const seconds = durationInSeconds % 60;
-              const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-              const newMainVideo = [
-                { title, description, src, id, time: formattedDuration, type }
-              ];
-              updateMainVideo(newMainVideo);
-              setnewMainVideo(newMainVideo);
-            };
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-
-        // //video clips
-        // let data = qs.stringify({
-        //   'project_id': clickedProjectid
-        // });
-
-        // let config = {
-        //   method: 'post',
-        //   maxBodyLength: Infinity,
-        //   url: `${HOSTINGURL}/v1/clip/get-by-id`,
-        //   headers: {
-        //     'accept': 'application/json',
-        //     'Content-Type': 'application/x-www-form-urlencoded',
-        //     'Authorization': `Bearer ${token}`
-        //   },
-        //   data: data
-        // };
-
-        // try {
-        //   const response = await axios.request(config);
-        //   console.log(response)
-        //   if (response.data.data && Array.isArray(response.data.data)) {
-        //     const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
-        //       // Split the time string into parts
-        //       const timeParts = clip.duration.split(':');
-
-        //       // Extract hours, minutes, seconds
-        //       const hours = parseInt(timeParts[0]);
-        //       const minutes = parseInt(timeParts[1]);
-        //       const seconds = parseInt(timeParts[2].split('.')[0]);
-
-        //       // Format the time in HH:MM:SS
-        //       const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-        //       return {
-        //         id: clip.id,
-        //         src: clip.clip_url,
-        //         title: clip.title,
-        //         description: clip.summary,
-        //         status: clip.status,
-        //         time: formattedTime,
-        //         type: clip.type,
-        //       };
-        //     }));
-        //     setNewvideoClips(newvideoClips);
-        //     setAccordionVisible(true);
-        //     setError('');
-        //     navigate(`/dashboard/${projectData[index].id}`);
-        //   } else {
-        //     console.log('Invalid API response:', response.data);
-        //     setAccordionVisible(false);
-        //     console.log(clickedProjectid, 'clickedProjectid')
-        //     setProjectId('');
-        //     // setError('We could not find the clips for this project');
-        //     enqueueSnackbar('We could not find the clips for this project', {
-        //       variant: 'error',
-        //       autoHideDuration: 1500,
-        //       anchorOrigin: {
-        //         vertical: 'top',
-        //         horizontal: 'right',
-        //       },
-        //     });
-        //   }
-        // } catch (error) {
-        //   setAccordionVisible(false);
-        //   console.log(clickedProjectid, 'clickedProjectid')
-        //   setProjectId('');
-        //   // setError('We could not find the clips for this project');
-        //   enqueueSnackbar('We could not find the clips for this project', {
-        //     variant: 'error',
-        //     autoHideDuration: 1500,
-        //     anchorOrigin: {
-        //       vertical: 'top',
-        //       horizontal: 'right',
-        //     },
-        //   });
-        // }
-      }
+      navigate(`/dashboard/${projectData[index].id}`);
     }
 
    

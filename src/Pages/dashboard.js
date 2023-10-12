@@ -47,12 +47,12 @@ export default function Dashboard() {
       setAccordionVisible(false);
       setProjectId('');
       return;
+    } else {
+      navigate(`/dashboard/${routeProjectId}`);
     }
     const handleProjectClick = async (index) => {
       const token = getToken();
       console.log('Token:', token);
-      if (token) {
-        //main video 
         let maindata = JSON.stringify({
           "id": routeProjectId
         });
@@ -69,97 +69,59 @@ export default function Dashboard() {
           data: maindata
         };
 
-        axios.request(mainconfig)
-          .then((response) => {
-            console.log(response.data, 'response.data');
-            const title = response.data.data.title;
-            const description = response.data.data.description;
-            const src = response.data.data.video_url;
-            const id = response.data.data.id;
-            const type = response.data.data.type;
+        const response = await axios.request(mainconfig);
+        console.log(response.data, 'responseeeeeeeeeeee.data');
+      const title = response.data.data.title;
+      const description = response.data.data.description;
+      const src = response.data.data.video_url;
+      const id = response.data.data.id;
+      const type = response.data.data.type;
 
-            // Calculate the duration of the video (assuming src is the video URL)
-            const videoElement = document.createElement('video');
-            videoElement.src = src;
-            videoElement.onloadedmetadata = () => {
-              const durationInSeconds = Math.floor(videoElement.duration);
+      // Calculate the duration of the video (assuming src is the video URL)
+      const videoElement = document.createElement('video');
+      videoElement.src = src;
+      videoElement.onloadedmetadata = () => {
+        const durationInSeconds = Math.floor(videoElement.duration);
 
-              // Convert duration to HH:MM:SS format
-              const hours = Math.floor(durationInSeconds / 3600);
-              const minutes = Math.floor((durationInSeconds % 3600) / 60);
-              const seconds = durationInSeconds % 60;
-              const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        // Convert duration to HH:MM:SS format
+        const hours = Math.floor(durationInSeconds / 3600);
+        const minutes = Math.floor((durationInSeconds % 3600) / 60);
+        const seconds = durationInSeconds % 60;
+        const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-              var newMainVideo = [
-                { title, description, src, id, time: formattedDuration, type }
-              ];
-              updateMainVideo(newMainVideo);
-              setnewMainVideo(newMainVideo);
-            };
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        var newMainVideo = [
+          { title, description, src, id, time: formattedDuration, type }
+        ];
+        updateMainVideo(newMainVideo);
+        setnewMainVideo(newMainVideo);
+      }; 
+      if (response.data.data.clips && Array.isArray(response.data.data.clips)) {
+        const newvideoClips = await Promise.all(response.data.data.clips.map(async (clip) => {
+          // Split the time string into parts
+          const timeParts = clip.duration.split(':');
 
-        //video clips
-        let data = qs.stringify({
-          'project_id': routeProjectId
-        });
+          // Extract hours, minutes, seconds
+          const hours = parseInt(timeParts[0]);
+          const minutes = parseInt(timeParts[1]);
+          const seconds = parseInt(timeParts[2].split('.')[0]);
 
-        let config = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: `${HOSTINGURL}/v1/clip/get-by-id`,
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${token}`
-          },
-          data: data
-        };
+          // Format the time in HH:MM:SS
+          const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-        try {
-          const response = await axios.request(config);
-          console.log(response)
-          if (response.data.data && Array.isArray(response.data.data)) {
-            const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
-              // Split the time string into parts
-              const timeParts = clip.duration.split(':');
-
-              // Extract hours, minutes, seconds
-              const hours = parseInt(timeParts[0]);
-              const minutes = parseInt(timeParts[1]);
-              const seconds = parseInt(timeParts[2].split('.')[0]);
-
-              // Format the time in HH:MM:SS
-              const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-              return {
-                id: clip.id,
-                src: clip.clip_url,
-                title: clip.title,
-                description: clip.summary,
-                status: clip.status,
-                time: formattedTime,
-                type: clip.type,
-              };
-            }));
-            setNewvideoClips(newvideoClips);
-            console.log(newvideoClips, 'newvideoClips fetch');
-            setAccordionVisible(true);
-            navigate(`/dashboard/${routeProjectId}`);
-          } else {
-            console.log('Invalid API response:', response.data);
-            setAccordionVisible(false);
-            setProjectId('');
-            // setError('We could not find the clips for this project');
-          }
-        } catch (error) {
-          setAccordionVisible(false);
-          setProjectId('');
-          // setError('We could not find the clips for this project');
-        }
-      }
+          return {
+            id: clip.id,
+            src: clip.clip_url,
+            title: clip.title,
+            description: clip.summary,
+            status: clip.status,
+            time: formattedTime,
+            type: clip.type,
+          };
+        }));
+        setNewvideoClips(newvideoClips);
+        setAccordionVisible(true);
+        
+      } 
     };
 
     handleProjectClick()
