@@ -53,8 +53,6 @@ function HomeScreen({ userName }) {
     const [isNewVideoUpload, setIsNewVideoUpload] = useState(false);
     const [bytesUploaded, setBytesUploaded] = useState(0);
     const [totalBytes, setTotalBytes] = useState(0);
-
-
     const fileInputRef = useRef(null);
 
     const handleFileChange = (e) => {

@@ -9,12 +9,13 @@ import "../assets/css/Sidebar.css";
 import { updateMainVideo } from "../components/data";
 import { Analytics } from '@vercel/analytics/react';
 import axios from "axios";
-import qs from "qs";
 import { useNavigate } from 'react-router-dom';
 import { useUserNickname } from '../components/userNicknameContext.js';
 import { useCloudinary } from '../components/CloudinaryContext.js';
+import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
 
 export default function Dashboard() {
+  const { setClipsFoundStatus } = useClipsFoundStatus();
   const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams();
   const { cloudinaryResponse } = useCloudinary();
@@ -48,6 +49,7 @@ export default function Dashboard() {
       setProjectId('');
       return;
     } else {
+      setClipsFoundStatus(true);
       navigate(`/dashboard/${routeProjectId}`);
     }
     const handleProjectClick = async (index) => {
@@ -152,7 +154,7 @@ export default function Dashboard() {
           />
         <div className="w-full overflow-x-auto px-3 z-30">
           <Modal className="z-50" />
-          {accordionVisible && <Navbar />}
+          {/* {accordionVisible && <Navbar />} */}
           {accordionVisible || cloudinaryResponse ? (
             <Steps
             projectId={projectId}

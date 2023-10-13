@@ -10,7 +10,6 @@ import AccountModal from "./AccountModal";
 import axios from "axios";
 import qs from "qs";
 import DropdownMenu from "./DropdownMenu";
-import { updateMainVideo } from "./data";
 import { BsThreeDots } from "react-icons/bs";
 import fetchProjectsData from '../components/fetchProjectData';
 import { FiEdit2 } from "react-icons/fi";
@@ -19,9 +18,13 @@ import { useSidebarContext } from '../components/SidebarContext';
 import { useUserNickname } from "./userNicknameContext";
 import fetchUserProfile from '../components/fetchUserProfile';
 import { useSnackbar } from 'notistack';
+import { useCloudinary } from '../components/CloudinaryContext.js';
+import { useClipsFoundStatus } from './ClipsFoundContext';
 // import Example from "./testDropdown";
 
-const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError  }) => {
+const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
+  const { setCloudinaryResponse } = useCloudinary();
+  const { clipsFound } = useClipsFoundStatus();
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { setUserName } = useUserNickname();
   const { setUserEmail } = useUserNickname();
@@ -63,7 +66,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     setUserName(userNickname);
     setUserEmail(userEmailAddress);
   }, [userNickname, setUserName, userEmailAddress, setUserEmail]);
-  
+
   useEffect(() => {
     if (!initialized) {
       fetchUserProfile(
@@ -77,7 +80,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
-  }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile ]);
+  }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
 
 
   var HOSTINGURL = process.env.REACT_APP_DEV_HOSTING_URL;
@@ -372,18 +375,17 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       navigate(`/dashboard/${projectData[index].id}`);
     }
 
-   
+
   };
 
 
   const handleAddNewVideo = () => {
-      console.log('isDashboard', isDashboard);
-      setAccordionVisible(false);
-      setProjectId('');
-
-    
-    // setShowModal(true); 
+    console.log('isDashboard', isDashboard);
+    setAccordionVisible(false);
+    setProjectId('');
+    setCloudinaryResponse(null);
     navigate('/dashboard');
+    // setShowModal(true); 
   };
 
   const handleFormSubmit = (projectId) => {
@@ -440,8 +442,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
         <div className="pt-4 pb-3">
           <button
-            className={`flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full cursor-pointer dark:text-white  border-animation ${!open && "justify-center"
-              }`}
+            disabled={!clipsFound}
+            className={`flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full  dark:text-white  border-animation ${!open && "justify-center"
+              }${clipsFound ? "cursor-pointer" : "bg-gray-200 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed"}`}
             onClick={handleAddNewVideo}
           >
             <div
@@ -485,83 +488,83 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               </span>
             </div>
           ) : (
-              <div className=" flex-grow overflow-y-auto backdrop-blur-xl history">
-                {isLoadingHistory ? (
-                  <div className="flex items-center justify-center mb-4 text-blue-500 h-[87%]">
-                    <span className="" style={{ userSelect: "none" }}>
-                      <RotatingLines
-                        strokeColor="grey"
-                        strokeWidth="5"
-                        animationDuration="0.75"
-                        width="25"
-                        visible={true}
-                      />
-                    </span>
-                  </div>
+            <div className=" flex-grow overflow-y-auto backdrop-blur-xl history">
+              {isLoadingHistory ? (
+                <div className="flex items-center justify-center mb-4 text-blue-500 h-[87%]">
+                  <span className="" style={{ userSelect: "none" }}>
+                    <RotatingLines
+                      strokeColor="grey"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      width="25"
+                      visible={true}
+                    />
+                  </span>
+                </div>
 
-                ) : (
-                  <div className={`overflow-hidden ${!open && "hidden"} relative`}>
-                    {lines
-                      .filter((line) => line && line.trim())
-                      .map((line, index) => (
-                        <div
-                          key={index}
-                          className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
-                          onMouseEnter={() => setHoveredIndex(index)}
-                          onMouseLeave={() => setHoveredIndex(-1)}
-                        >
-                          {editIndex === index ? (
-                            <div className="width-full row relative">
-                              <input
-                                className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
-                                type="text"
-                                value={tempLines[index]}
-                                onChange={(event) => handleEditChange(event, index)}
-                              />
-                              <button onClick={() => handleSaveClick(index)} className="save-button">
-                                <AiOutlineCheck />
-                              </button>
-                              <button onClick={() => handleCancelClick()} className="cancel-button">
-                                <AiOutlineClose />
-                              </button>
-                            </div>
-                          ) : (
-                            <p
-                              className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
-                              style={{
-                                width: hoveredIndex === index ? "188px" : "243px",
-                                // width: "100%",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                userSelect: "none",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => {
-                                setActiveIndex(index);
-                                handleProjectClick(index);
-                              }}
-                            >
-                              {line}
-                            </p>
-                          )}
-                          <div className="hover-actions" >
-                            {editIndex !== index && (
-                              <>
-                                <button onClick={() => deleteLine(index)} className="delete-button">
-                                  <AiOutlineDelete />
-                                </button>
-                                <button onClick={() => handleEditClick(index)} className="edit-button">
-                                  <FiEdit2 />
-                                </button>
-                              </>
-                            )}
+              ) : (
+                <div className={`overflow-hidden ${!open && "hidden"} relative`}>
+                  {lines
+                    .filter((line) => line && line.trim())
+                    .map((line, index) => (
+                      <div
+                        key={index}
+                        className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""}`}
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(-1)}
+                      >
+                        {editIndex === index ? (
+                          <div className="width-full row relative">
+                            <input
+                              className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
+                              type="text"
+                              value={tempLines[index]}
+                              onChange={(event) => handleEditChange(event, index)}
+                            />
+                            <button onClick={() => handleSaveClick(index)} className="save-button">
+                              <AiOutlineCheck />
+                            </button>
+                            <button onClick={() => handleCancelClick()} className="cancel-button">
+                              <AiOutlineClose />
+                            </button>
                           </div>
+                        ) : (
+                          <p
+                            className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                            style={{
+                              width: hoveredIndex === index ? "188px" : "243px",
+                              // width: "100%",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              userSelect: "none",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              setActiveIndex(index);
+                              handleProjectClick(index);
+                            }}
+                          >
+                            {line}
+                          </p>
+                        )}
+                        <div className="hover-actions" >
+                          {editIndex !== index && (
+                            <>
+                              <button onClick={() => deleteLine(index)} className="delete-button">
+                                <AiOutlineDelete />
+                              </button>
+                              <button onClick={() => handleEditClick(index)} className="edit-button">
+                                <FiEdit2 />
+                              </button>
+                            </>
+                          )}
                         </div>
-                      ))}
-                  </div>
-                )}
-              </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
           )}
         </div>
 

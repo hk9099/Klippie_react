@@ -4,12 +4,14 @@ import axios from 'axios';
 import qs from 'qs';
 import AccordionSection from '../components/AccordionSection';
 // import Shuffleloader from '../components/shuffleloader.js';
-import { updateMainVideo } from '../components/data';
+// import { updateMainVideo } from '../components/data';
 import { useSidebarContext } from '../components/SidebarContext.js';
 import { useSnackbar } from 'notistack';
 import { AiOutlineClose } from 'react-icons/ai';
 import HomeScreen from './HomeScreen';
 import Suggetionpopup from '../components/Suggetionpopup';
+import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
+
 var getToken = () => {
     const encodedToken = localStorage.getItem('_sodfhgiuhih');
 
@@ -23,6 +25,7 @@ var getToken = () => {
 };
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
+    const { setClipsFoundStatus } = useClipsFoundStatus();
     const navigate = useNavigate();
     const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
@@ -41,6 +44,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
     const [accordionVisible, setAccordionVisible] = useState(true);
     const { setIsApiCompleted } = useSidebarContext();
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
+    
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
@@ -127,6 +131,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
             setIsLoading(false);
             setAllApiCompleted(true);
             setIsSuggetionpopupOpen(true);
+            setClipsFoundStatus(false);
             setError('');
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -172,15 +177,16 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                         console.log(response.data, 'response.data');
                         const message = response.data.data;
 
-                        setAccordionVisible(true);
                         if (message === "Transcribing video completed") {
                             setIsApiCompleted(true);
+                            setClipsFoundStatus(false);
                         }
 
                         if (message === 'Clips Founded') {
                             navigate(`/dashboard/${currentProjectId}`);
                             setProjectId('')
                             setError('');
+                            setClipsFoundStatus(true);
                         }
 
                         // Check if the message is not in the list of unique messages
@@ -197,12 +203,10 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                 };
 
                 fetchData();
-            }, 10000); // 10 seconds
-
-            // Clean up the interval when the component unmounts or when projectId/token change
+            }, 10000); 
             return () => clearInterval(intervalId);
         }
-    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted , routeProjectId]);
+    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted , routeProjectId , navigate]);
 
     useEffect(() => {
         setProjectId(currentProjectId);
@@ -227,9 +231,9 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                 {isSuggetionpopupOpen && (
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
                 )}
-                {/* {!accordionVisible && (
+                {!accordionVisible && (
                     <HomeScreen />
-                )} */}
+                )}
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
             {closeButton}

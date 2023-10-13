@@ -8,6 +8,7 @@ import { SidebarProvider } from './components/SidebarContext.js';
 import { SnackbarProvider } from 'notistack';
 import { useParams } from 'react-router-dom';
 import Test from './components/ContectUs.js';
+import { ClipsFoundProvider } from './components/ClipsFoundContext.js';
 const Signin = lazy(() => import('./Pages/signin.js'));
 const Signup = lazy(() => import('./Pages/signup.js'));
 const Forgotpassword = lazy(() => import('./Pages/forgotpassword.js'));
@@ -35,6 +36,7 @@ function App() {
       }>
 
         <UserNicknameProvider>
+          <ClipsFoundProvider>
           <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={1500}>
             <SidebarProvider>
               <CloudinaryProvider>
@@ -58,7 +60,8 @@ function App() {
                 </Routes>
               </CloudinaryProvider>
             </SidebarProvider>
-          </SnackbarProvider>
+            </SnackbarProvider>
+          </ClipsFoundProvider>
         </UserNicknameProvider>
       </Suspense>
     </Router>
