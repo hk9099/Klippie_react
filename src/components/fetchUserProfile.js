@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { TokenManager } from '../components/getToken.js';
 
 // Define the async function to fetch user profile
+var userToken = TokenManager.getToken();
 const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL) => {
-    // console.log('profile start');
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -24,8 +25,6 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
         //     navigate("/");
         // }
 
-        const token = getToken();
-
         try {
             const response = await axios.post(
                 `${HOSTINGURL}/v1/auth/profile`,
@@ -33,7 +32,7 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
                 {
                     headers: {
                         accept: 'application/json',
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${userToken}`,
                     },
                 }
             );
@@ -82,8 +81,6 @@ const generateAvatar = async (emailAddress, setUserAvatar, getToken, HOSTINGURL)
     try {
         const response = await axios.get(avatarUrl);
         setUserAvatar(response.config.url);
-        var token = getToken();
-
         let data = JSON.stringify({
             avatar: response.config.url,
         });
@@ -96,14 +93,13 @@ const generateAvatar = async (emailAddress, setUserAvatar, getToken, HOSTINGURL)
             headers: {
                 accept: 'application/json',
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${userToken}`,
             },
             data: data,
         };
 
+        //eslint-disable-next-line
         const updateResponse = await axios.request(config);
-        // console.log(updateResponse.data);
-        // console.log('account update end');
     } catch (error) {
         console.log(error);
         throw error;

@@ -4,6 +4,7 @@ import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { useSnackbar } from 'notistack';
 // import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { TokenManager } from '../components/getToken.js';
 
 function Logout({ showLogout }) {
     const { enqueueSnackbar } = useSnackbar();
@@ -31,6 +32,7 @@ function Logout({ showLogout }) {
             const timer = setTimeout(() => {
                 localStorage.removeItem('_auth');
                 localStorage.removeItem('_sodfhgiuhih');
+                TokenManager.removeToken();
                 setIsLoading(false);
                 navigate('/');
             }, 1500);

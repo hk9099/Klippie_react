@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import UserModal from '../components/UserModal.js';
 import { useSnackbar } from 'notistack';
+import { TokenManager } from '../components/getToken.js';
 
 var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
@@ -30,33 +31,35 @@ const AccountModal = ({
     userEmailAddress,
     avatar,
 }) => {
-    const [token, setToken] = useState(null);
+    // const [token, setToken] = useState(null);
+    const userToken = TokenManager.getToken();
     const { enqueueSnackbar } = useSnackbar();
-    const [googleToken, setGoogleToken] = useState(null);
+    // const [googleToken, setGoogleToken] = useState(null);
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    //eslint-disable-next-line
     const [social, setSocial] = useState(false);
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(!social ? 'profile' : 'changePassword');
 
-    useEffect(() => {
-        const encodedToken = localStorage.getItem('_sodfhgiuhih');
-        const userGoogle = localStorage.getItem('_auth');
+    // useEffect(() => {
+    //     const encodedToken = localStorage.getItem('_sodfhgiuhih');
+    //     const userGoogle = localStorage.getItem('_auth');
 
-        if (encodedToken) {
-            const decodedToken = atob(encodedToken);
-            var userInfo = JSON.parse(decodedToken);
-            var social = userInfo.user.is_social
-            setSocial(social);
-            setToken(userInfo.token.access_token);
+    //     if (encodedToken) {
+    //         const decodedToken = atob(encodedToken);
+    //         var userInfo = JSON.parse(decodedToken);
+    //         var social = userInfo.user.is_social
+    //         setSocial(social);
+    //         setToken(userInfo.token.access_token);
             
-        } else if (userGoogle) {
-            const decodedGoogle = atob(userGoogle);
-            var googleUserInfo = JSON.parse(decodedGoogle);
-            setGoogleToken(googleUserInfo.token.access_token);
-        }
-    }, []);
+    //     } else if (userGoogle) {
+    //         const decodedGoogle = atob(userGoogle);
+    //         var googleUserInfo = JSON.parse(decodedGoogle);
+    //         setGoogleToken(googleUserInfo.token.access_token);
+    //     }
+    // }, []);
 
     return (
         <div
@@ -136,7 +139,7 @@ const AccountModal = ({
                                                 headers: {
                                                     accept: 'application/json',
                                                     'Content-Type': 'application/json',
-                                                    Authorization: `Bearer ${token ? token : googleToken}`,
+                                                    Authorization: `Bearer ${userToken}`,
                                                 },
                                             }
                                         );

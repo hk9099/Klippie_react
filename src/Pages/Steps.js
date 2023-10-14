@@ -11,21 +11,12 @@ import { AiOutlineClose } from 'react-icons/ai';
 import HomeScreen from './HomeScreen';
 import Suggetionpopup from '../components/Suggetionpopup';
 import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
+import { TokenManager } from '../components/getToken.js';
 
-var getToken = () => {
-    const encodedToken = localStorage.getItem('_sodfhgiuhih');
-
-    if (encodedToken) {
-        const decodedToken = atob(encodedToken);
-        const userInfo = JSON.parse(decodedToken);
-        return userInfo.token.access_token;
-    } else {
-        return null;
-    }
-};
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
     const { setClipsFoundStatus } = useClipsFoundStatus();
+    const userToken = TokenManager.getToken();
     const navigate = useNavigate();
     const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
@@ -44,7 +35,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
     const [accordionVisible, setAccordionVisible] = useState(true);
     const { setIsApiCompleted } = useSidebarContext();
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
-    
+
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
@@ -100,7 +91,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                     headers: {
                         'accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token
+                        'Authorization': 'Bearer ' + userToken
                     },
                     data: data
                 };
@@ -118,7 +109,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                     headers: {
                         'accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        'Authorization': 'Bearer ' + token
+                        'Authorization': 'Bearer ' + userToken
                     },
                     data: data1
                 };
@@ -153,8 +144,8 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
         }
     };
     useEffect(() => {
-        const token = getToken();
-        if (currentProjectId && token) {
+        
+        if (currentProjectId && userToken) {
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
                     try {
@@ -168,7 +159,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                             headers: {
                                 'accept': 'application/json',
                                 'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}`
+                                'Authorization': `Bearer ${userToken}`
                             },
                             data: data
                         };
@@ -206,19 +197,20 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
             }, 10000); 
             return () => clearInterval(intervalId);
         }
-    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted , routeProjectId , navigate]);
+        //eslint-disable-next-line
+    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted , routeProjectId , navigate , setClipsFoundStatus]);
 
     useEffect(() => {
         setProjectId(currentProjectId);
     }, [currentProjectId])
 
     useEffect(() => {
-        const token = getToken();
-        if (cloudinaryResponse && token) {
+        
+        if (cloudinaryResponse && userToken) {
             if (!apiCallsMadeRef.current || prevProjectIdRef.current !== cloudinaryResponse) {
                 apiCallsMadeRef.current = true;
                 prevProjectIdRef.current = cloudinaryResponse;
-                makeApiCalls(cloudinaryResponse, token);
+                makeApiCalls(cloudinaryResponse, userToken);
             }
         }
         //eslint-disable-next-line

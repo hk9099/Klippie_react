@@ -14,6 +14,8 @@ import '../assets/css/signin.css';
 import axios from 'axios';
 import Hiiii from '../assets/images/hi_40x40.gif';
 import { HiOutlineMail } from 'react-icons/hi';
+import { TokenManager } from '../components/getToken.js';
+
 
 function Signin() {
     const navigate = useNavigate();
@@ -131,9 +133,21 @@ function Signin() {
                     autoHideDuration: 1500,
                 });
                 const encodedUser = btoa(JSON.stringify(response.data));
-                localStorage.setItem('_sodfhgiuhih', encodedUser);
-                const encodedEmail = btoa(values.email);
-                localStorage.setItem('_auth', encodedEmail);
+                // localStorage.setItem('_sodfhgiuhih', encodedUser);
+                // const encodedEmail = btoa(values.email);
+                // localStorage.setItem('_auth', encodedEmail);
+                TokenManager.setToken('userToken', 2160 ,encodedUser);
+
+                // const userToken = Cookies.get('userToken');
+                // if (userToken) {
+                //     //decode token to get user data
+                //     const decodedToken = atob(userToken);
+                //     const userInfo = JSON.parse(decodedToken);
+                //     console.log(userInfo, 'userInfo');
+                // } else {
+                //     console.log('Cookie not found or expired.');
+                // }
+
                 navigate('/dashboard');
             } else {
                 enqueueSnackbar('Invalid response from the server.', {

@@ -1,22 +1,13 @@
 import axios from 'axios';
+import { TokenManager } from '../components/getToken.js';
 
 var HOSTINGURL = 'https://dev-api.getklippie.com';
 
-const getToken = () => {
-    const encodedToken = localStorage.getItem('_sodfhgiuhih');
-
-    if (encodedToken) {
-        const decodedToken = atob(encodedToken);
-        const userInfo = JSON.parse(decodedToken);
-        return userInfo.token.access_token;
-    } else {
-        return null;
-    }
-};
-
 async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setLinesId) {
-    const token = getToken();
-    if (!token) {
+
+    const userToken = TokenManager.getToken();
+
+    if (!userToken) {
         console.error('No token available');
         return;
     }
@@ -29,7 +20,7 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, 
             {
                 headers: {
                     'accept': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${userToken}`,
                 },
             }
         );

@@ -17,6 +17,7 @@ const OtpVarification = lazy(() => import('./Pages/otpVarification.js'));
 const Layout = lazy(() => import('./Pages/Layout.js'));
 const Steps = lazy(() => import('./Pages/Steps.js'));
 const HomeScreen = lazy(() => import('./Pages/HomeScreen.js'));
+const PricingCardsContainer = lazy(() => import('./Pages/PricingCardsContainer.js'));
 
 function App() {
   const { projectId } = useParams();
@@ -56,7 +57,8 @@ function App() {
                   <Route path="/steps" element={<Steps />} />
                   <Route path="/" element={<Signin />} />
                   <Route path="/homescreen" element={<HomeScreen />} />
-                  <Route path="/Test" element={<Test />} />
+                    <Route path="/Test" element={<Test />} />
+                  <Route path="/pricing" element={<PricingCardsContainer />} />
                 </Routes>
               </CloudinaryProvider>
             </SidebarProvider>

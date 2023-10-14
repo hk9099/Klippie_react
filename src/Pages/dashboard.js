@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
 import Modal from "../components/Modal";
 import Steps from "../Pages/Steps";
 import HomeScreen from "../Pages/HomeScreen";
@@ -13,8 +13,29 @@ import { useNavigate } from 'react-router-dom';
 import { useUserNickname } from '../components/userNicknameContext.js';
 import { useCloudinary } from '../components/CloudinaryContext.js';
 import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
+import { TokenManager } from '../components/getToken.js';
+import PopupForm from '../components/sessionPopup.js';
+import { useSnackbar } from 'notistack';
 
 export default function Dashboard() {
+  const userToken = TokenManager.getToken();
+  //eslint-disable-next-line
+  const [showPopup, setShowPopup] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    // Check if the token is expired every minute
+    const interval = setInterval(() => {
+      if (TokenManager.isTokenExpired()) {
+        TokenManager.removeToken();
+        setShowPopup(true);
+      } 
+    }, 60 * 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   const { setClipsFoundStatus } = useClipsFoundStatus();
   const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams();
@@ -29,18 +50,94 @@ export default function Dashboard() {
   const setError = (message) => {
     setErrorMessage(message);
   };
-  const getToken = () => {
-    const encodedToken = localStorage.getItem('_sodfhgiuhih');
-
-    if (encodedToken) {
-      const decodedToken = atob(encodedToken);
-      const userInfo = JSON.parse(decodedToken);
-      return userInfo.token.access_token;
+  useEffect(() => {
+    if (userToken) {
+      navigate('/dashboard');
     } else {
-      return null;
+     setShowPopup(true);
+    }
+  }, [userToken, navigate]);
+
+  const handleSubmit = async (values) =>  {
+    console.log('Form data:', values);
+    try {
+      const response = await axios.post(
+        'https://dev-api.getklippie.com/v1/auth/login',
+        {
+          email: values.email,
+          password: values.password,
+          is_social: false,
+          firebase_id: 'string',
+          id_token: 'string',
+          device_id: 'string'
+        }
+      );
+
+      if (response && response.data) {
+        // Successful login
+        enqueueSnackbar('Login Successful', {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          autoHideDuration: 1500,
+        });
+        const encodedUser = btoa(JSON.stringify(response.data));
+        // localStorage.setItem('_sodfhgiuhih', encodedUser);
+        // const encodedEmail = btoa(values.email);
+        // localStorage.setItem('_auth', encodedEmail);
+        TokenManager.setToken('userToken', 2160 , encodedUser);
+        window.location.reload();
+        // const userToken = Cookies.get('userToken');
+        // if (userToken) {
+        //     //decode token to get user data
+        //     const decodedToken = atob(userToken);
+        //     const userInfo = JSON.parse(decodedToken);
+        //     console.log(userInfo, 'userInfo');
+        // } else {
+        //     console.log('Cookie not found or expired.');
+        // }
+
+        navigate('/dashboard');
+      } else {
+        enqueueSnackbar('Invalid response from the server.', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          autoHideDuration: 1500,
+        });
+      }
+    } catch (error) {
+      if (error.response.data.detail) {
+        enqueueSnackbar(error.response.data.detail, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          autoHideDuration: 1500,
+        });
+      } else {
+        navigate("/otpVarification");
+        enqueueSnackbar(error.response.data.message, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          autoHideDuration: 1500,
+        });
+      }
     }
   };
 
+  const handleCancel = () => {
+    navigate('/');
+    setShowPopup(false);
+  };
   var HOSTINGURL = 'https://dev-api.getklippie.com';
   useEffect(() => {
     console.log('routeProjectId', routeProjectId);
@@ -53,8 +150,7 @@ export default function Dashboard() {
       navigate(`/dashboard/${routeProjectId}`);
     }
     const handleProjectClick = async (index) => {
-      const token = getToken();
-      console.log('Token:', token);
+ 
         let maindata = JSON.stringify({
           "id": routeProjectId
         });
@@ -66,7 +162,7 @@ export default function Dashboard() {
           headers: {
             'accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${userToken}`
           },
           data: maindata
         };
@@ -144,35 +240,46 @@ export default function Dashboard() {
 
   return (
     <div className="h-screen dashborardbg">
-      <div className="flex h-full ">
-        <Sidebar
-          setProjectId={setProjectId}
-          setNewvideoClips={setNewvideoClips}
-          setnewMainVideo={setnewMainVideo}
-          setAccordionVisible={setAccordionVisible}
-          setError={setError}
+      <div className="flex h-full">
+        {showPopup ? null : (
+          // Render the sidebar when showPopup is false
+          <Sidebar
+            setProjectId={setProjectId}
+            setNewvideoClips={setNewvideoClips}
+            setnewMainVideo={setnewMainVideo}
+            setAccordionVisible={setAccordionVisible}
+            setError={setError}
           />
+        )}
         <div className="w-full overflow-x-auto px-3 z-30">
           <Modal className="z-50" />
           {/* {accordionVisible && <Navbar />} */}
-          {accordionVisible || cloudinaryResponse ? (
-            <Steps
-            projectId={projectId}
-            newhistoryvideoClips={newvideoClips}
-            newmainvideo={newmainvideo}
-            errorMessage={errorMessage}
-            accordionVisible={accordionVisible}
-            cloudinaryResponse={cloudinaryResponse}
-            />
-            ) : (
-              <HomeScreen userName={userName} />
+          {showPopup ? (
+            // Render only the PopupForm when showPopup is true
+            <PopupForm onSubmit={handleSubmit} onCancel={handleCancel} />
+          ) : (
+            // Render other components when showPopup is false
+            <>
+              {accordionVisible || cloudinaryResponse ? (
+                <Steps
+                  projectId={projectId}
+                  newhistoryvideoClips={newvideoClips}
+                  newmainvideo={newmainvideo}
+                  errorMessage={errorMessage}
+                  accordionVisible={accordionVisible}
+                  cloudinaryResponse={cloudinaryResponse}
+                />
+              ) : (
+                <HomeScreen userName={userName} />
               )}
-          {!accordionVisible && errorMessage && (
-            <div className="flex justify-center h-screen items-center ">
-              <div className="text-red-500 text-center  inline-block p-2 font-bold text-lg">
-                {errorMessage}
-              </div>
-            </div>
+              {!accordionVisible && errorMessage && (
+                <div className="flex justify-center h-screen items-center">
+                  <div className="text-red-500 text-center  inline-block p-2 font-bold text-lg">
+                    {errorMessage}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

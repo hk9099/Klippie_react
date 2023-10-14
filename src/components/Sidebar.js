@@ -20,6 +20,7 @@ import fetchUserProfile from '../components/fetchUserProfile';
 import { useSnackbar } from 'notistack';
 import { useCloudinary } from '../components/CloudinaryContext.js';
 import { useClipsFoundStatus } from './ClipsFoundContext';
+import { TokenManager } from '../components/getToken.js';
 // import Example from "./testDropdown";
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
@@ -56,7 +57,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const isDashboard = window.location.pathname === '/dashboard';
-
+  const userToken = TokenManager.getToken();
 
   const closeDropdown = () => {
     setDropdownOpen(false);
@@ -105,17 +106,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     );
     console.log('handleUpdateProfileSuccess');
   };
-  const getToken = () => {
-    const encodedToken = localStorage.getItem('_sodfhgiuhih');
-
-    if (encodedToken) {
-      const decodedToken = atob(encodedToken);
-      const userInfo = JSON.parse(decodedToken);
-      return userInfo.token.access_token;
-    } else {
-      return null;
-    }
-  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -128,22 +118,14 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   useEffect(() => {
     if (!initialized) {
-      const encodedEmail = localStorage.getItem("_auth");
-      if (encodedEmail) {
-        navigate("/dashboard");
-      } else {
-        navigate("/");
-      }
-
-      const token = getToken();
-
+     
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
         url: `${HOSTINGURL}/v1/auth/profile`,
         headers: {
           'accept': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${userToken}`
         }
       };
 
@@ -195,7 +177,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     return axios.get(avatarUrl)
       .then((response) => {
         setUserAvatar(response.config.url);
-        var token = getToken();
 
         let data = JSON.stringify({
           "avatar": response.config.url,
@@ -209,7 +190,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           headers: {
             'accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${userToken}`
           },
           data: data
         };
@@ -237,7 +218,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   // Function to delete a line
   const deleteLine = async (index) => {
-    var token = getToken();
+
     try {
       const clickedProject = projectData[index];
       //console.log('Clicked Project ID:', clickedProject.id);
@@ -254,7 +235,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         headers: {
           'accept': 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${userToken}`
         },
         data: data
       };
@@ -296,7 +277,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   };
 
   const handleSaveClick = (index) => {
-    const token = getToken();
     const updatedLine = tempLines[index];
     console.log(updatedLine, 'updatedLine')
     // console.log('Token:', token);
@@ -314,7 +294,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       headers: {
         accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${userToken}`
       },
       data: data
     };
@@ -339,8 +319,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   };
 
   const handleProjectClick = async (index) => {
-    const token = getToken();
-    console.log('Token:', token);
     const data = JSON.stringify({
       "id": projectData[index].id
     });
@@ -351,7 +329,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       headers: {
         'accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${userToken}`
       },
       data: data
     };

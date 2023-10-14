@@ -2,21 +2,13 @@ import React, { useState } from "react";
 import { useUserNickname } from "./userNicknameContext";
 import { RxCross2 } from "react-icons/rx";
 import axios from "axios";
+import { TokenManager } from '../components/getToken.js';
 
 export default function ContactUs({ isOpen, onClose }) {
+    const userToken = TokenManager.getToken();
     const { userName, userEmail } = useUserNickname();
     const [message, setMessage] = useState("");
-    const getToken = () => {
-        const encodedToken = localStorage.getItem('_sodfhgiuhih');
-
-        if (encodedToken) {
-            const decodedToken = atob(encodedToken);
-            const userInfo = JSON.parse(decodedToken);
-            return userInfo.token.access_token;
-        } else {
-            return null;
-        }
-    };
+    
     const handleSubmit = () => async () =>{
         let data = JSON.stringify({
             "name": userName,
@@ -31,7 +23,7 @@ export default function ContactUs({ isOpen, onClose }) {
             headers: {
                 'accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + getToken()
+                'Authorization': 'Bearer ' + userToken
             },
             data: data
         };

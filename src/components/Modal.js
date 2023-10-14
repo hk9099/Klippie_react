@@ -4,8 +4,10 @@ import * as Yup from "yup";
 import axios from "axios";
 import qs from "qs";
 import FilestackUploader from "./FileStackPicker";
+import { TokenManager } from '../components/getToken.js';
 // import { updateMainVideo } from "./data";
 const Modal = ({ onSubmit, isOpen, onClose }) => {
+    const userToken = TokenManager.getToken();
     //eslint-disable-next-line
     const [selectedOption, setSelectedOption] = useState("upload");
     //eslint-disable-next-line
@@ -87,19 +89,12 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
                     };
                 }
 
-                const encodedToken = localStorage.getItem("_sodfhgiuhih");
-                if (encodedToken) {
-                    var decodedToken = atob(encodedToken);
-                    const userInfo = JSON.parse(decodedToken);
-                    var Token = userInfo.token.access_token;
-                }
-
                 const apiUrl = `${process.env.REACT_APP_DEV_HOSTING_URL}/v1/project/create`;
                 const config = {
                     headers: {
                         accept: "application/json",
                         "Content-Type": "application/x-www-form-urlencoded",
-                        Authorization: `Bearer ${Token}`,
+                        Authorization: `Bearer ${userToken}`,
                     },
                 };
 
