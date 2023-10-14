@@ -260,7 +260,7 @@ export default function Dashboard() {
           ) : (
             // Render other components when showPopup is false
             <>
-              {accordionVisible || cloudinaryResponse ? (
+                {(accordionVisible || cloudinaryResponse) ? (
                 <Steps
                   projectId={projectId}
                   newhistoryvideoClips={newvideoClips}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import qs from 'qs';
 import AccordionSection from '../components/AccordionSection';
@@ -35,7 +35,16 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
     const [accordionVisible, setAccordionVisible] = useState(true);
     const { setIsApiCompleted } = useSidebarContext();
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
+    const location = useLocation();
 
+    useEffect(() => {
+        // Check the pathname of the current URL
+        if (location.pathname !== '/dashboard') {
+            setAccordionVisible(true);
+        } else {
+            setAccordionVisible(false);
+        }
+    }, [location]);
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
