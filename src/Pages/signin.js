@@ -19,23 +19,30 @@ import { TokenManager } from '../components/getToken.js';
 
 function Signin() {
     const navigate = useNavigate();
+    const user = TokenManager.getToken();
     const { enqueueSnackbar } = useSnackbar();
     useEffect(() => {
         localStorage.setItem('color-theme', 'light');
     }, []);
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-
-
+    //eslint-disable-next-line
+    const [loginCount, setLoginCount] = useState(0);
+    const incrementLoginCount = () => {
+        const currentCount = parseInt(localStorage.getItem('loginCount')) || 0;
+        const newCount = currentCount + 1;
+        
+        localStorage.setItem('loginCount', newCount.toString());
+        setLoginCount(newCount);
+    };
 
     useEffect(() => {
-        const encodedEmail = localStorage.getItem('_auth');
-        if (encodedEmail) {
+        if (user) {
             setIsLoading(true);
             // const email = atob(encodedEmail); // Decode email
             navigate('/dashboard');
         }
-    }, [navigate]);
+    }, [user, navigate]);
 
     // const handleGoogleLogin = () => {
     //     const customProvider = new GoogleAuthProvider();
@@ -136,6 +143,7 @@ function Signin() {
                 // localStorage.setItem('_sodfhgiuhih', encodedUser);
                 // const encodedEmail = btoa(values.email);
                 // localStorage.setItem('_auth', encodedEmail);
+                incrementLoginCount();
                 TokenManager.setToken('userToken', 2160 ,encodedUser);
 
                 // const userToken = Cookies.get('userToken');

@@ -55,6 +55,8 @@ function HomeScreen({ userName }) {
     const [totalBytes, setTotalBytes] = useState(0);
     const fileInputRef = useRef(null);
 
+    var loginCount = localStorage.getItem('loginCount');
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setIsFileUploadedInput(true);
@@ -210,7 +212,7 @@ function HomeScreen({ userName }) {
                     >
                         <div className="px-16 h-[99%] flex flex-col justify-evenly select-none ">
                             <h1 className=" text-white text-6xl text-left block font-normal w-full font-montserrat">
-                                Hello, {userName}
+                              {loginCount > 1 ? `Welcome back, ${userName} 😊` : `Hello, ${userName} 👋` }
                             </h1>
 
                             <div className='flex justify-start items-center h-[450px] w-full prompt-card'>

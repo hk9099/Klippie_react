@@ -27,7 +27,7 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
 
         try {
             const response = await axios.post(
-                `${HOSTINGURL}/v1/auth/profile`,
+                `https://dev-api.getklippie.com/v1/auth/profile`,
                 {},
                 {
                     headers: {

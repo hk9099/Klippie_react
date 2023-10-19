@@ -67,6 +67,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     setUserName(userNickname);
     setUserEmail(userEmailAddress);
   }, [userNickname, setUserName, userEmailAddress, setUserEmail]);
+  var HOSTINGURL = 'https://dev-api.getklippie.com';
 
   useEffect(() => {
     if (!initialized) {
@@ -84,7 +85,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
 
 
-  var HOSTINGURL = process.env.REACT_APP_DEV_HOSTING_URL;
 
   useEffect(() => {
     console.log('isApiCompleted', isApiCompleted);
@@ -122,7 +122,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `${HOSTINGURL}/v1/auth/profile`,
+        url: `https://dev-api.getklippie.com/v1/auth/profile`,
         headers: {
           'accept': 'application/json',
           'Authorization': `Bearer ${userToken}`

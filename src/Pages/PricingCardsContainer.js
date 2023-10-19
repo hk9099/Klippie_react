@@ -1,43 +1,37 @@
 // PricingCardsContainer.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PricingCard from '../components/PricingCard';
 import Logo from '../assets/images/logo.svg';
-// import { createCheckoutSession } from '../components/chargebee/chargebee';
-
-const pricingData = [
-    {
-        plan: 'Basic',
-        price: '19',
-        features: ['Feature 1', 'Feature 2', 'Feature 3'],
-    },
-    {
-        plan: 'Pro',
-        price: '39',
-        features: ['Feature 1', 'Feature 2', 'Feature 3'],
-    },
-    // {
-    //     plan: 'Pro',
-    //     price: '39',
-    //     features: ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4'],
-    // },
-];
-
-
+import axios from 'axios';
 
 function PricingCardsContainer() {
+    const [pricingData, setPricingData] = useState([]);
+
+    useEffect(() => {
+        axios
+            .post('https://dev-api.getklippie.com/v1/plans/get-all')
+            .then((response) => {
+                setPricingData(response.data.data);
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
     return (
-        <div className="bg-[#0D0E20] min-h-screen flex items-center justify-center">
-            <div className="container mx-auto p-4">
-                <div className="flex items-center justify-center mb-8">
-                    <img src={Logo} alt="Logo" className="w-20 h-20 mr-5 bg-white rounded-full" />
-                    <h1 className="text-5xl font-semibold text-white text-center ">Klippie Pricing</h1>
+        <div className=' min-h-screen flex items-center justify-center flex-col'>
+                <div className="flex flex-row items-center justify-center">
+                    <img src={Logo} alt="Klippie Logo" className="w-20 h-20 bg-white rounded-full mr-3 mb-5" /> 
+                    <h1 className="text-4xl font-bold text-white">Klippie</h1>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 text-center lg:grid-cols-2 gap-4">
-                    {pricingData.map((data, index) => (
-                        <PricingCard key={index} {...data} />
-                    ))}
-                </div>
+        <div className="bg-[#0D0E20] flex items-center justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 text-center lg:grid-cols-2 gap-4">
+                {pricingData.map((data, index) => (
+                    <PricingCard key={index} {...data} />
+                ))} 
             </div>
+        </div>
         </div>
     );
 }
