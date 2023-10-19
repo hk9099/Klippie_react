@@ -65,7 +65,7 @@ function PricingCard({ id, chargebee_plan_id, credits, name, description, charge
         if (chargebee_prices && chargebee_prices.length > 0 && chargebee_prices[0].id) {
 
             const cbInstance = window.Chargebee.init({
-                site: 'getklippie-test',
+                site: process.env.REACT_APP_CHARGEBEE_SITE,
             });
 
             cbInstance.openCheckout({
