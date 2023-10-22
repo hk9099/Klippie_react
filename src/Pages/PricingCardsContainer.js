@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import PricingCard from '../components/PricingCard';
 // import Logo from '../assets/images/logo.svg';
 import axios from 'axios';
+import { RxCross2 } from "react-icons/rx";
+import { Link } from 'react-router-dom';
 
-function PricingCardsContainer() {
+function PricingCardsContainer({ isOpen, onClose }) {
     const [pricingData, setPricingData] = useState([]);
 
     useEffect(() => {
@@ -14,7 +16,7 @@ function PricingCardsContainer() {
                 const pricing = [
                     {
                         title: 'Free',
-                        id:response?.data?.data[0]?.chargebee_prices[0]?.id ?? null,
+                        id: response?.data?.data[0]?.chargebee_prices[0]?.id ?? null,
                         description: 'For Your Hobby Projects',
                         price: '$0',
                         time: 'Per Month',
@@ -58,24 +60,52 @@ function PricingCardsContainer() {
             });
     }, []);
 
-  
+
 
 
     return (
-        <div className=' min-h-screen flex items-center justify-center flex-col'>
-            {/* <div className="flex flex-row items-center justify-center">
-                <img src={Logo} alt="Klippie Logo" className="w-20 h-20 bg-white rounded-full mr-3 mb-5" />
-                <h1 className="text-4xl font-bold text-white">Klippie</h1>
-            </div> */}
-            <div className="bg-[#0D0E20] flex items-center justify-center">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 text-center lg:grid-cols-2 gap-4">
-                    {pricingData.map((data, index) => (
-                        <PricingCard key={index} {...data} />
-                    ))}
+        <>
+            <div className={`fixed inset-0 flex justify-center items-center z-50 ${isOpen ? 'block' : 'hidden'} h-screen overflow-y-auto`}>
+                <div className="fixed inset-0 backdrop-blur-md bg-black bg-opacity-60 z-40"></div>
+                <div className="relative w-auto max-h-full z-50">
+                    <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                        <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
+                                Upgrade your plan
+                            </h3>
+                            <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                                <RxCross2 className="text-2xl text-white cursor-pointer" onClick={onClose} />
+                            </button>
+                        </div>
+                        <div className="p-6 overflow-y-auto">
+                            <div className="flex items-center justify-center">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 text-center lg:grid-cols-2 gap-4">
+                                    {pricingData.map((data, index) => (
+                                        <PricingCard key={index} {...data} />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-center p-4 border-t border-solid border-gray-300 rounded-b">
+                            <p className="text-gray-700 dark:text-gray-300 text-center">
+                                For more information, please contact us at
+                                <Link
+                                    href="mailto:support@getklippie.com"
+                                    className="text-blue-500 hover:underline ml-1"
+                                    onClick={() => window.open('mailto:support@getklippie.com', '_blank')}
+                                >
+                                    support@getklippie.com
+                                </Link>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+        </>
     );
 }
 
 export default PricingCardsContainer;
+
+

@@ -250,7 +250,7 @@ export default function Dashboard() {
             setError={setError}
           />
         )}
-        <div className="w-full overflow-x-auto px-3 z-30">
+        <div className="w-full overflow-x-auto px-3 ">
           <Modal className="z-50" />
           {/* {accordionVisible && <Navbar />} */}
           {showPopup ? (

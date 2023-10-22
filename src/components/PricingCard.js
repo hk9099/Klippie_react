@@ -123,7 +123,7 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
         <p className="text-lg text-gray-600 dark:text-gray-300 mb-5 font-nunito">
             {description}
         </p>
-        <h1 className="text-7xl font-[300] text-gray-900 dark:text-gray-100 mb-1 font-nunito">
+        <h1 className="text-5xl font-[300] text-gray-900 dark:text-gray-100 mb-1 font-nunito">
             {price}
         </h1>
         <h3 className="text-lg font-light text-gray-900 dark:text-gray-100 mb-4 font-nunito">

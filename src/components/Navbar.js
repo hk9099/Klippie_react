@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BsStopwatch } from 'react-icons/bs';
+import PricingModal from '../Pages/PricingCardsContainer';
 
 const Navbar = ({ creaditBalance }) => {
-    console.log(creaditBalance, 'creaditBalanceeeeeeeeeeeeeeeeeeeee');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
     const secondsToHHMMSS = (seconds) => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -13,7 +23,7 @@ const Navbar = ({ creaditBalance }) => {
         };
 
         const formattedTime = `${formatTwoDigits(hours)}h ${formatTwoDigits(minutes)}min`;
-        const minutesClass = minutes < 10 ? 'text-red-500 border border-red-500 rounded-lg select-none animate-pulse'
+        const minutesClass = minutes < 10 ? 'text-red-500 border border-red-500 rounded-lg select-none'
         : 'text-content'; 
 
         return { hours, minutes, formattedTime, minutesClass };
@@ -35,13 +45,18 @@ const Navbar = ({ creaditBalance }) => {
                                 </div>
                             </div>
                         )}
-                        <button
-                            className='text-gray-300 w-[250px] text-center inline-block px-3 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg '>
-                            <span className={`text-content `}>Add More Credit</span>
+                         <button
+                            className='text-gray-300 w-[250px] text-center inline-block px-3 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg'
+                            onClick={openModal} // Open the modal when this button is clicked
+                        >
+                            <span className={`text-content`}>Add More Credit</span>
                         </button>
                     </div>
                 </div>
             </nav>
+            {isModalOpen && (
+                <PricingModal isOpen={isModalOpen} onClose={closeModal} />
+            )}
         </>
     );
 };
