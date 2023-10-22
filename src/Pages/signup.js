@@ -87,6 +87,8 @@ function Signup({ errors, touched }) {
   //     });
   // };
 
+  
+
   const validationSchema = Yup.object({
     name: Yup.string()
       .required("Name is required")
@@ -114,40 +116,56 @@ function Signup({ errors, touched }) {
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     setLoading(true);
     const _authemail = btoa(values.email);
     localStorage.setItem("_authemail", _authemail);
-    const payload = {
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      confirmPassword: values.confirmPassword,
+    let loc = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'https://geolocation-db.com/json/',
+      headers: {}
     };
-    axios
-      .post("https://dev-api.getklippie.com/v1/auth/signup", payload)
-      .then((response) => {
-        console.log(response, "response");
-        enqueueSnackbar(response.data.message, {
-          variant: 'success',
-          autoHideDuration: 1500
-        });
-        var signupToken = response.data.data;
-        localStorage.setItem("signupToken", signupToken);
-        navigate("/otpVarification");
-      })
-      .catch((error) => {
-        console.log(error,);
+    
+    try {
+      const response = await axios.request(loc);
+      console.log(response, "response");
+  
+      const payload = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        device_id: response.data.IPv4,
+      };
+  
+      const signupResponse = await axios.post("https://dev-api.getklippie.com/v1/auth/signup", payload);
+      console.log(signupResponse, "response");
+      enqueueSnackbar(signupResponse.data.message, {
+        variant: 'success',
+        autoHideDuration: 1500
+      });
+      var signupToken = signupResponse.data.data;
+      localStorage.setItem("signupToken", signupToken);
+      navigate("/otpVarification");
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
         enqueueSnackbar(error.response.data.detail, {
           variant: 'error',
           autoHideDuration: 1500
         });
-      })
-      .finally(() => {
-        console.log("finally");
-        setLoading(false);
-        setSubmitting(false);
-      });
+      } else {
+        enqueueSnackbar("An error occurred", {
+          variant: 'error',
+          autoHideDuration: 1500
+        });
+      }
+    } finally {
+      console.log("finally");
+      setLoading(false);
+      setSubmitting(false);
+    }
   };
 
   return (

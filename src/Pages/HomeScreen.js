@@ -43,7 +43,7 @@ function MyProgressBar({ bytesUploaded, totalBytes }) {
     );
 }
 
-function HomeScreen({ userName }) {
+function HomeScreen({ userName ,creaditBalance }) {
     const [isDragging, setIsDragging] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const { setCloudinaryResponse } = useCloudinary(); 
@@ -201,17 +201,17 @@ function HomeScreen({ userName }) {
         <>
             <div className="flex flex-col h-screen " onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
                 <div className="">
-                    <Navbar />
+                    <Navbar creaditBalance={creaditBalance} />
                 </div>
                 <section
                     className={`flex-grow flex flex-col overflow-hidden dark:bg-transparent  ${isDragging ? 'border-dashed border-2 border-sky-500 dark:bg-[#ffffff2a]' : 'dark:bg-transparent'
                         } ${isFileUploaded ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : 'dark:bg-transparent'} ${isFileUploaded ? 'pointer-events-none' : ''} ${isFileUploadedInput ? 'pointer-events-none' : ''}`}
                 >
                     <div
-                        className={`overflow-y-auto flex-grow  '}`}
+                        className={`overflow-y-auto flex-grow`}
                     >
-                        <div className="px-16 h-[99%] flex flex-col justify-evenly select-none ">
-                            <h1 className=" text-white text-6xl text-left block font-normal w-full font-montserrat">
+                        <div className="px-16 flex flex-col justify-evenly select-none ">
+                            <h1 className=" text-white text-6xl text-left block font-normal w-full font-montserrat py-3">
                               {loginCount > 1 ? `Welcome back, ${userName} 😊` : `Hello, ${userName} 👋` }
                             </h1>
 

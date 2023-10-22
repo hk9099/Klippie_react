@@ -1,4 +1,5 @@
 import 'devextreme/dist/css/dx.light.css';
+import '@mantine/core/styles.css';
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RotatingLines } from "react-loader-spinner";
@@ -35,7 +36,7 @@ function App() {
           />
         </div>
       }>
-
+   
         <UserNicknameProvider>
           <ClipsFoundProvider>
           <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={1500}>

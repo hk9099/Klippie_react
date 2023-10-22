@@ -15,6 +15,8 @@ module.exports = {
       backgroundColor: {
         'custom-color': '#0D0E20',
         'custom-color-dark': '#0D0E20',
+        'custom-modal-bg-color' : '#B3B5E2',
+        'custom-modal-text-color' : '#020913'
       },
       // colors: {
       //   black: '#09090c',

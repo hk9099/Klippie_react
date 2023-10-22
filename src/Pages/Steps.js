@@ -45,6 +45,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
             setAccordionVisible(false);
         }
     }, [location]);
+
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
@@ -54,7 +55,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
 
     const handleCloseClick = () => {
         // When close button is clicked, cancel the ongoing API calls
-    
+
         setIsLoading(false);
     };
     const closeButton = isLoading ? (
@@ -75,11 +76,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                 return;
             }
 
-            // API 1
-            setAccordionVisible(false);
             setAllApiCompleted(false);
-            setError('');
-            setIsLoading(true);
             try {
                 let data = JSON.stringify({
                     "public_id": cloudinaryResponse.public_id,
@@ -106,7 +103,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                 };
 
                 const response = await axios.request(config);
-     
+
                 let data1 = qs.stringify({
                     'project_id': response.data.data.id
                 });
@@ -126,13 +123,18 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                 const response1 = await axios.request(config1);
                 setProjectId(response1.data.data.id);
             } catch (error) {
-                console.log(error);
+                console.log(error.response.data.error, 'error.response.data.message');
+                enqueueSnackbar(error.response.data.error,
+                    {
+                        variant: 'error', autoHideDuration: 3000, anchorOrigin: {
+                            vertical: 'top',
+                            horizontal: 'right',
+                        },
+                    });
             }
-            setIsLoading(false);
             setAllApiCompleted(true);
             setIsSuggetionpopupOpen(true);
             setClipsFoundStatus(false);
-            setError('');
         } catch (error) {
             if (error.name === 'AbortError') {
                 enqueueSnackbar('API call aborted',
@@ -153,7 +155,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
         }
     };
     useEffect(() => {
-        
+
         if (currentProjectId && userToken) {
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
@@ -203,18 +205,18 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                 };
 
                 fetchData();
-            }, 10000); 
+            }, 10000);
             return () => clearInterval(intervalId);
         }
         //eslint-disable-next-line
-    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted , routeProjectId , navigate , setClipsFoundStatus]);
+    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus]);
 
     useEffect(() => {
         setProjectId(currentProjectId);
     }, [currentProjectId])
 
     useEffect(() => {
-        
+
         if (cloudinaryResponse && userToken) {
             if (!apiCallsMadeRef.current || prevProjectIdRef.current !== cloudinaryResponse) {
                 apiCallsMadeRef.current = true;
@@ -223,7 +225,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
             }
         }
         //eslint-disable-next-line
-    }, [cloudinaryResponse, allApiCompleted]);
+    }, [cloudinaryResponse, allApiCompleted, userToken]);
 
     return (
         <div className="min-h-screen flex items-center justify-center">
@@ -238,7 +240,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
             {closeButton}
-            {!isLoading  && accordionVisible && (
+            {!isLoading && accordionVisible && (
                 <AccordionSection videoClips={newvideoClips} />
             )}
         </div>

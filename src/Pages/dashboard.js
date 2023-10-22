@@ -19,12 +19,10 @@ import { useSnackbar } from 'notistack';
 
 export default function Dashboard() {
   const userToken = TokenManager.getToken();
-  //eslint-disable-next-line
   const [showPopup, setShowPopup] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    // Check if the token is expired every minute
     const interval = setInterval(() => {
       if (TokenManager.isTokenExpired()) {
         TokenManager.removeToken();
@@ -47,6 +45,7 @@ export default function Dashboard() {
   console.log(accordionVisible, 'accordionVisible');
   const [errorMessage, setErrorMessage] = useState("");
   const { userName } = useUserNickname();
+  const {creaditBalance} = useUserNickname();
   const setError = (message) => {
     setErrorMessage(message);
   };
@@ -270,7 +269,7 @@ export default function Dashboard() {
                   cloudinaryResponse={cloudinaryResponse}
                 />
               ) : (
-                <HomeScreen userName={userName} />
+                <HomeScreen userName={userName} creaditBalance={creaditBalance} />
               )}
               {!accordionVisible && errorMessage && (
                 <div className="flex justify-center h-screen items-center">

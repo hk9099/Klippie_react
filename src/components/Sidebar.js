@@ -29,10 +29,12 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { setUserName } = useUserNickname();
   const { setUserEmail } = useUserNickname();
+  const {setCreaditBalance} = useUserNickname();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [initialized] = useState(false);
   const [userEmailAddress, setUserEmailAddress] = useState("");
+  const [creadit, setCreadit] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
   const [userNickname, setUserNickname] = useState("");
   const [open, setOpen] = useState(true);
@@ -66,7 +68,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   useEffect(() => {
     setUserName(userNickname);
     setUserEmail(userEmailAddress);
-  }, [userNickname, setUserName, userEmailAddress, setUserEmail]);
+    setCreaditBalance(creadit);
+  }, [userNickname, setUserName, userEmailAddress, setUserEmail ,creadit, setCreaditBalance]);
   var HOSTINGURL = 'https://dev-api.getklippie.com';
 
   useEffect(() => {
@@ -77,12 +80,13 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         setUserNickname,
         setUserEmailAddress,
         setUserAvatar,
+        setCreadit,
         HOSTINGURL
       );
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
-  }, [initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL, refreshProfile]);
+  }, [initialized, navigate, setUserNickname, setUserEmailAddress,setCreadit, setUserAvatar, HOSTINGURL, refreshProfile]);
 
 
 

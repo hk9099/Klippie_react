@@ -3,7 +3,7 @@ import { TokenManager } from '../components/getToken.js';
 
 // Define the async function to fetch user profile
 var userToken = TokenManager.getToken();
-const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL) => {
+const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar,setCreadit, HOSTINGURL) => {
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -37,7 +37,7 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
                 }
             );
 
-            console.log('fetch profile');
+            console.log(response.data, 'response.data');
             const userNickname = response.data.name;
             setUserNickname(userNickname);
             const userEmailAddress = response.data.email;
@@ -48,6 +48,7 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
             const userAvatarUrl = response.data.avatar;
             // console.log(userAvatarUrl, 'userAvatarUrllllllllllllllllll');
             setUserAvatar(userAvatarUrl);
+            setCreadit(response.data.balance);
 
             console.log('got profile');
 
