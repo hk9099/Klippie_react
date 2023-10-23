@@ -23,14 +23,18 @@ const Navbar = ({ creaditBalance }) => {
         };
 
         const formattedTime = `${formatTwoDigits(hours)}h ${formatTwoDigits(minutes)}min`;
-        const minutesClass = minutes < 10 ? 'text-red-500 border border-red-500 rounded-lg select-none'
-        : 'text-content'; 
+        let minutesClass = 'text-content';
+    
+        if (hours === 0 && minutes < 10) {
+            // Set red border and text color when hr is 00 and min is less than 10
+            minutesClass = 'text-red-500 border border-red-500 rounded-lg select-none';
+        }
 
         return { hours, minutes, formattedTime, minutesClass };
     };
 
     const { hours, minutes, formattedTime, minutesClass } = secondsToHHMMSS(creaditBalance);
-    console.log(formattedTime, 'formattedddddddddddddddddddddddddddd');
+    // console.log(formattedTime, 'formattedddddddddddddddddddddddddddd');
 
     return (
         <>
@@ -39,17 +43,17 @@ const Navbar = ({ creaditBalance }) => {
                     <div className='flex justify-end items-center w-100'>
                         {(!isNaN(hours) && !isNaN(minutes)) && (
                             <div className='p-3'>
-                                <div className={`text-green-600 px-3 py-2  font-bold text-lg flex justify-center items-center p-3 ${minutesClass}`}>
-                                    <BsStopwatch className={`me-2  `} />
+                                <div className={`text-green-600 px-3 py-2  font-bold text-lg flex justify-center items-center select-none p-3 ${minutesClass}`}>
+                                    <BsStopwatch className={`me-2 `} />
                                     <span >{formattedTime}</span>
                                 </div>
                             </div>
                         )}
                          <button
-                            className='text-gray-300 w-[250px] text-center inline-block px-3 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg'
+                            className='text-gray-300 w-auto text-center inline-block px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg'
                             onClick={openModal} // Open the modal when this button is clicked
                         >
-                            <span className={`text-content`}>Add More Credit</span>
+                            <span className={`text-content select-none`}>Upgrade</span>
                         </button>
                     </div>
                 </div>

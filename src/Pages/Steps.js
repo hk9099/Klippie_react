@@ -43,8 +43,9 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
             setAccordionVisible(true);
         } else {
             setAccordionVisible(false);
+            navigate(`/dashboard`);
         }
-    }, [location]);
+    }, [location , navigate]);
 
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);

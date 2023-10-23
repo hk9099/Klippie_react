@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import DataGrid, {
   Column,
   Selection,
@@ -13,24 +13,24 @@ import VideoPlayer from "../Pages/videoplayer.js";
 import DropDownButton from "../components/GridDropdown.js";
 import { Popup } from "devextreme-react/popup";
 import { Form } from "devextreme-react/form";
-import { LuDownload } from "react-icons/lu";
-import VideoDownload from "./VideoDownload.js";
+// import { LuDownload } from "react-icons/lu";
+// import VideoDownload from "./VideoDownload.js";
 
 const Videoclips = ({ videoClips, setVideoCount }) => {
   //eslint-disable-next-line
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
-  const isDataLoadedRef = useRef(false); 
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  // const isDataLoadedRef = useRef(false); 
+  // const [selectedRows, setSelectedRows] = useState([]);
+  // const [modalVisible, setModalVisible] = useState(false);
 
-  const handleDownloadClick = () => {
-    setModalVisible(true); // Show the download modal
-  };
+  // const handleDownloadClick = () => {
+  //   setModalVisible(true); // Show the download modal
+  // };
 
-  const handleDownloadComplete = () => {
-    setModalVisible(false); // Hide the download modal when download is complete
-  };
+  // const handleDownloadComplete = () => {
+  //   setModalVisible(false); // Hide the download modal when download is complete
+  // };
 
   // const handleDescriptionCellClick = (rowData) => {
   //   setSelectedRowData(rowData.data);
@@ -45,46 +45,42 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
 
   
 
-  const dataSource = {
-    store: videoClips,
-    type: "array",
-    key: "id",
-  };
 
-  useEffect(() => {
-    // Update the video count whenever the videoClips data changes
-    setVideoCount(videoClips.length);
 
-    // Load videoClips data only once when it's available
-    if (!isDataLoadedRef.current && videoClips.length > 0) {
-      isDataLoadedRef.current = true;
-    }
-  }, [videoClips, setVideoCount]);
+  // useEffect(() => {
+  //   // Update the video count whenever the videoClips data changes
+  //   setVideoCount(videoClips.length);
+
+  //   // Load videoClips data only once when it's available
+  //   if (!isDataLoadedRef.current && videoClips.length > 0) {
+  //     isDataLoadedRef.current = true;
+  //   }
+  // }, [videoClips, setVideoCount]);
 
   return (<>
-    {selectedRows.length > 0 && (
+    {/* {selectedRows.length > 0 && (
       <button
         className="fixed bottom-0 right-0 m-4 p-4 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 z-50"
         onClick={handleDownloadClick}
       ><LuDownload />
       </button>
-    )}
+    )} */}
 
-    {modalVisible && (
+    {/* {modalVisible && (
       <VideoDownload
         selectedRows={selectedRows}
         onComplete={handleDownloadComplete}
       />
-    )}
+    )} */}
 
     <DataGrid
-      dataSource={dataSource}
+      dataSource={videoClips}
       showBorders={true}
       columnAutoWidth={true}
       showRowLines={true}
-      onSelectionChanged={(e) => {
-        setSelectedRows(e.selectedRowsData);
-      }}
+      // onSelectionChanged={(e) => {
+      //   setSelectedRows(e.selectedRowsData);
+      // }}
     >
       <LoadPanel enabled={false} />
       <Selection

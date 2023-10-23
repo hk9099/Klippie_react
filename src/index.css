@@ -135,6 +135,10 @@
     color: white !important; /* Change text color to white */
 }
 
+.custom-progress{
+    width: 70% !important; /* Change width to 100% */
+}
+
 .react-sweet-progress-symbol{
     color: white !important; /* Change text color to white */
 }

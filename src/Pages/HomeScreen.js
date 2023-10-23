@@ -4,8 +4,9 @@ import Navbar from '../components/Navbar';
 import { useSnackbar } from 'notistack';
 import { useCloudinary } from '../components/CloudinaryContext.js';
 import { Progress } from 'react-sweet-progress';
+import axios from 'axios';
 import "react-sweet-progress/lib/style.css";
-// import axios from 'axios';
+import { TokenManager } from '../components/getToken.js';
 
 function MyProgressBar({ bytesUploaded, totalBytes }) {
     const percent = Math.round((bytesUploaded / totalBytes) * 100) || 0;
@@ -54,15 +55,59 @@ function HomeScreen({ userName ,creaditBalance }) {
     const [bytesUploaded, setBytesUploaded] = useState(0);
     const [totalBytes, setTotalBytes] = useState(0);
     const fileInputRef = useRef(null);
-
     var loginCount = localStorage.getItem('loginCount');
+    const userToken = TokenManager.getToken();
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        setIsFileUploadedInput(true);
-        processFile(file);
+        console.log(file, 'file');
+    
+        if (file) {
+            // Create a video element to read the video file
+            const videoElement = document.createElement('video');
+            videoElement.src = URL.createObjectURL(file);
+
+            // When the video metadata is loaded, get the duration
+            videoElement.onloadedmetadata = async () => {
+                const duration = Math.floor(videoElement.duration);
+                console.log('Video Duration:', duration, 'seconds');
+                let data = JSON.stringify({
+                    "seconds": duration
+                });
+                console.log(data, 'data');
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://dev-api.getklippie.com/v1/project/project-eligibility',
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${userToken}`
+                    },
+                    data: data
+                };
+
+                try {
+                    const response = await axios.request(config);
+                    console.log(response, 'response');
+                    processFile(file);
+                    setIsFileUploadedInput(true);
+                } catch (error) {
+                    enqueueSnackbar(error.response.data.error, {
+                        variant: 'error',
+                        autoHideDuration: 1500,
+                    });
+                    console.log(error.response.data.error, 'error.response.data.message');
+                }
+            };
+
+            // Clean up the video element
+            videoElement.remove();
+        }
+
+    
         fileInputRef.current.value = '';
-    };
+      };
 
 
     const handleDragEnter = (e) => {
@@ -93,12 +138,7 @@ function HomeScreen({ userName ,creaditBalance }) {
 
         if (droppedFiles.length > 0) {
             // Files were dropped
-
             if (hasAllowedExtension) {
-                // Set isNewVideoUpload flag to true when a new video is uploaded
-                setIsNewVideoUpload(true);
-                setIsFileUploaded(true);
-
                 if (isFileUploaded) {
                     // If the entire file has already been uploaded, do nothing
                     return;
@@ -106,12 +146,57 @@ function HomeScreen({ userName ,creaditBalance }) {
 
                 // Upload the video here
                 const files = droppedFiles[0];
-                processFile(files);
-
-                enqueueSnackbar(`File uploaded successfully: ${droppedFiles[0].name}`, {
-                    variant: 'success',
-                    autoHideDuration: 1300,
-                });
+                console.log(files, 'files');
+                // processFile(files);
+                if (files) {
+                    // Create a video element to read the video file
+                    const videoElement = document.createElement('video');
+                    videoElement.src = URL.createObjectURL(files);
+        
+                    // When the video metadata is loaded, get the duration
+                    videoElement.onloadedmetadata = async () => {
+                        const duration = Math.floor(videoElement.duration);
+                        console.log('Video Duration:', duration, 'seconds');
+                        let data = JSON.stringify({
+                            "seconds": duration
+                        });
+                        console.log(data, 'data');
+                        let config = {
+                            method: 'post',
+                            maxBodyLength: Infinity,
+                            url: 'https://dev-api.getklippie.com/v1/project/project-eligibility',
+                            headers: {
+                                'accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${userToken}`
+                            },
+                            data: data
+                        };
+        
+                        try {
+                            const response = await axios.request(config);
+                            console.log(response, 'response');
+                            processFile(files);
+                            setIsFileUploadedInput(true);
+                            setIsNewVideoUpload(true);
+                            setIsFileUploaded(true)
+                            enqueueSnackbar(`File uploaded successfully: ${droppedFiles[0].name}`, {
+                                variant: 'success',
+                                autoHideDuration: 1300,
+                            });
+                            
+                        } catch (error) {
+                            enqueueSnackbar(error.response.data.error, {
+                                variant: 'error',
+                                autoHideDuration: 1500,
+                            });
+                            console.log(error.response.data.error, 'error.response.data.message');
+                        }
+                    };
+        
+                    // Clean up the video element
+                    videoElement.remove();
+                }
             } else {
                 // Show an error notification
                 enqueueSnackbar('Error: Only .mp3 and .mp4 files are allowed.', {
@@ -145,7 +230,7 @@ function HomeScreen({ userName ,creaditBalance }) {
     };
 
     const sendChunk = async (chunk, start, end, size, XUniqueUploadId, POST_URL, YOUR_CLOUD_NAME, YOUR_UNSIGNED_UPLOAD_PRESET) => {
-        console.log(`bytes ${start}-${end}/${size}`)
+        // console.log(`bytes ${start}-${end}/${size}`)
         const formdata = new FormData();
         formdata.append("file", chunk);
         formdata.append("cloud_name", YOUR_CLOUD_NAME);
@@ -166,7 +251,7 @@ function HomeScreen({ userName ,creaditBalance }) {
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
+                // console.log(responseData);
                 if (start === 0 && !isFirstChunkLogged) {
                     setIsFirstChunkLogged(true);
                 }
@@ -204,8 +289,8 @@ function HomeScreen({ userName ,creaditBalance }) {
                     <Navbar creaditBalance={creaditBalance} />
                 </div>
                 <section
-                    className={`flex-grow flex flex-col overflow-hidden dark:bg-transparent  ${isDragging ? 'border-dashed border-2 border-sky-500 dark:bg-[#ffffff2a]' : 'dark:bg-transparent'
-                        } ${isFileUploaded ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : 'dark:bg-transparent'} ${isFileUploaded ? 'pointer-events-none' : ''} ${isFileUploadedInput ? 'pointer-events-none' : ''}`}
+                    className={`flex-grow flex flex-col overflow-hidden dark:bg-transparent  ${isDragging ? 'border-dashed border-2 rounded-3xl border-sky-500 dark:bg-[#ffffff2a]' : 'dark:bg-transparent'
+                        } ${isFileUploaded ? 'border-dashed border-2 rounded-3xl border-green-500 dark:bg-[#ffffff2a]' : 'dark:bg-transparent'} ${isFileUploaded ? 'pointer-events-none' : ''} ${isFileUploadedInput ? 'pointer-events-none' : ''}`}
                 >
                     <div
                         className={`overflow-y-auto flex-grow`}
@@ -354,10 +439,12 @@ function HomeScreen({ userName ,creaditBalance }) {
                     </div>
                 {isFileUploadedInput || isFileUploaded ? (
                     <>
+                    <div className="text-white w-full text-center font-ubuntu font-semibold flex justify-center items-center">
                         <MyProgressBar bytesUploaded={bytesUploaded} totalBytes={totalBytes}/>
                         {/* <div className="text-white text-center font-ubuntu font-semibold">
                             {(bytesUploaded / 1048576).toFixed(2)}&nbsp;/&nbsp;{(totalBytes / 1048576).toFixed(2)}&nbsp;MB
                         </div> */}
+                    </div>
                     </>
                 ) : null}
                 </section>
