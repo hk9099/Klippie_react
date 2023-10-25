@@ -87,6 +87,7 @@ function PricingCardsContainer({ isOpen, onClose }) {
             }
         }
         fetchSubscriptions();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 

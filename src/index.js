@@ -6,7 +6,7 @@ import App from './App';
 import { ThemeProvider } from './components/ThemeContext';
 import Background from './components/Background';
 import 'tailwindcss/tailwind.css';
-import { MantineProvider } from '@mantine/core';
+// import { MantineProvider } from '@mantine/core';
 
 const noop = () => { };
 
@@ -32,12 +32,12 @@ if (process.env.NODE_ENV === 'production') {
 const root = createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <MantineProvider withGlobalStyles withNormalizeCSS>
+    {/* <MantineProvider withGlobalStyles withNormalizeCSS> */}
         <ThemeProvider>
           <Background>
             <App />
           </Background>
         </ThemeProvider>
-    </MantineProvider>
+    {/* </MantineProvider> */}
   </React.StrictMode>
 );
