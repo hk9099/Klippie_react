@@ -18,6 +18,12 @@ module.exports = {
         'custom-modal-bg-color' : '#B3B5E2',
         'custom-modal-text-color' : '#020913'
       },
+      borderWidth: {
+        'gradient': '4px',
+      },
+      borderColor: {
+        'gradient': 'linear-gradient(to right, #FF0000, #00FF00)', // Define your gradient colors here
+      },
       // colors: {
       //   black: '#09090c',
       //   darkGray: '#121212',

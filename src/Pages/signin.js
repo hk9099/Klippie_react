@@ -15,6 +15,7 @@ import axios from 'axios';
 import Hiiii from '../assets/images/hi_40x40.gif';
 import { HiOutlineMail } from 'react-icons/hi';
 import { TokenManager } from '../components/getToken.js';
+import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
 
 
 function Signin() {
@@ -35,14 +36,16 @@ function Signin() {
         localStorage.setItem('loginCount', newCount.toString());
         setLoginCount(newCount);
     };
+    const { setClipsFoundStatus } = useClipsFoundStatus();
 
     useEffect(() => {
         if (user) {
             setIsLoading(true);
             // const email = atob(encodedEmail); // Decode email
             navigate('/dashboard');
+            // setClipsFoundStatus(false);
         }
-    }, [user, navigate]);
+    }, [user, navigate , setClipsFoundStatus]);
 
     // const handleGoogleLogin = () => {
     //     const customProvider = new GoogleAuthProvider();

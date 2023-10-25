@@ -15,7 +15,7 @@ import { TokenManager } from '../components/getToken.js';
 
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
-    const { setClipsFoundStatus } = useClipsFoundStatus();
+    const { setClipsFoundStatus ,setShowHomeStatus} = useClipsFoundStatus();
     const userToken = TokenManager.getToken();
     const navigate = useNavigate();
     const { projectId: routeProjectId } = useParams();
@@ -136,6 +136,8 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
             setAllApiCompleted(true);
             setIsSuggetionpopupOpen(true);
             setClipsFoundStatus(false);
+            setShowHomeStatus(true);
+
         } catch (error) {
             if (error.name === 'AbortError') {
                 enqueueSnackbar('API call aborted',
@@ -241,7 +243,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
             {closeButton}
-            {!isLoading && accordionVisible && (
+            {!isLoading && accordionVisible &&  (
                 <AccordionSection videoClips={newvideoClips} />
             )}
         </div>

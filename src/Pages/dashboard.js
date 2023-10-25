@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams ,useLocation} from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 // import Navbar from "../components/Navbar";
 import Modal from "../components/Modal";
@@ -18,9 +18,13 @@ import PopupForm from '../components/sessionPopup.js';
 import { useSnackbar } from 'notistack';
 
 export default function Dashboard() {
+  const location = useLocation();
   const userToken = TokenManager.getToken();
   const [showPopup, setShowPopup] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  
+
+ 
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -49,13 +53,22 @@ export default function Dashboard() {
   const setError = (message) => {
     setErrorMessage(message);
   };
+
+  useEffect(() => {
+    if (location.pathname === '/dashboard') {
+      setClipsFoundStatus(false)
+      setAccordionVisible(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname ]);
+
   useEffect(() => {
     if (userToken) {
       navigate('/dashboard');
     } else {
      setShowPopup(true);
     }
-  }, [userToken, navigate]);
+  }, [userToken, navigate ]);
 
   const handleSubmit = async (values) =>  {
     console.log('Form data:', values);
@@ -99,6 +112,7 @@ export default function Dashboard() {
         // }
 
         navigate('/dashboard');
+        setClipsFoundStatus(true);
       } else {
         enqueueSnackbar('Invalid response from the server.', {
           variant: 'error',
@@ -267,6 +281,8 @@ export default function Dashboard() {
                   errorMessage={errorMessage}
                   accordionVisible={accordionVisible}
                   cloudinaryResponse={cloudinaryResponse}
+                  userName={userName}
+                   creaditBalance={creaditBalance}
                 />
               ) : (
                 <HomeScreen userName={userName} creaditBalance={creaditBalance} />

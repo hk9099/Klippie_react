@@ -254,7 +254,7 @@ align-items: center;
 gap: 12px;
 }
 
-.dashborardbg::after{
+.dashborardbg::before{
   position: absolute;
 content: '';
 top: 0;
@@ -267,7 +267,7 @@ flex-shrink: 0;
 border-radius: 825px;
 background: var(--background-highlight, rgba(89, 82, 130, 0.40));
 filter: blur(150px);
-z-index: 9;
+/* z-index: 9; */
 }
 
 .active {

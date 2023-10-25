@@ -7,6 +7,7 @@ import Loader from './Loader.js';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { FaMobileAlt } from 'react-icons/fa';
+import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
 
 
 function Signin() {
@@ -17,6 +18,7 @@ function Signin() {
     const [attempts, setAttempts] = useState(0);
     const [showResendButton, setShowResendButton] = useState(true);
     const [resendButtonLoading, setResendButtonLoading] = useState(false);
+    const { setClipsFoundStatus } = useClipsFoundStatus();
 
     useEffect(() => {
         const encodedEmail = localStorage.getItem('_auth');
@@ -25,8 +27,9 @@ function Signin() {
             setIsLoading(true);
             // const email = atob(encodedEmail); // Decode email
             navigate('/dashboard');
+            // setClipsFoundStatus(false);
         }
-    }, [navigate]);
+    }, [navigate , setClipsFoundStatus]);
 
     useEffect(() => {
         const email = localStorage.getItem('email');

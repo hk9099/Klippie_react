@@ -26,6 +26,7 @@ import { TokenManager } from '../components/getToken.js';
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { setCloudinaryResponse } = useCloudinary();
   const { clipsFound } = useClipsFoundStatus();
+  //eslint-disable-next-line
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { setUserName } = useUserNickname();
   const { setUserEmail } = useUserNickname();
@@ -58,7 +59,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
-  const isDashboard = window.location.pathname === '/dashboard';
   const userToken = TokenManager.getToken();
 
   const closeDropdown = () => {
@@ -86,7 +86,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
-  }, [initialized, navigate, setUserNickname, setUserEmailAddress,setCreadit, setUserAvatar, HOSTINGURL, refreshProfile]);
+  }, []);
 
 
 
@@ -362,7 +362,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
 
   const handleAddNewVideo = () => {
-    console.log('isDashboard', isDashboard);
     setAccordionVisible(false);
     setProjectId('');
     setCloudinaryResponse(null);

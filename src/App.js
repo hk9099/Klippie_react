@@ -54,10 +54,11 @@ function App() {
                     path="/dashboard/:projectId" // Define a dynamic parameter
                     element={<Layout><Dashboard /></Layout>}
                   />
+                  
                   <Route path="/otpVarification" element={<OtpVarification />} />
                   <Route path="/steps" element={<Steps />} />
                   <Route path="/" element={<Signin />} />
-                  <Route path="/homescreen" element={<HomeScreen />} />
+                  <Route path="/homescreen" element={<Layout><HomeScreen /></Layout>} />
                     <Route path="/Test" element={<Test />} />
                   <Route path="/pricing" element={<PricingCardsContainer />} />
                 </Routes>

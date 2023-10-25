@@ -1,10 +1,10 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
 import { BiCheck } from 'react-icons/bi';
 
-function PricingCard({ title, price, time, description, planDetails, benefits, id, benefitTitle }) {
-   
+function PricingCard({ title, price, time, description, planDetails, benefits, id, benefitTitle, highlightBorder }) {
+
     const [subRetrieved, setSubRetrieved] = useState(false);
     const userToken = TokenManager.getToken();
 
@@ -84,14 +84,23 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
                         console.error(err);
                     }
                 },
-                loaded: () => { },
+                loaded: () => {
+                    console.log('loaded')
+                 },
                 close: () => {
-                    console.log('closed');
+                    window.location.reload();
                 },
                 success: async () => {
                     console.log('sucess')
                     await handlePolling();
                     setTimeout(closePolling, 20000);
+                    window.location.reload();
+                },
+                step: () => {
+                    console.log('step')
+                },
+                error: () => {
+                    console.log('error')
                 },
             });
         } else {
@@ -116,58 +125,59 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
         //         Get Started
         //     </button>
         // </div>
-        <div className="bg-gray-700 bg-opacity-10 dark:bg-opacity-30 rounded-3xl shadow-lg text-center p-6 border border-gray-500 dark:border-gray-400">
-        <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100  font-nunito">
-            {title}
-        </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-300 mb-5 font-nunito">
-            {description}
-        </p>
-        <h1 className="text-5xl font-[300] text-gray-900 dark:text-gray-100 mb-1 font-nunito">
-            {price}
-        </h1>
-        <h3 className="text-lg font-light text-gray-900 dark:text-gray-100 mb-4 font-nunito">
-            {time}
-        </h3>
-        <ul className="space-y-3 text-gray-700 dark:text-gray-400 dark:bg-gray-700 dark:bg-opacity-30 p-4 rounded-lg font-nunito">
-            {planDetails.map((detail, index) => (
-                <li key={index} className={index === 0 || index === planDetails.length - 1 ? '' : 'border-b border-gray-400 dark:border-gray-700 pb-2 font-nunito'}>
-                    {Object.entries(detail).map(([key, value], i) => (
-                        <div key={key} className={`flex justify-between font-nunito ${i === 0 && index === 0 ? 'text-center' : ''}`}>
-                            <span className={`font-bold dark:text-gray-100 ${i === 0 && index === 0 ? 'mx-auto text-xl' : ''}`}>
-                                {i === 0 && index === 0 ? value : key}
-                            </span>
-                            <span>{i === 0 && index === 0 ? '' : value}</span>
-                        </div>
-                    ))}
-                </li>
-            ))}
-            <button
-                className=" bg-gray-900 text-white font-extrabold text-xl py-2 px-4 rounded-lg hover:bg-gray-800 transition duration-300 block w-full font-nunito border-[0.2px] border-gray-900 dark:border-gray-400"
-                onClick={handleButtonClick}
-                name={`button_${id}`}
-            >
-                {id === null ? 'Start Creating' : 'Get Started'}
-            </button>
-        </ul>
-        <div className="relative mt-4">
-            <hr className="absolute top-1/2 left-0 w-1/3 border border-gray-400 dark:border-gray-700" />
-            <span className="text-gray-700 z-10 dark:text-gray-400 text-sm py-1 font-nunito relative dark:bg-[#0D0E20] dark:bg-opacity-100 px-3 rounded-xl ">
-                {benefitTitle}
-            </span>
-            <hr className="absolute top-1/2 right-0 w-1/3 border border-gray-400 dark:border-gray-700" />
+        <div className={`bg-gray-700 bg-opacity-10 dark:bg-opacity-30 rounded-3xl shadow-lg text-center p-6 border border-gray-500 dark:border-gray-400 ${highlightBorder ? 'dark:border-indigo-700 border-4 border-dashed border-opacity-50 bg-indigo-900 bg-opacity-10' : ''}`}>
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100  font-nunito">
+                {title}
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-5 font-nunito">
+                {description}
+            </p>
+            <h1 className="text-5xl font-[300] text-gray-900 dark:text-gray-100 mb-1 font-nunito">
+                {price}
+            </h1>
+            <h3 className="text-lg font-light text-gray-900 dark:text-gray-100 mb-4 font-nunito">
+                {time}
+            </h3>
+            <ul className={`space-y-3 text-gray-700 dark:text-gray-400 dark:bg-gray-700 dark:bg-opacity-30 p-4 rounded-lg font-nunito ${highlightBorder ? 'border-2 border-indigo-700 bg-indigo-700 bg-opacity-10' : ''}`}>
+                {planDetails.map((detail, index) => (
+                    <li key={index} className={index === 0 || index === planDetails.length - 1 ? '' : 'border-b border-gray-400 dark:border-gray-700 pb-2 font-nunito'}>
+                        {Object.entries(detail).map(([key, value], i) => (
+                            <div key={key} className={`flex justify-between font-nunito ${i === 0 && index === 0 ? 'text-center' : ''}`}>
+                                <span className={`font-bold dark:text-gray-100 ${i === 0 && index === 0 ? 'mx-auto text-xl' : ''}`}>
+                                    {i === 0 && index === 0 ? value : key}
+                                </span>
+                                <span>{i === 0 && index === 0 ? '' : value}</span>
+                            </div>
+                        ))}
+                    </li>
+                ))}
+                <button
+                    className={` bg-gray-900 text-white font-extrabold text-xl py-2 px-4 rounded-lg hover:bg-gray-800 transition duration-300 block w-full font-nunito border-[0.2px] border-gray-900 dark:border-gray-400 ${highlightBorder ? 'bg-indigo-900 cursor-not-allowed hover:bg-indigo-700' : ''}`}
+                    onClick={handleButtonClick}
+                    name={`button_${id}`}
+                    disabled={highlightBorder}
+                >
+                    {highlightBorder ? 'Subscribed' : id === null ? 'Start Creating' : 'Get Started'}
+                </button>
+            </ul>
+            <div className="relative mt-4">
+                <hr className="absolute top-1/2 left-0 w-1/3 border border-gray-400 dark:border-gray-700" />
+                <span className="text-gray-700 z-10 dark:text-gray-400 text-sm py-1 font-nunito relative dark:bg-[#0D0E20] dark:bg-opacity-100 px-3 rounded-xl ">
+                    {benefitTitle}
+                </span>
+                <hr className="absolute top-1/2 right-0 w-1/3 border border-gray-400 dark:border-gray-700" />
+            </div>
+
+
+            <ul className=" text-gray-700 dark:text-gray-400 mt-4">
+                {benefits.map((benefit, index) => (
+                    <li key={index} className="flex items-center my-3">
+                        <BiCheck className="text-green-500 mr-2" />
+                        {benefit}
+                    </li>
+                ))}
+            </ul>
         </div>
-
-
-        <ul className=" text-gray-700 dark:text-gray-400 mt-4">
-            {benefits.map((benefit, index) => (
-                <li key={index} className="flex items-center my-3">
-                    <BiCheck className="text-green-500 mr-2" />
-                    {benefit}
-                </li>
-            ))}
-        </ul>
-    </div>
     );
 }
 

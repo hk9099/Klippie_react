@@ -10,6 +10,8 @@ function Suggetionpopup({ isOpen, onClose }) {
                 aria-hidden="true"
                 className="fixed h-screen top-0 left-0 right-0 flex justify-center items-center z-50"
             >
+                      <div className="absolute w-full h-full bg-black opacity-50 blur-xl" onClick={onClose}   ></div>
+
           <div className="relative w-auto max-w-2xl mx-auto px-4">
             <div className="bg-white rounded-lg relative dark:bg-[#1d2e61] ">
               <button
