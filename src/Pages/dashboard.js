@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams ,useLocation} from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 // import Navbar from "../components/Navbar";
 import Modal from "../components/Modal";
@@ -22,16 +22,16 @@ export default function Dashboard() {
   const userToken = TokenManager.getToken();
   const [showPopup, setShowPopup] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  
 
- 
+
+
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (TokenManager.isTokenExpired()) {
         TokenManager.removeToken();
         setShowPopup(true);
-      } 
+      }
     }, 60 * 1000);
 
     return () => {
@@ -49,7 +49,7 @@ export default function Dashboard() {
   console.log(accordionVisible, 'accordionVisible');
   const [errorMessage, setErrorMessage] = useState("");
   const { userName } = useUserNickname();
-  const {creaditBalance} = useUserNickname();
+  const { creaditBalance } = useUserNickname();
   const setError = (message) => {
     setErrorMessage(message);
   };
@@ -60,17 +60,17 @@ export default function Dashboard() {
       setAccordionVisible(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname ]);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (userToken) {
       navigate('/dashboard');
     } else {
-     setShowPopup(true);
+      setShowPopup(true);
     }
-  }, [userToken, navigate ]);
+  }, [userToken, navigate]);
 
-  const handleSubmit = async (values) =>  {
+  const handleSubmit = async (values) => {
     console.log('Form data:', values);
     try {
       const response = await axios.post(
@@ -99,7 +99,7 @@ export default function Dashboard() {
         // localStorage.setItem('_sodfhgiuhih', encodedUser);
         // const encodedEmail = btoa(values.email);
         // localStorage.setItem('_auth', encodedEmail);
-        TokenManager.setToken('userToken', 2160 , encodedUser);
+        TokenManager.setToken('userToken', 2160, encodedUser);
         window.location.reload();
         // const userToken = Cookies.get('userToken');
         // if (userToken) {
@@ -163,25 +163,25 @@ export default function Dashboard() {
       navigate(`/dashboard/${routeProjectId}`);
     }
     const handleProjectClick = async (index) => {
- 
-        let maindata = JSON.stringify({
-          "id": routeProjectId
-        });
 
-        let mainconfig = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: `${HOSTINGURL}/v1/project/get-by-id`,
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userToken}`
-          },
-          data: maindata
-        };
+      let maindata = JSON.stringify({
+        "id": routeProjectId
+      });
 
-        const response = await axios.request(mainconfig);
-        console.log(response.data, 'responseeeeeeeeeeee.data');
+      let mainconfig = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `${HOSTINGURL}/v1/project/get-by-id`,
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`
+        },
+        data: maindata
+      };
+
+      const response = await axios.request(mainconfig);
+      console.log(response.data, 'responseeeeeeeeeeee.data');
       const title = response.data.data.title;
       const description = response.data.data.description;
       const src = response.data.data.video_url;
@@ -205,7 +205,7 @@ export default function Dashboard() {
         ];
         updateMainVideo(newMainVideo);
         setnewMainVideo(newMainVideo);
-      }; 
+      };
       if (response.data.data.clips && Array.isArray(response.data.data.clips)) {
         const newvideoClips = await Promise.all(response.data.data.clips.map(async (clip) => {
           // Split the time string into parts
@@ -231,8 +231,8 @@ export default function Dashboard() {
         }));
         setNewvideoClips(newvideoClips);
         setAccordionVisible(true);
-        
-      } 
+
+      }
     };
 
     handleProjectClick()
@@ -273,7 +273,7 @@ export default function Dashboard() {
           ) : (
             // Render other components when showPopup is false
             <>
-                {(accordionVisible || cloudinaryResponse) ? (
+              {(accordionVisible || cloudinaryResponse) ? (
                 <Steps
                   projectId={projectId}
                   newhistoryvideoClips={newvideoClips}
@@ -282,7 +282,7 @@ export default function Dashboard() {
                   accordionVisible={accordionVisible}
                   cloudinaryResponse={cloudinaryResponse}
                   userName={userName}
-                   creaditBalance={creaditBalance}
+                  creaditBalance={creaditBalance}
                 />
               ) : (
                 <HomeScreen userName={userName} creaditBalance={creaditBalance} />

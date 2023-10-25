@@ -14,7 +14,7 @@ import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
 import { TokenManager } from '../components/getToken.js';
 
 
-const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
+const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userName ,creaditBalance}) => {
     const { setClipsFoundStatus ,setShowHomeStatus} = useClipsFoundStatus();
     const userToken = TokenManager.getToken();
     const navigate = useNavigate();
@@ -238,7 +238,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse }) => {
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
                 )}
                 {!accordionVisible && (
-                    <HomeScreen />
+                    <HomeScreen userName={userName} creaditBalance={creaditBalance} />
                 )}
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
