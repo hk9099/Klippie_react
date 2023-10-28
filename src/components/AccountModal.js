@@ -7,6 +7,7 @@ import axios from 'axios';
 import UserModal from '../components/UserModal.js';
 import { useSnackbar } from 'notistack';
 import { TokenManager } from '../components/getToken.js';
+import SubscriptionModal from './SubscriptionModal.js';
 
 var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
@@ -111,6 +112,14 @@ const AccountModal = ({
                         >
                             Profile
                             </button>
+                        )} 
+                        {!social && (
+                            <button
+                            onClick={() => setActiveTab('subscriptions')}
+                            className="bg-red-500 text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white"
+                        >
+                            Subscriptions
+                        </button>
                         )}
                     </div>
 
@@ -173,7 +182,7 @@ const AccountModal = ({
                                             <Field
                                                 type={showOldPassword ? 'text' : 'password'}
                                                 name="oldPassword"
-                                                className="px-4 py-2 border rounded-md relative placeholder:text-gray-400 bg-transparent"
+                                                className="px-4 py-2 border rounded-lg relative placeholder:text-gray-400 bg-transparent"
                                                 placeholder="Enter your current password"
                                             />
                                             <div
@@ -285,7 +294,9 @@ const AccountModal = ({
                                 />
                             </Formik>
                         )}
-
+                        {activeTab === 'subscriptions' && (
+                           <SubscriptionModal  />
+                        )}
                     </div>
                 </div>
             </div>

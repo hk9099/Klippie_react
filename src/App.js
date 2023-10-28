@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RotatingLines } from "react-loader-spinner";
 import { UserNicknameProvider } from './components/userNicknameContext.js';
 import { CloudinaryProvider } from './components/CloudinaryContext.js';
+import {SubscriptionProvider} from './components/SubscriptionContext.js';
 import { SidebarProvider } from './components/SidebarContext.js';
 import { SnackbarProvider } from 'notistack';
 import { useParams } from 'react-router-dom';
@@ -38,6 +39,7 @@ function App() {
       }>
    
         <UserNicknameProvider>
+          <SubscriptionProvider>
           <ClipsFoundProvider>
           <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={1500}>
             <SidebarProvider>
@@ -66,6 +68,7 @@ function App() {
             </SidebarProvider>
             </SnackbarProvider>
           </ClipsFoundProvider>
+          </SubscriptionProvider>
         </UserNicknameProvider>
       </Suspense>
     </Router>

@@ -1,18 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { BsStopwatch } from 'react-icons/bs';
-import PricingModal from '../Pages/PricingCardsContainer';
+import PricingCardsContainer from '../Pages/PricingCardsContainer';
+import axios from 'axios';
+import { TokenManager } from '../components/getToken.js';
 
 const Navbar = ({ creaditBalance }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const userToken = TokenManager.getToken();
+    const [subscribed, setSubscribed] = useState(false);
     const openModal = () => {
         setIsModalOpen(true);
     };
 
-    const closeModal = () => {
+    const closeModal = () => { 
         setIsModalOpen(false);
     };
+    useEffect(() => {
+        const fetchSubscriptions = async () => {
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://dev-api.getklippie.com/v1/sub/get',
+                headers: {
+                    'accept': 'application/json',
+                    'Authorization': 'Bearer ' + userToken,
+                }
+            };
 
+            const response = await axios(config);
+            console.log(response.data.data.is_active, 'response.data.data.is_active');
+            if (response.data.data.is_active === true) {
+                console.log('subscribed');
+                setSubscribed(true);
+            } else {
+                console.log('not subscribed');
+                setSubscribed(false);
+            }
+        }
+        fetchSubscriptions();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const secondsToHHMMSS = (seconds) => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -50,8 +77,8 @@ const Navbar = ({ creaditBalance }) => {
                             </div>
                         )}
                          <button
-                            className='text-gray-300 w-auto text-center inline-block px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg'
-                            onClick={openModal} // Open the modal when this button is clicked
+                            className={`text-gray-300 w-auto text-center inline-block px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed ? 'hidden' : 'bg-blue-500'}`}
+                            onClick={openModal}
                         >
                             <span className={`text-content select-none`}>Upgrade</span>
                         </button>
@@ -59,7 +86,7 @@ const Navbar = ({ creaditBalance }) => {
                 </div>
             </nav>
             {isModalOpen && (
-                <PricingModal isOpen={isModalOpen} onClose={closeModal} />
+                <PricingCardsContainer isOpen={isModalOpen} onClose={closeModal} />
             )}
         </>
     );
