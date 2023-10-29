@@ -368,7 +368,7 @@ function HomeScreen({ userName, creaditBalance }) {
                                     </div>
                                 </div>
 
-                                <div className="text-white select-none cursor-pointer px-4 py-5 w-full h-[410px] font-bold text-lg inline-block  dark:bg-[#ffffff2a] rounded-[50px] me-4">
+                                <div className="text-white select-none cursor-pointer px-4 py-5 w-full h-[420px] font-bold text-lg inline-block  dark:bg-[#ffffff2a] rounded-[50px] me-4">
                                     <div className="flex justify-center items-center px-3 mb-3  ">
                                         <span className="text-2xl font-bold text-white">💡</span>
                                         <h2 className="ms-3 text-gradient-tips w-full font-bold text-3xl inline-block rounded-2xl bg-clip-text text-transparent ">

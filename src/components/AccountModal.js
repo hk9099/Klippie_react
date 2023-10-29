@@ -97,8 +97,8 @@ const AccountModal = ({
                     {!social && (
                         <button
                             onClick={() => setActiveTab('profile')}
-                            className={`${activeTab === 'profile' ? 'dark:bg-blue-500' : 'bg-gray-400'
-                                } text-white px-4 py-2 font-extrabold rounded-md dark:bg-gray-700 dark:text-white`}
+                            className={`${activeTab === 'profile' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'
+                                } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
                         >
                             Profile
                             </button>
@@ -106,7 +106,7 @@ const AccountModal = ({
                         {!social && (
                             <button
                                 onClick={() => setActiveTab('changePassword')}
-                                className={`${activeTab === 'changePassword' ? 'dark:bg-blue-500' : 'bg-gray-400' } text-white px-4 py-2 font-extrabold rounded-md dark:bg-gray-700 dark:text-white`}
+                                className={`${activeTab === 'changePassword' ? 'dark:bg-blue-500' : 'dark:bg-gray-700' } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
                             >
                                 Change&nbsp;Password
                             </button>
@@ -114,7 +114,7 @@ const AccountModal = ({
                         {!social && (
                             <button
                             onClick={() => setActiveTab('subscriptions')}
-                            className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'bg-gray-400' } text-white px-4 py-2 font-extrabold rounded-md dark:bg-gray-700 dark:text-white`}
+                            className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'dark:bg-gray-700' } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
                             >
                             Subscriptions
                         </button>

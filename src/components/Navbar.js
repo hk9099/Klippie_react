@@ -8,6 +8,7 @@ const Navbar = ({ creaditBalance }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const userToken = TokenManager.getToken();
     const [subscribed, setSubscribed] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const openModal = () => {
         setIsModalOpen(true);
     };
@@ -17,6 +18,7 @@ const Navbar = ({ creaditBalance }) => {
     };
     useEffect(() => {
         const fetchSubscriptions = async () => {
+            setIsLoading(true);
             let config = {
                 method: 'post',
                 maxBodyLength: Infinity,
@@ -32,9 +34,11 @@ const Navbar = ({ creaditBalance }) => {
             if (response.data.data.is_active === true) {
                 console.log('subscribed');
                 setSubscribed(true);
+                setIsLoading(false);
             } else {
                 console.log('not subscribed');
                 setSubscribed(false);
+                setIsLoading(false);
             }
         }
         fetchSubscriptions();
@@ -76,6 +80,7 @@ const Navbar = ({ creaditBalance }) => {
                                 </div>
                             </div>
                         )}
+                        
                          <button
                             className={`text-gray-300 w-auto text-center inline-block px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed ? 'hidden' : 'bg-blue-500'}`}
                             onClick={openModal}
