@@ -115,10 +115,10 @@ const VideoPlayer = ({ src, title,type }) => {
                 <HiOutlineDownload />
                 {isLoading ? "Downloading..." : `Download ${type === 'mp4' ? 'Video' : 'Audio'}`}
             </button>
-            <button className="Download_button m-auto mt-2" >
+            {/* <button className="Download_button m-auto mt-2" >
                 edit
                
-            </button>
+            </button> */}
         </>
     );
 };
