@@ -20,6 +20,7 @@ const Layout = lazy(() => import('./Pages/Layout.js'));
 const Steps = lazy(() => import('./Pages/Steps.js'));
 const HomeScreen = lazy(() => import('./Pages/HomeScreen.js'));
 const PricingCardsContainer = lazy(() => import('./Pages/PricingCardsContainer.js'));
+const YouTube = lazy(() => import('./components/YouTube.js'));
 
 function App() {
   const { projectId } = useParams();
@@ -63,6 +64,7 @@ function App() {
                   <Route path="/homescreen" element={<Layout><HomeScreen /></Layout>} />
                     <Route path="/Test" element={<Test />} />
                   <Route path="/pricing" element={<PricingCardsContainer />} />
+                  <Route path="/youtube" element={<YouTube />} />
                 </Routes>
               </CloudinaryProvider>
             </SidebarProvider>

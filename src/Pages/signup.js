@@ -93,15 +93,15 @@ function Signup({ errors, touched }) {
     name: Yup.string()
       .required("Name is required")
       .max(50, "Name is too long - should be 50 chars maximum."),
-    email: Yup.string()
+      email: Yup.string()
       .email("Invalid email address")
       .required("Email is required")
       .max(50, "Email is too long - should be 50 chars maximum.")
       .matches(
-        /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+        /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
         "Invalid email address"
       )
-      .lowercase(),
+      .lowercase(),    
     password: Yup.string()
       .required("Password is required")
       .min(8, "Password is too short - should be 8 chars minimum.")

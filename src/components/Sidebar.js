@@ -323,6 +323,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   };
 
   const handleProjectClick = async (index) => {
+    console.log(projectData[index].id);
     const data = JSON.stringify({
       "id": projectData[index].id
     });

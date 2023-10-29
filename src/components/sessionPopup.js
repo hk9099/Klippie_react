@@ -4,7 +4,15 @@ import * as Yup from 'yup';
 import Logo from '../assets/images/logo.svg';
 
 const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Email is required'),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required")
+      .max(50, "Email is too long - should be 50 chars maximum.")
+      .matches(
+        /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+        "Invalid email address"
+      )
+      .lowercase(),
     password: Yup.string().required('Password is required'),
 });
 

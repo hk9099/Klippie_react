@@ -142,7 +142,15 @@ const MultiStepForm = () => {
     };
 
     const validationSchema = Yup.object({
-        email: Yup.string().email('Invalid email address').required('Email is required'),
+        email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required")
+      .max(50, "Email is too long - should be 50 chars maximum.")
+      .matches(
+        /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+        "Invalid email address"
+      )
+      .lowercase(),
         otp: Yup.string().required('Code is required').min(6, 'Code must be 6 digits').max(6, 'Code must be 6 digits').matches(/^[0-9]+$/, "Must be only digits").typeError('Must be a number'),
         password: Yup.string().required('Password is required'),
         confirm_password: Yup.string()

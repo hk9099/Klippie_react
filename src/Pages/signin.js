@@ -109,8 +109,16 @@ function Signin() {
     };
 
     const validationSchema = Yup.object({
-        email: Yup.string().email('Invalid email address').required('Required').max(50, 'Email is too long - should be 50 chars maximum.').matches(/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/, 'Invalid email address').lowercase(),
-        password: Yup.string().required('Required').min(8, 'Password is too short - should be 8 chars minimum.').matches(
+        email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required")
+        .max(50, "Email is too long - should be 50 chars maximum.")
+        .matches(
+          /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+          "Invalid email address"
+        )
+        .lowercase(),
+                password: Yup.string().required('Required').min(8, 'Password is too short - should be 8 chars minimum.').matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
             'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
         ),
