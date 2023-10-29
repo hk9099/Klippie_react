@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-
+import Navbar from "../components/Navbar";
 import Modal from "../components/Modal";
 import Steps from "../Pages/Steps";
 import HomeScreen from "../Pages/HomeScreen";
@@ -266,12 +266,10 @@ export default function Dashboard() {
         )}
         <div className="w-full overflow-x-auto px-3 ">
           <Modal className="z-50" />
-          {/* {accordionVisible && <Navbar />} */}
+          {accordionVisible &&  <Navbar creaditBalance={creaditBalance} />}
           {showPopup ? (
-            // Render only the PopupForm when showPopup is true
             <PopupForm onSubmit={handleSubmit} onCancel={handleCancel} />
           ) : (
-            // Render other components when showPopup is false
             <>
               {(accordionVisible || cloudinaryResponse) ? (
                 <Steps

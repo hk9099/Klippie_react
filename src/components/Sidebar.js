@@ -62,6 +62,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const userToken = TokenManager.getToken();
+  //eslint-disable-next-line
   const [videoURL, setVideoURL] = useState([]);
   const [previewVideoURL, setPreviewVideoURL] = useState(null);
   // console.log(videoURL, 'videoURL')
