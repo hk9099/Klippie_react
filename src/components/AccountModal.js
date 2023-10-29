@@ -43,7 +43,6 @@ const AccountModal = ({
     const [social, setSocial] = useState(false);
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(!social ? 'profile' : 'changePassword');
-
     // useEffect(() => {
     //     const encodedToken = localStorage.getItem('_sodfhgiuhih');
     //     const userGoogle = localStorage.getItem('_auth');
@@ -67,7 +66,7 @@ const AccountModal = ({
             className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50 ${showAccount ? '' : 'hidden'
                 } `}
         >
-            <div className={`bg-white rounded p-4 flex flex-col gap-4 dark:bg-gray-800 ${!social ? 'w-[600px]' : 'w-[400px]'} `}>
+            <div className={`bg-white rounded-3xl border p-4 flex flex-col gap-4 dark:bg-gray-800 ${!social ? 'w-[600px]' : 'w-[400px]'}  dark:border-gray-700`}>
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                         
@@ -95,29 +94,28 @@ const AccountModal = ({
                 </div>
                 <div className="flex flex-row">
                     <div className="w-25 flex flex-col gap-2">
-                        {!social && (
-                            <button
-                                onClick={() => setActiveTab('changePassword')}
-                                className={`${activeTab === 'changePassword' ? 'bg-blue-500' : 'bg-gray-400'
-                                    } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
-                            >
-                                Change&nbsp;Password
-                            </button>
-                        )} 
-                        {!social && (
+                    {!social && (
                         <button
                             onClick={() => setActiveTab('profile')}
-                            className={`${activeTab === 'profile' ? 'bg-blue-500' : 'bg-gray-400'
-                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
+                            className={`${activeTab === 'profile' ? 'dark:bg-blue-500' : 'bg-gray-400'
+                                } text-white px-4 py-2 font-extrabold rounded-md dark:bg-gray-700 dark:text-white`}
                         >
                             Profile
                             </button>
                         )} 
                         {!social && (
                             <button
+                                onClick={() => setActiveTab('changePassword')}
+                                className={`${activeTab === 'changePassword' ? 'dark:bg-blue-500' : 'bg-gray-400' } text-white px-4 py-2 font-extrabold rounded-md dark:bg-gray-700 dark:text-white`}
+                            >
+                                Change&nbsp;Password
+                            </button>
+                        )} 
+                        {!social && (
+                            <button
                             onClick={() => setActiveTab('subscriptions')}
-                            className="bg-red-500 text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white"
-                        >
+                            className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'bg-gray-400' } text-white px-4 py-2 font-extrabold rounded-md dark:bg-gray-700 dark:text-white`}
+                            >
                             Subscriptions
                         </button>
                         )}

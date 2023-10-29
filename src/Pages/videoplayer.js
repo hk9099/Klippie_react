@@ -44,36 +44,36 @@ const videoOptions = {
     progressFloatPosition: "",
     mode: "scaleToFill",
 };
-const VideoPlayer = ({ src, title,type }) => {
+const VideoPlayer = ({ src, title, type, sidebar }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
-  
+
     const handleDownload = async () => {
         try {
             setIsLoading(true);
 
             if (!src) {
-               enqueueSnackbar("No video source found", { variant: "error" }, { preventDuplicate: true }, { autoHideDuration: 2000 });
+                enqueueSnackbar("No video source found", { variant: "error" }, { preventDuplicate: true }, { autoHideDuration: 2000 });
             }
 
             if (type === "mp4") {
-            const response = await fetch(src);
-            console.log(response);
-            const videoBlob = await response.blob();
+                const response = await fetch(src);
+                console.log(response);
+                const videoBlob = await response.blob();
 
-            const blobURL = URL.createObjectURL(videoBlob);
+                const blobURL = URL.createObjectURL(videoBlob);
 
-            const downloadLink = document.createElement("a");
-            downloadLink.href = blobURL;
-            downloadLink.download = `${title}.mp4`
-            document.body.appendChild(downloadLink);
+                const downloadLink = document.createElement("a");
+                downloadLink.href = blobURL;
+                downloadLink.download = `${title}.mp4`
+                document.body.appendChild(downloadLink);
 
-            // Programmatically click the link to trigger the download
-            downloadLink.click();
+                // Programmatically click the link to trigger the download
+                downloadLink.click();
 
-            // Clean up: Remove the download link and revoke the Blob object URL
-            document.body.removeChild(downloadLink);
-            URL.revokeObjectURL(blobURL);
+                // Clean up: Remove the download link and revoke the Blob object URL
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(blobURL);
             } else {
                 const response = await fetch(src);
                 console.log(response);
@@ -104,21 +104,20 @@ const VideoPlayer = ({ src, title,type }) => {
 
     return (
         <>
-                <JolPlayer
-                    className="w-[400px!important] h-[230px!important] m-[auto!important]"
-                    option={{
-                        videoSrc: [src],
-                        ...videoOptions,
-                    }}
-                />
-            <button className="Download_button m-auto mt-2" onClick={handleDownload}>
+            <JolPlayer
+                className="w-[400px!important] h-[230px!important] m-[auto!important]"
+                option={{
+                    videoSrc: [src],
+                    ...videoOptions,
+                }}
+            />
+            <button 
+            className={`border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full w-[335px] text-center p-2  gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center`}
+                onClick={handleDownload}>
                 <HiOutlineDownload />
                 {isLoading ? "Downloading..." : `Download ${type === 'mp4' ? 'Video' : 'Audio'}`}
             </button>
-            {/* <button className="Download_button m-auto mt-2" >
-                edit
-               
-            </button> */}
+
         </>
     );
 };

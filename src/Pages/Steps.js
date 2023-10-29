@@ -91,6 +91,8 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
                     "video": cloudinaryResponse.video,
                 });
 
+                console.log(data, 'dataaaaaaaaaaaaaaaaaaaaaaaa');
+
                 let config = {
                     method: 'post',
                     maxBodyLength: Infinity,
@@ -187,7 +189,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
                             setClipsFoundStatus(false);
                         }
 
-                        if (message === 'Clips Founded') {
+                        if (message === 'Clips generated') {
                             navigate(`/dashboard/${currentProjectId}`);
                             setProjectId('')
                             setError('');
