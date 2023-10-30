@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsStopwatch } from 'react-icons/bs';
 import PricingCardsContainer from '../Pages/PricingCardsContainer';
 import axios from 'axios';
@@ -8,17 +8,16 @@ const Navbar = ({ creaditBalance }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const userToken = TokenManager.getToken();
     const [subscribed, setSubscribed] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    console.log(subscribed, 'subscribed');
     const openModal = () => {
         setIsModalOpen(true);
     };
 
-    const closeModal = () => { 
+    const closeModal = () => {
         setIsModalOpen(false);
     };
     useEffect(() => {
         const fetchSubscriptions = async () => {
-            setIsLoading(true);
             let config = {
                 method: 'post',
                 maxBodyLength: Infinity,
@@ -29,21 +28,20 @@ const Navbar = ({ creaditBalance }) => {
                 }
             };
 
-            const response = await axios(config);
-            console.log(response.data.data.is_active, 'response.data.data.is_active');
-            if (response.data.data.is_active === true) {
-                console.log('subscribed');
-                setSubscribed(true);
-                setIsLoading(false);
-            } else {
-                console.log('not subscribed');
-                setSubscribed(false);
-                setIsLoading(false);
+            try {
+                const response = await axios(config);
+                console.log(response, 'response.data.data.is_active');
+                if (response.data.data.is_active === true) {
+                    console.log('subscribed');
+                    setSubscribed(true);
+                } 
+            } catch (error) {
+                // console.log(error);
             }
         }
         fetchSubscriptions();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
     const secondsToHHMMSS = (seconds) => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -55,7 +53,7 @@ const Navbar = ({ creaditBalance }) => {
 
         const formattedTime = `${formatTwoDigits(hours)}h ${formatTwoDigits(minutes)}min`;
         let minutesClass = 'text-content';
-    
+
         if (hours === 0 && minutes < 10) {
             // Set red border and text color when hr is 00 and min is less than 10
             minutesClass = 'text-red-500 border border-red-500 rounded-lg select-none';
@@ -80,13 +78,13 @@ const Navbar = ({ creaditBalance }) => {
                                 </div>
                             </div>
                         )}
-                        
-                         <button
-                            className={`text-gray-300 w-auto text-center inline-block px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed ? 'hidden' : 'bg-blue-500'}`}
-                            onClick={openModal}
-                        >
-                            <span className={`text-content select-none`}>Upgrade</span>
-                        </button>
+                       
+                            <button
+                                className={`text-gray-300 w-auto text-center px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed ? 'hidden' : 'block'}`}
+                                onClick={openModal}
+                            >
+                                <span className={`text-content select-none`}>Upgrade</span>
+                            </button>
                     </div>
                 </div>
             </nav>

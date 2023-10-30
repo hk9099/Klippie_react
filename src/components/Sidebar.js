@@ -91,7 +91,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
-  }, []);
+  }, [refreshProfile]);
 
   const logVideoURL = (index) => {
     if (projectData[index] && projectData[index].video_url) {
@@ -555,6 +555,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                         opacity={1}
                         style={{ backgroundColor: '#B3B5E2', color: '#020913', padding: '0px'}}
                         clickable={true}
+                        delayShow={3000}
                       />
                       <div className="hover-actions" >
                         {editIndex !== index && (

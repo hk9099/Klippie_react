@@ -58,6 +58,7 @@ function HomeScreen({ userName, creaditBalance }) {
     var loginCount = localStorage.getItem('loginCount');
     const userToken = TokenManager.getToken();
 
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         console.log(file, 'file');
@@ -404,7 +405,7 @@ function HomeScreen({ userName, creaditBalance }) {
                     <div className="flex justify-center items-center flex-col select-none cursor-pointer file-input mt-2" >
                         <div
                             className={`text-white select-none cursor-pointer text-center font-bold text-lg w-[50%] inline-block border-dashed border-2 rounded-lg py-10 ${isDragging ? 'border-blue-500 bg-blue-100 dark:bg-[#ffffff2a]' : 'border-gray-500 dark:bg-transparent'} ${isFileUploaded ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : ''} ${isFileUploadedInput ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : ''}`}
-                            onClick={() => { isFileUploadedInput && fileInputRef.current.click(); }}
+                            onClick={() => { fileInputRef.current.click(); }}
                         >
                             <input
                                 hidden

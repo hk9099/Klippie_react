@@ -57,7 +57,6 @@ export default function Dashboard() {
   useEffect(() => {
     if (location.pathname === '/dashboard') {
       setClipsFoundStatus(false)
-      setAccordionVisible(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);

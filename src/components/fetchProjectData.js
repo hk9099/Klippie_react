@@ -3,7 +3,7 @@ import { TokenManager } from '../components/getToken.js';
 
 var HOSTINGURL = 'https://dev-api.getklippie.com';
 
-async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL,setNoData) {
+async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL) {
 
     const userToken = TokenManager.getToken();
 
@@ -36,7 +36,6 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, 
         setIsLoadingHistory(false);
 
     } catch (error) {
-        setNoData(true);
         setIsLoadingHistory(false);
     }
 }

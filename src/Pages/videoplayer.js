@@ -43,8 +43,10 @@ const videoOptions = {
     isProgressFloat: false,
     progressFloatPosition: "",
     mode: "scaleToFill",
+    
 };
 const VideoPlayer = ({ src, title, type, sidebar }) => {
+    console.log("type:", type);
     const [isLoading, setIsLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -56,7 +58,7 @@ const VideoPlayer = ({ src, title, type, sidebar }) => {
                 enqueueSnackbar("No video source found", { variant: "error" }, { preventDuplicate: true }, { autoHideDuration: 2000 });
             }
 
-            if (type === "mp4") {
+            if (type === "mp4" || type === "video") {
                 const response = await fetch(src);
                 console.log(response);
                 const videoBlob = await response.blob();
@@ -115,7 +117,8 @@ const VideoPlayer = ({ src, title, type, sidebar }) => {
             className={`border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full w-[335px] text-center p-2  gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center`}
                 onClick={handleDownload}>
                 <HiOutlineDownload />
-                {isLoading ? "Downloading..." : `Download ${type === 'mp4' ? 'Video' : 'Audio'}`}
+                {isLoading ? "Downloading..." : `Download ${type === 'mp4' || type === 'video'
+                 ? 'Video' : 'Audio'}`}
             </button>
 
         </>

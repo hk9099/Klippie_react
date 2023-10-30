@@ -151,3 +151,35 @@
     font-family: Poppins, sans-serif!important;
     font-weight: bold!important;
 }
+
+.dx-widget input, .dx-widget textarea {
+    padding: 0 7px;
+}
+
+.success-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .success-icon {
+    animation: scale-up 0.3s ease-in-out; /* Apply the animation */
+  }
+  
+  .success-message p {
+    font-size: 20px;
+    color: #fff;
+    margin-top: 10px;
+  }
+
+  @keyframes scale-up {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  

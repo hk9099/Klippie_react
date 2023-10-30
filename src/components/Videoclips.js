@@ -89,7 +89,8 @@ console.log(videoClips, "videoClips");
         showCheckBoxesMode="always"
       />
      
-      <Paging defaultPageSize={3} />
+      <Paging defaultPageSize={3} 
+      />
       <Pager
         showPageSizeSelector={true}
         showInfo={true}
