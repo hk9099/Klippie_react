@@ -5,26 +5,6 @@ const CloudinaryMediaEditor = ({publicId,startTime,endTime}) => {
     
     const initializeEditor = () => {
       console.log(publicId,startTime,endTime);
-      function timeStringToSeconds(timeString) {
-        const timeParts = timeString.split(':');
-        const hours = parseInt(timeParts[0], 10) || 0;
-        const minutes = parseInt(timeParts[1], 10) || 0;
-        const secondsParts = timeParts[2].split('.');
-        const seconds = parseInt(secondsParts[0], 10) || 0;
-        const milliseconds = parseInt(secondsParts[1], 10) || 0;
-      
-        return hours * 3600 + minutes * 60 + seconds + milliseconds / 1000;
-      }
-      
-      const startTimeString = "10";
-      const endTimeString = "20";
-      
-      const startTimeInSeconds = timeStringToSeconds(startTimeString);
-      const endTimeInSeconds = timeStringToSeconds(endTimeString);
-      
-      console.log("Start Time in Seconds:", startTimeInSeconds);
-      console.log("End Time in Seconds:", endTimeInSeconds);
-      
 
     // Initialize the media editor
     const myEditor = window.cloudinary.mediaEditor();
@@ -43,8 +23,8 @@ const CloudinaryMediaEditor = ({publicId,startTime,endTime}) => {
       video: {
         steps: ['trim'],
         trim: {
-          startOffset: startTimeInSeconds,
-          endOffset: endTimeInSeconds,
+          startOffset: 10,
+          endOffset: 20,
           units: 'seconds',
         },  
       },
@@ -58,10 +38,7 @@ const CloudinaryMediaEditor = ({publicId,startTime,endTime}) => {
     // Show the editor
     myEditor.show();
 
-    myEditor.on('ready', () => {
-      // Store the editor instance in the ref
-      editorRef.current = myEditor;
-    });
+  
 
     // Add event listeners for custom actions
     myEditor.on('export', (data) => {
@@ -92,8 +69,6 @@ const CloudinaryMediaEditor = ({publicId,startTime,endTime}) => {
           console.error('Error downloading video:', error);
         });
     
-      // Store the editor instance in the ref
-      editorRef.current = myEditor;
     });
     
 
@@ -123,14 +98,7 @@ const CloudinaryMediaEditor = ({publicId,startTime,endTime}) => {
   };
 
   const openEditor = () => {
-    // Check if the editor is already initialized
-    if (editorRef.current) {
-      // Show the editor
-      editorRef.current.show();
-    } else {
-      // Initialize the editor
-      initializeEditor();
-    }
+    initializeEditor();
   };
 
   return (

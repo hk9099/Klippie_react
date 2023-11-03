@@ -566,14 +566,14 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                           {line}
                         </p>
                       )}
-                      <Tooltip id={`tooltip-${index}`} content={videoDiv}
+                      {/* <Tooltip id={`tooltip-${index}`} content={videoDiv}
                         place="right"
                         className="dark:custom-modal-bg-color dark:text-gray-300 font-semibold text-[2xl!important] font-ubuntu border-0 rounded-[50%!important]"
                         opacity={1}
                         style={{ backgroundColor: '#B3B5E2', color: '#020913', padding: '0px' }}
                         clickable={true}
                         delayShow={3000}
-                      />
+                      /> */}
                       <div className="hover-actions" >
                         {editIndex !== index && (
                           <>
