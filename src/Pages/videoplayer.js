@@ -122,9 +122,9 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime ,
                 {isLoading ? "Downloading..." : `Download ${type === 'mp4' || type === 'video'
                     ? 'Video' : 'Audio'}`}
             </button>
-            <button  className={`border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full w-[335px] text-center p-2  gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center`}>
+            {/* <button  className={`border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full w-[335px] text-center p-2  gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center`}>
                 <CloudinaryMediaEditor publicId={publicId} startTime={startTime} endTime={endTime} src={src} />
-            </button>
+            </button> */}
             {/* <Link to={`/mediaEditor/${clipId}`} className={`border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full w-[335px] text-center p-2  gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center`}>
                 <CloudinaryMediaEditor publicId={publicId} startTime={startTime} endTime={endTime} src={src} />
                 Go to Editor
