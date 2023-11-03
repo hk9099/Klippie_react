@@ -19,8 +19,10 @@ export const TokenManager = {
             try {
                 var decoded = atob(token);
                 var decodedToken = JSON.parse(decoded);
+                var loginCount = decodedToken.user.login_count;
                 var accessToken = decodedToken.token.access_token;
-                return accessToken;
+                var increment = Cookies.get('increment');
+                return [loginCount, accessToken , increment]
             } catch (error) {
                 console.error('Error decoding the encodedUser cookie:', error);
             }
@@ -31,6 +33,7 @@ export const TokenManager = {
         Cookies.remove('userToken');
         Cookies.remove('userToken_expires');
         Cookies.remove('encodedUser');
+        Cookies.remove('increment');
     },
     isTokenExpired: () => {
         const expirationTime = new Date(Cookies.get('userToken_expires'));
@@ -43,5 +46,11 @@ export const TokenManager = {
         // console.log('Token is Expired:', isExpired);
 
         return isExpired;
+    },
+    incrementValue: (key) => {
+        const currentValue = Cookies.get(key) || 0; // Get the current value or default to 0
+        const newValue = parseInt(currentValue) + 1; // Increment the value
+        Cookies.set(key, newValue); // Set the updated value in the cookie
+        return newValue; // Return the new value
     },
 };

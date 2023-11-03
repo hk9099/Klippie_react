@@ -5,6 +5,7 @@ const ClipsFoundContext = createContext();
 export const useClipsFoundStatus = () => useContext(ClipsFoundContext);
 
 export const ClipsFoundProvider = ({ children }) => {
+    const [projectCreated, setProjectCreated] = useState(false);
     const [clipsFound, setClipsFound] = useState(false);
     const [showHome, setShowHome] = useState(true);
 
@@ -17,7 +18,7 @@ export const ClipsFoundProvider = ({ children }) => {
     };
 
     return (
-        <ClipsFoundContext.Provider value={{ clipsFound, setClipsFoundStatus, showHome, setShowHomeStatus }}>
+        <ClipsFoundContext.Provider value={{ clipsFound, setClipsFoundStatus, showHome, setShowHomeStatus ,projectCreated, setProjectCreated}}>
             {children}
         </ClipsFoundContext.Provider>
     );

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import ReactEmoji from 'react-emoji-render';
 import Navbar from '../components/Navbar';
 import { useSnackbar } from 'notistack';
-import { useCloudinary } from '../components/CloudinaryContext.js';
+import { useCloudinary } from '../context/CloudinaryContext.js';
 import { Progress } from 'react-sweet-progress';
 import axios from 'axios';
 import "react-sweet-progress/lib/style.css";
@@ -56,7 +56,7 @@ function HomeScreen({ userName, creaditBalance }) {
     const [totalBytes, setTotalBytes] = useState(0);
     const fileInputRef = useRef(null);
     var loginCount = localStorage.getItem('loginCount');
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
 
 
     const handleFileChange = (e) => {
@@ -377,21 +377,21 @@ function HomeScreen({ userName, creaditBalance }) {
                                         </h2>
                                     </div>
                                     <div className="flex justify-center items-start flex-col">
-                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":arrow_up: Upload up to 2 hours of audio or video" />                                        </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":robot_face: AI Finds the best clips" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":email: We'll email you when the clips are ready!" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":eyes: Review your clips for accuracy" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":computer: Modify the start & stop times" />
                                         </div>
-                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                        <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":arrow_down: Download your favorite clips" />
                                         </div>
                                     </div>

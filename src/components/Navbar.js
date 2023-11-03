@@ -3,10 +3,12 @@ import { BsStopwatch } from 'react-icons/bs';
 import PricingCardsContainer from '../Pages/PricingCardsContainer';
 import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
+import { useSubscription } from '../context/SubscriptionContext.js';
 
 const Navbar = ({ creaditBalance }) => {
+    const { setSubscription } = useSubscription();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
     const [subscribed, setSubscribed] = useState(false);
     console.log(subscribed, 'subscribed');
     const openModal = () => {
@@ -31,6 +33,7 @@ const Navbar = ({ creaditBalance }) => {
             try {
                 const response = await axios(config);
                 console.log(response, 'response.data.data.is_active');
+                setSubscription(response.data.data);    
                 if (response.data.data.is_active === true) {
                     console.log('subscribed');
                     setSubscribed(true);
@@ -67,7 +70,7 @@ const Navbar = ({ creaditBalance }) => {
 
     return (
         <>
-            <nav className='border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent h-[90px] '>
+            <nav className='border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent sticky top-0 z-50 '>
                 <div className='flex justify-end items-center mx-auto'>
                     <div className='flex justify-end items-center w-100'>
                         {(!isNaN(hours) && !isNaN(minutes)) && (

@@ -7,7 +7,7 @@ import { TokenManager } from '../components/getToken.js';
 
 export default function DownloadButton({ status, clipId }) {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
 
     // Define the default selected item and its associated colors
     const defaultSelectedItem = status;

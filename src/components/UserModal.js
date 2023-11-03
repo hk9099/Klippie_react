@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { Form, Field, ErrorMessage } from 'formik';
 import { FiEdit2 } from 'react-icons/fi';
-import { useSidebarContext } from './SidebarContext';
+import { useSidebarContext } from '../context/SidebarContext';
 import { TokenManager } from '../components/getToken.js';
 
 const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) => {
@@ -14,7 +14,7 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
     const [successMessage, setSuccessMessage] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
     const validationSchema = Yup.object({
         userNickname: Yup.string().required('Required'),
     });

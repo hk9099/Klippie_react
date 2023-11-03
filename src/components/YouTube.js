@@ -1,69 +1,145 @@
-// import React, { useState, useEffect } from 'react';
-// import ytdl from 'ytdl-core';
 
-// const VideoDownloader = () => {
-//   const [videoURL, setVideoURL] = useState('');
-//   const [customLink, setCustomLink] = useState('');
-//   const [videoMetadata, setVideoMetadata] = useState(null);
+import { useEffect, useRef, useState } from 'react';
+import CreativeEditorSDK from '@cesdk/cesdk-js';
 
-//   const handleDownload = () => {
-//     window.location.href = `http://localhost:4000/download?URL=${videoURL}`;
-//   };
 
-//   const generateCustomLink = () => {
-//     fetch(`http://localhost:4000/custom-link?URL=${videoURL}`, {
-//       method: 'GET',
-//     })
-//       .then((res) => res.json())
-//       .then((json) => {
-//         setCustomLink(json.customLink);
-//       });
 
-//     // Get video metadata for preview
-//     ytdl.getInfo(videoURL, (err, info) => {
-//       if (err) {
-//         console.error(err);
-//       } else {
-//         setVideoMetadata(info);
-//       }
-//     });
-//   };
+export default function CloudinaryMediaEditor({src ,publicId,startTime,endTime}) {
+const config = {
+  theme: 'dark',
+  baseURL: 'https://cdn.img.ly/packages/imgly/cesdk-js/1.17.0/assets',
+  ui: {
+    elements: {
+      view: 'advanced', // 'default' or 'advanced'
+      navigation: {
+        show: true, // 'false' to hide the navigation completely
+        position: 'top', // 'top' or 'bottom'
+        action: {
+          close: true, // true or false
+          back: true, // true or false
+          load: true, // true or false
+          save: true, // true or false
+          export: {
+            show: true,
+            format: ['application/pdf']
+          },
+          download: true, // true  or false
+          custom: [
+            {
+              label: 'common.custom', // string or i18n key
+              iconName: 'default', // one of 'default', 'download', 'upload', or 'save'
+              callback: () => {
+                // callback signature is `() => void | Promise<void>`
+                // place custom functionality here
+              }
+            }
+          ]
+        }
+      },
+      panels: {
+        inspector: {
+          show: true, // true or false
+          position: 'left' // 'left' or 'right'
+        },
+        assetLibrary: {
+          show: true, // true or false
+          position: 'left' // 'left' or 'right'
+        },
+        settings: {
+          show: true // true or false
+        }
+      },
+      dock: {
+        iconSize: 'large', // 'large' or 'normal'
+        hideLabels: false, // false or true
+        groups: [
+          {
+            id: 'ly.img.template', // string
+            entryIds: ['ly.img.template'] // string[]
+          },
+          {
+            id: 'ly.img.defaultGroup', // string
+            showOverview: true // true or false
+          }
+        ],
+        defaultGroupId: 'ly.img.defaultGroup' // string
+      },
+      libraries: {
+        insert: {
+          entries: (defaultEntries) => defaultEntries,
+          floating: true, // true or false
+          autoClose: false // true or false
+        },
+        replace: {
+          entries: (defaultEntries) => defaultEntries,
+          floating: true, // true or false
+          autoClose: false // true or false
+        }
+      },
+      blocks: {
+        opacity: false, // true  or false
+        transform: false, // true  or false
+        '//ly.img.ubq/image': {
+          adjustments: true, // true  or false
+          filters: false, // true  or false
+          effects: false, // true  or false
+          blur: true, // true  or false
+          crop: false // true  or false
+        },
+        '//ly.img.ubq/page': {
+          manage: true,
+          format: true,
+          maxDuration: 30 * 60
+        }
+      }
+    }
+  },
+  callbacks: {
+    onUpload: 'local',
+    onExport: 'local',
+    onDownload: 'local',
+    onCustom: 'local',
+    onImport: 'local',
+    onSourceChanged: 'local',
+  }
+};
 
-//   useEffect(() => {
-//     // Clear video metadata when the URL changes
-//     setVideoMetadata(null);
-//   }, [videoURL]);
+CreativeEditorSDK.create('#cesdk', config).then(async (cesdk) => {
 
-//   return (
-//     <div>
-//       <h1 className="heading">My Own YouTube Downloader !</h1>
-//       <input
-//         className="URL-input"
-//         placeholder="Video URL e.g. https://www.youtube.com/watch?v=MtN1YnoL46Q"
-//         value={videoURL}
-//         onChange={(e) => setVideoURL(e.target.value)}
-//       />
-//       <button className="convert-button" onClick={handleDownload}>
-//         Convert
-//       </button>
-//       <button className="convert-button" onClick={generateCustomLink}>
-//         Generate Custom Link
-//       </button>
-//       {customLink && (
-//         <p>
-//           Custom Link: <a href={customLink} target="_blank" rel="noopener noreferrer">{customLink}</a>
-//         </p>
-//       )}
-//       {videoMetadata && (
-//         <div>
-//           <h2>Video Preview</h2>
-//           <video width="320" height="240" controls>
-//             <source src={videoMetadata.player_response.videoDetails.thumbnail.thumbnails[0].url} type="video/mp4" />
-//           </video>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
 
-// export default VideoDownloader;
+  await cesdk.addDefaultAssetSources();
+  await cesdk.addDemoAssetSources();
+
+
+  await cesdk.createVideoScene();
+
+
+  // Adding some image after creating the scene
+  const video = await cesdk.engine.asset.defaultApplyAsset({
+    id: 'ly.img.cesdk.images.samples/sample.1',
+    meta: {
+      uri: 'http://res.cloudinary.com/delkyf33p/video/upload/so_163.88197/eo_208.63547/test1698651024315',
+      width: "100%",
+      height: "100%"
+    }
+  });
+
+
+  if (video == null) return;
+
+
+  // Select the first image after loading the scene ...
+  cesdk.engine.block.setSelected(video, true);
+
+
+  // ... and opening the replace asset library for the user to choose a differnt image
+  if (!cesdk.ui.isPanelOpen('//ly.img.panel/assetLibrary.replace')) {
+    cesdk.ui.openPanel('//ly.img.panel/assetLibrary.replace');
+  }
+});
+
+  return (
+    <>
+    </>
+  );
+} 

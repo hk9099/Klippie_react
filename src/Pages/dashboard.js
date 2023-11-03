@@ -10,21 +10,20 @@ import { updateMainVideo } from "../components/data";
 import { Analytics } from '@vercel/analytics/react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import { useUserNickname } from '../components/userNicknameContext.js';
-import { useCloudinary } from '../components/CloudinaryContext.js';
-import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
+import { useUserNickname } from '../context/userNicknameContext.js';
+import { useCloudinary } from '../context/CloudinaryContext.js';
+import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 import { TokenManager } from '../components/getToken.js';
 import PopupForm from '../components/sessionPopup.js';
 import { useSnackbar } from 'notistack';
+import DragDropModal from "../components/Drag&DropModal";
 
 export default function Dashboard() {
   const location = useLocation();
-  const userToken = TokenManager.getToken();
+  const userToken = TokenManager.getToken()[1]
+  const loginCount = TokenManager.getToken()[0]
   const [showPopup, setShowPopup] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-
-
-
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -41,22 +40,33 @@ export default function Dashboard() {
   const { setClipsFoundStatus } = useClipsFoundStatus();
   const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams();
-  const { cloudinaryResponse } = useCloudinary();
+  const { cloudinaryResponse  } = useCloudinary();
   const [projectId, setProjectId] = useState(null);
   const [newvideoClips, setNewvideoClips] = useState([]);
   const [newmainvideo, setnewMainVideo] = useState([]);
   const [accordionVisible, setAccordionVisible] = useState(true);
   console.log(accordionVisible, 'accordionVisible');
   const [errorMessage, setErrorMessage] = useState("");
+  const [newProjectCount, setNewProjectCount] = useState('');
+  console.log(newProjectCount, 'newProjectCount');
   const { userName } = useUserNickname();
   const { creaditBalance } = useUserNickname();
   const setError = (message) => {
     setErrorMessage(message);
   };
 
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //   const increments = TokenManager.getToken()[2]
+  //     console.log(increments, 'increments');
+  //   }, 1000);
+  // }, [loginCount]);
+
   useEffect(() => {
     if (location.pathname === '/dashboard') {
       setClipsFoundStatus(false)
+      const increments = TokenManager.getToken()[2]
+      setNewProjectCount(increments);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
@@ -218,6 +228,9 @@ export default function Dashboard() {
           // Format the time in HH:MM:SS
           const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
+          const publicId = clip.clip_url.split('/').pop().split('.')[0];
+          console.log(publicId, 'publicId');
+
           return {
             id: clip.id,
             src: clip.clip_url,
@@ -226,6 +239,9 @@ export default function Dashboard() {
             status: clip.status,
             time: formattedTime,
             type: clip.type,
+            start_time : clip.start_time,
+            end_time : clip.end_time,
+            publicId: publicId
           };
         }));
         setNewvideoClips(newvideoClips);
@@ -263,9 +279,15 @@ export default function Dashboard() {
             setError={setError}
           />
         )}
-        <div className="w-full overflow-x-auto px-3 ">
+        <div className="w-full overflow-x-auto px-3 z-10">
           <Modal className="z-50" />
-          {accordionVisible &&  <Navbar creaditBalance={creaditBalance} />}
+          {loginCount === 1 && (newProjectCount ===  undefined || '') ? (
+            null
+          ) : loginCount > 1 ? (
+            <Navbar creaditBalance={creaditBalance} />
+          ) : (
+            <Navbar creaditBalance={creaditBalance} />
+          )}
           {showPopup ? (
             <PopupForm onSubmit={handleSubmit} onCancel={handleCancel} />
           ) : (
@@ -281,8 +303,16 @@ export default function Dashboard() {
                   userName={userName}
                   creaditBalance={creaditBalance}
                 />
-              ) : (
+              ) : loginCount === 1 && (newProjectCount ===  undefined || '') ? (
                 <HomeScreen userName={userName} creaditBalance={creaditBalance} />
+              ) : loginCount === 1 && newProjectCount >= 1  ? (
+                  <DragDropModal className="z-50" />
+                ) : loginCount > 1 && (newProjectCount ===  undefined || '') ? (
+                  <DragDropModal className="z-50" />
+                ) : loginCount > 1 && newProjectCount >= 1 ?(
+                  <DragDropModal className="z-50" />
+                ) : (
+                  null
               )}
               {!accordionVisible && errorMessage && (
                 <div className="flex justify-center h-screen items-center">

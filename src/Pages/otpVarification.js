@@ -7,7 +7,7 @@ import Loader from './Loader.js';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { FaMobileAlt } from 'react-icons/fa';
-import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
+import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 
 
 function Signin() {

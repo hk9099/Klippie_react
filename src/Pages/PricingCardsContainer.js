@@ -7,11 +7,10 @@ import { RxCross2 } from "react-icons/rx";
 import { Link } from 'react-router-dom';
 import { TokenManager } from '../components/getToken.js';
 
-
 export default function PricingCardsContainer({ isOpen, onClose }) {
     const [pricingData, setPricingData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
     const [freePlan, setFreePlan] = useState(false);
     const [paidPlan, setPaidPlan] = useState(false);
 

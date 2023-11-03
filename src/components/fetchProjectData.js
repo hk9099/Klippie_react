@@ -5,7 +5,7 @@ var HOSTINGURL = 'https://dev-api.getklippie.com';
 
 async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL) {
 
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
 
     if (!userToken) {
         console.error('No token available');

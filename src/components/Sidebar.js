@@ -14,12 +14,12 @@ import { BsThreeDots } from "react-icons/bs";
 import fetchProjectsData from '../components/fetchProjectData';
 import { FiEdit2 } from "react-icons/fi";
 import { RotatingLines } from "react-loader-spinner";
-import { useSidebarContext } from '../components/SidebarContext';
-import { useUserNickname } from "./userNicknameContext";
+import { useSidebarContext } from '../context/SidebarContext';
+import { useUserNickname } from "../context/userNicknameContext";
 import fetchUserProfile from '../components/fetchUserProfile';
 import { useSnackbar } from 'notistack';
-import { useCloudinary } from '../components/CloudinaryContext.js';
-import { useClipsFoundStatus } from './ClipsFoundContext';
+import { useCloudinary } from '../context/CloudinaryContext.js';
+import { useClipsFoundStatus } from '../context/ClipsFoundContext';
 import { TokenManager } from '../components/getToken.js';
 import { Tooltip } from 'react-tooltip';
 import VideoPlayer from "../Pages/videoplayer.js";
@@ -28,6 +28,8 @@ import VideoPlayer from "../Pages/videoplayer.js";
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { setCloudinaryResponse } = useCloudinary();
   const { clipsFound } = useClipsFoundStatus();
+  const { setClipsFoundStatus,projectCreated } = useClipsFoundStatus();
+  console.log(projectCreated, 'projectCreated')
   //eslint-disable-next-line
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { setUserName } = useUserNickname();
@@ -61,7 +63,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
-  const userToken = TokenManager.getToken();
+  const userToken = TokenManager.getToken()[1]
+ 
   //eslint-disable-next-line
   const [videoURL, setVideoURL] = useState([]);
   const [previewVideoURL, setPreviewVideoURL] = useState(null);
@@ -91,7 +94,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
-  }, [refreshProfile]);
+  }, [refreshProfile,projectCreated]);
 
   const logVideoURL = (index) => {
     if (projectData[index] && projectData[index].video_url) {
@@ -373,8 +376,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     if (message === 'Clips generated') {
       navigate(`/dashboard/${projectData[index].id}`);
     }
-
-
   };
 
 
@@ -382,6 +383,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     setAccordionVisible(false);
     setProjectId('');
     setCloudinaryResponse(null);
+    //eslint-disable-next-line
+    const newValue = TokenManager.incrementValue('increment');
     navigate('/dashboard');
     // setShowModal(true); 
   };
@@ -394,7 +397,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   // const handleUserModal = () => {
   //   setShowUserModal(true);
   // };
-
 
 
   return (
@@ -471,7 +473,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             </div>
           </button>
         </div>
-
         {projectId ? null : (
           <Modal
             onSubmit={handleFormSubmit}

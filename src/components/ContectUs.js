@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useUserNickname } from "./userNicknameContext";
+import { useUserNickname } from "../context/userNicknameContext";
 import { RxCross2 } from "react-icons/rx";
 import axios from "axios";
 import { TokenManager } from '../components/getToken.js';
 import { FaCheckCircle } from "react-icons/fa";
 
 export default function ContactUs({ isOpen, onClose }) {
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
     const { userName, userEmail } = useUserNickname();
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);

@@ -15,7 +15,7 @@ import axios from 'axios';
 import Hiiii from '../assets/images/hi_40x40.gif';
 import { HiOutlineMail } from 'react-icons/hi';
 import { TokenManager } from '../components/getToken.js';
-import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
+import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 
 
 function Signin() {

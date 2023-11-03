@@ -2,7 +2,7 @@ import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
 
 // Define the async function to fetch user profile
-var userToken = TokenManager.getToken();
+var userToken = TokenManager.getToken()[1]
 const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar,setCreadit, HOSTINGURL) => {
 
     const getToken = () => {

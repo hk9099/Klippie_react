@@ -6,7 +6,7 @@ import { BiCheck } from 'react-icons/bi';
 function PricingCard({ title, price, time, description, planDetails, benefits, id, benefitTitle, highlightBorder }) {
 
     const [subRetrieved, setSubRetrieved] = useState(false);
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
 
     const createCheckoutSession = async (data) => {
         try {

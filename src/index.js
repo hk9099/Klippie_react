@@ -6,8 +6,13 @@ import App from './App';
 import { ThemeProvider } from './components/ThemeContext';
 import Background from './components/Background';
 import 'tailwindcss/tailwind.css';
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 // import { MantineProvider } from '@mantine/core';
 
+if (process.env.NODE_ENV === 'production') {
+  console.log("Disabling React DevTools in production mode");
+  disableReactDevTools();
+}
 const noop = () => { };
 
 if (process.env.NODE_ENV === 'production') {

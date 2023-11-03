@@ -7,7 +7,7 @@ import FilestackUploader from "./FileStackPicker";
 import { TokenManager } from '../components/getToken.js';
 // import { updateMainVideo } from "./data";
 const Modal = ({ onSubmit, isOpen, onClose }) => {
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
     //eslint-disable-next-line
     const [selectedOption, setSelectedOption] = useState("upload");
     //eslint-disable-next-line

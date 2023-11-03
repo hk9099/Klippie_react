@@ -8,17 +8,18 @@ import UserModal from '../components/UserModal.js';
 import { useSnackbar } from 'notistack';
 import { TokenManager } from '../components/getToken.js';
 import SubscriptionModal from './SubscriptionModal.js';
+import { useSubscription } from '../context/SubscriptionContext.js';
 
 var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
 const ChangePasswordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
+    oldPassword: Yup.string().required('Current Password is required'),
     newPassword: Yup.string()
         .notOneOf(
             [Yup.ref('oldPassword'), null],
-            'New Password cannot be the same as Old Password'
+            'New Password cannot be the same as Current Password'
         )
-        .min(8, 'New Password must be at least 8 characters')
+        .min(8, 'New Password must be at least 8 characters').max(20, 'New Password must be at most 20 characters').matches( /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,20}$/, 'New Password must contain at least one uppercase letter, one lowercase letter, one number and one special character')
         .required('New Password is required'),
     confirmNewPassword: Yup.string()
         .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
@@ -32,8 +33,9 @@ const AccountModal = ({
     userEmailAddress,
     avatar,
 }) => {
+    const { Subscription } = useSubscription();
     // const [token, setToken] = useState(null);
-    const userToken = TokenManager.getToken();
+    const userToken = TokenManager.getToken()[1]
     const { enqueueSnackbar } = useSnackbar();
     // const [googleToken, setGoogleToken] = useState(null);
     const [showOldPassword, setShowOldPassword] = useState(false);
@@ -180,7 +182,7 @@ const AccountModal = ({
                                             <Field
                                                 type={showOldPassword ? 'text' : 'password'}
                                                 name="oldPassword"
-                                                className="px-4 py-2 border rounded-lg relative placeholder:text-gray-400 bg-transparent"
+                                                className="px-4 py-2 border rounded-lg relative placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
                                                 placeholder="Enter your current password"
                                             />
                                             <div
@@ -211,7 +213,7 @@ const AccountModal = ({
                                             <Field
                                                 type={showNewPassword ? 'text' : 'password'}
                                                 name="newPassword"
-                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent"
+                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
                                                 placeholder="Enter your new password"
                                             />
                                             <div
@@ -243,7 +245,7 @@ const AccountModal = ({
                                             <Field
                                                 type={showConfirmPassword ? 'text' : 'password'}
                                                 name="confirmNewPassword"
-                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent"
+                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
                                                 placeholder="Confirm your new password"
                                             />
                                             <div
@@ -293,7 +295,7 @@ const AccountModal = ({
                             </Formik>
                         )}
                         {activeTab === 'subscriptions' && (
-                           <SubscriptionModal  />
+                           <SubscriptionModal  Subscription={Subscription} />
                         )}
                     </div>
                 </div>

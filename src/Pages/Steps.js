@@ -5,18 +5,19 @@ import qs from 'qs';
 import AccordionSection from '../components/AccordionSection';
 // import Shuffleloader from '../components/shuffleloader.js';
 // import { updateMainVideo } from '../components/data';
-import { useSidebarContext } from '../components/SidebarContext.js';
+import { useSidebarContext } from '../context/SidebarContext.js';
 import { useSnackbar } from 'notistack';
 import { AiOutlineClose } from 'react-icons/ai';
-import HomeScreen from './HomeScreen';
+// import HomeScreen from './HomeScreen';
 import Suggetionpopup from '../components/Suggetionpopup';
-import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
+import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 import { TokenManager } from '../components/getToken.js';
+import DragDropModal from '../components/Drag&DropModal';
 
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userName ,creaditBalance}) => {
-    const { setClipsFoundStatus ,setShowHomeStatus} = useClipsFoundStatus();
-    const userToken = TokenManager.getToken();
+    const { setClipsFoundStatus ,setShowHomeStatus ,setProjectCreated} = useClipsFoundStatus();
+    const userToken = TokenManager.getToken()[1]
     const navigate = useNavigate();
     const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
@@ -106,7 +107,8 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
                 };
 
                 const response = await axios.request(config);
-
+                setProjectCreated(true);
+                
                 let data1 = qs.stringify({
                     'project_id': response.data.data.id
                 });
@@ -240,7 +242,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
                 )}
                 {!accordionVisible && (
-                    <HomeScreen userName={userName} creaditBalance={creaditBalance} />
+                    <DragDropModal className="z-50" />
                 )}
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
