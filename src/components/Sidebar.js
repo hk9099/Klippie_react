@@ -497,7 +497,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             setProjectId={setProjectId}
           />
         )}
-        <div className={` flex-grow backdrop-blur-xl history ${lines.length === 0 ? "flex items-center justify-center " : ""}}`}>
+        <div className={` flex-grow overflow-auto backdrop-blur-xl history ${lines.length === 0 ? "flex items-center justify-center " : ""}  `}>
           {isLoadingHistory ? (
             <div className="flex items-center justify-center mb-4 text-blue-500 h-[87%]">
               <span className="" style={{ userSelect: "none" }}>
@@ -550,7 +550,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                         <p
                           className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
                           style={{
-                            width: hoveredIndex === index ? "188px" : "243px",
+                            width: hoveredIndex === index ? "188px" : "236px",
                             // width: "100%",
                             whiteSpace: "nowrap",
                             overflow: "hidden",

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { JolPlayer } from "jol-player";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useSnackbar } from 'notistack';
-import CloudinaryMediaEditor from "../components/mediaEditor.js";
-import { Link } from "react-router-dom";
+// import CloudinaryMediaEditor from "../components/mediaEditor.js";
+// import { Link } from "react-router-dom";
 
 
 const videoOptions = {

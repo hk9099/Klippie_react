@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSnackbar } from 'notistack';
 import { IoMdCloudUpload } from 'react-icons/io';
@@ -84,8 +84,8 @@ function DragDropModal() {
   const [isNewVideoUpload, setIsNewVideoUpload] = useState(false);
   const [bytesUploaded, setBytesUploaded] = useState(0);
   const [totalBytes, setTotalBytes] = useState(0);
+  // eslint-disable-next-line no-unused-vars
   const [disabled, setDisabled] = useState(true);
-  const fileInputRef = useRef(null);
   // var loginCount = localStorage.getItem('loginCount');
   const userToken = TokenManager.getToken()[1]
 
