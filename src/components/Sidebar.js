@@ -24,11 +24,12 @@ import { TokenManager } from '../components/getToken.js';
 import { Tooltip } from 'react-tooltip';
 import VideoPlayer from "../Pages/videoplayer.js";
 // import Example from "./testDropdown";
+import ConfirmationModal from "../components/DeleteConfirmationModal.js";
 
-const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
+const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError  }) => {
   const { setCloudinaryResponse } = useCloudinary();
   const { clipsFound } = useClipsFoundStatus();
-  const { setClipsFoundStatus,projectCreated } = useClipsFoundStatus();
+  const { setClipsFoundStatus, projectCreated } = useClipsFoundStatus();
   console.log(projectCreated, 'projectCreated')
   //eslint-disable-next-line
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
@@ -64,7 +65,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const userToken = TokenManager.getToken()[1]
- 
+  const [ showDeleteConfirmation,setShowDeleteConfirmation] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState(null);
+  const [deleteProject, setDeleteProject] = useState(null);
   //eslint-disable-next-line
   const [videoURL, setVideoURL] = useState([]);
   const [previewVideoURL, setPreviewVideoURL] = useState(null);
@@ -94,7 +97,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       setRefreshProfile(false);
     }
     // eslint-disable-next-line
-  }, [refreshProfile,projectCreated]);
+  }, [refreshProfile, projectCreated]);
 
   const logVideoURL = (index) => {
     if (projectData[index] && projectData[index].video_url) {
@@ -103,7 +106,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   }
   const videoDiv = previewVideoURL ? (
     <div>
-      <VideoPlayer src={previewVideoURL} sidebar={true}/>
+      <VideoPlayer src={previewVideoURL} sidebar={true} />
     </div>
   ) : null;
 
@@ -236,52 +239,65 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   };
 
 
+  const deleteLine = (index) => {
+    console.log(projectData[index].name, 'index')
+    setDeleteProject(projectData[index].name);
+    setDeleteIndex(index);
+    setShowDeleteConfirmation(true);
+  };
 
-  // Function to delete a line
-  const deleteLine = async (index) => {
-
-    try {
-      const clickedProject = projectData[index];
-      //console.log('Clicked Project ID:', clickedProject.id);
-      var clickedProjectid = clickedProject.id;
-
-      let data = qs.stringify({
-        'project_id': clickedProjectid
-      });
-
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${HOSTINGURL}/v1/project/delete`,
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Bearer ${userToken}`
-        },
-        data: data
-      };
+  const confirmDelete = async () => {
+    // Handle the delete action here
+    if (deleteIndex !== null) {
+      // Perform the deletion action
+      const index = deleteIndex;
+      // Function to delete a line
 
       try {
-        await axios.request(config);
-        // If the API call is successful, update the state
-        const updatedProjectData = projectData.filter((_, i) => i !== index);
-        setProjectData(updatedProjectData);
+        const clickedProject = projectData[index];
+        //console.log('Clicked Project ID:', clickedProject.id);
+        var clickedProjectid = clickedProject.id;
 
-        // Similarly, update lines state if needed
-        setLines((prevLines) => {
-          const updatedLines = prevLines.filter((_, i) => i !== index);
-          return updatedLines;
+        let data = qs.stringify({
+          'project_id': clickedProjectid
         });
-        navigate('/dashboard');
-        setAccordionVisible(false);
-        setError('');
+
+        let config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: `${HOSTINGURL}/v1/project/delete`,
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${userToken}`
+          },
+          data: data
+        };
+
+        try {
+          await axios.request(config);
+          // If the API call is successful, update the state
+          const updatedProjectData = projectData.filter((_, i) => i !== index);
+          setProjectData(updatedProjectData);
+
+          // Similarly, update lines state if needed
+          setLines((prevLines) => {
+            const updatedLines = prevLines.filter((_, i) => i !== index);
+            return updatedLines;
+          });
+          navigate('/dashboard');
+          setAccordionVisible(false);
+          setError('');
+        } catch (error) {
+          console.log(error);
+          // Handle error states or display an error message to the user
+        }
+        setShowDeleteConfirmation(false);
+        setDeleteIndex(null);
       } catch (error) {
         console.log(error);
         // Handle error states or display an error message to the user
       }
-    } catch (error) {
-      console.error('Error deleting line:', error);
-      // Handle error states or display an error message to the user
     }
   };
 
@@ -554,7 +570,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                         place="right"
                         className="dark:custom-modal-bg-color dark:text-gray-300 font-semibold text-[2xl!important] font-ubuntu border-0 rounded-[50%!important]"
                         opacity={1}
-                        style={{ backgroundColor: '#B3B5E2', color: '#020913', padding: '0px'}}
+                        style={{ backgroundColor: '#B3B5E2', color: '#020913', padding: '0px' }}
                         clickable={true}
                         delayShow={3000}
                       />
@@ -575,7 +591,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               )}
             </div>
           )}
-
+ 
           {/* <div className="flex-grow w-1/4 p-4 bg-gray-200">
   <h2 className="text-2xl font-semibold">Video Preview</h2>
   {previewVideoURL && (
@@ -660,6 +676,12 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           </Link>
         </div>
       </div>
+      <ConfirmationModal
+        show={showDeleteConfirmation}
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteConfirmation(false)}
+        projectName={deleteProject}
+      />
     </>
   );
 };

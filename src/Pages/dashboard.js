@@ -17,6 +17,7 @@ import { TokenManager } from '../components/getToken.js';
 import PopupForm from '../components/sessionPopup.js';
 import { useSnackbar } from 'notistack';
 import DragDropModal from "../components/Drag&DropModal";
+import ConfirmationModal from "../components/DeleteConfirmationModal";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -246,7 +247,6 @@ export default function Dashboard() {
         }));
         setNewvideoClips(newvideoClips);
         setAccordionVisible(true);
-
       }
     };
 
