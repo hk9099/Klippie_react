@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
 import { BiCheck } from 'react-icons/bi';
+import { useSubscription } from '../context/SubscriptionContext.js';
 
-function PricingCard({ title, price, time, description, planDetails, benefits, id, benefitTitle, highlightBorder }) {
-
+function PricingCard({ title, price, time, description, planDetails, benefits, id, benefitTitle, highlightBorder ,onClose ,fetchSubscriptions}) {
+    const { setPlanSubscribed ,setSubscribed} = useSubscription();
     const [subRetrieved, setSubRetrieved] = useState(false);
     const userToken = TokenManager.getToken()[1]
 
@@ -48,6 +49,11 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
             const data = await getSubscription();
             if (data.data !== null) {
                 setSubRetrieved(true);
+                console.log('subscribed');
+                setPlanSubscribed(true);
+                setSubscribed(true);
+                fetchSubscriptions();
+                onClose();
                 return;
             } else {
                 setTimeout(handlePolling, 1000);
@@ -88,11 +94,15 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
                     console.log('loaded')
                  },
                 close: () => {
+                    setPlanSubscribed(true);
+                    fetchSubscriptions();
                 },
                 success: async () => {
                     console.log('sucess')
                     await handlePolling();
                     setTimeout(closePolling, 20000);
+                    setPlanSubscribed(true);
+                    fetchSubscriptions();
                 },
                 step: () => {
                     console.log('step')

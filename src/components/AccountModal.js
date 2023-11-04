@@ -34,7 +34,6 @@ const AccountModal = ({
     avatar,
 }) => {
     const { Subscription } = useSubscription();
-    console.log(Subscription, 'Subscription');
     // const [token, setToken] = useState(null);
     const userToken = TokenManager.getToken()[1]
     const { enqueueSnackbar } = useSnackbar();

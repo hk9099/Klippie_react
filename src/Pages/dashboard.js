@@ -278,7 +278,7 @@ export default function Dashboard() {
             setError={setError}
           />
         )}
-        <div className="w-full overflow-x-auto px-3 ">
+        <div className="w-full overflow-x-auto px-3 "  >
           <Modal className="z-50" />
           {loginCount === 1 && (newProjectCount ===  undefined || '') ? (
             null

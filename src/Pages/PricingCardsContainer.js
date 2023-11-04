@@ -6,36 +6,43 @@ import axios from 'axios';
 import { RxCross2 } from "react-icons/rx";
 import { Link } from 'react-router-dom';
 import { TokenManager } from '../components/getToken.js';
+import { useSubscription } from '../context/SubscriptionContext.js';
 
 export default function PricingCardsContainer({ isOpen, onClose }) {
+    const { PlanSubscribed, setSubscription, setPlanSubscribed } = useSubscription();
+    console.log(PlanSubscribed);
     const [pricingData, setPricingData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const userToken = TokenManager.getToken()[1]
     const [freePlan, setFreePlan] = useState(false);
     const [paidPlan, setPaidPlan] = useState(false);
+    const fetchSubscriptions = async () => {
+        let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://dev-api.getklippie.com/v1/sub/get',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + userToken,
+            }
+        };
+
+        const response = await axios(config);
+        console.log(response, 'response.data.data.is_active');
+        setSubscription(response.data.data);
+        if (response.data.data === null) {
+            setFreePlan(true);
+            setIsLoading(false);
+        } else {
+            setPaidPlan(true);
+            setIsLoading(false);
+        }
+    }
 
     useEffect(() => {
-        const fetchSubscriptions = async () => {
-            let config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: 'https://dev-api.getklippie.com/v1/sub/get',
-                headers: {
-                    'accept': 'application/json',
-                    'Authorization': 'Bearer ' + userToken,
-                }
-            };
-
-            const response = await axios(config);
-            if (response.data.data === null) {
-                setFreePlan(true);
-            } else {
-                setPaidPlan(true);
-            }
-        }
         fetchSubscriptions();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ ]);
+    }, []);
 
     useEffect(() => {
         axios
@@ -90,7 +97,7 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
             });
     }, []);
 
-  
+
 
 
     return (
@@ -116,7 +123,9 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                                         {pricingData.map((data, index) => (
                                             <PricingCard key={index} {...data} highlightBorder={
                                                 (freePlan && index === 0) || (paidPlan && index === 1)
-                                              } />
+                                            } onClose={onClose}
+                                                fetchSubscriptions={fetchSubscriptions}
+                                            />
                                         ))}
                                     </div>
                                 </div>
@@ -139,7 +148,7 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
             )}
         </>
     );
-    
+
 }
 
 

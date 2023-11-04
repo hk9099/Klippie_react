@@ -6,11 +6,10 @@ import { TokenManager } from '../components/getToken.js';
 import { useSubscription } from '../context/SubscriptionContext.js';
 
 const Navbar = ({ creaditBalance }) => {
-    const { setSubscription } = useSubscription();
+    const { subscribed ,setSubscribed,setSubscription} = useSubscription();
+    console.log(subscribed, 'subscribed');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const userToken = TokenManager.getToken()[1]
-    const [subscribed, setSubscribed] = useState(false);
-    console.log(subscribed, 'subscribed');
     const openModal = () => {
         setIsModalOpen(true);
     };
@@ -32,8 +31,7 @@ const Navbar = ({ creaditBalance }) => {
 
             try {
                 const response = await axios(config);
-                console.log(response, 'response.data.data.is_active');
-                setSubscription(response.data.data);    
+                setSubscription(response.data.data);
                 if (response.data.data.is_active === true) {
                     console.log('subscribed');
                     setSubscribed(true);
@@ -82,7 +80,7 @@ const Navbar = ({ creaditBalance }) => {
                             </div>
                         )}
                             <button
-                                className={`text-gray-300 w-auto text-center px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed ? 'hidden' : 'block'}`}
+                                className={`text-gray-300 w-auto text-center px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed === true ? 'hidden' : 'block'}`}
                                 onClick={openModal}
                             >
                                 <span className={`text-content select-none`}>Upgrade</span>
