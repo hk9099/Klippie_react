@@ -29,9 +29,9 @@ import ConfirmationModal from "../components/DeleteConfirmationModal.js";
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError  }) => {
   const { setCloudinaryResponse } = useCloudinary();
   const { clipsFound } = useClipsFoundStatus();
-  const { setClipsFoundStatus, projectCreated } = useClipsFoundStatus();
-  console.log(projectCreated, 'projectCreated')
   //eslint-disable-next-line
+  const { setClipsFoundStatus, projectCreated } = useClipsFoundStatus();
+  // console.log(projectCreated, 'projectCreated')
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { setUserName } = useUserNickname();
   const { setUserEmail } = useUserNickname();
@@ -104,11 +104,11 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       setPreviewVideoURL(projectData[index].video_url);
     }
   }
-  const videoDiv = previewVideoURL ? (
-    <div>
-      <VideoPlayer src={previewVideoURL} sidebar={true} />
-    </div>
-  ) : null;
+  // const videoDiv = previewVideoURL ? (
+  //   <div>
+  //     <VideoPlayer src={previewVideoURL} sidebar={true} />
+  //   </div>
+  // ) : null;
 
   useEffect(() => {
     console.log('isApiCompleted', isApiCompleted);
@@ -419,7 +419,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     <>
       <div
         className={`${open ? "w-[260px]" : "w-fit"
-          } fixed top-0 p-2  z-40 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}
+          } fixed top-0 p-2  z-10 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}
       >
         <AiOutlineMenu
           className={`${!open && "rotate-180"

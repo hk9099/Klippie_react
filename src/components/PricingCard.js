@@ -46,7 +46,7 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
     const handlePolling = async () => {
         if (!subRetrieved) {
             const data = await getSubscription();
-            if (data.data) {
+            if (data.data !== null) {
                 setSubRetrieved(true);
                 return;
             } else {
@@ -88,13 +88,11 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
                     console.log('loaded')
                  },
                 close: () => {
-                    window.location.reload();
                 },
                 success: async () => {
                     console.log('sucess')
                     await handlePolling();
                     setTimeout(closePolling, 20000);
-                    window.location.reload();
                 },
                 step: () => {
                     console.log('step')

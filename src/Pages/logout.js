@@ -1,19 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { BiLogOut } from 'react-icons/bi';
-import React, { Fragment, useRef, useState, useEffect } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
-// import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { TokenManager } from '../components/getToken.js';
+import { RxCross2 } from "react-icons/rx";
+import { HiOutlineLogout } from "react-icons/hi";
 
 function Logout({ showLogout }) {
     const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
-    // const [open] = useState(true);
-
-    const cancelButtonRef = useRef(null);
 
     const handleLogout = () => {
         enqueueSnackbar('Logging out...', {
@@ -49,10 +46,9 @@ function Logout({ showLogout }) {
 
     return (
         <>
-
             {isLoading ? (
                 <p
-                    className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 `}
+                    className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover-bg-gray-700`}
                     onClick={() => setIsOpen(true)}
                 >
                     <span className="text-2xl">
@@ -73,83 +69,40 @@ function Logout({ showLogout }) {
                     <span className="text-2xl h-6 w-12 flex items-center justify-center">
                         <BiLogOut />
                     </span>
-                        <span className={`${showLogout ? '' : 'hidden'} origin-left duration-300 hover:block text-sm`}>
+                    <span className={`${showLogout ? '' : 'hidden'} origin-left duration-300 hover:block text-sm`}>
                         Log Out
                     </span>
                 </p>
             )}
 
-            <Transition.Root show={isOpen} as={Fragment}>
-                <Dialog
-                    as="div"
-                    className="fixed inset-0 overflow-y-auto z-50"
-                    initialFocus={cancelButtonRef}
-                    onClose={() => setIsOpen(false)} // Close the modal
-                >
-                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center ">
-                        <Transition.Child
-                            as={Fragment}
-                            enter="ease-out duration-300"
-                            enterFrom="opacity-0 scale-95"
-                            enterTo="opacity-100 scale-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100 scale-100"
-                            leaveTo="opacity-0 scale-95"
-                        >
-                            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-50 transition-opacity" />
-                        </Transition.Child>
-
-                        <Transition.Child
-                            as={Fragment}
-                            enter="ease-out duration-300"
-                            enterFrom="opacity-0 scale-95"
-                            enterTo="opacity-100 scale-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100 scale-100"
-                            leaveTo="opacity-0 scale-95"
-                        >
-                            <div className="inline-block align-bottom bg-[#58575a] rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
-                                <div className="sm:flex sm:items-start">
-                                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-yellow-600">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
-                                        </svg>
-
-                                        {/* <ExclamationTriangleIcon className="h-6 w-6 text-yellow-600" aria-hidden="true" /> */}
-                                    </div>
-                                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                        <Dialog.Title as="h3" className="text-lg leading-6  text-white font-bold">
-                                            Log out account
-                                        </Dialog.Title>
-                                        <div className="mt-2">
-                                            <p className="text-sm text-gray-100">
-                                                Are you sure you want to Log Out?
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                                    <button
-                                        type="button"
-                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                        onClick={handleDeactivate} // Call the handleDeactivate function
-                                    >
-                                        Log Out
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                                        onClick={() => setIsOpen(false)} // Close the modal
-                                        ref={cancelButtonRef}
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        </Transition.Child>
+            {isOpen && (
+                <div className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center inset-0 backdrop-blur-md bg-black bg-opacity-60 z-50">
+                    <div className="bg-gray-800 w-full max-w-md p-6 rounded-lg border shadow-lg z-50 border-gray-700 text-white">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold">Log Out</h2>
+                            <RxCross2 className="text-2xl cursor-pointer" onClick={() => setIsOpen(false)} />
+                        </div>
+                        <p className="text-gray-300 mb-4">
+                            Are you sure you want to log out?
+                        </p>
+                        <div className="flex justify-end">
+                            <button
+                                onClick={() => setIsOpen(false)}
+                                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 mr-2"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleDeactivate}
+                                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center"
+                            >
+                                <HiOutlineLogout className="mr-2" />
+                                Log Out
+                            </button>
+                        </div>
                     </div>
-                </Dialog>
-            </Transition.Root>
+                </div>
+            )}
         </>
     );
 }

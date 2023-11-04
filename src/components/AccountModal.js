@@ -19,7 +19,7 @@ const ChangePasswordSchema = Yup.object().shape({
             [Yup.ref('oldPassword'), null],
             'New Password cannot be the same as Current Password'
         )
-        .min(8, 'New Password must be at least 8 characters').max(20, 'New Password must be at most 20 characters').matches( /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,20}$/, 'New Password must contain at least one uppercase letter, one lowercase letter, one number and one special character')
+        .min(8, 'New Password must be at least 8 characters').max(20, 'New Password must be at most 20 characters').matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,20}$/, 'New Password must contain at least one uppercase letter, one lowercase letter, one number and one special character')
         .required('New Password is required'),
     confirmNewPassword: Yup.string()
         .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
@@ -34,6 +34,7 @@ const AccountModal = ({
     avatar,
 }) => {
     const { Subscription } = useSubscription();
+    console.log(Subscription, 'Subscription');
     // const [token, setToken] = useState(null);
     const userToken = TokenManager.getToken()[1]
     const { enqueueSnackbar } = useSnackbar();
@@ -55,7 +56,7 @@ const AccountModal = ({
     //         var social = userInfo.user.is_social
     //         setSocial(social);
     //         setToken(userInfo.token.access_token);
-            
+
     //     } else if (userGoogle) {
     //         const decodedGoogle = atob(userGoogle);
     //         var googleUserInfo = JSON.parse(decodedGoogle);
@@ -65,13 +66,13 @@ const AccountModal = ({
 
     return (
         <div
-            className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50 ${showAccount ? '' : 'hidden'
+            className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center  z-50 inset-0 backdrop-blur-md bg-black bg-opacity-60 ${showAccount ? '' : 'hidden'
                 } `}
         >
             <div className={`bg-white rounded-3xl border p-4 flex flex-col gap-4 dark:bg-gray-800 ${!social ? 'w-[600px]' : 'w-[400px]'}  dark:border-gray-700`}>
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                        
+
                     </h2>
                     <button
                         onClick={() => {
@@ -96,35 +97,35 @@ const AccountModal = ({
                 </div>
                 <div className="flex flex-row">
                     <div className="w-25 flex flex-col gap-2">
-                    {!social && (
-                        <button
-                            onClick={() => setActiveTab('profile')}
-                            className={`${activeTab === 'profile' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'
-                                } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
-                        >
-                            Profile
+                        {!social && (
+                            <button
+                                onClick={() => setActiveTab('profile')}
+                                className={`${activeTab === 'profile' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'
+                                    } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
+                            >
+                                Profile
                             </button>
-                        )} 
+                        )}
                         {!social && (
                             <button
                                 onClick={() => setActiveTab('changePassword')}
-                                className={`${activeTab === 'changePassword' ? 'dark:bg-blue-500' : 'dark:bg-gray-700' } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
+                                className={`${activeTab === 'changePassword' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
                             >
                                 Change&nbsp;Password
                             </button>
-                        )} 
+                        )}
                         {!social && (
                             <button
-                            onClick={() => setActiveTab('subscriptions')}
-                            className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'dark:bg-gray-700' } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
+                                onClick={() => setActiveTab('subscriptions')}
+                                className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white ${Subscription === null ? 'hidden' : 'block'}`}
                             >
-                            Subscriptions
-                        </button>
+                                Subscriptions
+                            </button>
                         )}
                     </div>
 
                     {!social && (
-                    <div className="w-1 border-r border-gray-200 dark:border-gray-700 mx-3" />
+                        <div className="w-1 border-r border-gray-200 dark:border-gray-700 mx-3" />
                     )}
 
                     <div className="w-[100%]">
@@ -173,12 +174,12 @@ const AccountModal = ({
                                 {(formikProps) => (
                                     <Form className="flex flex-col gap-3">
                                         <div className="flex flex-col gap-2 relative">
-                                            <label
+                                            {/* <label
                                                 htmlFor="oldPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
                                                 Current Password
-                                            </label>
+                                            </label> */}
                                             <Field
                                                 type={showOldPassword ? 'text' : 'password'}
                                                 name="oldPassword"
@@ -204,12 +205,12 @@ const AccountModal = ({
                                             className="text-red-500 text-sm"
                                         />
                                         <div className="flex flex-col gap-2 relative">
-                                            <label
+                                            {/* <label
                                                 htmlFor="newPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
                                                 New Password
-                                            </label>
+                                            </label> */}
                                             <Field
                                                 type={showNewPassword ? 'text' : 'password'}
                                                 name="newPassword"
@@ -236,12 +237,12 @@ const AccountModal = ({
                                         />
 
                                         <div className="flex flex-col gap-2 relative">
-                                            <label
+                                            {/* <label
                                                 htmlFor="confirmNewPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
                                                 Confirm New Password
-                                            </label>
+                                            </label> */}
                                             <Field
                                                 type={showConfirmPassword ? 'text' : 'password'}
                                                 name="confirmNewPassword"
@@ -270,9 +271,9 @@ const AccountModal = ({
                                             type="submit"
                                             disabled={formikProps.isSubmitting}
                                             className={`${formikProps.isSubmitting
-                                                    ? 'bg-gray-400 cursor-wait'
-                                                    : 'bg-blue-500'
-                                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
+                                                ? 'bg-gray-400 cursor-wait'
+                                                : 'bg-blue-500'
+                                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white mt-3`}
                                         >
                                             {formikProps.isSubmitting ? 'Loading...' : 'Submit'}
                                         </button>
@@ -283,7 +284,7 @@ const AccountModal = ({
                         {activeTab === 'profile' && (
                             <Formik initialValues={{}} onSubmit={() => { }}>
                                 <UserModal
-                                    isOpen={true} 
+                                    isOpen={true}
                                     userNickname={userNickname}
                                     userEmailAddress={userEmailAddress}
                                     avatar={avatar}
@@ -295,7 +296,7 @@ const AccountModal = ({
                             </Formik>
                         )}
                         {activeTab === 'subscriptions' && (
-                           <SubscriptionModal  Subscription={Subscription} />
+                            <SubscriptionModal Subscription={Subscription} />
                         )}
                     </div>
                 </div>

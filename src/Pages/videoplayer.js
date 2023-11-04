@@ -109,7 +109,7 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime ,
     return (
         <>
             <JolPlayer
-                className="w-[400px!important] h-[230px!important] m-[auto!important]"
+                className="w-[400px!important] h-[230px!important] m-[auto!important] z-[auto!important]"
                 option={{
                     videoSrc: [src],
                     ...videoOptions,

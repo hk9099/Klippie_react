@@ -71,7 +71,7 @@ export default function ContactUs({ isOpen, onClose }) {
 
     return (
         <div className={`fixed inset-0 flex justify-center items-center z-50 ${isOpen ? 'block' : 'hidden'}`}>
-            <div className="absolute w-full h-full bg-black opacity-50 blur-xl" onClick={onClose}></div>
+            <div className="absolute w-full h-full inset-0 backdrop-blur-md bg-black bg-opacity-60" onClick={onClose}></div>
             <div className="bg-gray-800 w-full max-w-md p-6 rounded-3xl border shadow-lg z-40 border-gray-700">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold text-white">Contact Us</h2>
