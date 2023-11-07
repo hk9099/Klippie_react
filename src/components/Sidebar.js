@@ -22,6 +22,7 @@ import { useCloudinary } from '../context/CloudinaryContext.js';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext';
 import { TokenManager } from '../components/getToken.js';
 import { Tooltip } from 'react-tooltip';
+//eslint-disable-next-line
 import VideoPlayer from "../Pages/videoplayer.js";
 // import Example from "./testDropdown";
 import ConfirmationModal from "../components/DeleteConfirmationModal.js";
@@ -70,6 +71,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [deleteProject, setDeleteProject] = useState(null);
   //eslint-disable-next-line
   const [videoURL, setVideoURL] = useState([]);
+  //eslint-disable-next-line
   const [previewVideoURL, setPreviewVideoURL] = useState(null);
   // console.log(videoURL, 'videoURL')
   const closeDropdown = () => {

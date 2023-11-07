@@ -35,6 +35,7 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
             setIsLoading(false);
         } else {
             setPaidPlan(true);
+            setPlanSubscribed(true);
             setIsLoading(false);
         }
     }

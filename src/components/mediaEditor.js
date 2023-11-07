@@ -1,100 +1,67 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
-const CloudinaryMediaEditor = ({publicId,startTime,endTime}) => {
-    const editorRef = useRef(null);
-    
-    const initializeEditor = () => {
-      console.log(publicId,startTime,endTime);
-
-    // Initialize the media editor
-    const myEditor = window.cloudinary.mediaEditor();
+const CloudinaryMediaEditor = ({ publicId, startTime, endTime }) => {
+  const initializeEditor = () => {
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
-    console.log(cloudName);
+    const myEditor = window.cloudinary.mediaEditor();
 
-    // Customize the editor configuration
     myEditor.update({
       cloudName: cloudName,
       publicIds: [
         {
-          publicId: publicId,
+          publicId: 'test1698990260550',
           resourceType: 'video',
         },
       ],
       video: {
         steps: ['trim'],
         trim: {
-          startOffset: 10,
-          endOffset: 20,
+          startOffset: 1,
+          endOffset: 2,
           units: 'seconds',
-        },  
+        },
       },
       showAdvanced: true,
       showConsoles: true,
       showLeftMenu: true,
       showRightMenu: true,
-      
     });
 
-    // Show the editor
     myEditor.show();
 
-  
+    myEditor.on('save', (result) => {
 
-    // Add event listeners for custom actions
+      console.log(result, 'result');
+    }
+    );
+
     myEditor.on('export', (data) => {
-      const downloadUrl = data.assets[0].downloadUrl;
-    
-      fetch(downloadUrl)
-        .then(response => response.blob())
-        .then(blob => {
-          // Create a temporary anchor element to trigger the download
-          const a = document.createElement('a');
-          a.style.display = 'none';
-    
-          // Create a URL for the blob
-          const videoUrl = window.URL.createObjectURL(blob);
-          a.href = videoUrl;
-    
-          // Set the download attribute and file name
-          a.download = `edited_video.${data.format}`
-    
-          // Trigger a click event on the anchor element to start the download
-          document.body.appendChild(a);
-          a.click();
-    
-          // Clean up the temporary anchor element
-          document.body.removeChild(a);
-        })
-        .catch(error => {
-          console.error('Error downloading video:', error);
-        });
-    
+      console.log('Exported data:', data);
+
+      // Create a Blob from the exported data
+      const blob = new Blob([data.data], { type: data.format });
+      console.log('blob', blob);
+
+      // Create an object URL for the Blob
+      const url = URL.createObjectURL(blob);
+
+      // Create a download link
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = 'edited_video.' + data.format; // Specify the desired filename
+
+      // Trigger a click event on the download link to start the download
+      downloadLink.click();
+
+      // Clean up the object URL after the download link is clicked
+      URL.revokeObjectURL(url);
+
+      // Close the tab when the download starts
+      window.close();
     });
-    
-
-    myEditor.on('import', (data) => {
-      console.log('Imported data:', data);
-    })
-
-    myEditor.on('sourceChanged', (data) => {
-      console.log('Source changed:', data);
-    })
-
-    myEditor.on('sourceChanging', (data) => {
-      console.log('Source changing:', data);
-    })
 
     myEditor.on('close', () => {
-      // Store the editor instance in the ref
-      editorRef.current = myEditor;
     });
-
-    myEditor.on('error', (error) => {
-      console.error(error);
-    });  
-
-    // Store the editor instance in the ref
-    editorRef.current = myEditor;
   };
 
   const openEditor = () => {

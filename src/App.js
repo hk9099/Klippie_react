@@ -21,7 +21,8 @@ const Steps = lazy(() => import('./Pages/Steps.js'));
 const HomeScreen = lazy(() => import('./Pages/HomeScreen.js'));
 const PricingCardsContainer = lazy(() => import('./Pages/PricingCardsContainer.js'));
 const YouTube = lazy(() => import('./components/YouTube.js'));
-const Custum = lazy(() => import('./components/custum.js'));
+const Editor = lazy(() => import('./components/Editor.js'));
+const CloudinaryMediaEditor = lazy(() => import('./components/mediaEditor.js'));
 
 function App() {
   const { projectId } = useParams();
@@ -64,8 +65,8 @@ function App() {
                   <Route path="/homescreen" element={<Layout><HomeScreen /></Layout>} />
                     <Route path="/Test" element={<Test />} />
                   <Route path="/pricing" element={<PricingCardsContainer />} />
-                  <Route path="/mediaEditor/:clipId" element={<Custum />} />
-                  <Route path="/youtube" element={<YouTube />} />
+                  <Route path="/editor/:clipId" element={<Editor />} />
+                  <Route path="/youtube" element={<CloudinaryMediaEditor />} />
                 </Routes>
               </CloudinaryProvider>
             </SidebarProvider>
