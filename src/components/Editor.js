@@ -74,13 +74,51 @@ function Editor() {
                             console.log(result, 'result');
                         });
 
-                        myEditor.on('export', (data) => {
-                            myEditor.hide();
+                        myEditor.on('export', async (data) => {
+                            myEditor.show();
                             console.log('Exported data:', data);
-                            setShowProgressBar(true);
 
                             const downloadUrl = data.assets[0].downloadUrl;
                             const secureUrl = data.assets[0].secureUrl;
+                            const downloadAttempts = 3; // Number of download attempts
+
+                          async function downloadVideo(attempt) {
+                                const xhr = new XMLHttpRequest();
+                                xhr.open('GET', downloadUrl, true);
+                                xhr.responseType = 'blob';
+
+                                xhr.onload = () => {
+                                    if (xhr.status === 200) {
+                                        const videoBlob = xhr.response;
+                                        const blobUrl = URL.createObjectURL(videoBlob);
+
+                                        const downloadLink = document.createElement('a');
+                                        downloadLink.style.display = 'none';
+
+                                        downloadLink.href = blobUrl;
+                                        downloadLink.download = `${response.data.data.title}.${response.data.data.type}`;
+
+                                        document.body.appendChild(downloadLink);
+                                        downloadLink.click();
+
+                                        document.body.removeChild(downloadLink);
+                                        URL.revokeObjectURL(blobUrl);
+                                        myEditor.hide();
+                                    setShowProgressBar(false);
+                                    window.close();
+                                    } else {
+                                        if (attempt < downloadAttempts) {
+                                            // Retry the download
+                                            console.log(`Download attempt ${attempt + 1}`);
+                                            downloadVideo(attempt + 1);
+                                        } else {
+                                            console.error('Failed to fetch the video content after multiple attempts');
+                                        }
+                                    }
+                                };
+                                xhr.send();
+
+                            }
                             let updateData = JSON.stringify({
                                 "id": id,
                                 "clip_url": secureUrl,
@@ -98,34 +136,19 @@ function Editor() {
                                 data: updateData
                             };
 
-                            axios(config)
-                                .then(function (response) {
-                                    console.log(response, 'response');
-                                    fetch(downloadUrl)
-                                        .then((response) => response.blob())
-                                        .then((videoBlob) => {
-                                            const blobUrl = URL.createObjectURL(videoBlob);
+                            try {
+                                const response = await axios(config);
+                                console.log(response, 'response');
+                                
+                            } catch (error) {
+                                console.log(error);
+                            }
 
-                                            const downloadLink = document.createElement('a');
-                                            downloadLink.href = blobUrl;
-                                            downloadLink.download = `${response.data.data.title}.${response.data.data.type}`
-                                            downloadLink.style.display = 'none';
-
-                                            document.body.appendChild(downloadLink);
-                                            downloadLink.click();
-
-                                            downloadLink.addEventListener('click', () => {
-                                                document.body.removeChild(downloadLink);
-                                                URL.revokeObjectURL(blobUrl);
-                                            });
-                                            setShowProgressBar(false);
-                                            window.close();
-                                        });
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
+                            // Start the initial download attempt
+                            downloadVideo(1);
                         });
+
+
 
                         myEditor.on('close', () => {
                             window.close();
