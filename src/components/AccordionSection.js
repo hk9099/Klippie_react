@@ -83,15 +83,16 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
         event.stopPropagation();
         try {
             setDownloadModalOpen(true); // Open the modal
-
+            
             if (fileselecteddata.length === 1) {
                 // Download a single video
                 const element = fileselecteddata[0];
                 setCurrentDownloadingVideo(element.title);
-
+                const videoUrl = element.src;
+                const secureVideoUrl = videoUrl.replace(/^http:\/\//i, 'https://');
                 const response = await axios({
                     method: 'get',
-                    url: element.src,
+                    url:secureVideoUrl,
                     responseType: 'blob',
                     onDownloadProgress: (progressEvent) => {
                         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -116,10 +117,11 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
     
                 const handleFileDownload = async (element, index) => {
                     setCurrentDownloadingVideo(element.title);
-    
+                    const videoUrl = element.src;
+                    const secureVideoUrl = videoUrl.replace(/^http:\/\//i, 'https://');
                     const response = await axios({
                         method: 'get',
-                        url: element.src,
+                        url: secureVideoUrl,
                         responseType: 'blob',
                     });
     
