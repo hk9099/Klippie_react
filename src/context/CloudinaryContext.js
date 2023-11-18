@@ -8,6 +8,7 @@ export function useCloudinary() {
 
 export function CloudinaryProvider({ children }) {
     const [cloudinaryResponse, setCloudinaryResponse] = useState(null);
+    
     return (
         <CloudinaryContext.Provider value={{ cloudinaryResponse, setCloudinaryResponse }}>
             {children}

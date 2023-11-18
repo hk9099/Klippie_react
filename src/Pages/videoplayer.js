@@ -49,7 +49,7 @@ const videoOptions = {
 
 };
 const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, clipId, setMainVideo }) => {
-    console.log(setMainVideo, 'setMainVideo');
+    // console.log(setMainVideo, 'setMainVideo');
     const [isLoading, setIsLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
@@ -134,9 +134,6 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
                     style={{ backgroundColor: '#B3B5E2', color: '#020913', zIndex: '999', position: 'realative' }}
                 />
             </div>
-            {/* <button  className={`border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full w-[335px] text-center p-2  gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center`}>
-                <CloudinaryMediaEditor publicId={publicId} startTime={startTime} endTime={endTime} src={src} />
-            </button> */}
         </>
     );
 };

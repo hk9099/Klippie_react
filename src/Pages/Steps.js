@@ -13,10 +13,11 @@ import Suggetionpopup from '../components/Suggetionpopup';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 import { TokenManager } from '../components/getToken.js';
 import DragDropModal from '../components/Drag&DropModal';
-
+import { useFileSelected } from "../context/SelectionContext.js";
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userName ,creaditBalance}) => {
     const { setClipsFoundStatus ,setShowHomeStatus ,setProjectCreated} = useClipsFoundStatus();
+    const { fileDelete } = useFileSelected();
     const userToken = TokenManager.getToken()[1]
     const navigate = useNavigate();
     const { projectId: routeProjectId } = useParams();
@@ -51,7 +52,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
-    }, [newhistoryvideoClips]);
+    }, [newhistoryvideoClips,fileDelete]);
 
 
 

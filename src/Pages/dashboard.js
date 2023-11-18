@@ -17,8 +17,10 @@ import { TokenManager } from '../components/getToken.js';
 import PopupForm from '../components/sessionPopup.js';
 import { useSnackbar } from 'notistack';
 import DragDropModal from "../components/Drag&DropModal";
+import { useFileSelected } from "../context/SelectionContext.js";
 
 export default function Dashboard() {
+  const { fileDelete } = useFileSelected();
   const location = useLocation();
   const userToken = TokenManager.getToken()[1]
   const loginCount = TokenManager.getToken()[0]
@@ -251,7 +253,7 @@ export default function Dashboard() {
 
     handleProjectClick()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo]);
+  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo , fileDelete]);
 
 
 

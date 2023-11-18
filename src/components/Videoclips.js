@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef ,useEffect} from "react";
 import DataGrid, {
   Column,
   Selection,
@@ -13,15 +13,16 @@ import VideoPlayer from "../Pages/videoplayer.js";
 import DropDownButton from "../components/GridDropdown.js";
 import { Popup } from "devextreme-react/popup";
 import { Form } from "devextreme-react/form";
+import { useFileSelected } from "../context/SelectionContext.js";
 // import { LuDownload } from "react-icons/lu";
 // import VideoDownload from "./VideoDownload.js";
 
 const Videoclips = ({ videoClips, setVideoCount }) => {
+  const { setFileselected ,setFileselecteddata} = useFileSelected();
   //eslint-disable-next-line
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
-  // const isDataLoadedRef = useRef(false); 
-  // const [selectedRows, setSelectedRows] = useState([]);
+  const isDataLoadedRef = useRef(false); 
   // const [modalVisible, setModalVisible] = useState(false);
 
   // const handleDownloadClick = () => {
@@ -47,15 +48,15 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
 
 
 
-  // useEffect(() => {
-  //   // Update the video count whenever the videoClips data changes
-  //   setVideoCount(videoClips.length);
+  useEffect(() => {
+    // Update the video count whenever the videoClips data changes
+    setVideoCount(videoClips.length);
 
-  //   // Load videoClips data only once when it's available
-  //   if (!isDataLoadedRef.current && videoClips.length > 0) {
-  //     isDataLoadedRef.current = true;
-  //   }
-  // }, [videoClips, setVideoCount]);
+    // Load videoClips data only once when it's available
+    if (!isDataLoadedRef.current && videoClips.length > 0) {
+      isDataLoadedRef.current = true;
+    }
+  }, [videoClips, setVideoCount]);
 console.log(videoClips, "videoClips");
   return (<>
     {/* {selectedRows.length > 0 && (
@@ -78,9 +79,15 @@ console.log(videoClips, "videoClips");
       showBorders={true}
       columnAutoWidth={true}
       showRowLines={true}
-      // onSelectionChanged={(e) => {
-      //   setSelectedRows(e.selectedRowsData);
-      // }}
+      onSelectionChanged={(e) => {
+        if (e.selectedRowsData.length > 0) {
+          setFileselected(true); 
+          setFileselecteddata(e.selectedRowsData);
+        } else {
+          setFileselected(false);
+          setFileselecteddata([]);
+        }
+      }}
     >
       <LoadPanel enabled={false} />
       <Selection
