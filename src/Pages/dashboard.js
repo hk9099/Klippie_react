@@ -27,6 +27,33 @@ export default function Dashboard() {
   const [showPopup, setShowPopup] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
+  const [mediaEditorClosed, setMediaEditorClosed] = useState(false);
+
+  useEffect(() => {
+    const handleMediaEditorClosed = () => {
+      // Handle the event when the media editor tab is closed
+      setMediaEditorClosed(true);
+    };
+
+    // Attach the event listener when the component mounts
+    window.addEventListener('mediaEditorClosed', handleMediaEditorClosed);
+
+    // Detach the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('mediaEditorClosed', handleMediaEditorClosed);
+    };
+  }, []);
+
+  // Reset the state or perform other actions when the media editor tab is closed
+  useEffect(() => {
+    if (mediaEditorClosed) {
+      // Do something when the media editor tab is closed
+      console.log('Media editor tab closed');
+      // Reset the state or perform other actions as needed
+      setMediaEditorClosed(false);
+    }
+  }, [mediaEditorClosed]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (TokenManager.isTokenExpired()) {

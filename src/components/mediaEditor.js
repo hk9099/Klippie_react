@@ -1,6 +1,22 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 
 const CloudinaryMediaEditor = ({ publicId, startTime, endTime }) => {
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      // Notify the parent component that the tab is being closed
+      window.dispatchEvent(new Event('mediaEditorClosed'));
+    };
+
+    // Attach the event listener when the component mounts
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Detach the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   const initializeEditor = () => {
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
     const myEditor = window.cloudinary.mediaEditor();
@@ -57,7 +73,7 @@ const CloudinaryMediaEditor = ({ publicId, startTime, endTime }) => {
       URL.revokeObjectURL(url);
 
       // Close the tab when the download starts
-      window.close();
+      // window.close();
     });
 
     myEditor.on('close', () => {

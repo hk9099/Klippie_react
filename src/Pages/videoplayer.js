@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import { Link } from "react-router-dom";
 import { BiSolidEdit } from 'react-icons/bi';
 import { Tooltip } from 'react-tooltip';
+import { useFileSelected } from "../context/SelectionContext.js";
 
 const videoOptions = {
     width: 750,
@@ -50,6 +51,7 @@ const videoOptions = {
 };
 const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, clipId, setMainVideo }) => {
     // console.log(setMainVideo, 'setMainVideo');
+    const { setFileDelete } = useFileSelected();
     const [isLoading, setIsLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
@@ -107,6 +109,16 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
         }
     };
 
+    const handleMediaEditorClick = () => {
+        const mediaEditorTab = window.open(`/editor/${clipId}`, '_blank');
+        const tabClosedListener = () => {
+            console.log('Media editor tab closed');
+            window.location.reload();
+            mediaEditorTab.removeEventListener('beforeunload', tabClosedListener);
+        };
+        mediaEditorTab.addEventListener('beforeunload', tabClosedListener);
+    };
+
 
     return (
         <>
@@ -125,7 +137,13 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
                     {isLoading ? "Downloading..." : `Download ${type === 'mp4' || type === 'video'
                         ? 'Video' : 'Audio'}`}
                 </button>
-                <Link to={`/editor/${clipId}`} target="_blank" data-tooltip-id="MediaEditor" className={`border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full text-center p-2  gap-3 m-auto mt-2 mb-0 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center ${setMainVideo ? 'hidden' : 'block'}`}>
+                <Link
+                    // to={`/editor/${clipId}`}
+                    // target="_blank"
+                    data-tooltip-id="MediaEditor"
+                    className={`border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full text-center p-2  gap-3 m-auto mt-2 mb-0 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center ${setMainVideo ? 'hidden' : 'block'}`}
+                    onClick={handleMediaEditorClick}
+                >
                     <BiSolidEdit />
                 </Link>
                 <Tooltip id="MediaEditor" content="Edit your video"

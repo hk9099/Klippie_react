@@ -168,6 +168,8 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
         }
     };
 
+   
+
     return (
         <div className="flex-grow-0 flex-shrink-0 w-[100%] h-[90%] overflow-y-auto overflow-x-scroll">
             <Accordion alwaysOpen={true} className="p-4">
