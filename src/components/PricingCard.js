@@ -70,7 +70,6 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
     };
 
     const handleButtonClick = () => {
-        console.log(id, 'id');
         if (id !== null) {
 
             const cbInstance = window.Chargebee.init({
@@ -91,14 +90,12 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
                     }
                 },
                 loaded: () => {
-                    console.log('loaded')
                  },
                 close: () => {
                     setPlanSubscribed(true);
                     fetchSubscriptions();
                 },
                 success: async () => {
-                    console.log('sucess')
                     await handlePolling();
                     setTimeout(closePolling, 20000);
                     setPlanSubscribed(true);

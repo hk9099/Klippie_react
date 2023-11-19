@@ -108,6 +108,14 @@ function DragDropModal() {
         videoElement.onloadedmetadata = async () => {
           const duration = Math.floor(videoElement.duration);
           console.log('Video Duration:', duration, 'seconds');
+          if (duration > 7200) {
+            enqueueSnackbar('Error: Only files less than 2 hours are allowed.', {
+                variant: 'error',
+                autoHideDuration: 1500,
+            });
+            setAcceptedFiles([]);
+            return;
+        }
           let data = JSON.stringify({
             "seconds": duration
           });

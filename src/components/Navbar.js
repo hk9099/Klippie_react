@@ -31,6 +31,7 @@ const Navbar = ({ creaditBalance }) => {
 
             try {
                 const response = await axios(config);
+                console.log(response.data.data, 'response.data.data');
                 setSubscription(response.data.data);
                 if (response.data.data.is_active === true) {
                     console.log('subscribed');
