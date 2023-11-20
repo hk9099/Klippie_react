@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useSnackbar } from 'notistack';
 import { IoMdCloudUpload } from 'react-icons/io';
 // import { useNavigate } from 'react-router-dom';
 // import { useUserNickname } from '../components/userNicknameContext.js';
@@ -11,6 +10,8 @@ import { TokenManager } from '../components/getToken.js';
 // import PopupForm from '../components/sessionPopup.js';
 import axios from 'axios';
 import { Tooltip } from 'react-tooltip';
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 function MyProgressBar({ bytesUploaded, totalBytes }) {
   const percent = Math.round((bytesUploaded / totalBytes) * 100) || 0;
@@ -74,7 +75,6 @@ const rejectStyle = {
 };
 
 function DragDropModal() {
-  const { enqueueSnackbar } = useSnackbar();
   const [acceptedFiles, setAcceptedFiles] = useState([]); // State to store accepted files
   const [inputText, setInputText] = useState('');
   const { setCloudinaryResponse } = useCloudinary();
@@ -103,23 +103,30 @@ function DragDropModal() {
         // Create a video element to read the video file
         const videoElement = document.createElement('video');
         videoElement.src = URL.createObjectURL(file);
+        console.log(file.size, 'file.size');
 
         // When the video metadata is loaded, get the duration
         videoElement.onloadedmetadata = async () => {
           const duration = Math.floor(videoElement.duration);
           console.log('Video Duration:', duration, 'seconds');
+          // const size = file.size;
+          //convert bytes to mb
+          const size = file.size / 1048576;
+          console.log(size, 'size');
           if (duration > 7200) {
-            enqueueSnackbar('Error: Only files less than 2 hours are allowed.', {
-                variant: 'error',
-                autoHideDuration: 1500,
-            });
+            ToastNotification({ type: 'error', message: 'Only files less than 2 hours are allowed.' });
             setAcceptedFiles([]);
             return;
-        }
+          } else if (size > 2e+9) {
+            ToastNotification({ type: 'error', message: 'Only files less than 2GB are allowed.' });
+            setAcceptedFiles([]);
+            return;
+          }
           let data = JSON.stringify({
-            "seconds": duration
+            "seconds": duration,
+            "size": size
           });
-          console.log(data, 'data');
+          console.log(data, 'dataaaaaaaaaaaaaaaa');
           let config = {
             method: 'post',
             maxBodyLength: Infinity,
@@ -137,14 +144,10 @@ function DragDropModal() {
             console.log(response, 'response');
             processFile(file);
             setIsFileUploadedInput(true);
-            enqueueSnackbar(`uploading ${acceptedFiles[0].name}!`, { variant: 'info' });
+            ToastNotification({ type: 'loading', message: `uploading ${acceptedFiles[0].name}!` });
           } catch (error) {
             setAcceptedFiles([]);
-            enqueueSnackbar(error.response.data.error, {
-              variant: 'error',
-              autoHideDuration: 1500,
-            });
-            console.log(error.response.data.error, 'error.response.data.message');
+            ToastNotification({ type: 'error', message: error.response.data.error });
           }
         };
         // Clean up the video element
@@ -153,9 +156,7 @@ function DragDropModal() {
     }
 
     if (rejectedFiles.length > 0) {
-      // Files were rejected, show an error notification
-      enqueueSnackbar(`File ${rejectedFiles[0].name} was rejected.`,
-       { variant: 'error' });
+      ToastNotification({ type: 'error', message: `File ${rejectedFiles[0].name} was rejected.` });
       console.log('Rejected files:', rejectedFiles);
     }
   };
@@ -267,6 +268,7 @@ function DragDropModal() {
 
   return (
     <div className="flex justify-center items-center h-[85vh]">
+      <Toaster />
       <div {...getRootProps()} style={style} className="dropzone cursor-pointer flex flex-col justify-center items-center px-[100px!important] py-[50px!important] rounded-lg">
         <input {...getInputProps()} />
         <IoMdCloudUpload className="text-8xl text-white" />
@@ -286,7 +288,7 @@ function DragDropModal() {
           <input
             className={`border border-gray-300 dark:bg-[#ffffff2a] px-2 py-1 rounded-lg text-sm focus:outline-none text-white font-ubuntu ${disabled ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-700'}`}
             type="text"
-            
+
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             disabled={disabled}

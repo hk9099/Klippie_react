@@ -14,13 +14,13 @@ import { useFileSelected } from "../context/SelectionContext.js";
 import axios from "axios";
 import qs from "qs";
 import { TokenManager } from '../components/getToken.js';
-import { useSnackbar } from 'notistack';
+import ToastNotification from "../components/ToastNotification";
 import JSZip from 'jszip';
+import { Toaster } from 'react-hot-toast';
 
 export default function AccordionSection({ videoClips, videoURl, clips }) {
     const { fileselected, fileselecteddata, setFileDelete } = useFileSelected();
     console.log(fileselecteddata, "fileselecteddata");
-    const { enqueueSnackbar } = useSnackbar();
     const [openStates, setOpenStates] = useState([true, true]);
     const [videoCount, setVideoCount] = useState(videoClips.length);
     const [downloadProgress, setDownloadProgress] = useState(0);
@@ -60,14 +60,11 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                     console.log(JSON.stringify(response.data));
                     setVideoCount(videoCount - 1);
                     setFileDelete(true);
-                    enqueueSnackbar('Video deleted successfully', { variant: 'success', autoHideDuration: 1500, });
+                    ToastNotification({ type: 'success', message: 'Video deleted successfully' });
                 })
                 .catch((error) => {
                     console.log(error);
-                    enqueueSnackbar(error.response.data.message,
-                        {
-                            variant: 'error', autoHideDuration: 1500,
-                        });
+                        ToastNotification({ type: 'error', message: error.response.data.message });
                     setFileDelete(false);
                 });
 
@@ -107,8 +104,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                 document.body.appendChild(link);
                 link.click();
                 link.parentNode.removeChild(link);
-
-                enqueueSnackbar(`Downloaded: ${element.title}`, { variant: 'success' });
+                ToastNotification({ type: 'success', message: `Downloaded: ${element.title}` });
             }else {
                 // Download a zip file containing all videos
                 const zip = new JSZip();
@@ -143,9 +139,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                         document.body.appendChild(zipLink);
                         zipLink.click();
                         zipLink.parentNode.removeChild(zipLink);
-    
-                        enqueueSnackbar(`Downloaded: ${zipFileName}`, { variant: 'success' });
-    
+                        ToastNotification({ type: 'success', message: `Downloaded: ${zipFileName}` });
                         // Reset progress and close the modal
                         setDownloadProgress(0);
                         setCurrentDownloadingVideo(null);
@@ -160,7 +154,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
             }
         } catch (error) {
             console.error("Download Error:", error);
-            enqueueSnackbar("Download failed", { variant: 'error' });
+            ToastNotification({ type: 'error', message: 'Download failed' });
         } finally {
             setDownloadProgress(0);
             setCurrentDownloadingVideo(null);
@@ -172,6 +166,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
 
     return (
         <div className="flex-grow-0 flex-shrink-0 w-[100%] h-[90%] overflow-y-auto overflow-x-scroll">
+            <Toaster />
             <Accordion alwaysOpen={true} className="p-4">
                 <AccordionItem isActive={openStates[0]}>
                     <AccordionHeader

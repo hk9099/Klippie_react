@@ -15,9 +15,11 @@ import { useCloudinary } from '../context/CloudinaryContext.js';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 import { TokenManager } from '../components/getToken.js';
 import PopupForm from '../components/sessionPopup.js';
-import { useSnackbar } from 'notistack';
 import DragDropModal from "../components/Drag&DropModal";
 import { useFileSelected } from "../context/SelectionContext.js";
+import ToastNotification   from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
+
 
 export default function Dashboard() {
   const { fileDelete } = useFileSelected();
@@ -25,8 +27,6 @@ export default function Dashboard() {
   const userToken = TokenManager.getToken()[1]
   const loginCount = TokenManager.getToken()[0]
   const [showPopup, setShowPopup] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
-
   const [mediaEditorClosed, setMediaEditorClosed] = useState(false);
 
   useEffect(() => {
@@ -124,15 +124,7 @@ export default function Dashboard() {
       );
 
       if (response && response.data) {
-        // Successful login
-        enqueueSnackbar('Login Successful', {
-          variant: 'success',
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center',
-          },
-          autoHideDuration: 1500,
-        });
+        ToastNotification({ type: 'success', message: 'Login Successful' });
         const encodedUser = btoa(JSON.stringify(response.data));
         // localStorage.setItem('_sodfhgiuhih', encodedUser);
         // const encodedEmail = btoa(values.email);
@@ -152,35 +144,14 @@ export default function Dashboard() {
         navigate('/dashboard');
         setClipsFoundStatus(true);
       } else {
-        enqueueSnackbar('Invalid response from the server.', {
-          variant: 'error',
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center',
-          },
-          autoHideDuration: 1500,
-        });
+        ToastNotification({ type: 'error', message: 'Invalid response from the server.' });
       }
     } catch (error) {
       if (error.response.data.detail) {
-        enqueueSnackbar(error.response.data.detail, {
-          variant: 'error',
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center',
-          },
-          autoHideDuration: 1500,
-        });
+        ToastNotification({ type: 'error', message: error.response.data.detail });
       } else {
         navigate("/otpVarification");
-        enqueueSnackbar(error.response.data.message, {
-          variant: 'error',
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center',
-          },
-          autoHideDuration: 1500,
-        });
+        ToastNotification({ type: 'error', message: error.response.data.message });
       }
     }
   };
@@ -295,7 +266,11 @@ export default function Dashboard() {
   }, [projectId]);
 
   return (
-    <div className="h-screen dashborardbg">
+    <div className="h-screen" style={{
+      zIndex: '1',
+      position: 'relative',
+    }}>
+      <Toaster position="top-center" />
       <div className="flex h-full">
         {showPopup ? null : (
           // Render the sidebar when showPopup is false

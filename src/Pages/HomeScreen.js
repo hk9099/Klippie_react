@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
 import ReactEmoji from 'react-emoji-render';
 import Navbar from '../components/Navbar';
-import { useSnackbar } from 'notistack';
 import { useCloudinary } from '../context/CloudinaryContext.js';
 import { Progress } from 'react-sweet-progress';
 import axios from 'axios';
 import "react-sweet-progress/lib/style.css";
 import { TokenManager } from '../components/getToken.js';
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 function MyProgressBar({ bytesUploaded, totalBytes }) {
     const percent = Math.round((bytesUploaded / totalBytes) * 100) || 0;
@@ -46,7 +47,6 @@ function MyProgressBar({ bytesUploaded, totalBytes }) {
 
 function HomeScreen({ userName, creaditBalance }) {
     const [isDragging, setIsDragging] = useState(false);
-    const { enqueueSnackbar } = useSnackbar();
     const { setCloudinaryResponse } = useCloudinary();
     const [isFileUploaded, setIsFileUploaded] = useState();
     const [isFileUploadedInput, setIsFileUploadedInput] = useState();
@@ -73,10 +73,7 @@ function HomeScreen({ userName, creaditBalance }) {
                 const duration = Math.floor(videoElement.duration);
                 console.log('Video Duration:', duration, 'seconds');
                 if (duration > 7200) {
-                    enqueueSnackbar('Error: Only files less than 2 hours are allowed.', {
-                        variant: 'error',
-                        autoHideDuration: 1500,
-                    });
+                    ToastNotification({ message: 'Only files less than 2 hours are allowed.', type: 'error' });
                     fileInputRef.current.value = '';
                     return;
                 }
@@ -102,10 +99,7 @@ function HomeScreen({ userName, creaditBalance }) {
                     processFile(file);
                     setIsFileUploadedInput(true);
                 } catch (error) {
-                    enqueueSnackbar(error.response.data.error, {
-                        variant: 'error',
-                        autoHideDuration: 1500,
-                    });
+                    ToastNotification({ message: error.response.data.error, type: 'error' });
                     console.log(error.response.data.error, 'error.response.data.message');
                 }
             };
@@ -167,14 +161,8 @@ function HomeScreen({ userName, creaditBalance }) {
                         const duration = Math.floor(videoElement.duration);
                         console.log('Video Duration:', duration, 'seconds');
                         if (duration > 7200) {
-                            enqueueSnackbar('Error: Only files less than 2 hours are allowed.', {
-                                variant: 'error',
-                                autoHideDuration: 1500,
-                            });
+                            ToastNotification({ message: 'Only files less than 2 hours are allowed.', type: 'error' });
                             fileInputRef.current.value = '';
-                            
-                            
-
                             return;
                         }
                         let data = JSON.stringify({
@@ -200,16 +188,9 @@ function HomeScreen({ userName, creaditBalance }) {
                             setIsFileUploadedInput(true);
                             setIsNewVideoUpload(true);
                             setIsFileUploaded(true)
-                            enqueueSnackbar(`File uploaded successfully: ${droppedFiles[0].name}`, {
-                                variant: 'success',
-                                autoHideDuration: 1300,
-                            });
-
+                            ToastNotification({ message: `File uploaded successfully: ${droppedFiles[0].name}`, type: 'success' });
                         } catch (error) {
-                            enqueueSnackbar(error.response.data.error, {
-                                variant: 'error',
-                                autoHideDuration: 1500,
-                            });
+                            ToastNotification({ message: error.response.data.error, type: 'error' });
                             console.log(error.response.data.error, 'error.response.data.message');
                         }
                     };
@@ -219,10 +200,7 @@ function HomeScreen({ userName, creaditBalance }) {
                 }
             } else {
                 // Show an error notification
-                enqueueSnackbar('Error: Only .mp3 and .mp4 files are allowed.', {
-                    variant: 'error',
-                    autoHideDuration: 1500,
-                });
+                ToastNotification({ message: 'Only .mp3 and .mp4 files are allowed.', type: 'error' });
             }
         }
     };
@@ -304,6 +282,7 @@ function HomeScreen({ userName, creaditBalance }) {
     };
     return (
         <>
+            <Toaster position="top-center" />
             <div className="flex flex-col h-screen " onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
                 <div className="">
                     <Navbar creaditBalance={creaditBalance} />

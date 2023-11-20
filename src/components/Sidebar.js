@@ -17,7 +17,6 @@ import { RotatingLines } from "react-loader-spinner";
 import { useSidebarContext } from '../context/SidebarContext';
 import { useUserNickname } from "../context/userNicknameContext";
 import fetchUserProfile from '../components/fetchUserProfile';
-import { useSnackbar } from 'notistack';
 import { useCloudinary } from '../context/CloudinaryContext.js';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext';
 import { TokenManager } from '../components/getToken.js';
@@ -26,6 +25,8 @@ import { Tooltip } from 'react-tooltip';
 import VideoPlayer from "../Pages/videoplayer.js";
 // import Example from "./testDropdown";
 import ConfirmationModal from "../components/DeleteConfirmationModal.js";
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError  }) => {
   const { setCloudinaryResponse } = useCloudinary();
@@ -37,7 +38,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const { setUserName } = useUserNickname();
   const { setUserEmail } = useUserNickname();
   const { setCreaditBalance } = useUserNickname();
-  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [initialized] = useState(false);
   const [userEmailAddress, setUserEmailAddress] = useState("");
@@ -381,16 +381,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
     if (message === "Transcribing video completed") {
       console.log(response.data.message, 'response.data.data.status')
-      enqueueSnackbar(response.data.message, {
-        variant: 'success',
-        autoHideDuration: 3000,
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'right',
-        },
-      });
+      ToastNotification({ message: response.data.message, type: 'loading' });
     }
-
     if (message === 'Clips generated') {
       navigate(`/dashboard/${projectData[index].id}`);
     }
@@ -419,6 +411,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   return (
     <>
+      <Toaster position="top-center" />
       <div
         className={`${open ? "w-[260px]" : "w-fit"
           } fixed top-0 p-2  z-10 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { JolPlayer } from "jol-player";
 import { HiOutlineDownload } from "react-icons/hi";
-import { useSnackbar } from 'notistack';
 // import CloudinaryMediaEditor from "../components/mediaEditor.js";
 import { Link } from "react-router-dom";
 import { BiSolidEdit } from 'react-icons/bi';
 import { Tooltip } from 'react-tooltip';
 import { useFileSelected } from "../context/SelectionContext.js";
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 const videoOptions = {
     width: 750,
@@ -53,7 +54,6 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
     // console.log(setMainVideo, 'setMainVideo');
     const { setFileDelete } = useFileSelected();
     const [isLoading, setIsLoading] = useState(false);
-    const { enqueueSnackbar } = useSnackbar();
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
     console.log(cloudName);
     const handleDownload = async () => {
@@ -61,7 +61,7 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
             setIsLoading(true);
 
             if (!src) {
-                enqueueSnackbar("No video source found", { variant: "error" }, { preventDuplicate: true }, { autoHideDuration: 2000 });
+                ToastNotification({ message: 'No video source found', type: 'error' });
             }
 
             if (type === "mp4" || type === "video") {
@@ -122,6 +122,7 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
 
     return (
         <>
+            <Toaster position="top-center" />
             <JolPlayer
                 className="w-[400px!important] h-[230px!important] m-[auto!important] z-[auto!important]"
                 option={{

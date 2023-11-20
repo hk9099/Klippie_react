@@ -1,25 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 import { BiLogOut } from 'react-icons/bi';
 import React, { useState, useEffect } from 'react';
-import { useSnackbar } from 'notistack';
 import { TokenManager } from '../components/getToken.js';
 import { RxCross2 } from "react-icons/rx";
 import { HiOutlineLogout } from "react-icons/hi";
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 function Logout({ showLogout }) {
-    const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
     const handleLogout = () => {
-        enqueueSnackbar('Logging out...', {
-            variant: 'info',
-            anchorOrigin: {
-                vertical: 'bottom',
-                horizontal: 'center',
-            },
-        });
+        ToastNotification({message: 'Logging out...', type: 'loading'});
         setIsLoading(true);
     };
 
@@ -46,6 +40,7 @@ function Logout({ showLogout }) {
 
     return (
         <>
+            <Toaster position="top-center" />
             {isLoading ? (
                 <p
                     className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover-bg-gray-700`}

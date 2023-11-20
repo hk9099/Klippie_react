@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import axios from 'axios';
 import UserModal from '../components/UserModal.js';
-import { useSnackbar } from 'notistack';
 import { TokenManager } from '../components/getToken.js';
 import SubscriptionModal from './SubscriptionModal.js';
 import { useSubscription } from '../context/SubscriptionContext.js';
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
 
@@ -36,7 +37,6 @@ const AccountModal = ({
     const { Subscription } = useSubscription();
     // const [token, setToken] = useState(null);
     const userToken = TokenManager.getToken()[1]
-    const { enqueueSnackbar } = useSnackbar();
     // const [googleToken, setGoogleToken] = useState(null);
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -68,6 +68,7 @@ const AccountModal = ({
             className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center  z-50 inset-0 backdrop-blur-md bg-black bg-opacity-60 ${showAccount ? '' : 'hidden'
                 } `}
         >
+            <Toaster />
             <div className={`bg-white rounded-3xl border p-4 flex flex-col gap-4 dark:bg-gray-800 ${!social ? 'w-[600px]' : 'w-[400px]'}  dark:border-gray-700`}>
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
@@ -152,20 +153,14 @@ const AccountModal = ({
                                                 },
                                             }
                                         );
-                                        enqueueSnackbar(response.data.message, {
-                                            variant: 'success',
-                                            autoHideDuration: 1500,
-                                        });
+                                        ToastNotification({ type: 'success', message: response.data.message })
                                         localStorage.removeItem('_auth');
                                         localStorage.removeItem('_sodfhgiuhih');
                                         navigate('/');
                                         setSubmitting(false);
                                     } catch (error) {
                                         console.error(error);
-                                        enqueueSnackbar(error.response.data.message, {
-                                            variant: 'error',
-                                            autoHideDuration: 1500,
-                                        });
+                                        ToastNotification({ type: 'error', message: error.response.data.message })
                                         setSubmitting(false);
                                     }
                                 }}

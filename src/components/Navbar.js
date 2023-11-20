@@ -36,7 +36,10 @@ const Navbar = ({ creaditBalance }) => {
                 if (response.data.data.is_active === true) {
                     console.log('subscribed');
                     setSubscribed(true);
-                } 
+                } else if (response.data.data.is_lifetime === true) {
+                    console.log('subscribed');
+                    setSubscribed(true);
+                }
             } catch (error) {
                 // console.log(error);
             }
@@ -73,7 +76,7 @@ const Navbar = ({ creaditBalance }) => {
                 <div className='flex justify-end items-center mx-auto'>
                     <div className='flex justify-end items-center w-100'>
                         {(!isNaN(hours) && !isNaN(minutes)) && (
-                            <div className='p-3'>
+                            <div className={`p-3 ${subscribed === true ? 'hidden' : 'block'}`}>
                                 <div className={`text-green-600 px-3 py-2  font-bold text-lg flex justify-center items-center select-none p-3 ${minutesClass}`}>
                                     <BsStopwatch className={`me-2 `} />
                                     <span >{formattedTime}</span>

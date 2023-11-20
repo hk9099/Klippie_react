@@ -52,6 +52,7 @@
     "react-dropzone": "^14.2.3",
     "react-emoji-render": "^2.0.1",
     "react-headless-accordion": "^1.0.2",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^4.10.1",
     "react-loader-spinner": "^5.4.5",
     "react-player": "^2.12.0",

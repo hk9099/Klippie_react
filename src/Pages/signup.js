@@ -10,14 +10,14 @@ import * as Yup from "yup";
 import axios from "axios";
 // import googleicon from "../assets/images/google.png";
 import "../assets/css/signup.css";
-import { useSnackbar } from 'notistack';
 import Hiiii from "../assets/images/hi_40x40.gif";
 // import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 // import { auth } from "../components/config";
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 function Signup({ errors, touched }) {
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
   // eslint-disable-next-line no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -141,9 +141,9 @@ function Signup({ errors, touched }) {
   
       const signupResponse = await axios.post("https://dev-api.getklippie.com/v1/auth/signup", payload);
       console.log(signupResponse, "response");
-      enqueueSnackbar(signupResponse.data.message, {
-        variant: 'success',
-        autoHideDuration: 1500
+      ToastNotification({
+        message: signupResponse.data.message,
+        type: "success",
       });
       var signupToken = signupResponse.data.data;
       localStorage.setItem("signupToken", signupToken);
@@ -151,14 +151,14 @@ function Signup({ errors, touched }) {
     } catch (error) {
       console.log(error);
       if (error.response) {
-        enqueueSnackbar(error.response.data.detail, {
-          variant: 'error',
-          autoHideDuration: 1500
+        ToastNotification({
+          message: error.response.data.detail,
+          type: "error",
         });
       } else {
-        enqueueSnackbar("An error occurred", {
-          variant: 'error',
-          autoHideDuration: 1500
+        ToastNotification({
+          message: "An error occurred",
+          type: "error",
         });
       }
     } finally {
@@ -170,6 +170,7 @@ function Signup({ errors, touched }) {
 
   return (
     <>
+      <Toaster position="top-center" />
       <div className=" h-full w-full">
         <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
           <div className="left_heading text-center">

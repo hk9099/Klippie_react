@@ -5,14 +5,13 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import '../assets/css/signin.css';
 import Loader from './Loader.js';
 import axios from 'axios';
-import { useSnackbar } from 'notistack';
 import { FaMobileAlt } from 'react-icons/fa';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
-
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 function Signin() {
     const navigate = useNavigate();
-    const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
     const [resendTimer, setResendTimer] = useState(30);
     const [attempts, setAttempts] = useState(0);
@@ -84,12 +83,12 @@ function Signin() {
         axios
             .post('https://dev-api.getklippie.com/v1/auth/verify-otp', payload)
             .then((response) => {
-                enqueueSnackbar('Code verified successfully', { variant: 'success', autoHideDuration: 1500 });
+                ToastNotification({ message: 'Code verified successfully', type: 'success' });
                 console.log(response.data);
                 navigate('/');
             })
             .catch((error) => {
-                enqueueSnackbar('Invalid Code', { variant: 'error', autoHideDuration: 1500 });
+                ToastNotification({ message: 'Invalid Code', type: 'error' });
                 setAttempts((prevAttempts) => prevAttempts + 1);
                 if (attempts + 1 >= 3) {
                     setShowResendButton(false);
@@ -173,24 +172,22 @@ function Signin() {
                 } else {
                     setShowResendButton(false);
                 }
-                enqueueSnackbar('New Code sent successfully', { variant: 'success', autoHideDuration: 1500 });
-
+                ToastNotification({ message: 'New Code sent successfully', type: 'success' });
                 // Update resendCount in localStorage
                 const updatedResendCount = attempts + 1;
                 localStorage.setItem('resendCount', updatedResendCount.toString());
                 setAttempts(updatedResendCount); // Update attempts state
             })
-            .catch((error) => {
-                enqueueSnackbar('Too many attempts. Please try again later.', {
-                    variant: 'error',
-                    autoHideDuration: 1500,
-                });
+            .catch((error) => {      ToastNotification({ type: 'success', message: 'Login Successful' });
+
+                ToastNotification({ message: 'Too many attempts. Please try again later.', type: 'error' });
                 setResendButtonLoading(false);
             });
     };
 
     return (
         <main>
+            <Toaster position="top-center" />
             {isLoading && <Loader />}
 
             <div className="h-full w-full">

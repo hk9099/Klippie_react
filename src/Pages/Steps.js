@@ -6,7 +6,6 @@ import AccordionSection from '../components/AccordionSection';
 // import Shuffleloader from '../components/shuffleloader.js';
 // import { updateMainVideo } from '../components/data';
 import { useSidebarContext } from '../context/SidebarContext.js';
-import { useSnackbar } from 'notistack';
 import { AiOutlineClose } from 'react-icons/ai';
 // import HomeScreen from './HomeScreen';
 import Suggetionpopup from '../components/Suggetionpopup';
@@ -14,6 +13,8 @@ import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 import { TokenManager } from '../components/getToken.js';
 import DragDropModal from '../components/Drag&DropModal';
 import { useFileSelected } from "../context/SelectionContext.js";
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userName ,creaditBalance}) => {
     const { setClipsFoundStatus ,setShowHomeStatus ,setProjectCreated} = useClipsFoundStatus();
@@ -23,7 +24,6 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
     const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
     const [currentProjectId, setProjectId] = useState();
-    const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
     const [newvideoClips, setNewvideoClips] = useState([]);
     //eslint-disable-next-line
@@ -130,13 +130,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
                 setProjectId(response1.data.data.id);
             } catch (error) {
                 console.log(error.response.data.error, 'error.response.data.message');
-                enqueueSnackbar(error.response.data.error,
-                    {
-                        variant: 'error', autoHideDuration: 3000, anchorOrigin: {
-                            vertical: 'top',
-                            horizontal: 'right',
-                        },
-                    });
+                    ToastNotification({message: error.response.data.error, type: 'error'});
             }
             setAllApiCompleted(true);
             setIsSuggetionpopupOpen(true);
@@ -145,18 +139,11 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
 
         } catch (error) {
             if (error.name === 'AbortError') {
-                enqueueSnackbar('API call aborted',
-                    { variant: 'info', autoHideDuration: 1000 });
+                    ToastNotification({message: 'API call aborted', type: 'loading'});
             } else {
                 // Handle error
                 console.error('API call failed:', error.message);
-                enqueueSnackbar('Clip creation Stoped',
-                    {
-                        variant: 'error', autoHideDuration: 1500, anchorOrigin: {
-                            vertical: 'top',
-                            horizontal: 'right',
-                        },
-                    });
+                    ToastNotification({message: 'Clip creation Stoped', type: 'error'});
             }
         } finally {
             setIsLoading(false);
@@ -217,7 +204,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
             return () => clearInterval(intervalId);
         }
         //eslint-disable-next-line
-    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus]);
+    }, [currentProjectId, uniqueMessages, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus]);
 
     useEffect(() => {
         setProjectId(currentProjectId);
@@ -237,6 +224,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
 
     return (
         <div className="min-h-screen flex items-center justify-center">
+            <Toaster position="top-center" />
             {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
             <div className="text-center">
                 {isSuggetionpopupOpen && (

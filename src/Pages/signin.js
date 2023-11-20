@@ -4,7 +4,6 @@ import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css'
 import { RiInformationLine } from 'react-icons/ri';
 import * as Yup from 'yup';
-import { useSnackbar } from 'notistack';
 // import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -16,12 +15,12 @@ import Hiiii from '../assets/images/hi_40x40.gif';
 import { HiOutlineMail } from 'react-icons/hi';
 import { TokenManager } from '../components/getToken.js';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
-
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 function Signin() {
     const navigate = useNavigate();
     const user = TokenManager.getToken();
-    const { enqueueSnackbar } = useSnackbar();
     useEffect(() => {
         localStorage.setItem('color-theme', 'light');
     }, []);
@@ -141,15 +140,8 @@ function Signin() {
             );
 
             if (response && response.data) {
-                // Successful login
-                enqueueSnackbar('Login Successful', {
-                    variant: 'success',
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    },
-                    autoHideDuration: 1500,
-                });
+                ToastNotification({message: 'Log in successful',
+                 type: 'success'});
                 const encodedUser = btoa(JSON.stringify(response.data));
                 // localStorage.setItem('_sodfhgiuhih', encodedUser);
                 // const encodedEmail = btoa(values.email);
@@ -169,35 +161,14 @@ function Signin() {
 
                 navigate('/dashboard');
             } else {
-                enqueueSnackbar('Invalid response from the server.', {
-                    variant: 'error',
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    },
-                    autoHideDuration: 1500,
-                });
+                ToastNotification({message: 'Invalid response from the server.', type: 'error'});
             }
         } catch (error) {
             if (error.response.data.detail) {
-                enqueueSnackbar(error.response.data.detail, {
-                    variant: 'error',
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    },
-                    autoHideDuration: 1500,
-                });
+                ToastNotification({message: error.response.data.detail, type: 'error'});
             } else {
                 navigate("/otpVarification");
-                enqueueSnackbar(error.response.data.message, {
-                    variant: 'error',
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    },
-                    autoHideDuration: 1500,
-                });
+                ToastNotification({message: error.response.data.message, type: 'error'});
             }
         }
         setIsLoading(false);
@@ -207,6 +178,7 @@ function Signin() {
 
     return (
         <>
+        <Toaster position="top-center" />
         <main>
             <div className="h-full w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
