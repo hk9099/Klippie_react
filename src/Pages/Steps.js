@@ -229,7 +229,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
         <div className="min-h-screen flex items-center justify-center">
             <Toaster position="top-center" />
             {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
-            <div className="text-center">
+            <div className="text-center w-full">
                 {isSuggetionpopupOpen && (
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
                 )}

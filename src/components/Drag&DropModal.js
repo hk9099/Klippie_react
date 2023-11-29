@@ -269,7 +269,7 @@ function DragDropModal() {
   return (
     <div className="flex justify-center items-center h-[85vh]">
       <Toaster />
-      <div {...getRootProps()} style={style} className="dropzone cursor-pointer flex flex-col justify-center items-center px-[100px!important] py-[50px!important] rounded-lg">
+      <div {...getRootProps()} style={style} className="dropzone w-[80%] h-[80%] cursor-pointer flex flex-col justify-center items-center px-[100px!important] py-[50px!important] rounded-lg">
         <input {...getInputProps()} />
         <IoMdCloudUpload className="text-8xl text-white" />
         <h1 className="text-4xl font-bold w-[400px] text-center text-white select-none">
@@ -293,7 +293,7 @@ function DragDropModal() {
             onChange={(e) => setInputText(e.target.value)}
             disabled={disabled}
           />
-          <Tooltip id="inputdisabled" content="This feature is disabled for now"
+          <Tooltip id="inputdisabled" content="This feature is coming soon"
             place="bottom"
             className="dark:custom-modal-bg-color dark:text-gray-300 font-semibold text-[2xl!important] font-ubuntu "
             opacity={1}

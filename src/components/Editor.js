@@ -91,7 +91,25 @@ function Editor() {
                                     minDuration: minDurations,
                                     units: 'seconds',
                                 },
+                            },    
+                            language: {
+                                locale: 'en_US',
+                                messages: {
+                                    en_US: {
+                                        "header": "Edit Your Clip",
+                                        "footer": {
+                                            "export": "Save",
+                                        },
+                                    },
+                                }
                             },
+                            theme: {logo: 'https://i.ibb.co/mvnxHH1/logo.png'},
+                            transformation: {
+                                crop: 'limit',
+                                quality: 'auto',
+                                fetchFormat: 'auto',
+                            },
+                            
                         });
 
                         myEditor.show();
@@ -99,6 +117,7 @@ function Editor() {
                         myEditor.on('save', (result) => {
                             console.log(result, 'result');
                         });
+
 
                         myEditor.on('export', async (data) => {
                             myEditor.hide();
