@@ -57,35 +57,35 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                         price: '$0',
                         time: 'Per Month',
                         planDetails: [
-                            { Type: 'FOREVER FREE' },
-                            { User: '1' },
-                            { Min: '120/month' },
-                            { Modal: 'Base' }
+                            { Type: 'Free Plan' },
+                            { "Upload Minutes": '120 Minutes Per Month' },
+                            { Users: '1' },
+                            // { Modal: 'Base' }
                         ],
-                        benefitTitle: 'Discover the Following Benefits',
+                        benefitTitle: 'Benefits',
                         benefits: [
-                            'Up to 1 hour of video upload time per project',
-                            'Create an unlimited number of projects',
-                            'Clips are not editable or exportable after 7 days'
+                            'Upload Up to 1 Hour of Audio or Video Per Project',
+                            '2 Hours of Free Upload Minutes Per Month',
+                            'Access to Clips for Up to 7 Days'
                         ]
                     },
                     {
-                        title: 'Creator',
+                        title: 'Unlimited Plan',
                         price: '$50',
                         id: response?.data?.data[1]?.chargebee_prices[0]?.id ?? null,
                         time: 'Per Month',
                         description: 'For Individual Content Creators',
                         planDetails: [
                             { Type: 'SPECIAL PLAN' },
-                            { User: '1' },
-                            { Min: '1667/month' },
-                            { Modal: 'Advanced' }
+                            { 'Upload Minutes': 'Unlimited' },
+                            { Users: '1' },
+                            // { Modal: 'Advanced' }
                         ],
-                        benefitTitle: 'Enjoy These Exclusive Perks',
+                        benefitTitle: 'Benefits',
                         benefits: [
-                            'Enjoy up to 2 hours of video upload time per project',
-                            'Unlimited project creations with advanced features',
-                            'Lifetime access to all created clips'
+                            'Upload Up to 2 Hours of Audio or Video Per Project',
+                            'Unlimited Upload Minutes Per Month',
+                            'Unlimited Clips Created Per Month'
                         ]
                     }
                 ];

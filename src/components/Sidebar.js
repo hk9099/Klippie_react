@@ -454,20 +454,16 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         </Link>
 
         <div className="pt-4 pb-3">
-          <Tooltip id="disabled" content="To start, drag and drop a video or click Choose File."
+          {/* <Tooltip id="disabled" content="To start, drag and drop a video or click Choose File."
             place="right"
             className="dark:custom-modal-bg-color dark:text-gray-300 font-semibold text-[2xl!important] font-ubuntu "
             opacity={1}
             style={{ backgroundColor: '#B3B5E2', color: '#020913' }}
-          />
+          /> */}
           <button
-            disabled={!clipsFound}
-            data-tooltip-id={!clipsFound ? "disabled" : undefined}
-            className={`flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full  dark:text-white  border-animation ${!open && "justify-center"
-              }${clipsFound ? "cursor-pointer" : "bg-gray-200 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed"}`}
-            onClick={handleAddNewVideo}
-          >
-
+            // disabled={!clipsFound}
+            // data-tooltip-id={!clipsFound ? "disabled" : undefined}
+            className={`flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full  dark:text-white  border-animation ${!open && "justify-center"}`}onClick={handleAddNewVideo}>
             <div
               className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full bg-white dark:bg-gray-800 dark:text-white ${!open && "justify-center"
                 }`}

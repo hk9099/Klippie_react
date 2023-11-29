@@ -134,9 +134,9 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
             <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100  font-nunito">
                 {title}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-5 font-nunito">
+            {/* <p className="text-lg text-gray-600 dark:text-gray-300 mb-5 font-nunito">
                 {description}
-            </p>
+            </p> */}
             <h1 className="text-5xl font-[300] text-gray-900 dark:text-gray-100 mb-1 font-nunito">
                 {price}
             </h1>
@@ -162,7 +162,7 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
                     name={`button_${id}`}
                     disabled={highlightBorder}
                 >
-                    {highlightBorder ? 'Subscribed' : id === null ? 'Start Creating' : 'Get Started'}
+                    {highlightBorder ? 'Your Current Plan' : id === null ? 'Start Creating' : 'Upgrade'}
                 </button>
             </ul>
             <div className="relative mt-4">
