@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import '../assets/css/signin.css';
 import Loader from './Loader.js';
 import axios from 'axios';
-import { FaMobileAlt } from 'react-icons/fa';
+// import { FaMobileAlt } from 'react-icons/fa';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
@@ -218,9 +218,9 @@ function Signin() {
                                                 placeholder="Enter Code"
                                                 className={`inputbox`}
                                             />
-                                            <span className="email-icon">
+                                            {/* <span className="email-icon">
                                                 <FaMobileAlt />
-                                            </span>
+                                            </span> */}
                                         </div>
                                         <ErrorMessage
                                             name="otp"

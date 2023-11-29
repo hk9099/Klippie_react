@@ -11,7 +11,7 @@ import { useSubscription } from '../context/SubscriptionContext.js';
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
-var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
+var HOSTINGURL = process.env.REACT_APP_DEV_HOSTING_URL;
 
 const ChangePasswordSchema = Yup.object().shape({
     oldPassword: Yup.string().required('Current Password is required'),
@@ -62,6 +62,32 @@ const AccountModal = ({
     //         setGoogleToken(googleUserInfo.token.access_token);
     //     }
     // }, []);
+
+    const handleDeleteAllProjects = async () => {
+        try {
+            // Your axios request with async/await
+            const response = await axios.post(
+                `${HOSTINGURL}/v1/project/delete-all`,
+                {},
+                {
+                    headers: {
+                        accept: 'application/json',
+                        Authorization: 'Bearer ' + userToken,
+                    },
+                }
+            );
+
+            console.log(response);
+            ToastNotification({ type: 'success', message: response.data.message });
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } catch (error) {
+            console.error(error);
+            ToastNotification({ type: 'error', message: error.response?.data?.detail || 'An error occurred' });
+        }
+    };
+
 
     return (
         <div
@@ -120,6 +146,12 @@ const AccountModal = ({
                                 className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white ${Subscription === null ? 'hidden' : 'block'}`}
                             >
                                 Subscriptions
+                            </button>
+                        )}
+                        {/* //create general tab */}
+                        {!social && (
+                            <button onClick={() => setActiveTab('general')} className={`${activeTab === 'general' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}>
+                                General
                             </button>
                         )}
                     </div>
@@ -291,6 +323,19 @@ const AccountModal = ({
                         )}
                         {activeTab === 'subscriptions' && (
                             <SubscriptionModal Subscription={Subscription} />
+                        )}
+                        {activeTab === 'general' && (
+                            <div className="flex justify-between items-center">
+                                <label className="text-sm font-semibold text-gray-200 dark:text-gray-200 select-none">
+                                    Delete All Projects
+                                </label>
+                                <button
+                                    onClick={handleDeleteAllProjects}
+                                    className="dark:bg-red-500 text-white px-4 py-2 rounded-md  dark:text-white"
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>

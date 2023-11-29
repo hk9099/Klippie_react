@@ -190,7 +190,7 @@ function Signup({ errors, touched }) {
                 }}
               />
             </h1>
-            <p className="text-gray-500 mt-2">Please Fill The Below Details</p>
+            <p className="text-gray-500 mt-2">Get Started - it's free. No credit card needed.</p>
           </div>
           <div className="mt-10 form_layout">
             <Formik
@@ -201,7 +201,7 @@ function Signup({ errors, touched }) {
               {({ isSubmitting, errors, touched }) => (
                 <Form className="flex flex-col justify-center items-center">
                   <div className="nameinput form_layout mb-3">
-                    <label className="text-gray-500">Enter your name</label>
+                    <label className="text-gray-500">Full Name</label>
                     <div className="inputbox-container mt-1">
                       <Field
                         type="text"
@@ -223,7 +223,7 @@ function Signup({ errors, touched }) {
 
                   <div className="emailinput form_layout mb-3">
                     <label className="text-gray-500 emailinput">
-                      Enter your email
+                      Email
                     </label>
                     <div className="inputbox-container mt-1">
                       <Field
@@ -286,7 +286,7 @@ function Signup({ errors, touched }) {
                   </div>
                   <div className="passwordinput form_layout mb-3">
                     <label className="text-gray-500 mt-2">
-                      Confirm your password{" "}
+                    Re-enter Your Password{" "}
                       <RiInformationLine
                         data-tooltip-id="confirm-password-tooltip"
                         className="password-tooltip ml-2"

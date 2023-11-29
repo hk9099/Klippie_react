@@ -1,19 +1,49 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import qs from 'qs';
 import { TokenManager } from '../components/getToken.js';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { RotatingLines } from "react-loader-spinner";
 
 function Editor() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { clipId: id } = useParams();
     const userToken = TokenManager.getToken()[1];
     const hasMounted = useRef(false);
     const [editorLoaded, setEditorLoaded] = useState(false);
     const [showLoader, setShowLoader] = useState(true);
     const [showProgressBar, setShowProgressBar] = useState(false);
+
+    function formatTime(seconds) {
+        const date = new Date(null);
+        date.setSeconds(seconds);
+        return date.toISOString().substr(11, 12);
+    }
+
+    function extractStartEndTime(response) {
+        try {
+            const asset = response.assets[0];
+            const transformation = response.transformation;
+
+            const startTimeMatch = transformation.match(/so_(\d+)/);
+            const endTimeMatch = transformation.match(/eo_(\d+)/);
+
+            const startTime = startTimeMatch ? parseInt(startTimeMatch[1], 10) : null;
+            const endTime = endTimeMatch ? parseInt(endTimeMatch[1], 10) : null;
+
+            const formattedStartTime = startTime !== null ? formatTime(startTime) : null;
+            const formattedEndTime = endTime !== null ? formatTime(endTime) : null;
+
+            return { formattedStartTime, formattedEndTime };
+        } catch (error) {
+            console.error("Error extracting start and end times:", error);
+            return null;
+        }
+    }
+
 
     useEffect(() => {
         if (!hasMounted.current) {
@@ -62,10 +92,6 @@ function Editor() {
                                     units: 'seconds',
                                 },
                             },
-                            showAdvanced: true,
-                            showConsoles: true,
-                            showLeftMenu: true,
-                            showRightMenu: true,
                         });
 
                         myEditor.show();
@@ -75,53 +101,64 @@ function Editor() {
                         });
 
                         myEditor.on('export', async (data) => {
-                            myEditor.show();
+                            myEditor.hide();
+                            setShowLoader(true);
                             console.log('Exported data:', data);
 
-                            const downloadUrl = data.assets[0].downloadUrl;
-                            const secureUrl = data.assets[0].secureUrl;
-                            const downloadAttempts = 3; // Number of download attempts
+                            // const downloadUrl = data.assets[0].downloadUrl;
+                            const secureUrl = data.assets[0].url;
 
-                          async function downloadVideo(attempt) {
-                                const xhr = new XMLHttpRequest();
-                                xhr.open('GET', downloadUrl, true);
-                                xhr.responseType = 'blob';
 
-                                xhr.onload = () => {
-                                    if (xhr.status === 200) {
-                                        const videoBlob = xhr.response;
-                                        const blobUrl = URL.createObjectURL(videoBlob);
+                            const { formattedStartTime, formattedEndTime } = extractStartEndTime(data);
 
-                                        const downloadLink = document.createElement('a');
-                                        downloadLink.style.display = 'none';
+                            console.log("Start Time:", formattedStartTime);
+                            console.log("End Time:", formattedEndTime);
+                            // const downloadAttempts = 3; // Number of download attempts
 
-                                        downloadLink.href = blobUrl;
-                                        downloadLink.download = `${response.data.data.title}.${response.data.data.type}`;
+                            //   async function downloadVideo(attempt) {
+                            //         const xhr = new XMLHttpRequest();
+                            //         xhr.open('GET', downloadUrl, true);
+                            //         xhr.responseType = 'blob';
 
-                                        document.body.appendChild(downloadLink);
-                                        downloadLink.click();
+                            //         xhr.onload = () => {
+                            //             if (xhr.status === 200) {
+                            //                 const videoBlob = xhr.response;
+                            //                 const blobUrl = URL.createObjectURL(videoBlob);
 
-                                        document.body.removeChild(downloadLink);
-                                        URL.revokeObjectURL(blobUrl);
-                                        myEditor.hide();
-                                    setShowProgressBar(false);
-                                    window.close();
-                                    } else {
-                                        if (attempt < downloadAttempts) {
-                                            // Retry the download
-                                            console.log(`Download attempt ${attempt + 1}`);
-                                            downloadVideo(attempt + 1);
-                                        } else {
-                                            console.error('Failed to fetch the video content after multiple attempts');
-                                        }
-                                    }
-                                };
-                                xhr.send();
+                            //                 const downloadLink = document.createElement('a');
+                            //                 downloadLink.style.display = 'none';
 
-                            }
+                            //                 downloadLink.href = blobUrl;
+                            //                 downloadLink.download = `${response.data.data.title}.${response.data.data.type}`;
+
+                            //                 document.body.appendChild(downloadLink);
+                            //                 downloadLink.click();
+
+                            //                 document.body.removeChild(downloadLink);
+                            //                 URL.revokeObjectURL(blobUrl);
+                            //                 myEditor.hide();
+                            //             setShowProgressBar(false);
+                            //             window.close();
+                            //             } else {
+                            //                 if (attempt < downloadAttempts) {
+                            //                     // Retry the download
+                            //                     console.log(`Download attempt ${attempt + 1}`);
+                            //                     downloadVideo(attempt + 1);
+                            //                 } else {
+                            //                     console.error('Failed to fetch the video content after multiple attempts');
+                            //                 }
+                            //             }
+                            //         };
+                            //         xhr.send();
+
+                            //     }
+
+
                             let updateData = JSON.stringify({
                                 "id": id,
                                 "clip_url": secureUrl,
+                                "start_time": formattedStartTime,
+                                "end_time": formattedEndTime
                             });
 
                             let config = {
@@ -139,13 +176,17 @@ function Editor() {
                             try {
                                 const response = await axios(config);
                                 console.log(response, 'response');
-                                
+                                myEditor.hide();
+                                setShowProgressBar(false);
+                                setShowLoader(false);
+                                window.close();
                             } catch (error) {
                                 console.log(error);
+                                setShowProgressBar(false);
+                                setShowLoader(false);
                             }
-
                             // Start the initial download attempt
-                            downloadVideo(1);
+                            // downloadVideo(1);
                         });
 
 
@@ -174,7 +215,7 @@ function Editor() {
 
     return (
         <div className="flex justify-center items-center h-screen">
-            {showLoader && !editorLoaded ? (
+            {showLoader && editorLoaded ? (
                 <RotatingLines
                     strokeColor="grey"
                     strokeWidth="5"

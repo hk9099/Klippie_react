@@ -17,6 +17,7 @@ import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userName ,creaditBalance}) => {
+    console.log(cloudinaryResponse, 'cloudinaryResponse');
     const { setClipsFoundStatus ,setShowHomeStatus ,setProjectCreated} = useClipsFoundStatus();
     const { fileDelete } = useFileSelected();
     const userToken = TokenManager.getToken()[1]
@@ -81,17 +82,19 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
 
             setAllApiCompleted(false);
             try {
-                let data = JSON.stringify({
-                    "public_id": cloudinaryResponse.public_id,
-                    "width": cloudinaryResponse.width,
-                    "height": cloudinaryResponse.height,
-                    "format": cloudinaryResponse.format,
-                    "resource_type": cloudinaryResponse.resource_type,
-                    "duration": cloudinaryResponse.duration,
-                    "secure_url": cloudinaryResponse.secure_url,
-                    "audio": cloudinaryResponse.audio,
-                    "video": cloudinaryResponse.video,
-                });
+                // let data = JSON.stringify({
+                //     "public_id": cloudinaryResponse.public_id,
+                //     "width": cloudinaryResponse.width,
+                //     "height": cloudinaryResponse.height,
+                //     "format": cloudinaryResponse.format,
+                //     "resource_type": cloudinaryResponse.resource_type,
+                //     "duration": cloudinaryResponse.duration,
+                //     "secure_url": cloudinaryResponse.secure_url,
+                //     "audio": cloudinaryResponse.audio,
+                //     "video": cloudinaryResponse.video,
+                // });
+
+                let data = {"public_id":"test1700716396260","width":640,"height":360,"format":"mp4","resource_type":"video","duration":955.617,"secure_url":"https://res.cloudinary.com/delkyf33p/video/upload/v1700716429/test1700716396260.mp4","audio":{"codec":"aac","bit_rate":"95999","frequency":44100,"channels":2,"channel_layout":"stereo"},"video":{"pix_format":"yuv420p","codec":"h264","level":30,"profile":"Main","bit_rate":"269160","dar":"16:9","time_base":"1/30000"}}
 
                 console.log(data, 'dataaaaaaaaaaaaaaaaaaaaaaaa');
 

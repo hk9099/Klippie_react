@@ -235,7 +235,7 @@ function DragDropModal() {
 
       if (response.ok) {
         const responseData = await response.json();
-        // console.log(responseData);
+        console.log(responseData);
         if (start === 0 && !isFirstChunkLogged) {
           setIsFirstChunkLogged(true);
         }

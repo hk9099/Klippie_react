@@ -6,7 +6,7 @@ import '../assets/css/signin.css';
 import axios from 'axios';
 import { HiOutlineMail } from 'react-icons/hi';
 import { RiInformationLine } from 'react-icons/ri';
-import { TbDeviceMobileMessage } from 'react-icons/tb';
+// import { TbDeviceMobileMessage } from 'react-icons/tb';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
 import { Tooltip } from 'react-tooltip';
 import think from '../assets/images/think_40x40.gif';
@@ -238,9 +238,9 @@ const MultiStepForm = () => {
                                                     value={formData.otp || ''}
                                                     className={`inputbox`}
                                                 />
-                                                <span className="email-icon">
+                                                {/* <span className="email-icon">
                                                     <TbDeviceMobileMessage />
-                                                </span>
+                                                </span> */}
 
                                             </div>
                                             <ErrorMessage

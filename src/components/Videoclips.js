@@ -111,9 +111,9 @@ console.log(videoClips, "videoClips");
         alignment='center'
         cssClass="Video"
         cellRender={(rowData) =>
-          <div >
+         
             <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
-          </div>
+         
         }
         width='auto'
         allowSorting={false}

@@ -509,7 +509,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             <div className={` ${!open && "hidden"} relative`}>
               {lines.length === 0 ? (
                 <div className="text-center text-gray-500 font-semibold dark:text-gray-300 select-none cursor-not-allowed">
-                  The History is Currently Empty.
+                  {/* The History is Currently Empty. */}
                 </div>
               ) : (
                 lines
