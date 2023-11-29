@@ -39,7 +39,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const { setUserEmail } = useUserNickname();
   const { setCreaditBalance } = useUserNickname();
   const navigate = useNavigate();
-  const [initialized] = useState(false);
+  const [initialized, setInitialized] = useState(false);
   const [userEmailAddress, setUserEmailAddress] = useState("");
   const [creadit, setCreadit] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
@@ -143,7 +143,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   }, []);
 
   useEffect(() => {
-    if (!initialized) {
+    if (!initialized && userAvatar === null) {
 
       let config = {
         method: 'post',
@@ -176,6 +176,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             } else {
               generateAvatar(userEmailAddress)
                 .then((avatarUrl) => {
+                  console.log(avatarUrl, 'avatarUrl');  
                   setUserAvatar(avatarUrl);
                 })
                 .catch((error) => {
@@ -192,7 +193,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         });
     }
     // eslint-disable-next-line
-  }, []);
+  }, [ ]);
 
   // Function to generate the avatar URL
   const generateAvatar = (emailAddress) => {
@@ -224,9 +225,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         axios
           .request(config)
           .then((response) => {
-            console.log(response.data);
+            console.log(response.data, 'response.data');
             console.log('account update end')
             // setUserAvatar(avatarData);
+            setInitialized(true);
           })
           .catch((error) => {
             console.log(error);
