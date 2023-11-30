@@ -67,8 +67,8 @@ function Editor() {
                         console.log(response, 'response');
                         const startTimeInSeconds = parseInt(parseTimeToSeconds(response.data.data.start_time));
                         const endTimeInSeconds = parseInt(parseTimeToSeconds(response.data.data.end_time));
-                        const maxDurations = endTimeInSeconds - startTimeInSeconds + 20;
-                        const minDurations = 30;
+                        const maxDurations = endTimeInSeconds - startTimeInSeconds + 2000000000000000000000000000000000000000;
+                        const minDurations = 5;
                         const parts = response.data.data.clip_url.split('/');
                         const publicId = parts[parts.length - 1].split('.')[0];
                         const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
