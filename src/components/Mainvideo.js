@@ -3,6 +3,7 @@ import DataGrid, { Column } from 'devextreme-react/data-grid';
 import 'devextreme/dist/css/dx.light.css';
 import { MainVideo } from '../components/data.js';
 import VideoPlayer from '../Pages/videoplayer.js';
+import CloudinaryVideoPlayer from "../components/cloudinaryVideoPlayer.js";
 
 const Mainvideo = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -34,8 +35,12 @@ const Mainvideo = () => {
           caption="Video"
           alignment='center'
           cssClass='Video'
-          cellRender={(rowData) => <VideoPlayer src={rowData.data.src} title={rowData.data.title} type={rowData.data.type} setMainVideo={mainVideo} />}
-          width='auto'
+          cellRender={(rowData) => 
+             <CloudinaryVideoPlayer src={rowData.data.src} title={rowData.data.title} type={rowData.data.type} setMainVideo={mainVideo} />
+            //  <CloudinaryVideoPlayer src={rowData.data.src} title={rowData.data.title} type={rowData.data.type} setMainVideo={mainVideo}} />
+
+            }
+            width={450}
         />
         <Column
           dataField="title"

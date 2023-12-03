@@ -14,6 +14,7 @@ import DropDownButton from "../components/GridDropdown.js";
 import { Popup } from "devextreme-react/popup";
 import { Form } from "devextreme-react/form";
 import { useFileSelected } from "../context/SelectionContext.js";
+import CloudinaryVideoPlayer from "../components/cloudinaryVideoPlayer.js";
 // import { LuDownload } from "react-icons/lu";
 // import VideoDownload from "./VideoDownload.js";
 
@@ -112,10 +113,10 @@ console.log(videoClips, "videoClips");
         cssClass="Video"
         cellRender={(rowData) =>
          
-            <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
-         
+            // <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
+          <CloudinaryVideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
         }
-        width='auto'
+        width={400}
         allowSorting={false}
       />
       <Column

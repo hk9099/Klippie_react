@@ -24,7 +24,7 @@ const PricingCardsContainer = lazy(() => import('./Pages/PricingCardsContainer.j
 // const YouTube = lazy(() => import('./components/YouTube.js'));
 const Editor = lazy(() => import('./components/Editor.js'));
 const CloudinaryMediaEditor = lazy(() => import('./components/mediaEditor.js'));
-
+const CloudinaryVideoPlayer = lazy(() => import('./components/cloudinaryVideoPlayer.js'));
 function App() {
   const { projectId } = useParams();
   console.log(projectId);
@@ -69,6 +69,7 @@ function App() {
                         <Route path="/pricing" element={<PricingCardsContainer />} />
                         <Route path="/editor/:clipId" element={<Editor />} />
                         <Route path="/youtube" element={<CloudinaryMediaEditor />} />
+                        <Route path="/cloudinaryVideoPlayer" element={<CloudinaryVideoPlayer />} />
                       </Routes>
                     </CloudinaryProvider>
                   </SidebarProvider>

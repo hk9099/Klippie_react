@@ -400,3 +400,8 @@ filter: blur(150px);
 .downloadmodal{
   z-index: 9999!important;
 }
+
+
+.Video{
+  vertical-align: middle!important;
+}
