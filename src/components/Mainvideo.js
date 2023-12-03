@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DataGrid, { Column } from 'devextreme-react/data-grid';
 import 'devextreme/dist/css/dx.light.css';
 import { MainVideo } from '../components/data.js';
-import VideoPlayer from '../Pages/videoplayer.js';
+// import VideoPlayer from '../Pages/videoplayer.js';
 import CloudinaryVideoPlayer from "../components/cloudinaryVideoPlayer.js";
 
 const Mainvideo = () => {
