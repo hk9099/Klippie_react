@@ -425,7 +425,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             setOpen(!open);
           }}
         />
-        <Link to="/dashboard">
+        <Link to="/dashboard" >
           <div
             className={`flex ${open && "justify-center"
               } justify-center items-center select-none px-[10px] py-3`}
@@ -463,7 +463,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           <button
             // disabled={!clipsFound}
             // data-tooltip-id={!clipsFound ? "disabled" : undefined}
-            className={`flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full  dark:text-white  border-animation ${!open && "justify-center"}`}onClick={handleAddNewVideo}>
+            className={`newProject flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full  dark:text-white  border-animation ${!open && "justify-center"}`}onClick={handleAddNewVideo}>
             <div
               className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full bg-white dark:bg-gray-800 dark:text-white ${!open && "justify-center"
                 }`}

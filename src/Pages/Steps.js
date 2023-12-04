@@ -226,7 +226,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
     }, [cloudinaryResponse, allApiCompleted, userToken]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="flex items-baseline justify-center">
             <Toaster position="top-center" />
             {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
             <div className="text-center w-full">

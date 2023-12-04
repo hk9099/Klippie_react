@@ -201,7 +201,14 @@
 
 // loadScript('https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.js', () => {
 //     loadScript('https://unpkg.com/cloudinary-video-player/dist/cld-video-player.js', () => {
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef ,useState} from 'react';
+import { HiOutlineDownload } from "react-icons/hi";
+// import CloudinaryMediaEditor from "../components/mediaEditor.js";
+import { Link } from "react-router-dom";
+import { BiSolidEdit } from 'react-icons/bi';
+// import { Tooltip } from 'react-tooltip';
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 export default function CloudinaryVideoPlayer({
     src,
@@ -218,6 +225,71 @@ export default function CloudinaryVideoPlayer({
 }) {
     const playerRef = useRef(null);
     const videoRef = useRef(null);
+    // console.log(setMainVideo, 'setMainVideo');
+    const [isLoading, setIsLoading] = useState(false);
+    // const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+    const handleDownload = async () => {
+        try {
+            setIsLoading(true);
+
+            if (!src) {
+                ToastNotification({ message: 'No video source found', type: 'error' });
+            }
+
+            if (type === "mp4" || type === "video") {
+                const response = await fetch(src);
+                console.log(response);
+                const videoBlob = await response.blob();
+
+                const blobURL = URL.createObjectURL(videoBlob);
+
+                const downloadLink = document.createElement("a");
+                downloadLink.href = blobURL;
+                downloadLink.download = `${title}.mp4`
+                document.body.appendChild(downloadLink);
+
+                // Programmatically click the link to trigger the download
+                downloadLink.click();
+
+                // Clean up: Remove the download link and revoke the Blob object URL
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(blobURL);
+            } else {
+                const response = await fetch(src);
+                console.log(response);
+                const videoBlob = await response.blob();
+
+                const blobURL = URL.createObjectURL(videoBlob);
+
+                const downloadLink = document.createElement("a");
+                downloadLink.href = blobURL;
+                downloadLink.download = `${title}.mp3`
+                document.body.appendChild(downloadLink);
+
+                // Programmatically click the link to trigger the download
+                downloadLink.click();
+
+                // Clean up: Remove the download link and revoke the Blob object URL
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(blobURL);
+            }
+
+            setIsLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+            console.error("Error while downloading the video:", error);
+        }
+    };
+
+    const handleMediaEditorClick = () => {
+        const mediaEditorTab = window.open(`/editor/${clipId}`, '_blank');
+        const tabClosedListener = () => {
+            console.log('Media editor tab closed');
+            window.location.reload();
+            mediaEditorTab.removeEventListener('beforeunload', tabClosedListener);
+        };
+        mediaEditorTab.addEventListener('beforeunload', tabClosedListener);
+    };
     useEffect(() => {
         if (playerRef.current) return;
         playerRef.current = window.cloudinary;
@@ -272,6 +344,34 @@ export default function CloudinaryVideoPlayer({
                     width: 50px !important;
                 }
             `}</style>
+              <div className="flex justify-between items-center ">
+                <button
+                    className={`w-1/2 border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full  text-center p-2 gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center`}
+                    onClick={handleDownload}
+                >
+                    <HiOutlineDownload />
+                    {isLoading ? "Downloading..." : `Download ${type === 'mp4' || type === 'video' ? 'Video' : 'Audio'}`}
+                </button>
+
+                <Link
+                    // to={`/editor/${clipId}`}
+                    // target="_blank"
+                    data-tooltip-id="MediaEditor"
+                    className={` w-1/2 ml-1 border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full text-center p-2 gap-3 m-auto mt-2 mb-0 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center ${setMainVideo ? 'hidden' : 'block'}`}
+                    onClick={handleMediaEditorClick}
+                >
+                    <BiSolidEdit />
+                    {`Edit ${type === 'mp4' || type === 'video' ? 'Video' : 'Audio'}`}
+                </Link>
+
+                {/* <Tooltip
+                    id="MediaEditor"
+                    content="Edit your video"
+                    place="bottom"
+                    opacity={1}
+                    style={{ backgroundColor: '#B3B5E2', color: '#020913', zIndex: '999', position: 'relative' }}
+                /> */}
+            </div>
         </div>
     )
 }

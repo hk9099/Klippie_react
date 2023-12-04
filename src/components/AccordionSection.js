@@ -247,7 +247,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                         )}
                     </div>
                     <AccordionBody>
-                        <div className="relative w-full h-fit overflow-y-auto ">
+                        <div className="relative w-full overflow-y-auto  ">
                             <Videoclips setVideoCount={setVideoCount} videoClips={videoClips} />
                         </div>
                     </AccordionBody>

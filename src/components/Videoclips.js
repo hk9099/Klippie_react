@@ -79,6 +79,8 @@ console.log(videoClips, "videoClips");
       dataSource={videoClips}
       showBorders={true}
       columnAutoWidth={true}
+      width={"100%"}
+      height={videoClips.length > 0 ? "100%" : "30vh"}
       showRowLines={true}
       onSelectionChanged={(e) => {
         if (e.selectedRowsData.length > 0) {
@@ -96,14 +98,13 @@ console.log(videoClips, "videoClips");
         selectAllMode="allPages"
         showCheckBoxesMode="always"
       />
-     
       <Paging defaultPageSize={3} 
       />
       <Pager
         showPageSizeSelector={true}
         showInfo={true}
         showNavigationButtons={true}
-        visible={true}
+        visible={videoClips.length > 0 ? true : false}
         displayMode="compact"
       />
       <Column
@@ -112,11 +113,10 @@ console.log(videoClips, "videoClips");
         alignment='center'
         cssClass="Video"
         cellRender={(rowData) =>
-         
             // <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
           <CloudinaryVideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
         }
-        width={400}
+        width={415}
         allowSorting={false}
       />
       <Column

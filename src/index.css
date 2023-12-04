@@ -183,3 +183,6 @@
     }
   }
   
+  .dx-datagrid-pager {
+    border-top: none!important;
+}

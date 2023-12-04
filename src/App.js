@@ -1,6 +1,6 @@
 import 'devextreme/dist/css/dx.light.css';
 // import '@mantine/core/styles.css';
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense,useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RotatingLines } from "react-loader-spinner";
 import { UserNicknameProvider } from './context/userNicknameContext.js';
@@ -25,9 +25,24 @@ const PricingCardsContainer = lazy(() => import('./Pages/PricingCardsContainer.j
 const Editor = lazy(() => import('./components/Editor.js'));
 const CloudinaryMediaEditor = lazy(() => import('./components/mediaEditor.js'));
 const CloudinaryVideoPlayer = lazy(() => import('./components/cloudinaryVideoPlayer.js'));
+const NotFoundPage = lazy(() => import('./Pages/NotFoundPage.js'));
 function App() {
   const { projectId } = useParams();
   console.log(projectId);
+    const projectIdPattern = /^dashboard\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+  useEffect(() => {
+    const handleContextmenu = e => {
+        e.preventDefault();
+    };
+
+    document.addEventListener('contextmenu', handleContextmenu);
+
+    return function cleanup() {
+        document.removeEventListener('contextmenu', handleContextmenu);
+    };
+}, []);
+
   return (
     <Router>
       <Suspense fallback={
@@ -52,7 +67,7 @@ function App() {
                       <Routes>
                         <Route path="/signup" element={<Signup />} />
                         <Route path="/forgotpassword" element={<Forgotpassword />} />
-                        <Route path="*" element={<h1>Not Found</h1>} />
+                        <Route path="*" element={<NotFoundPage />} />
                         <Route
                           path="/dashboard"
                           element={<Layout><Dashboard /></Layout>}

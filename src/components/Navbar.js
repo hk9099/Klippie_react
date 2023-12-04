@@ -84,7 +84,7 @@ const Navbar = ({ creaditBalance }) => {
                             </div>
                         )}
                             <button
-                                className={`text-gray-300 w-auto text-center px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed === true ? 'hidden' : 'block'}`}
+                                className={`upgradetopro text-gray-300 w-auto text-center px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed === true ? 'hidden' : 'block'}`}
                                 onClick={openModal}
                             >
                                 <span className={`text-content select-none`}>Upgrade</span>
