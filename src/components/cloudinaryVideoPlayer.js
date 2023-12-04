@@ -325,6 +325,7 @@ export default function CloudinaryVideoPlayer({
 
     }, [])
     return (
+        <>
         <div className={`cld-video-player cld-fluid w-full h-full ${sidebar ? 'hidden' : ''} border border-white border-opacity-60  backdrop-blur-4 flex rounded-[10px] text-center `}>
             <video
                 ref={videoRef}
@@ -344,6 +345,7 @@ export default function CloudinaryVideoPlayer({
                     width: 50px !important;
                 }
             `}</style>
+        </div>
               <div className="flex justify-between items-center ">
                 <button
                     className={`w-1/2 border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full  text-center p-2 gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center`}
@@ -372,6 +374,6 @@ export default function CloudinaryVideoPlayer({
                     style={{ backgroundColor: '#B3B5E2', color: '#020913', zIndex: '999', position: 'relative' }}
                 /> */}
             </div>
-        </div>
+            </>
     )
 }
