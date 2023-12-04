@@ -10,7 +10,7 @@ import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 import { useDropzone } from 'react-dropzone';
 // import { IoMdCloudUpload } from 'react-icons/io';
-// import { Tooltip } from 'react-tooltip';
+import { Tooltip } from 'react-tooltip';
 
 function MyProgressBar({ bytesUploaded, totalBytes }) {
     const percent = Math.round((bytesUploaded / totalBytes) * 100) || 0;
@@ -554,7 +554,7 @@ function HomeScreen({ userName, creaditBalance }) {
                             </label>
                         </div> */}
                         <Toaster />
-                        <div {...getRootProps()} style={style} className="dropzone w-[80%] border-gray-500 h-[150px] cursor-pointer flex flex-col justify-center items-center px-[100px!important] py-[50px!important] rounded-lg">
+                        <div {...getRootProps()} style={style} className="draganddrop dropzone w-[80%] border-gray-500 h-[150px] cursor-pointer flex flex-col justify-center items-center px-[100px!important] py-[50px!important] rounded-lg">
                             <input {...getInputProps()} />
                             <label htmlFor="file" className="relative items-center text-xl font-semibold cursor-pointer text-center text-gray-500 hover:bg-opacity-70 hover:text-opacity-90">
                                 Choose a File (MP3, MP4) or Drag Here
@@ -582,7 +582,7 @@ function HomeScreen({ userName, creaditBalance }) {
                                 </>
                             ) : null}
                         </div>
-                        <div className="text-white select-none cursor-pointer font-bold text-lg w-[80%] inline-block">
+                        <div className="text-white select-none cursor-pointer font-bold text-lg w-[80%] inline-block" data-tooltip-id="youtube">
                             <div className="text-center">
                                 <div className="relative mt-2">
                                     <div className="flex items-center">
@@ -590,6 +590,7 @@ function HomeScreen({ userName, creaditBalance }) {
                                             type="text"
                                             placeholder="Paste a YouTube Link Here"
                                             className="relative w-full px-4 py-4 border-2 border-gray-500 rounded-lg text-white focus:outline-none bg-transparent border-dashed"
+                                            disabled={disabled}
                                         />
                                         <button
                                             type="button"
@@ -601,6 +602,12 @@ function HomeScreen({ userName, creaditBalance }) {
                                 </div>
                             </div>
                         </div>
+                        <Tooltip
+                            id="youtube"
+                            content="Coming Soon!"
+                            opacity={1}
+                            style={{ backgroundColor: '#B3B5E2', color: '#020913' }}
+                        />
                     </div>
                 </section>
             </div>
