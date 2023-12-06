@@ -4,7 +4,6 @@ import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css'
 import { RiInformationLine } from 'react-icons/ri';
 import * as Yup from 'yup';
-import { useSnackbar } from 'notistack';
 // import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -14,26 +13,38 @@ import '../assets/css/signin.css';
 import axios from 'axios';
 import Hiiii from '../assets/images/hi_40x40.gif';
 import { HiOutlineMail } from 'react-icons/hi';
+import { TokenManager } from '../components/getToken.js';
+import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 function Signin() {
     const navigate = useNavigate();
-    const { enqueueSnackbar } = useSnackbar();
+    const user = TokenManager.getToken();
     useEffect(() => {
         localStorage.setItem('color-theme', 'light');
     }, []);
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-
-
+    //eslint-disable-next-line
+    const [loginCount, setLoginCount] = useState(0);
+    const incrementLoginCount = () => {
+        const currentCount = parseInt(localStorage.getItem('loginCount')) || 0;
+        const newCount = currentCount + 1;
+        
+        localStorage.setItem('loginCount', newCount.toString());
+        setLoginCount(newCount);
+    };
+    const { setClipsFoundStatus } = useClipsFoundStatus();
 
     useEffect(() => {
-        const encodedEmail = localStorage.getItem('_auth');
-        if (encodedEmail) {
+        if (user) {
             setIsLoading(true);
             // const email = atob(encodedEmail); // Decode email
             navigate('/dashboard');
+            // setClipsFoundStatus(false);
         }
-    }, [navigate]);
+    }, [user, navigate , setClipsFoundStatus]);
 
     // const handleGoogleLogin = () => {
     //     const customProvider = new GoogleAuthProvider();
@@ -97,18 +108,27 @@ function Signin() {
     };
 
     const validationSchema = Yup.object({
-        email: Yup.string().email('Invalid email address').required('Required').max(50, 'Email is too long - should be 50 chars maximum.').matches(/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/, 'Invalid email address').lowercase(),
-        password: Yup.string().required('Required').min(8, 'Password is too short - should be 8 chars minimum.').matches(
+        email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required")
+        .max(50, "Email is too long - should be 50 chars maximum.")
+        .matches(
+          /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+          "Invalid email address"
+        )
+        .lowercase(),
+                password: Yup.string().required('Required').min(8, 'Password is too short - should be 8 chars minimum.').matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
             'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
         ),
     });
+    
 
     const handleSubmit = async (values, { setSubmitting }) => {
         setIsLoading(true);
         try {
             const response = await axios.post(
-                process.env.REACT_APP_HOSTING_URL + '/v1/auth/login',
+               'https://dev-api.getklippie.com/v1/auth/login',
                 {
                     email: values.email,
                     password: values.password,
@@ -120,50 +140,35 @@ function Signin() {
             );
 
             if (response && response.data) {
-                // Successful login
-                enqueueSnackbar('Login Successful', {
-                    variant: 'success',
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    },
-                    autoHideDuration: 1500,
-                });
+                ToastNotification({message: 'Log in successful',
+                 type: 'success'});
                 const encodedUser = btoa(JSON.stringify(response.data));
-                localStorage.setItem('_sodfhgiuhih', encodedUser);
-                const encodedEmail = btoa(values.email);
-                localStorage.setItem('_auth', encodedEmail);
+                // localStorage.setItem('_sodfhgiuhih', encodedUser);
+                // const encodedEmail = btoa(values.email);
+                // localStorage.setItem('_auth', encodedEmail);
+                incrementLoginCount();
+                TokenManager.setToken('userToken', 2160 ,encodedUser);
+
+                // const userToken = Cookies.get('userToken');
+                // if (userToken) {
+                //     //decode token to get user data
+                //     const decodedToken = atob(userToken);
+                //     const userInfo = JSON.parse(decodedToken);
+                //     console.log(userInfo, 'userInfo');
+                // } else {
+                //     console.log('Cookie not found or expired.');
+                // }
+
                 navigate('/dashboard');
             } else {
-                enqueueSnackbar('Invalid response from the server.', {
-                    variant: 'error',
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    },
-                    autoHideDuration: 1500,
-                });
+                ToastNotification({message: 'Invalid response from the server.', type: 'error'});
             }
         } catch (error) {
             if (error.response.data.detail) {
-                enqueueSnackbar(error.response.data.detail, {
-                    variant: 'error',
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    },
-                    autoHideDuration: 1500,
-                });
+                ToastNotification({message: error.response.data.detail, type: 'error'});
             } else {
                 navigate("/otpVarification");
-                enqueueSnackbar(error.response.data.message, {
-                    variant: 'error',
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    },
-                    autoHideDuration: 1500,
-                });
+                ToastNotification({message: error.response.data.message, type: 'error'});
             }
         }
         setIsLoading(false);
@@ -173,6 +178,7 @@ function Signin() {
 
     return (
         <>
+        <Toaster position="top-center" />
         <main>
             <div className="h-full w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">

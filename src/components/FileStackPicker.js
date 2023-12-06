@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import * as filestack from 'filestack-js';
 
-// var FILESTACK = process.env.REACT_APP_FILESTACK_API_KEY;
+var FILESTACK = process.env.REACT_APP_FILESTACK_API_KEY;
 
 const FilestackUploader = ({ setUploadedFileUrl, setUploadedFileName, onClose }) => {
-    const apiKey = 'Ah6BGoib5TtiyxsLeCtXBz';
+    const apiKey = FILESTACK;
     const pickerRef = useRef(null);
 
     const handleFileUploadFinished = async (res) => {

@@ -2,7 +2,8 @@
 
 
 export let MainVideo = [];
+console.log("MainVideo:", MainVideo);
 export const updateMainVideo = (newMainVideo) => {
-    MainVideo = newMainVideo;
     console.log("MainVideo updated:", MainVideo);
+    MainVideo = newMainVideo;
 };

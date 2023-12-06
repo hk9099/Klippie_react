@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import axios from 'axios';
 import UserModal from '../components/UserModal.js';
-import { useSnackbar } from 'notistack';
+import { TokenManager } from '../components/getToken.js';
+import SubscriptionModal from './SubscriptionModal.js';
+import { useSubscription } from '../context/SubscriptionContext.js';
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
-var HOSTINGURL = process.env.REACT_APP_HOSTING_URL;
+var HOSTINGURL = process.env.REACT_APP_DEV_HOSTING_URL;
 
 const ChangePasswordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
+    oldPassword: Yup.string().required('Current Password is required'),
     newPassword: Yup.string()
         .notOneOf(
             [Yup.ref('oldPassword'), null],
-            'New Password cannot be the same as Old Password'
+            'New Password cannot be the same as Current Password'
         )
-        .min(8, 'New Password must be at least 8 characters')
+        .min(8, 'New Password must be at least 8 characters').max(20, 'New Password must be at most 20 characters').matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,20}$/, 'New Password must contain at least one uppercase letter, one lowercase letter, one number and one special character')
         .required('New Password is required'),
     confirmNewPassword: Yup.string()
         .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
@@ -30,43 +34,71 @@ const AccountModal = ({
     userEmailAddress,
     avatar,
 }) => {
-    const [token, setToken] = useState(null);
-    const { enqueueSnackbar } = useSnackbar();
-    const [googleToken, setGoogleToken] = useState(null);
+    const { Subscription } = useSubscription();
+    // const [token, setToken] = useState(null);
+    const userToken = TokenManager.getToken()[1]
+    // const [googleToken, setGoogleToken] = useState(null);
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    //eslint-disable-next-line
     const [social, setSocial] = useState(false);
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(!social ? 'profile' : 'changePassword');
+    // useEffect(() => {
+    //     const encodedToken = localStorage.getItem('_sodfhgiuhih');
+    //     const userGoogle = localStorage.getItem('_auth');
 
-    useEffect(() => {
-        const encodedToken = localStorage.getItem('_sodfhgiuhih');
-        const userGoogle = localStorage.getItem('_auth');
+    //     if (encodedToken) {
+    //         const decodedToken = atob(encodedToken);
+    //         var userInfo = JSON.parse(decodedToken);
+    //         var social = userInfo.user.is_social
+    //         setSocial(social);
+    //         setToken(userInfo.token.access_token);
 
-        if (encodedToken) {
-            const decodedToken = atob(encodedToken);
-            var userInfo = JSON.parse(decodedToken);
-            var social = userInfo.user.is_social
-            setSocial(social);
-            setToken(userInfo.token.access_token);
-            
-        } else if (userGoogle) {
-            const decodedGoogle = atob(userGoogle);
-            var googleUserInfo = JSON.parse(decodedGoogle);
-            setGoogleToken(googleUserInfo.token.access_token);
+    //     } else if (userGoogle) {
+    //         const decodedGoogle = atob(userGoogle);
+    //         var googleUserInfo = JSON.parse(decodedGoogle);
+    //         setGoogleToken(googleUserInfo.token.access_token);
+    //     }
+    // }, []);
+
+    const handleDeleteAllProjects = async () => {
+        try {
+            // Your axios request with async/await
+            const response = await axios.post(
+                `${HOSTINGURL}/v1/project/delete-all`,
+                {},
+                {
+                    headers: {
+                        accept: 'application/json',
+                        Authorization: 'Bearer ' + userToken,
+                    },
+                }
+            );
+
+            console.log(response);
+            ToastNotification({ type: 'success', message: response.data.message });
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } catch (error) {
+            console.error(error);
+            ToastNotification({ type: 'error', message: error.response?.data?.detail || 'An error occurred' });
         }
-    }, []);
+    };
+
 
     return (
         <div
-            className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50 ${showAccount ? '' : 'hidden'
+            className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center  z-50 inset-0 backdrop-blur-md bg-black bg-opacity-60 ${showAccount ? '' : 'hidden'
                 } `}
         >
-            <div className={`bg-white rounded p-4 flex flex-col gap-4 dark:bg-gray-800 ${!social ? 'w-[600px]' : 'w-[400px]'} `}>
+            <Toaster />
+            <div className={`bg-white rounded-3xl border p-4 flex flex-col gap-4 dark:bg-gray-800 ${!social ? 'w-[600px]' : 'w-[400px]'}  dark:border-gray-700`}>
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                        
+
                     </h2>
                     <button
                         onClick={() => {
@@ -93,26 +125,39 @@ const AccountModal = ({
                     <div className="w-25 flex flex-col gap-2">
                         {!social && (
                             <button
+                                onClick={() => setActiveTab('profile')}
+                                className={`${activeTab === 'profile' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'
+                                    } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
+                            >
+                                Profile
+                            </button>
+                        )}
+                        {!social && (
+                            <button
                                 onClick={() => setActiveTab('changePassword')}
-                                className={`${activeTab === 'changePassword' ? 'bg-blue-500' : 'bg-gray-400'
-                                    } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
+                                className={`${activeTab === 'changePassword' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
                             >
                                 Change&nbsp;Password
                             </button>
-                        )} 
+                        )}
                         {!social && (
-                        <button
-                            onClick={() => setActiveTab('profile')}
-                            className={`${activeTab === 'profile' ? 'bg-blue-500' : 'bg-gray-400'
-                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
-                        >
-                            Profile
+                            <button
+                                onClick={() => setActiveTab('subscriptions')}
+                                className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white ${Subscription === null ? 'hidden' : 'block'}`}
+                            >
+                                Subscriptions
+                            </button>
+                        )}
+                        {/* //create general tab */}
+                        {!social && (
+                            <button onClick={() => setActiveTab('general')} className={`${activeTab === 'general' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}>
+                                General
                             </button>
                         )}
                     </div>
 
                     {!social && (
-                    <div className="w-1 border-r border-gray-200 dark:border-gray-700 mx-3" />
+                        <div className="w-1 border-r border-gray-200 dark:border-gray-700 mx-3" />
                     )}
 
                     <div className="w-[100%]">
@@ -136,24 +181,18 @@ const AccountModal = ({
                                                 headers: {
                                                     accept: 'application/json',
                                                     'Content-Type': 'application/json',
-                                                    Authorization: `Bearer ${token ? token : googleToken}`,
+                                                    Authorization: `Bearer ${userToken}`,
                                                 },
                                             }
                                         );
-                                        enqueueSnackbar(response.data.message, {
-                                            variant: 'success',
-                                            autoHideDuration: 1500,
-                                        });
+                                        ToastNotification({ type: 'success', message: response.data.message })
                                         localStorage.removeItem('_auth');
                                         localStorage.removeItem('_sodfhgiuhih');
                                         navigate('/');
                                         setSubmitting(false);
                                     } catch (error) {
                                         console.error(error);
-                                        enqueueSnackbar(error.response.data.message, {
-                                            variant: 'error',
-                                            autoHideDuration: 1500,
-                                        });
+                                        ToastNotification({ type: 'error', message: error.response.data.message })
                                         setSubmitting(false);
                                     }
                                 }}
@@ -161,16 +200,16 @@ const AccountModal = ({
                                 {(formikProps) => (
                                     <Form className="flex flex-col gap-3">
                                         <div className="flex flex-col gap-2 relative">
-                                            <label
+                                            {/* <label
                                                 htmlFor="oldPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
                                                 Current Password
-                                            </label>
+                                            </label> */}
                                             <Field
                                                 type={showOldPassword ? 'text' : 'password'}
                                                 name="oldPassword"
-                                                className="px-4 py-2 border rounded-md relative placeholder:text-gray-400 bg-transparent"
+                                                className="px-4 py-2 border rounded-lg relative placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
                                                 placeholder="Enter your current password"
                                             />
                                             <div
@@ -192,16 +231,16 @@ const AccountModal = ({
                                             className="text-red-500 text-sm"
                                         />
                                         <div className="flex flex-col gap-2 relative">
-                                            <label
+                                            {/* <label
                                                 htmlFor="newPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
                                                 New Password
-                                            </label>
+                                            </label> */}
                                             <Field
                                                 type={showNewPassword ? 'text' : 'password'}
                                                 name="newPassword"
-                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent"
+                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
                                                 placeholder="Enter your new password"
                                             />
                                             <div
@@ -224,16 +263,16 @@ const AccountModal = ({
                                         />
 
                                         <div className="flex flex-col gap-2 relative">
-                                            <label
+                                            {/* <label
                                                 htmlFor="confirmNewPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
                                                 Confirm New Password
-                                            </label>
+                                            </label> */}
                                             <Field
                                                 type={showConfirmPassword ? 'text' : 'password'}
                                                 name="confirmNewPassword"
-                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent"
+                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
                                                 placeholder="Confirm your new password"
                                             />
                                             <div
@@ -258,9 +297,9 @@ const AccountModal = ({
                                             type="submit"
                                             disabled={formikProps.isSubmitting}
                                             className={`${formikProps.isSubmitting
-                                                    ? 'bg-gray-400 cursor-wait'
-                                                    : 'bg-blue-500'
-                                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white`}
+                                                ? 'bg-gray-400 cursor-wait'
+                                                : 'bg-blue-500'
+                                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white mt-3`}
                                         >
                                             {formikProps.isSubmitting ? 'Loading...' : 'Submit'}
                                         </button>
@@ -271,7 +310,7 @@ const AccountModal = ({
                         {activeTab === 'profile' && (
                             <Formik initialValues={{}} onSubmit={() => { }}>
                                 <UserModal
-                                    isOpen={true} // Always show the UserModal when the "Profile" tab is active
+                                    isOpen={true}
                                     userNickname={userNickname}
                                     userEmailAddress={userEmailAddress}
                                     avatar={avatar}
@@ -282,7 +321,22 @@ const AccountModal = ({
                                 />
                             </Formik>
                         )}
-
+                        {activeTab === 'subscriptions' && (
+                            <SubscriptionModal Subscription={Subscription} />
+                        )}
+                        {activeTab === 'general' && (
+                            <div className="flex justify-between items-center">
+                                <label className="text-sm font-semibold text-gray-200 dark:text-gray-200 select-none">
+                                    Delete All Projects
+                                </label>
+                                <button
+                                    onClick={handleDeleteAllProjects}
+                                    className="dark:bg-red-500 text-white px-4 py-2 rounded-md  dark:text-white"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

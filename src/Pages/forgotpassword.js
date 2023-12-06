@@ -2,21 +2,20 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useSnackbar } from 'notistack';
 import '../assets/css/signin.css';
 import axios from 'axios';
 import { HiOutlineMail } from 'react-icons/hi';
 import { RiInformationLine } from 'react-icons/ri';
-import { TbDeviceMobileMessage } from 'react-icons/tb';
+// import { TbDeviceMobileMessage } from 'react-icons/tb';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
 import { Tooltip } from 'react-tooltip';
 import think from '../assets/images/think_40x40.gif';
 import { useNavigate } from 'react-router-dom';
-
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 const MultiStepForm = () => {
     const navigate = useNavigate();
-    const { enqueueSnackbar } = useSnackbar();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({});
     const [emailSent, setEmailSent] = useState(false);
@@ -48,7 +47,7 @@ const MultiStepForm = () => {
 
         try {
             const response = await axios.post(
-                'https://api.getklippie.com/v1/auth/forgot-password-send-otp',
+                'https://dev-api.getklippie.com/v1/auth/forgot-password-send-otp',
                 {
                     email: formData.email,
                 }
@@ -59,12 +58,12 @@ const MultiStepForm = () => {
             setLoading(false);
             setStep(2);
             setEmailToken(emailtoken);
-            enqueueSnackbar('Email sent successfully!', { variant: 'success' , autoHideDuration: 1000});
+            ToastNotification({ message: 'Email sent successfully!', type: 'success' });
         } catch (error) {
             var err = error.response.data.detail;
             setLoading(false);
             setError(err);
-            enqueueSnackbar(err, { variant: 'error' , autoHideDuration: 1000});
+            ToastNotification({ message: err, type: 'error' });
         } finally {
             setEmailLoading(false);
         }
@@ -78,7 +77,7 @@ const MultiStepForm = () => {
 
             //eslint-disable-next-line
             const response = await axios.post(
-                'https://api.getklippie.com/v1/auth/verify-otp',
+                'https://dev-api.getklippie.com/v1/auth/verify-otp',
                 {
                     token: emailToken,
                     otp: formData.otp,
@@ -89,12 +88,12 @@ const MultiStepForm = () => {
             setOtpVerified(true);
             setLoading(false);
             setStep(3);
-            enqueueSnackbar('Code verified successfully!', { variant: 'success' , autoHideDuration: 1000});
+            ToastNotification({ message: 'Code verified successfully!', type: 'success' });
         } catch (error) {
             console.log(error.response.data.detail);
             setLoading(false);
             setError(error.response.data.detail);
-            enqueueSnackbar(error.response.data.detail, { variant: 'error' , autoHideDuration: 1000});
+            ToastNotification({ message: error.response.data.detail, type: 'error' });
         } finally {
             setOtpLoading(false);
         }
@@ -107,7 +106,7 @@ const MultiStepForm = () => {
         try {
             //eslint-disable-next-line
             const response = await axios.post(
-                'https://api.getklippie.com/v1/auth/reset-forgot-password',
+                'https://dev-api.getklippie.com/v1/auth/reset-forgot-password',
                 {
                     token: emailToken,
                     new_password: formData.password,
@@ -116,13 +115,13 @@ const MultiStepForm = () => {
             console.log(JSON.stringify(response.data));
             setLoading(false);
             setSuccess('Password reset successful!');
-            enqueueSnackbar('Password reset successful!', { variant: 'success' , autoHideDuration: 1000});
+            ToastNotification({ message: 'Password reset successful!', type: 'success' });
             navigate('/');
         } catch (error) {
             console.log(error.response.data.detail);
             setLoading(false);
             setError(error.response.data.detail);
-            enqueueSnackbar(error.response.data.detail, { variant: 'error' , autoHideDuration: 1000});
+            ToastNotification({ message: error.response.data.detail, type: 'error' });
         } finally {
             setPasswordLoading(false);
         }
@@ -142,7 +141,15 @@ const MultiStepForm = () => {
     };
 
     const validationSchema = Yup.object({
-        email: Yup.string().email('Invalid email address').required('Email is required'),
+        email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required")
+      .max(50, "Email is too long - should be 50 chars maximum.")
+      .matches(
+        /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+        "Invalid email address"
+      )
+      .lowercase(),
         otp: Yup.string().required('Code is required').min(6, 'Code must be 6 digits').max(6, 'Code must be 6 digits').matches(/^[0-9]+$/, "Must be only digits").typeError('Must be a number'),
         password: Yup.string().required('Password is required'),
         confirm_password: Yup.string()
@@ -152,6 +159,7 @@ const MultiStepForm = () => {
 
     return (
         <main>
+            <Toaster position="top-center" />
             <div className="h-full w-full">
                 <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
                     <div className="left_heading text-center">
@@ -230,9 +238,9 @@ const MultiStepForm = () => {
                                                     value={formData.otp || ''}
                                                     className={`inputbox`}
                                                 />
-                                                <span className="email-icon">
+                                                {/* <span className="email-icon">
                                                     <TbDeviceMobileMessage />
-                                                </span>
+                                                </span> */}
 
                                             </div>
                                             <ErrorMessage

@@ -321,21 +321,21 @@ width: 100%;
   right: auto;
 }
 
-.emailinput:hover label,
+/* .emailinput:hover label,
 .emailinput:hover input::placeholder {
   color: #917bea;
-}
+} */
 
-.emailinput:hover input {
+/* .emailinput:hover input {
   border-bottom-color: #917bea;
 }
 
 .emailinput:hover input:focus {
   background-color: #b7a9f185;
   color: #000;
-}
+} */
 
-.passwordinput:hover label,
+/* .passwordinput:hover label,
 .passwordinput:hover input::placeholder {
   color: #917bea;
 }
@@ -361,7 +361,7 @@ width: 100%;
 .nameinput:hover input:focus {
   background-color: #b7a9f185;
   color: #000;
-}
+} */
 
 
 

@@ -6,11 +6,17 @@ import App from './App';
 import { ThemeProvider } from './components/ThemeContext';
 import Background from './components/Background';
 import 'tailwindcss/tailwind.css';
-
-const noop = () => { };
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
+// import { MantineProvider } from '@mantine/core';
 
 if (process.env.NODE_ENV === 'production') {
-  // Disable the message in production mode
+  console.log("Disabling React DevTools in production mode");
+  disableReactDevTools();
+}
+const noop = () => { };
+
+
+if (process.env.NODE_ENV === 'production') {
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
     ...window.__REACT_DEVTOOLS_GLOBAL_HOOK__,
     inject: noop,
@@ -30,11 +36,14 @@ if (process.env.NODE_ENV === 'production') {
 
 const root = createRoot(document.getElementById('root'));
 root.render(
+
   <React.StrictMode>
-    <ThemeProvider>
-      <Background>
-        <App />
-      </Background>
-    </ThemeProvider>
+    {/* <MantineProvider withGlobalStyles withNormalizeCSS> */}
+        <ThemeProvider>
+          <Background>
+            <App />
+          </Background>
+        </ThemeProvider>
+    {/* </MantineProvider> */}
   </React.StrictMode>
 );

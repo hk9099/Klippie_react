@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { TokenManager } from '../components/getToken.js';
 
 // Define the async function to fetch user profile
-const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar, HOSTINGURL) => {
-    console.log('profile start');
+var userToken = TokenManager.getToken()[1]
+const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar,setCreadit, HOSTINGURL) => {
 
     const getToken = () => {
         const encodedToken = localStorage.getItem('_sodfhgiuhih');
@@ -16,74 +17,71 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
         }
     };
     if (!initialized) {
-        const encodedEmail = localStorage.getItem("_auth");
+        // const encodedEmail = localStorage.getItem("_auth");
 
-        if (encodedEmail) {
-            navigate("/dashboard");
-        } else {
-            navigate("/");
-        }
-
-        const token = getToken();
+        // if (encodedEmail) {
+        //     navigate("/dashboard");
+        // } else {
+        //     navigate("/");
+        // }
 
         try {
             const response = await axios.post(
-                `${HOSTINGURL}/v1/auth/profile`,
+                `https://dev-api.getklippie.com/v1/auth/profile`,
                 {},
                 {
                     headers: {
                         accept: 'application/json',
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${userToken}`,
                     },
                 }
             );
 
-            console.log('fetch profile');
+            console.log(response.data, 'response.data');
             const userNickname = response.data.name;
             setUserNickname(userNickname);
             const userEmailAddress = response.data.email;
             setUserEmailAddress(userEmailAddress);
             const userAvatar = response.data.profile_image;
-            console.log(userAvatar, 'userAvatarrrrrrrrrrrr');
+            // console.log(userAvatar, 'userAvatarrrrrrrrrrrr');
             setUserAvatar(userAvatar);
             const userAvatarUrl = response.data.avatar;
-            console.log(userAvatarUrl, 'userAvatarUrllllllllllllllllll');
+            // console.log(userAvatarUrl, 'userAvatarUrllllllllllllllllll');
             setUserAvatar(userAvatarUrl);
+            setCreadit(response.data.balance);
 
             console.log('got profile');
 
             if (userAvatar === null) {
-                console.log('userAvatar is null');
+                // console.log('userAvatar is null');
                 if (userAvatarUrl) {
-                    console.log('userAvatarUrl is not null');
+                    // console.log('userAvatarUrl is not null');
                     setUserAvatar(userAvatarUrl);
                 } else {
-                    console.log('userAvatarUrl is null');
-                    console.log(userEmailAddress);
+                    // console.log('userAvatarUrl is null');
+                    // console.log(userEmailAddress);
                     await generateAvatar(userEmailAddress, setUserAvatar, getToken, HOSTINGURL);
                 }
             } else {
                 setUserAvatar(userAvatar);
             }
 
-            console.log('profile end');
+            // console.log('profile end');
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 };
 
 // Define the async function to generate the avatar URL
 const generateAvatar = async (emailAddress, setUserAvatar, getToken, HOSTINGURL) => {
-    console.log('generate avatar start');
+    // console.log('generate avatar start');
     const userAvatar = emailAddress.split('@')[0];
     const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
 
     try {
         const response = await axios.get(avatarUrl);
         setUserAvatar(response.config.url);
-        var token = getToken();
-
         let data = JSON.stringify({
             avatar: response.config.url,
         });
@@ -96,14 +94,13 @@ const generateAvatar = async (emailAddress, setUserAvatar, getToken, HOSTINGURL)
             headers: {
                 accept: 'application/json',
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${userToken}`,
             },
             data: data,
         };
 
+        //eslint-disable-next-line
         const updateResponse = await axios.request(config);
-        console.log(updateResponse.data);
-        console.log('account update end');
     } catch (error) {
         console.log(error);
         throw error;

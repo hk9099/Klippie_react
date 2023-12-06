@@ -1,30 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import qs from 'qs';
 import AccordionSection from '../components/AccordionSection';
 // import Shuffleloader from '../components/shuffleloader.js';
-import { updateMainVideo } from "../components/data.js";
-import { useSidebarContext } from '../components/SidebarContext.js';
-import { useSnackbar } from 'notistack';
+// import { updateMainVideo } from '../components/data';
+import { useSidebarContext } from '../context/SidebarContext.js';
 import { AiOutlineClose } from 'react-icons/ai';
-import HomeScreen from './HomeScreen';
+// import HomeScreen from './HomeScreen';
 import Suggetionpopup from '../components/Suggetionpopup';
-var getToken = () => {
-    const encodedToken = localStorage.getItem('_sodfhgiuhih');
+import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
+import { TokenManager } from '../components/getToken.js';
+import DragDropModal from '../components/Drag&DropModal';
+import { useFileSelected } from "../context/SelectionContext.js";
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
-    if (encodedToken) {
-        const decodedToken = atob(encodedToken);
-        const userInfo = JSON.parse(decodedToken);
-        return userInfo.token.access_token;
-    } else {
-        return null;
-    }
-};
-
-const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage }) => {
+const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance }) => {
+    console.log(cloudinaryResponse, 'cloudinaryResponse');
+    const { setClipsFoundStatus, setShowHomeStatus, setProjectCreated } = useClipsFoundStatus();
+    const { fileDelete } = useFileSelected();
+    const userToken = TokenManager.getToken()[1]
+    const navigate = useNavigate();
+    const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
-    const [currentProjectId, setProjectId] = useState(propProjectId);
-    const { enqueueSnackbar } = useSnackbar();
+    const [currentProjectId, setProjectId] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const [newvideoClips, setNewvideoClips] = useState([]);
     //eslint-disable-next-line
@@ -38,19 +38,28 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
     const [accordionVisible, setAccordionVisible] = useState(true);
     const { setIsApiCompleted } = useSidebarContext();
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
-    console.log(propProjectId, 'propProjectId');
-    console.log(currentProjectId, 'currentProjectId');
+    const location = useLocation();
+
+    useEffect(() => {
+        // Check the pathname of the current URL
+        if (location.pathname !== '/dashboard') {
+            setAccordionVisible(true);
+        } else {
+            setAccordionVisible(false);
+            navigate(`/dashboard`);
+        }
+    }, [location, navigate]);
+
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
-    }, [newhistoryvideoClips]);
+    }, [newhistoryvideoClips, fileDelete]);
 
-    const controller = useRef(new AbortController());
 
 
     const handleCloseClick = () => {
         // When close button is clicked, cancel the ongoing API calls
-        controller.current.abort();
+
         setIsLoading(false);
     };
     const closeButton = isLoading ? (
@@ -62,78 +71,93 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
         </button>
     ) : null;
 
-    const makeApiCalls = async (propProjectId, token) => {
-        controller.current = new AbortController();
+
+    const makeApiCalls = async (cloudinaryResponse, token) => {
+
         setIsApiCompleted(false);
         try {
 
-            if (!propProjectId || !token) {
+            if (!cloudinaryResponse || !token) {
                 return;
             }
 
-            // API 1
-            setAccordionVisible(true);
             setAllApiCompleted(false);
-            setError('');
-            setIsLoading(true);
+            try {
+                var data
+                if (process.env.NODE_ENV === 'production') {
+                    data = JSON.stringify({
+                        "public_id": cloudinaryResponse.public_id,
+                        "width": cloudinaryResponse.width,
+                        "height": cloudinaryResponse.height,
+                        "format": cloudinaryResponse.format,
+                        "resource_type": cloudinaryResponse.resource_type,
+                        "duration": cloudinaryResponse.duration,
+                        "secure_url": cloudinaryResponse.secure_url,
+                        "audio": cloudinaryResponse.audio,
+                        "video": cloudinaryResponse.video,
+                    });
+                } else if (process.env.NODE_ENV === 'development') {
+                    data = { "public_id": "test1700716396260", "width": 640, "height": 360, "format": "mp4", "resource_type": "video", "duration": 955.617, "secure_url": "https://res.cloudinary.com/delkyf33p/video/upload/v1700716429/test1700716396260.mp4", "audio": { "codec": "aac", "bit_rate": "95999", "frequency": 44100, "channels": 2, "channel_layout": "stereo" }, "video": { "pix_format": "yuv420p", "codec": "h264", "level": 30, "profile": "Main", "bit_rate": "269160", "dar": "16:9", "time_base": "1/30000" } }
+                }
 
-            let data1 = qs.stringify({
-                'project_id': propProjectId
-            });
 
-            let config1 = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: 'https://api.getklippie.com/v1/project/test',
-                headers: {
-                    'accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': `Bearer ${token}`
-                },
-                data: data1,
-                signal: controller.current.signal,
-            };
-
-            const response1 = await axios.request(config1);
-            console.log('API 1 success:', response1.data);
-            enqueueSnackbar(response1.data.message,
-                {
-                    variant: 'success',
-                    autoHideDuration: 1500, anchorOrigin: {
-                        vertical: 'top',
-                        horizontal: 'right',
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://dev-api.getklippie.com/v1/project/create',
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + userToken
                     },
+                    data: data
+                };
+
+                const response = await axios.request(config);
+                setProjectCreated(true);
+
+                let data1 = qs.stringify({
+                    'project_id': response.data.data.id
                 });
-            setIsLoading(false);
+
+                let config1 = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://dev-api.getklippie.com/v1/project/c',
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + userToken
+                    },
+                    data: data1
+                };
+
+                const response1 = await axios.request(config1);
+                setProjectId(response1.data.data.id);
+            } catch (error) {
+                console.log(error.response.data.error, 'error.response.data.message');
+                ToastNotification({ message: error.response.data.error, type: 'error' });
+            }
             setAllApiCompleted(true);
             setIsSuggetionpopupOpen(true);
-            setAccordionVisible(true);
-            setProjectId(propProjectId);
-            setError('');
+            setClipsFoundStatus(false);
+            setShowHomeStatus(true);
+
         } catch (error) {
             if (error.name === 'AbortError') {
-                enqueueSnackbar('API call aborted',
-                    { variant: 'info', autoHideDuration: 1000 });
+                ToastNotification({ message: 'API call aborted', type: 'loading' });
             } else {
                 // Handle error
                 console.error('API call failed:', error.message);
-                enqueueSnackbar('Clip creation Stoped',
-                    {
-                        variant: 'error', autoHideDuration: 1500, anchorOrigin: {
-                            vertical: 'top',
-                            horizontal: 'right',
-                        },
-                    });
+                ToastNotification({ message: 'Clip creation Stoped', type: 'error' });
             }
         } finally {
             setIsLoading(false);
         }
     };
     useEffect(() => {
-        const token = getToken();
-        console.log(currentProjectId, 'currentProjectId')
-        if (currentProjectId && token) {
-            // Step 3: Poll the project/stats API every 10 seconds
+
+        if (currentProjectId && userToken) {
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
                     try {
@@ -143,11 +167,11 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                         const config = {
                             method: 'post',
                             maxBodyLength: Infinity,
-                            url: 'https://api.getklippie.com/v1/project/stats',
+                            url: 'https://dev-api.getklippie.com/v1/project/stats',
                             headers: {
                                 'accept': 'application/json',
                                 'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}`
+                                'Authorization': `Bearer ${userToken}`
                             },
                             data: data
                         };
@@ -158,120 +182,14 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
 
                         if (message === "Transcribing video completed") {
                             setIsApiCompleted(true);
+                            setClipsFoundStatus(false);
                         }
 
-                        if (message === 'Clips Founded') {
-                            console.log('Clips Founded');
-                            let data = qs.stringify({
-                                'project_id': currentProjectId
-                            });
-                            let config = {
-                                method: 'post',
-                                maxBodyLength: Infinity,
-                                url: `https://api.getklippie.com/v1/clip/get-by-id`,
-                                headers: {
-                                    'accept': 'application/json',
-                                    'Content-Type': 'application/x-www-form-urlencoded',
-                                    'Authorization': `Bearer ${token}`
-                                },
-                                data: data
-                            };
-
-                            const response = await axios.request(config);
-                            console.log(response)
-                            if (response.data.data && Array.isArray(response.data.data)) {
-                                const newvideoClips = await Promise.all(response.data.data.map(async (clip) => {
-                                    // Split the time string into parts
-                                    const timeParts = clip.duration.split(':');
-
-                                    // Extract hours, minutes, seconds
-                                    const hours = parseInt(timeParts[0]);
-                                    const minutes = parseInt(timeParts[1]);
-                                    const seconds = parseInt(timeParts[2].split('.')[0]);
-
-                                    // Format the time in HH:MM:SS
-                                    const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-                                    return {
-                                        id: clip.id,
-                                        src: clip.clip_url,
-                                        title: clip.title,
-                                        description: clip.summary,
-                                        status: clip.status,
-                                        time: formattedTime,
-                                        type: clip.type,
-                                    };
-                                }));
-                                setNewvideoClips(newvideoClips);
-                                let data1 = JSON.stringify({
-                                    "id": currentProjectId,
-                                });
-
-                                let config1 = {
-                                    method: 'post',
-                                    maxBodyLength: Infinity,
-                                    url: 'https://api.getklippie.com/v1/project/get-by-id',
-                                    headers: {
-                                        'accept': 'application/json',
-                                        'Content-Type': 'application/json',
-                                        'Authorization': 'Bearer ' + token
-                                    },
-                                    data: data1
-                                };
-
-                                axios.request(config1)
-                                    .then((response1) => {
-                                        console.log(JSON.stringify(response.data));
-                                        const title = response1.data.data.title;
-                                        const description = response1.data.data.description;
-                                        const src = response1.data.data.video_url;
-                                        const id = response1.data.data.id;
-
-                                        // Calculate the duration of the video (assuming src is the video URL)
-                                        const videoElement = document.createElement('video');
-                                        videoElement.src = src;
-                                        videoElement.onloadedmetadata = async () => {
-                                            const durationInSeconds = Math.floor(videoElement.duration);
-
-                                            // Convert duration to HH:MM:SS format
-                                            const hours = Math.floor(durationInSeconds / 3600);
-                                            const minutes = Math.floor((durationInSeconds % 3600) / 60);
-                                            const seconds = durationInSeconds % 60;
-                                            const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                                            const newMainVideo = [
-                                                { title, description, src, id, time: formattedDuration }
-                                            ];
-
-                                            try {
-                                                updateMainVideo(newMainVideo); 
-                                                setProjectId(null);
-                                                setIsSuggetionpopupOpen(false);
-                                            } catch (error) {
-                                                console.error("Error updating main video:", error);
-                                            }
-                                        };
-                                    })
-                                    .catch((error) => {
-                                        console.log(error);
-                                    });
-                                setAccordionVisible(true);
-                                setError('');
-                                console.log('New video clips:', newvideoClips);
-                            } else {
-                                console.log('Invalid API response:', response.data);
-                                setAccordionVisible(false);
-                                setProjectId('');
-                                // setError('We could not find the clips for this project');
-                                enqueueSnackbar('We could not find the clips for this project', {
-                                    variant: 'error',
-                                    autoHideDuration: 1500,
-                                    anchorOrigin: {
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    },
-                                });
-                            }
+                        if (message === 'Clips generated') {
+                            navigate(`/dashboard/${currentProjectId}`);
+                            setProjectId('')
+                            setError('');
+                            setClipsFoundStatus(true);
                         }
 
                         // Check if the message is not in the list of unique messages
@@ -288,43 +206,43 @@ const Steps = ({ projectId: propProjectId, newhistoryvideoClips, errorMessage })
                 };
 
                 fetchData();
-            }, 10000); // 10 seconds
-
-            // Clean up the interval when the component unmounts or when projectId/token change
+            }, 10000);
             return () => clearInterval(intervalId);
         }
-    }, [currentProjectId, uniqueMessages, enqueueSnackbar, setIsApiCompleted]);
-
-    // useEffect(() => {
-    //     setProjectId(propProjectId);
-    // }, [propProjectId])
+        //eslint-disable-next-line
+    }, [currentProjectId, uniqueMessages, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus]);
 
     useEffect(() => {
-        const token = getToken();
-        if (propProjectId && token) {
-            if (!apiCallsMadeRef.current || prevProjectIdRef.current !== propProjectId) {
+        setProjectId(currentProjectId);
+    }, [currentProjectId])
+
+    useEffect(() => {
+
+        if (cloudinaryResponse && userToken) {
+            if (!apiCallsMadeRef.current || prevProjectIdRef.current !== cloudinaryResponse) {
                 apiCallsMadeRef.current = true;
-                prevProjectIdRef.current = propProjectId;
-                makeApiCalls(propProjectId, token);
+                prevProjectIdRef.current = cloudinaryResponse;
+                makeApiCalls(cloudinaryResponse, userToken);
             }
         }
         //eslint-disable-next-line
-    }, [propProjectId, allApiCompleted]);
+    }, [cloudinaryResponse, allApiCompleted, userToken]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="flex items-baseline justify-center">
+            <Toaster position="top-center" />
             {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
-            <div className="text-center">
+            <div className="text-center w-full">
                 {isSuggetionpopupOpen && (
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
                 )}
                 {!accordionVisible && (
-                    <HomeScreen />
+                    <DragDropModal className="z-50" />
                 )}
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
             {closeButton}
-            {!isLoading && newvideoClips.length > 0 && accordionVisible && (
+            {!isLoading && accordionVisible && (
                 <AccordionSection videoClips={newvideoClips} />
             )}
         </div>

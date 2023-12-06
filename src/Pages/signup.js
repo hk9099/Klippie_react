@@ -10,14 +10,14 @@ import * as Yup from "yup";
 import axios from "axios";
 // import googleicon from "../assets/images/google.png";
 import "../assets/css/signup.css";
-import { useSnackbar } from 'notistack';
 import Hiiii from "../assets/images/hi_40x40.gif";
 // import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 // import { auth } from "../components/config";
+import ToastNotification from "../components/ToastNotification";
+import { Toaster } from 'react-hot-toast';
 
 function Signup({ errors, touched }) {
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
   // eslint-disable-next-line no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -87,19 +87,21 @@ function Signup({ errors, touched }) {
   //     });
   // };
 
+  
+
   const validationSchema = Yup.object({
     name: Yup.string()
       .required("Name is required")
       .max(50, "Name is too long - should be 50 chars maximum."),
-    email: Yup.string()
+      email: Yup.string()
       .email("Invalid email address")
       .required("Email is required")
       .max(50, "Email is too long - should be 50 chars maximum.")
       .matches(
-        /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+        /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
         "Invalid email address"
       )
-      .lowercase(),
+      .lowercase(),    
     password: Yup.string()
       .required("Password is required")
       .min(8, "Password is too short - should be 8 chars minimum.")
@@ -114,44 +116,61 @@ function Signup({ errors, touched }) {
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     setLoading(true);
     const _authemail = btoa(values.email);
     localStorage.setItem("_authemail", _authemail);
-    const payload = {
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      confirmPassword: values.confirmPassword,
+    let loc = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'https://geolocation-db.com/json/',
+      headers: {}
     };
-    axios
-      .post(process.env.REACT_APP_HOSTING_URL + "/v1/auth/signup", payload)
-      .then((response) => {
-        console.log(response, "response");
-        enqueueSnackbar(response.data.message, {
-          variant: 'success',
-          autoHideDuration: 1500
-        });
-        var signupToken = response.data.data;
-        localStorage.setItem("signupToken", signupToken);
-        navigate("/otpVarification");
-      })
-      .catch((error) => {
-        console.log(error,);
-        enqueueSnackbar(error.response.data.detail, {
-          variant: 'error',
-          autoHideDuration: 1500
-        });
-      })
-      .finally(() => {
-        console.log("finally");
-        setLoading(false);
-        setSubmitting(false);
+    
+    try {
+      const response = await axios.request(loc);
+      console.log(response, "response");
+  
+      const payload = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        device_id: response.data.IPv4,
+      };
+  
+      const signupResponse = await axios.post("https://dev-api.getklippie.com/v1/auth/signup", payload);
+      console.log(signupResponse, "response");
+      ToastNotification({
+        message: signupResponse.data.message,
+        type: "success",
       });
+      var signupToken = signupResponse.data.data;
+      localStorage.setItem("signupToken", signupToken);
+      navigate("/otpVarification");
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        ToastNotification({
+          message: error.response.data.detail,
+          type: "error",
+        });
+      } else {
+        ToastNotification({
+          message: "An error occurred",
+          type: "error",
+        });
+      }
+    } finally {
+      console.log("finally");
+      setLoading(false);
+      setSubmitting(false);
+    }
   };
 
   return (
     <>
+      <Toaster position="top-center" />
       <div className=" h-full w-full">
         <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
           <div className="left_heading text-center">
@@ -171,7 +190,7 @@ function Signup({ errors, touched }) {
                 }}
               />
             </h1>
-            <p className="text-gray-500 mt-2">Please Fill The Below Details</p>
+            <p className="text-gray-500 mt-2">Get Started - it's free. No credit card needed.</p>
           </div>
           <div className="mt-10 form_layout">
             <Formik
@@ -182,7 +201,7 @@ function Signup({ errors, touched }) {
               {({ isSubmitting, errors, touched }) => (
                 <Form className="flex flex-col justify-center items-center">
                   <div className="nameinput form_layout mb-3">
-                    <label className="text-gray-500">Enter your name</label>
+                    <label className="text-gray-500">Full Name</label>
                     <div className="inputbox-container mt-1">
                       <Field
                         type="text"
@@ -204,7 +223,7 @@ function Signup({ errors, touched }) {
 
                   <div className="emailinput form_layout mb-3">
                     <label className="text-gray-500 emailinput">
-                      Enter your email
+                      Email
                     </label>
                     <div className="inputbox-container mt-1">
                       <Field
@@ -267,7 +286,7 @@ function Signup({ errors, touched }) {
                   </div>
                   <div className="passwordinput form_layout mb-3">
                     <label className="text-gray-500 mt-2">
-                      Confirm your password{" "}
+                    Re-enter Your Password{" "}
                       <RiInformationLine
                         data-tooltip-id="confirm-password-tooltip"
                         className="password-tooltip ml-2"

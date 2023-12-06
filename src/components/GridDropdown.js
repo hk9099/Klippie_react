@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import qs from 'qs';
+import { TokenManager } from '../components/getToken.js';
 
 
 export default function DownloadButton({ status, clipId }) {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const userToken = TokenManager.getToken()[1]
 
     // Define the default selected item and its associated colors
     const defaultSelectedItem = status;
@@ -18,32 +20,19 @@ export default function DownloadButton({ status, clipId }) {
         setDropdownOpen(!isDropdownOpen);
     };
 
-    const getToken = () => {
-        const encodedToken = localStorage.getItem('_sodfhgiuhih');
-
-        if (encodedToken) {
-            const decodedToken = atob(encodedToken);
-            const userInfo = JSON.parse(decodedToken);
-            return userInfo.token.access_token;
-        } else {
-            return null;
-        }
-    };
-
     const handleItemClick = async (item) => {
         setSelectedItem(item);
         setDropdownOpen(false);
-        const token = getToken();
         try {
             //eslint-disable-next-line
-            const response = await axios.post('https://api.getklippie.com/v1/clip/status-update', qs.stringify({
+            const response = await axios.post('https://dev-api.getklippie.com/v1/clip/status-update', qs.stringify({
                 'status': item,
                 'clip_id': clipId
             }), {
                 headers: {
                     'accept': 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${userToken}`
                 }
             });
             // console.log(JSON.stringify(response.data));

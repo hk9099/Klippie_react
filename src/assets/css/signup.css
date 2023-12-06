@@ -57,12 +57,12 @@
 }
 
 .custom-tooltip {
-    background-color: #917bea;
-    font-size: 14px;
-    width: 450px;
-    text-align: center;
-    font-family: Poppins, sans-serif;
-    font-weight: bold;
+    background-color: #917bea!important;
+    font-size: 14px!important;
+    width: 450px!important;
+    text-align: center!important;
+    font-family: Poppins, sans-serif!important;
+    font-weight: bold!important;
 }
 
 .password-tooltip {
@@ -302,7 +302,7 @@
     right: auto;
 }
 
-.emailinput:hover label,
+/* .emailinput:hover label,
 .emailinput:hover input::placeholder {
     color: #917bea;
 }
@@ -328,7 +328,7 @@
 .passwordinput:hover input:focus {
     background-color: #b7a9f185;
     color: #000;
-}
+} */
 
 .or_block {
     margin: 15px 0;

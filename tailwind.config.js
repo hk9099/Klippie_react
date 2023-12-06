@@ -2,7 +2,9 @@ module.exports = {
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
     "./src/**/*.{html,js}",
-    "./node_modules/tw-elements/dist/js/**/*.js"
+    "./node_modules/tw-elements/dist/js/**/*.js",
+    "./node_modules/flowbite/**/*.js",
+    'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'
   ],
 
   // enable dark mode via class strategy
@@ -13,6 +15,14 @@ module.exports = {
       backgroundColor: {
         'custom-color': '#0D0E20',
         'custom-color-dark': '#0D0E20',
+        'custom-modal-bg-color' : '#B3B5E2',
+        'custom-modal-text-color' : '#020913'
+      },
+      borderWidth: {
+        'gradient': '4px',
+      },
+      borderColor: {
+        'gradient': 'linear-gradient(to right, #FF0000, #00FF00)', // Define your gradient colors here
       },
       // colors: {
       //   black: '#09090c',
@@ -34,6 +44,7 @@ module.exports = {
   },
   plugins: [
     require('tailwind-scrollbar'),
-    require("tw-elements/dist/plugin.cjs")
+    require("tw-elements/dist/plugin.cjs"),
+    require('flowbite/plugin')
   ],
 }

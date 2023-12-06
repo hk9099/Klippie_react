@@ -1,22 +1,13 @@
 import axios from 'axios';
+import { TokenManager } from '../components/getToken.js';
 
-var HOSTINGURL = 'https://api.getklippie.com';
+var HOSTINGURL = 'https://dev-api.getklippie.com';
 
-const getToken = () => {
-    const encodedToken = localStorage.getItem('_sodfhgiuhih');
+async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL) {
 
-    if (encodedToken) {
-        const decodedToken = atob(encodedToken);
-        const userInfo = JSON.parse(decodedToken);
-        return userInfo.token.access_token;
-    } else {
-        return null;
-    }
-};
+    const userToken = TokenManager.getToken()[1]
 
-async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setLinesId) {
-    const token = getToken();
-    if (!token) {
+    if (!userToken) {
         console.error('No token available');
         return;
     }
@@ -29,21 +20,22 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, 
             {
                 headers: {
                     'accept': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${userToken}`,
                 },
             }
         );
 
         // console.log('Projects:', response.data);
         const projectData = response.data.data;
+        console.log('Projects:', projectData);
         setProjectData(projectData);
         if (projectData.length > 0) {
             setLines(projectData.map(project => project.name));
+            setVideoURL(projectData.map(project => project.video_url));
         }
         setIsLoadingHistory(false);
 
     } catch (error) {
-        console.error('API Error:', error);
         setIsLoadingHistory(false);
     }
 }

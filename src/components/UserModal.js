@@ -4,7 +4,8 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { Form, Field, ErrorMessage } from 'formik';
 import { FiEdit2 } from 'react-icons/fi';
-import { useSidebarContext } from './SidebarContext';
+import { useSidebarContext } from '../context/SidebarContext';
+import { TokenManager } from '../components/getToken.js';
 
 const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) => {
     const { setRefreshProfile } = useSidebarContext();
@@ -13,28 +14,12 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
     const [successMessage, setSuccessMessage] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+    const userToken = TokenManager.getToken()[1]
     const validationSchema = Yup.object({
         userNickname: Yup.string().required('Required'),
     });
-
     
-
-    var HOSTINGURL = 'https://api.getklippie.com';
-
-    const getToken = () => {
-        const encodedToken = localStorage.getItem('_sodfhgiuhih');
-
-        if (encodedToken) {
-            const decodedToken = atob(encodedToken);
-            const userInfo = JSON.parse(decodedToken);
-            return userInfo.token.access_token;
-        } else {
-            return null;
-        }
-    };
-
-    const token = getToken();
-
+    var HOSTINGURL = 'https://dev-api.getklippie.com';
 
     const formik = useFormik({
         initialValues: {
@@ -51,10 +36,10 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
             let config = {
                 method: 'post',
                 maxBodyLength: Infinity,
-                url: 'https://api.getklippie.com/v1/auth/upload-profile-image',
+                url: 'https://dev-api.getklippie.com/v1/auth/upload-profile-image',
                 headers: {
                     'accept': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${userToken}`,
                 },
                 data: data
             };
@@ -75,7 +60,7 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
                         headers: {
                             'accept': 'application/json',
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
+                            'Authorization': `Bearer ${userToken}`
                         },
                         data: data
                     };
@@ -83,7 +68,7 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
                     axios
                         .request(config)
                         .then((response) => {
-                            setRefreshProfile(true); 
+                            setRefreshProfile(true);
                             setSuccessMessage('Profile updated successfully');
                             setTimeout(() => {
                                 setSuccessMessage(null);
