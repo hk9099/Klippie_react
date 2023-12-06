@@ -75,7 +75,7 @@ const rejectStyle = {
 };
 
 function HomeScreen({ userName, creaditBalance }) {
-    const [isDragging, setIsDragging] = useState(false);
+    // const [isDragging, setIsDragging] = useState(false);
     const { setCloudinaryResponse } = useCloudinary();
     const [isFileUploaded, setIsFileUploaded] = useState();
     const [isFileUploadedInput, setIsFileUploadedInput] = useState();

@@ -16,9 +16,9 @@ import { useFileSelected } from "../context/SelectionContext.js";
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
-const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userName ,creaditBalance}) => {
+const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance }) => {
     console.log(cloudinaryResponse, 'cloudinaryResponse');
-    const { setClipsFoundStatus ,setShowHomeStatus ,setProjectCreated} = useClipsFoundStatus();
+    const { setClipsFoundStatus, setShowHomeStatus, setProjectCreated } = useClipsFoundStatus();
     const { fileDelete } = useFileSelected();
     const userToken = TokenManager.getToken()[1]
     const navigate = useNavigate();
@@ -48,12 +48,12 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
             setAccordionVisible(false);
             navigate(`/dashboard`);
         }
-    }, [location , navigate]);
+    }, [location, navigate]);
 
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         console.log(newhistoryvideoClips, 'updatedVideoClips');
-    }, [newhistoryvideoClips,fileDelete]);
+    }, [newhistoryvideoClips, fileDelete]);
 
 
 
@@ -71,6 +71,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
         </button>
     ) : null;
 
+
     const makeApiCalls = async (cloudinaryResponse, token) => {
 
         setIsApiCompleted(false);
@@ -82,21 +83,23 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
 
             setAllApiCompleted(false);
             try {
-                // let data = JSON.stringify({
-                //     "public_id": cloudinaryResponse.public_id,
-                //     "width": cloudinaryResponse.width,
-                //     "height": cloudinaryResponse.height,
-                //     "format": cloudinaryResponse.format,
-                //     "resource_type": cloudinaryResponse.resource_type,
-                //     "duration": cloudinaryResponse.duration,
-                //     "secure_url": cloudinaryResponse.secure_url,
-                //     "audio": cloudinaryResponse.audio,
-                //     "video": cloudinaryResponse.video,
-                // });
+                var data
+                if (process.env.NODE_ENV === 'production') {
+                    data = JSON.stringify({
+                        "public_id": cloudinaryResponse.public_id,
+                        "width": cloudinaryResponse.width,
+                        "height": cloudinaryResponse.height,
+                        "format": cloudinaryResponse.format,
+                        "resource_type": cloudinaryResponse.resource_type,
+                        "duration": cloudinaryResponse.duration,
+                        "secure_url": cloudinaryResponse.secure_url,
+                        "audio": cloudinaryResponse.audio,
+                        "video": cloudinaryResponse.video,
+                    });
+                } else if (process.env.NODE_ENV === 'development') {
+                    data = { "public_id": "test1700716396260", "width": 640, "height": 360, "format": "mp4", "resource_type": "video", "duration": 955.617, "secure_url": "https://res.cloudinary.com/delkyf33p/video/upload/v1700716429/test1700716396260.mp4", "audio": { "codec": "aac", "bit_rate": "95999", "frequency": 44100, "channels": 2, "channel_layout": "stereo" }, "video": { "pix_format": "yuv420p", "codec": "h264", "level": 30, "profile": "Main", "bit_rate": "269160", "dar": "16:9", "time_base": "1/30000" } }
+                }
 
-                let data = {"public_id":"test1700716396260","width":640,"height":360,"format":"mp4","resource_type":"video","duration":955.617,"secure_url":"https://res.cloudinary.com/delkyf33p/video/upload/v1700716429/test1700716396260.mp4","audio":{"codec":"aac","bit_rate":"95999","frequency":44100,"channels":2,"channel_layout":"stereo"},"video":{"pix_format":"yuv420p","codec":"h264","level":30,"profile":"Main","bit_rate":"269160","dar":"16:9","time_base":"1/30000"}}
-
-                console.log(data, 'dataaaaaaaaaaaaaaaaaaaaaaaa');
 
                 let config = {
                     method: 'post',
@@ -112,7 +115,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
 
                 const response = await axios.request(config);
                 setProjectCreated(true);
-                
+
                 let data1 = qs.stringify({
                     'project_id': response.data.data.id
                 });
@@ -133,7 +136,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
                 setProjectId(response1.data.data.id);
             } catch (error) {
                 console.log(error.response.data.error, 'error.response.data.message');
-                    ToastNotification({message: error.response.data.error, type: 'error'});
+                ToastNotification({ message: error.response.data.error, type: 'error' });
             }
             setAllApiCompleted(true);
             setIsSuggetionpopupOpen(true);
@@ -142,11 +145,11 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
 
         } catch (error) {
             if (error.name === 'AbortError') {
-                    ToastNotification({message: 'API call aborted', type: 'loading'});
+                ToastNotification({ message: 'API call aborted', type: 'loading' });
             } else {
                 // Handle error
                 console.error('API call failed:', error.message);
-                    ToastNotification({message: 'Clip creation Stoped', type: 'error'});
+                ToastNotification({ message: 'Clip creation Stoped', type: 'error' });
             }
         } finally {
             setIsLoading(false);
@@ -239,7 +242,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse ,userNam
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>
             {closeButton}
-            {!isLoading && accordionVisible &&  (
+            {!isLoading && accordionVisible && (
                 <AccordionSection videoClips={newvideoClips} />
             )}
         </div>
