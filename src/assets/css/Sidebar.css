@@ -319,6 +319,7 @@ filter: blur(150px);
 
 .dx-texteditor-input{
   background-color: transparent!important;
+  padding: 10px!important;
 }
 
 .dx-datagrid-pager{
@@ -337,10 +338,10 @@ filter: blur(150px);
   color: white!important;
 }
 
-.dx-texteditor-input{
+/* .dx-texteditor-input{
   color: white!important;
   background-color: transparent!important;
-}
+} */
 
 .dx-dropdowneditor-icon::before{
   color: white!important;
@@ -404,4 +405,13 @@ filter: blur(150px);
 
 .Video{
   vertical-align: middle!important;
+}
+
+.dx-texteditor-input-auto-resize{
+  overflow: auto!important;
+}
+
+.dx-overlay-shader {
+  pointer-events: auto;
+  background-color: rgb(56 54 54 / 64%);
 }

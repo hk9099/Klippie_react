@@ -186,3 +186,13 @@
   .dx-datagrid-pager {
     border-top: none!important;
 }
+
+/* .dx-field-item-label{
+    display: none!important;
+} */
+
+[type='text']:focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: transparent!important;
+    box-shadow: none!important;
+}

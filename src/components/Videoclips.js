@@ -1,80 +1,55 @@
-import React, { useState,useRef ,useEffect} from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import DataGrid, {
   Column,
   Selection,
   Paging,
   Pager,
-  Item,
   LoadPanel,
   // Editing,
 } from "devextreme-react/data-grid";
+import { Button } from 'devextreme-react/button';
 import "devextreme/dist/css/dx.light.css";
+import 'devextreme-react/text-area';
 import VideoPlayer from "../Pages/videoplayer.js";
 import DropDownButton from "../components/GridDropdown.js";
 import { Popup } from "devextreme-react/popup";
-import { Form } from "devextreme-react/form";
+import Form, { Item, GroupItem, Label } from 'devextreme-react/form';
+import TextArea from 'devextreme-react/text-area';
 import { useFileSelected } from "../context/SelectionContext.js";
 import CloudinaryVideoPlayer from "../components/cloudinaryVideoPlayer.js";
 // import { LuDownload } from "react-icons/lu";
 // import VideoDownload from "./VideoDownload.js";
+import { TokenManager } from '../components/getToken.js';
+import axios from 'axios';
+import qs from 'qs';
 
 const Videoclips = ({ videoClips, setVideoCount }) => {
-  const { setFileselected ,setFileselecteddata} = useFileSelected();
+  const { projectId: routeProjectId } = useParams();
+  console.log(routeProjectId, "routeProjectId");
+  const { setFileselected, setFileselecteddata } = useFileSelected();
+  const userToken = TokenManager.getToken()[1];
   //eslint-disable-next-line
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
-  const isDataLoadedRef = useRef(false); 
-  // const [modalVisible, setModalVisible] = useState(false);
+  const [isPopupVisible, setPopupVisibility] = useState(true);
+  const togglePopup = () => {
+    setPopupVisibility(!isPopupVisible);
+  };
+  const isDataLoadedRef = useRef(false);
 
-  // const handleDownloadClick = () => {
-  //   setModalVisible(true); // Show the download modal
-  // };
-
-  // const handleDownloadComplete = () => {
-  //   setModalVisible(false); // Hide the download modal when download is complete
-  // };
-
-  // const handleDescriptionCellClick = (rowData) => {
-  //   setSelectedRowData(rowData.data);
-  //   setPopupVisible(true);
-  // };
-
-  //eslint-disable-next-line
-  // const handleClosePopup = () => {
-  //   setSelectedRowData(null);
-  //   setPopupVisible(false);
-  // };
-
-  
 
 
 
   useEffect(() => {
-    // Update the video count whenever the videoClips data changes
     setVideoCount(videoClips.length);
 
-    // Load videoClips data only once when it's available
     if (!isDataLoadedRef.current && videoClips.length > 0) {
       isDataLoadedRef.current = true;
     }
   }, [videoClips, setVideoCount]);
-console.log(videoClips, "videoClips");
+  console.log(videoClips, "videoClips");
   return (<>
-    {/* {selectedRows.length > 0 && (
-      <button
-        className="fixed bottom-0 right-0 m-4 p-4 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 z-50"
-        onClick={handleDownloadClick}
-      ><LuDownload />
-      </button>
-    )} */}
-
-    {/* {modalVisible && (
-      <VideoDownload
-        selectedRows={selectedRows}
-        onComplete={handleDownloadComplete}
-      />
-    )} */}
-
     <DataGrid
       dataSource={videoClips}
       showBorders={true}
@@ -84,11 +59,18 @@ console.log(videoClips, "videoClips");
       showRowLines={true}
       onSelectionChanged={(e) => {
         if (e.selectedRowsData.length > 0) {
-          setFileselected(true); 
+          setFileselected(true);
           setFileselecteddata(e.selectedRowsData);
         } else {
           setFileselected(false);
           setFileselecteddata([]);
+        }
+      }}
+      onCellClick={(e) => {
+        if (e.column.dataField === "description") {
+          console.log(e.data, "e.data");
+          setSelectedRowData(e.data);
+          setPopupVisible(true);
         }
       }}
     >
@@ -98,7 +80,7 @@ console.log(videoClips, "videoClips");
         selectAllMode="allPages"
         showCheckBoxesMode="always"
       />
-      <Paging defaultPageSize={3} 
+      <Paging defaultPageSize={3}
       />
       <Pager
         showPageSizeSelector={true}
@@ -113,7 +95,7 @@ console.log(videoClips, "videoClips");
         alignment='center'
         cssClass="Video"
         cellRender={(rowData) =>
-            // <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
+          // <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
           <CloudinaryVideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
         }
         width={415}
@@ -138,7 +120,7 @@ console.log(videoClips, "videoClips");
           </div>
         )}
       />
-     <Column
+      <Column
         dataField="description"
         alignment='center'
         width="auto"
@@ -155,6 +137,7 @@ console.log(videoClips, "videoClips");
           </div>
         )}
         allowSorting={false}
+        allowEditing={true}
       />
       <Column
         dataField="time"
@@ -178,27 +161,81 @@ console.log(videoClips, "videoClips");
         resizable={true}
         columnAutoWidth={true}
         cellRender={(rowData) => (
-          <div style={{ textAlign: "center" , color: '#000!important'}}>
-              <DropDownButton status={rowData.data.status} clipId={rowData.data.id} />
+          <div style={{ textAlign: "center", color: '#000!important' }}>
+            <DropDownButton status={rowData.data.status} clipId={rowData.data.id} />
           </div>
         )}
         width='auto'
         allowSorting={false}
       />
-      <Popup
-        visible={popupVisible}
-        onHiding={() => setPopupVisible(false)}
-        title="Row Details"
-        width={400}
-        height={300}
-      >
-        <Form formData={selectedRowData} readOnly={true}>
-          <Item dataField="title" />
-          <Item dataField="description" />
-          <Item dataField="time" />
-        </Form>
-      </Popup>
     </DataGrid>
+    <Popup
+      visible={popupVisible}
+      onHiding={() => setPopupVisible(false)}
+      hideOnOutsideClick={true}
+      showCloseButton={true}
+      title="Description"
+      resizeEnabled={true}
+      width={500}
+      height={'auto'}
+      style={{
+        padding: "20px",
+      }}
+    >
+      <TextArea
+        value={selectedRowData?.description}
+        defaultValue={selectedRowData?.description}
+        // inputAttr={{ maxLength: 500 }}
+        autoResizeEnabled={true}
+        height={'200'}
+        valueChangeEvent="keyup"
+        stylingMode="outlined"
+        hoverStateEnabled={true}
+        placeholder="Enter Description"
+        style={{ padding: "0px" }}
+        onChange={(e) => {
+          console.log(e.event.target.value, "e.event.target.value");
+          setSelectedRowData({
+            ...selectedRowData,
+            description: e.event.target.value,
+          });
+        }}
+      />
+      <Button
+        text="Save"
+        type="success"
+        stylingMode="contained"
+        onClick={() => {
+          console.log(selectedRowData, "selectedRowData");
+          let data = qs.stringify({
+            'id': routeProjectId,
+            'description': selectedRowData?.description,
+          });
+          
+          let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://dev-api.getklippie.com/v1/project/update',
+            headers: { 
+              'accept': 'application/json', 
+              'Content-Type': 'application/x-www-form-urlencoded', 
+              'Authorization': 'Bearer '+userToken
+            },
+            data : data
+          };
+          
+          axios.request(config)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+          setPopupVisible(false);
+        }}
+        style={{ marginTop: "10px" }}
+      />
+    </Popup>
   </>
   );
 };

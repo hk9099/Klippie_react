@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DataGrid, { Column } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Editing } from 'devextreme-react/data-grid';
 import 'devextreme/dist/css/dx.light.css';
 import { MainVideo } from '../components/data.js';
 // import VideoPlayer from '../Pages/videoplayer.js';
@@ -29,18 +29,22 @@ const Mainvideo = () => {
         sorting={{ mode: 'none' }}
       // onSelectionChanged={onSelectionChanged}
       >
+        <Editing
+          allowUpdating={false}
+          allowAdding={false}
+          allowDeleting={false}
+          mode="popup" />
         {/* <Selection mode="multiple" selectAllMode="allPages" showCheckBoxesMode="always" visible={false} /> */}
         <Column
           dataField="video"
           caption="Video"
           alignment='center'
           cssClass='Video'
-          cellRender={(rowData) => 
-             <CloudinaryVideoPlayer src={rowData.data.src} title={rowData.data.title} type={rowData.data.type} setMainVideo={mainVideo} />
+          cellRender={(rowData) =>
+            <CloudinaryVideoPlayer src={rowData.data.src} title={rowData.data.title} type={rowData.data.type} setMainVideo={mainVideo} />
             //  <CloudinaryVideoPlayer src={rowData.data.src} title={rowData.data.title} type={rowData.data.type} setMainVideo={mainVideo}} />
-
-            }
-            width={450}
+          }
+          width={450}
         />
         <Column
           dataField="title"

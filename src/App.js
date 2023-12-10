@@ -21,10 +21,11 @@ const Layout = lazy(() => import('./Pages/Layout.js'));
 const Steps = lazy(() => import('./Pages/Steps.js'));
 const HomeScreen = lazy(() => import('./Pages/HomeScreen.js'));
 const PricingCardsContainer = lazy(() => import('./Pages/PricingCardsContainer.js'));
-// const YouTube = lazy(() => import('./components/YouTube.js'));
+const YouTube = lazy(() => import('./components/youtubevideo.js'));
 const Editor = lazy(() => import('./components/Editor.js'));
 const CloudinaryMediaEditor = lazy(() => import('./components/mediaEditor.js'));
 const CloudinaryVideoPlayer = lazy(() => import('./components/cloudinaryVideoPlayer.js'));
+const Login = lazy(() => import('./components/login.js'));
 const NotFoundPage = lazy(() => import('./Pages/NotFoundPage.js'));
 function App() {
   const { projectId } = useParams();
@@ -83,8 +84,9 @@ function App() {
                         <Route path="/Test" element={<Test />} />
                         <Route path="/pricing" element={<PricingCardsContainer />} />
                         <Route path="/editor/:clipId" element={<Editor />} />
-                        <Route path="/youtube" element={<CloudinaryMediaEditor />} />
+                        <Route path="/youtube" element={<YouTube />} />
                         <Route path="/cloudinaryVideoPlayer" element={<CloudinaryVideoPlayer />} />
+                        <Route path="/login" element={<Login />} />
                       </Routes>
                     </CloudinaryProvider>
                   </SidebarProvider>

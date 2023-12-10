@@ -122,7 +122,7 @@ function Editor() {
                         myEditor.on('export', async (data) => {
                             myEditor.hide();
                             setShowLoader(true);
-                            console.log('Exported data:', data);
+                            console.log('Exported data:', data.transformation);
 
                             // const downloadUrl = data.assets[0].downloadUrl;
                             const secureUrl = data.assets[0].url;
@@ -176,8 +176,7 @@ function Editor() {
                             let updateData = JSON.stringify({
                                 "id": id,
                                 "clip_url": secureUrl,
-                                "start_time": formattedStartTime,
-                                "end_time": formattedEndTime
+                                "transformations": data.transformation
                             });
 
                             let config = {
@@ -194,7 +193,7 @@ function Editor() {
 
                             try {
                                 const response = await axios(config);
-                                console.log(response, 'response');
+                                console.log(response, 'responseeeeeeeeeee');
                                 myEditor.hide();
                                 setShowProgressBar(false);
                                 setShowLoader(false);
