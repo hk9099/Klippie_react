@@ -209,6 +209,7 @@ import { BiSolidEdit } from 'react-icons/bi';
 // import { Tooltip } from 'react-tooltip';
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
+import { useFileSelected } from "../context/SelectionContext.js";
 
 export default function CloudinaryVideoPlayer({
     src,
@@ -223,6 +224,7 @@ export default function CloudinaryVideoPlayer({
     cloudName,
     videoId,
 }) {
+    const {setPageLoaded} = useFileSelected();
     const playerRef = useRef(null);
     const videoRef = useRef(null);
     // console.log(setMainVideo, 'setMainVideo');
@@ -281,12 +283,16 @@ export default function CloudinaryVideoPlayer({
         }
     };
 
+    
+
     const handleMediaEditorClick = () => {
         const mediaEditorTab = window.open(`/editor/${clipId}`, '_blank');
         const tabClosedListener = () => {
-            console.log('Media editor tab closed');
-            window.location.reload();
+            console.log('Media editor tab closeddddddd');
+            // window.location.reload();
+            setPageLoaded(true);
             mediaEditorTab.removeEventListener('beforeunload', tabClosedListener);
+            
         };
         mediaEditorTab.addEventListener('beforeunload', tabClosedListener);
     };

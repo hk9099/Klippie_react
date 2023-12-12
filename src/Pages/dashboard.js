@@ -22,7 +22,8 @@ import { Toaster } from 'react-hot-toast';
 
 
 export default function Dashboard() {
-  const { fileDelete } = useFileSelected();
+  const { fileDelete,pageLoaded ,setPageLoaded} = useFileSelected();
+  console.log(pageLoaded, 'pageLoaded');
   const location = useLocation();
   const userToken = TokenManager.getToken()[1]
   const loginCount = TokenManager.getToken()[0]
@@ -42,7 +43,7 @@ export default function Dashboard() {
     return () => {
       window.removeEventListener('mediaEditorClosed', handleMediaEditorClosed);
     };
-  }, []);
+  }, [setPageLoaded]);
 
   // Reset the state or perform other actions when the media editor tab is closed
   useEffect(() => {
@@ -171,6 +172,7 @@ export default function Dashboard() {
       setClipsFoundStatus(true);
       navigate(`/dashboard/${routeProjectId}`);
     }
+
     const handleProjectClick = async (index) => {
 
       let maindata = JSON.stringify({
@@ -246,12 +248,18 @@ export default function Dashboard() {
         }));
         setNewvideoClips(newvideoClips);
         setAccordionVisible(true);
+        setPageLoaded(false);
       }
     };
 
-    handleProjectClick()
+    
+    if (pageLoaded === true) {
+      handleProjectClick()
+    } else {
+      handleProjectClick()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo , fileDelete]);
+  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo , fileDelete,projectId,pageLoaded]);
 
 
 
@@ -263,7 +271,7 @@ export default function Dashboard() {
       setAccordionVisible(false);
     }
     setProjectId(projectId);
-  }, [projectId]);
+  }, [projectId , pageLoaded]);
 
   return (
     <div className="h-screen" style={{

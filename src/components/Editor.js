@@ -44,6 +44,22 @@ function Editor() {
         }
     }
 
+    useEffect(() => {
+        var button = document.querySelector('.iMAXtE');
+        console.log(button, 'button');
+        // Check if the button is found
+        if (button) {
+            // Add a click event listener to the button
+            button.addEventListener('click', function () {
+                // Perform actions when the button is clicked
+                console.log('Button clicked!');
+                
+            });
+        } else {
+            console.log('Button not found');
+        }
+    }, []);
+
 
     useEffect(() => {
         if (!hasMounted.current) {
@@ -197,7 +213,8 @@ function Editor() {
                                 'id': id,
                                 'title': '',
                                 'summary': '',
-                                'transformations': data.transformation
+                                'transformations': data.transformation,
+                                'clip_url': secureUrl
                             });
 
                             let config = {

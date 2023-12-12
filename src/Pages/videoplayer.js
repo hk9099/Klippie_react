@@ -110,7 +110,6 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
         const mediaEditorTab = window.open(`/editor/${clipId}`, '_blank');
         const tabClosedListener = () => {
             console.log('Media editor tab closed');
-            window.location.reload();
             mediaEditorTab.removeEventListener('beforeunload', tabClosedListener);
         };
         mediaEditorTab.addEventListener('beforeunload', tabClosedListener);
