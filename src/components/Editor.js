@@ -91,7 +91,7 @@ function Editor() {
                                     minDuration: minDurations,
                                     units: 'seconds',
                                 },
-                            },    
+                            },
                             language: {
                                 locale: 'en_US',
                                 messages: {
@@ -103,13 +103,13 @@ function Editor() {
                                     },
                                 }
                             },
-                            theme: {logo: 'https://i.ibb.co/mvnxHH1/logo.png'},
+                            theme: { logo: 'https://i.ibb.co/mvnxHH1/logo.png' },
                             transformation: {
                                 crop: 'limit',
                                 quality: 'auto',
                                 fetchFormat: 'auto',
                             },
-                            
+
                         });
 
                         myEditor.show();
@@ -173,11 +173,31 @@ function Editor() {
                             //     }
 
 
-                            let updateData = JSON.stringify({
-                                "id": id,
-                                "clip_url": secureUrl,
-                                "start_time": formattedStartTime,
-                                "end_time": formattedEndTime
+                            // let updateData = JSON.stringify({
+                            //     "id": id,
+                            //     // "clip_url": secureUrl,
+                            //     'title': '',
+                            //     'summary': '',
+                            //     "transformations": data.transformation
+                            // });
+
+                            // let config = {
+                            //     method: 'post',
+                            //     maxBodyLength: Infinity,
+                            //     url: 'https://dev-api.getklippie.com/v1/clip/update',
+                            //     headers: {
+                            //         'accept': 'application/json', 
+                            //         'Content-Type': 'application/x-www-form-urlencoded', 
+                            //         'Authorization': `Bearer ${userToken}`,
+                            //     },
+                            //     data: updateData
+                            // };
+
+                            let updatedata = qs.stringify({
+                                'id': id,
+                                'title': '',
+                                'summary': '',
+                                'transformations': data.transformation
                             });
 
                             let config = {
@@ -186,10 +206,10 @@ function Editor() {
                                 url: 'https://dev-api.getklippie.com/v1/clip/update',
                                 headers: {
                                     'accept': 'application/json',
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${userToken}`,
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                    'Authorization': 'Bearer ' + userToken,
                                 },
-                                data: updateData
+                                data: updatedata
                             };
 
                             try {
