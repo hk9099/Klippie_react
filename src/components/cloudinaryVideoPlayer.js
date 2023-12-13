@@ -208,7 +208,7 @@ import { Link } from "react-router-dom";
 import { BiSolidEdit } from 'react-icons/bi';
 // import { Tooltip } from 'react-tooltip';
 import ToastNotification from "../components/ToastNotification";
-import { Toaster } from 'react-hot-toast';
+// import { Toaster } from 'react-hot-toast';
 import { useFileSelected } from "../context/SelectionContext.js";
 
 export default function CloudinaryVideoPlayer({

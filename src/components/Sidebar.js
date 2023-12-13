@@ -20,7 +20,7 @@ import fetchUserProfile from '../components/fetchUserProfile';
 import { useCloudinary } from '../context/CloudinaryContext.js';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext';
 import { TokenManager } from '../components/getToken.js';
-import { Tooltip } from 'react-tooltip';
+// import { Tooltip } from 'react-tooltip';
 //eslint-disable-next-line
 import VideoPlayer from "../Pages/videoplayer.js";
 // import Example from "./testDropdown";
@@ -30,7 +30,7 @@ import { Toaster } from 'react-hot-toast';
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError  }) => {
   const { setCloudinaryResponse } = useCloudinary();
-  const { clipsFound } = useClipsFoundStatus();
+  // const { clipsFound } = useClipsFoundStatus();
   //eslint-disable-next-line
   const { setClipsFoundStatus, projectCreated } = useClipsFoundStatus();
   const { refreshProfile, setRefreshProfile } = useSidebarContext();

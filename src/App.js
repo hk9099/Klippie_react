@@ -31,7 +31,7 @@ function App() {
   if (process.env.NODE_ENV === 'development') {
   console.log(projectId);
   }
-    const projectIdPattern = /^dashboard\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    // const projectIdPattern = /^dashboard\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
   useEffect(() => {
     const handleContextmenu = e => {

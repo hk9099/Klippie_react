@@ -6,7 +6,7 @@ import { MainVideo } from '../components/data.js';
 import CloudinaryVideoPlayer from "../components/cloudinaryVideoPlayer.js";
 
 const Mainvideo = () => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line no-unused-vars
   const [mainVideo, setMainVideo] = useState(true);
   // const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
 

@@ -86,7 +86,7 @@ function HomeScreen({ userName, creaditBalance }) {
     const fileInputRef = useRef(null);
 
     const [acceptedFiles, setAcceptedFiles] = useState([]); // State to store accepted files
-    const [inputText, setInputText] = useState('');
+    // const [inputText, setInputText] = useState('');
     // eslint-disable-next-line no-unused-vars
     const [disabled, setDisabled] = useState(true);
 
@@ -203,10 +203,11 @@ function HomeScreen({ userName, creaditBalance }) {
         event.stopPropagation();
     };
 
-    const handleSubmit = () => {
-        // console.log("Input Text Value: " + inputText);
-        setInputText('');
-    };
+
+    // const handleSubmit = () => {
+    //     // console.log("Input Text Value: " + inputText);
+    //     setInputText('');
+    // };
 
 
     // const handleFileChange = (e) => {
