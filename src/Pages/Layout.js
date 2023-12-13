@@ -32,7 +32,9 @@ const Layout = ({ children }) => {
   const handleJoyrideCallback = (data) => {
     const { status, type } = data;
     if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
+      if (process.env.NODE_ENV === 'development') {
       console.log(data);
+      }
     } else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
       // Set cookie to mark the tour as finished
       Cookies.set("tourStatus", "finished");

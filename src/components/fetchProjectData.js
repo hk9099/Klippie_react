@@ -25,9 +25,10 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, 
             }
         );
 
-        // console.log('Projects:', response.data);
         const projectData = response.data.data;
+        if (process.env.NODE_ENV === 'development') {
         console.log('Projects:', projectData);
+        }
         setProjectData(projectData);
         if (projectData.length > 0) {
             setLines(projectData.map(project => project.name));

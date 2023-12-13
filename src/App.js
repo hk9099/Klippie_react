@@ -28,7 +28,9 @@ const CloudinaryVideoPlayer = lazy(() => import('./components/cloudinaryVideoPla
 const NotFoundPage = lazy(() => import('./Pages/NotFoundPage.js'));
 function App() {
   const { projectId } = useParams();
+  if (process.env.NODE_ENV === 'development') {
   console.log(projectId);
+  }
     const projectIdPattern = /^dashboard\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
   useEffect(() => {

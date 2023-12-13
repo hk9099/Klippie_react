@@ -46,17 +46,23 @@ function Editor() {
 
     useEffect(() => {
         var button = document.querySelector('.iMAXtE');
+        if (process.env.NODE_ENV === 'development') {
         console.log(button, 'button');
+        }
         // Check if the button is found
         if (button) {
             // Add a click event listener to the button
             button.addEventListener('click', function () {
                 // Perform actions when the button is clicked
+                if (process.env.NODE_ENV === 'development') {
                 console.log('Button clicked!');
+                }
                 
             });
         } else {
+            if (process.env.NODE_ENV === 'development') {
             console.log('Button not found');
+            }
         }
     }, []);
 
@@ -80,7 +86,9 @@ function Editor() {
             try {
                 axios(config)
                     .then(function (response) {
+                        if (process.env.NODE_ENV === 'development') {
                         console.log(response, 'response');
+                        }
                         const startTimeInSeconds = parseInt(parseTimeToSeconds(response.data.data.start_time));
                         const endTimeInSeconds = parseInt(parseTimeToSeconds(response.data.data.end_time));
                         const maxDurations = endTimeInSeconds - startTimeInSeconds + 2000000000000000000000000000000000000000;
@@ -131,23 +139,28 @@ function Editor() {
                         myEditor.show();
 
                         myEditor.on('save', (result) => {
+                            if (process.env.NODE_ENV === 'development') {
                             console.log(result, 'result');
+                            }
                         });
 
 
                         myEditor.on('export', async (data) => {
                             myEditor.hide();
                             setShowLoader(true);
+                            if (process.env.NODE_ENV === 'development') {
                             console.log('Exported data:', data);
+                            }
 
                             // const downloadUrl = data.assets[0].downloadUrl;
                             const secureUrl = data.assets[0].url;
 
 
                             const { formattedStartTime, formattedEndTime } = extractStartEndTime(data);
-
+                            if (process.env.NODE_ENV === 'development') {
                             console.log("Start Time:", formattedStartTime);
                             console.log("End Time:", formattedEndTime);
+                            }
                             // const downloadAttempts = 3; // Number of download attempts
 
                             //   async function downloadVideo(attempt) {
@@ -231,13 +244,17 @@ function Editor() {
 
                             try {
                                 const response = await axios(config);
+                                if (process.env.NODE_ENV === 'development') {
                                 console.log(response, 'response');
+                                }
                                 myEditor.hide();
                                 setShowProgressBar(false);
                                 setShowLoader(false);
                                 window.close();
                             } catch (error) {
+                                if (process.env.NODE_ENV === 'development') {
                                 console.log(error);
+                                }
                                 setShowProgressBar(false);
                                 setShowLoader(false);
                             }
@@ -254,10 +271,14 @@ function Editor() {
                         setEditorLoaded(true);
                     })
                     .catch(function (error) {
+                        if (process.env.NODE_ENV === 'development') {
                         console.log(error);
+                        }
                     });
             } catch (error) {
+                if (process.env.NODE_ENV === 'development') {
                 console.log(error);
+                }
             }
 
             hasMounted.current = true;

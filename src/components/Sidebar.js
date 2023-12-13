@@ -33,7 +33,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const { clipsFound } = useClipsFoundStatus();
   //eslint-disable-next-line
   const { setClipsFoundStatus, projectCreated } = useClipsFoundStatus();
-  // console.log(projectCreated, 'projectCreated')
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { setUserName } = useUserNickname();
   const { setUserEmail } = useUserNickname();
@@ -73,7 +72,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [videoURL, setVideoURL] = useState([]);
   //eslint-disable-next-line
   const [previewVideoURL, setPreviewVideoURL] = useState(null);
-  // console.log(videoURL, 'videoURL')
   const closeDropdown = () => {
     setDropdownOpen(false);
   };
@@ -113,7 +111,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   // ) : null;
 
   useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
     console.log('isApiCompleted', isApiCompleted);
+    }
     fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL);
     for (let i = 0; i < Math.min(3, projectData.length); i++) {
     }
@@ -130,7 +130,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       setUserAvatar,
       HOSTINGURL
     );
-    console.log('handleUpdateProfileSuccess');
   };
 
   const toggleDropdown = () => {
@@ -155,11 +154,11 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         }
       };
 
-      // console.log(config);
-
       axios.request(config)
         .then((response) => {
-          // console.log(response.data, 'response.data');
+          if (process.env.NODE_ENV === 'development') {
+          console.log(response.data, 'response.data');
+          }
           var userNickname = response.data.name;
           setUserNickname(userNickname);
           const userEmailAddress = response.data.email;
@@ -176,11 +175,15 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             } else {
               generateAvatar(userEmailAddress)
                 .then((avatarUrl) => {
+                  if (process.env.NODE_ENV === 'development') {
                   console.log(avatarUrl, 'avatarUrl');  
+                  }
                   setUserAvatar(avatarUrl);
                 })
                 .catch((error) => {
-                  // console.log(error);
+                  if (process.env.NODE_ENV === 'development') {
+                  console.log(error);
+                  }
                 });
             }
 
@@ -189,7 +192,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           }
         })
         .catch((error) => {
+          if (process.env.NODE_ENV === 'development') {
           console.log(error);
+          }
         });
     }
     // eslint-disable-next-line
@@ -197,7 +202,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   // Function to generate the avatar URL
   const generateAvatar = (emailAddress) => {
-    console.log('generate avatar start')
     const userAvatar = emailAddress.split('@')[0];
     const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
 
@@ -208,7 +212,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         let data = JSON.stringify({
           "avatar": response.config.url,
         });
-        console.log('account update start')
 
         let config = {
           method: 'post',
@@ -225,26 +228,33 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         axios
           .request(config)
           .then((response) => {
+            if (process.env.NODE_ENV === 'development') {
             console.log(response.data, 'response.data');
-            console.log('account update end')
+            }
             // setUserAvatar(avatarData);
             setInitialized(true);
           })
           .catch((error) => {
+            if (process.env.NODE_ENV === 'development') {
             console.log(error);
+            }
           });
 
 
       })
       .catch((error) => {
+        if (process.env.NODE_ENV === 'development') {
         console.log(error);
+        }
         throw error;
       });
   };
 
 
   const deleteLine = (index) => {
+    if (process.env.NODE_ENV === 'development') {
     console.log(projectData[index].name, 'index')
+    }
     setDeleteProject(projectData[index].name);
     setDeleteIndex(index);
     setShowDeleteConfirmation(true);
@@ -259,7 +269,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
       try {
         const clickedProject = projectData[index];
-        //console.log('Clicked Project ID:', clickedProject.id);
         var clickedProjectid = clickedProject.id;
 
         let data = qs.stringify({
@@ -293,14 +302,16 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           setAccordionVisible(false);
           setError('');
         } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
           console.log(error);
-          // Handle error states or display an error message to the user
+          }
         }
         setShowDeleteConfirmation(false);
         setDeleteIndex(null);
       } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
         console.log(error);
-        // Handle error states or display an error message to the user
+        }
       }
     }
   };
@@ -320,10 +331,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   const handleSaveClick = (index) => {
     const updatedLine = tempLines[index];
+    if (process.env.NODE_ENV === 'development') {
     console.log(updatedLine, 'updatedLine')
-    // console.log('Token:', token);
-    // console.log('Updated Line:', updatedLine);
-    // console.log('Project ID:', projectData[index].id);
+    }
     const data = qs.stringify({
       id: projectData[index].id,
       name: updatedLine
@@ -343,15 +353,18 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
     axios.request(config)
       .then((response) => {
-        // console.log(JSON.stringify(response.data));
-        // Update your lines state if needed
+        if (process.env.NODE_ENV === 'development') {
+        console.log(response.data, 'updatedLine');
+        }
         const newLines = [...lines];
         newLines[index] = updatedLine;
         setLines(newLines);
         setEditIndex(-1);
       })
       .catch((error) => {
+        if (process.env.NODE_ENV === 'development') {
         console.log(error);
+        }
       });
   };
 
@@ -361,7 +374,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   };
 
   const handleProjectClick = async (index) => {
+    if (process.env.NODE_ENV === 'development') {
     console.log(projectData[index].id);
+    }
     const data = JSON.stringify({
       "id": projectData[index].id
     });
@@ -378,11 +393,15 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     };
 
     const response = await axios.request(config);
+    if (process.env.NODE_ENV === 'development') {
     console.log(response.data, 'response.data');
+    }
     const message = response.data.data;
 
     if (message === "Transcribing video completed") {
+      if (process.env.NODE_ENV === 'development') {
       console.log(response.data.message, 'response.data.data.status')
+      }
       ToastNotification({ message: response.data.message, type: 'loading' });
     }
     if (message === 'Clips generated') {

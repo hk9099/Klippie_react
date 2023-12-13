@@ -23,7 +23,9 @@ import { Toaster } from 'react-hot-toast';
 
 export default function Dashboard() {
   const { fileDelete,pageLoaded ,setPageLoaded} = useFileSelected();
+  if (process.env.NODE_ENV === 'development') {
   console.log(pageLoaded, 'pageLoaded');
+  }
   const location = useLocation();
   const userToken = TokenManager.getToken()[1]
   const loginCount = TokenManager.getToken()[0]
@@ -48,9 +50,6 @@ export default function Dashboard() {
   // Reset the state or perform other actions when the media editor tab is closed
   useEffect(() => {
     if (mediaEditorClosed) {
-      // Do something when the media editor tab is closed
-      console.log('Media editor tab closed');
-      // Reset the state or perform other actions as needed
       setMediaEditorClosed(false);
     }
   }, [mediaEditorClosed]);
@@ -75,10 +74,14 @@ export default function Dashboard() {
   const [newvideoClips, setNewvideoClips] = useState([]);
   const [newmainvideo, setnewMainVideo] = useState([]);
   const [accordionVisible, setAccordionVisible] = useState(true);
+  if (process.env.NODE_ENV === 'development') {
   console.log(accordionVisible, 'accordionVisible');
+  }
   const [errorMessage, setErrorMessage] = useState("");
   const [newProjectCount, setNewProjectCount] = useState('');
+  if (process.env.NODE_ENV === 'development') {
   console.log(newProjectCount, 'newProjectCount');
+  }
   const { userName } = useUserNickname();
   const { creaditBalance } = useUserNickname();
   const setError = (message) => {
@@ -110,7 +113,9 @@ export default function Dashboard() {
   }, [userToken, navigate]);
 
   const handleSubmit = async (values) => {
+    if (process.env.NODE_ENV === 'development') {
     console.log('Form data:', values);
+    }
     try {
       const response = await axios.post(
         'https://dev-api.getklippie.com/v1/auth/login',
@@ -163,7 +168,9 @@ export default function Dashboard() {
   };
   var HOSTINGURL = 'https://dev-api.getklippie.com';
   useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
     console.log('routeProjectId', routeProjectId);
+    }
     if (!routeProjectId) {
       setAccordionVisible(false);
       setProjectId('');
@@ -192,7 +199,9 @@ export default function Dashboard() {
       };
 
       const response = await axios.request(mainconfig);
+      if (process.env.NODE_ENV === 'development') {
       console.log(response.data, 'responseeeeeeeeeeee.data');
+      }
       const title = response.data.data.title;
       const description = response.data.data.description;
       const src = response.data.data.video_url;
@@ -231,8 +240,9 @@ export default function Dashboard() {
           const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
           const publicId = clip?.clip_url?.split('/').pop().split('.')[0];
+          if (process.env.NODE_ENV === 'development') {
           console.log(publicId, 'publicId');
-
+          }
           return {
             id: clip.id,
             src: clip.clip_url,

@@ -17,7 +17,9 @@ import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance }) => {
+    if (process.env.NODE_ENV === 'development') {
     console.log(cloudinaryResponse, 'cloudinaryResponse');
+    }
     const { setClipsFoundStatus, setShowHomeStatus, setProjectCreated } = useClipsFoundStatus();
     const { fileDelete } = useFileSelected();
     const userToken = TokenManager.getToken()[1]
@@ -52,7 +54,9 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
 
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
+        if (process.env.NODE_ENV === 'development') {
         console.log(newhistoryvideoClips, 'updatedVideoClips');
+        }
     }, [newhistoryvideoClips, fileDelete]);
 
 
@@ -135,7 +139,9 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                 const response1 = await axios.request(config1);
                 setProjectId(response1.data.data.id);
             } catch (error) {
+                if (process.env.NODE_ENV === 'development') {
                 console.log(error.response.data.error, 'error.response.data.message');
+                }
                 ToastNotification({ message: error.response.data.error, type: 'error' });
             }
             setAllApiCompleted(true);
@@ -177,7 +183,9 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                         };
 
                         const response = await axios.request(config);
+                        if (process.env.NODE_ENV === 'development') {
                         console.log(response.data, 'response.data');
+                        }
                         const message = response.data.data;
 
                         if (message === "Transcribing video completed") {
@@ -201,7 +209,9 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                         //     enqueueSnackbar(message, { variant: 'info', autoHideDuration: 2000 });
                         // }
                     } catch (error) {
+                        if (process.env.NODE_ENV === 'development') {
                         console.log(error);
+                        }
                     }
                 };
 

@@ -7,7 +7,9 @@ import { useSubscription } from '../context/SubscriptionContext.js';
 
 const Navbar = ({ creaditBalance }) => {
     const { subscribed ,setSubscribed,setSubscription} = useSubscription();
+    if (process.env.NODE_ENV === 'development') {
     console.log(subscribed, 'subscribed');
+    }
     const [isModalOpen, setIsModalOpen] = useState(false);
     const userToken = TokenManager.getToken()[1]
     const openModal = () => {
@@ -31,17 +33,19 @@ const Navbar = ({ creaditBalance }) => {
 
             try {
                 const response = await axios(config);
+                if (process.env.NODE_ENV === 'development') {
                 console.log(response.data.data, 'response.data.data');
+                }
                 setSubscription(response.data.data);
                 if (response.data.data.is_active === true) {
-                    console.log('subscribed');
                     setSubscribed(true);
                 } else if (response.data.data.is_lifetime === true) {
-                    console.log('subscribed');
                     setSubscribed(true);
                 }
             } catch (error) {
-                // console.log(error);
+                if (process.env.NODE_ENV === 'development') {
+                console.log(error);
+                }
             }
         }
         fetchSubscriptions();
@@ -68,7 +72,6 @@ const Navbar = ({ creaditBalance }) => {
     };
 
     const { hours, minutes, formattedTime, minutesClass } = secondsToHHMMSS(creaditBalance);
-    // console.log(formattedTime, 'formattedddddddddddddddddddddddddddd');
 
     return (
         <>

@@ -63,7 +63,9 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
 
             if (type === "mp4" || type === "video") {
                 const response = await fetch(src);
+                if (process.env.NODE_ENV === 'development') {
                 console.log(response);
+                }
                 const videoBlob = await response.blob();
 
                 const blobURL = URL.createObjectURL(videoBlob);
@@ -81,7 +83,9 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
                 URL.revokeObjectURL(blobURL);
             } else {
                 const response = await fetch(src);
+                if (process.env.NODE_ENV === 'development') {
                 console.log(response);
+                }
                 const videoBlob = await response.blob();
 
                 const blobURL = URL.createObjectURL(videoBlob);
@@ -109,7 +113,9 @@ const VideoPlayer = ({ src, title, type, sidebar, publicId, startTime, endTime, 
     const handleMediaEditorClick = () => {
         const mediaEditorTab = window.open(`/editor/${clipId}`, '_blank');
         const tabClosedListener = () => {
+            if (process.env.NODE_ENV === 'development') {
             console.log('Media editor tab closed');
+            }
             mediaEditorTab.removeEventListener('beforeunload', tabClosedListener);
         };
         mediaEditorTab.addEventListener('beforeunload', tabClosedListener);

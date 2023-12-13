@@ -97,25 +97,30 @@ function HomeScreen({ userName, creaditBalance }) {
         setAcceptedFiles(acceptedFiles);
         if (acceptedFiles.length > 0) {
             // Files were accepted, show a success notification
+            if (process.env.NODE_ENV === 'development') {
             console.log('Accepted files:', acceptedFiles[0].name);
-
+            }
             const file = acceptedFiles[0];
+            if (process.env.NODE_ENV === 'development') {
             console.log(file, 'file');
-
+            }
             if (file) {
                 // Create a video element to read the video file
                 const videoElement = document.createElement('video');
                 videoElement.src = URL.createObjectURL(file);
+                if (process.env.NODE_ENV === 'development') {
                 console.log(file.size, 'file.size');
-
+                }
                 // When the video metadata is loaded, get the duration
                 videoElement.onloadedmetadata = async () => {
                     const duration = Math.floor(videoElement.duration);
+                    if (process.env.NODE_ENV === 'development') {
                     console.log('Video Duration:', duration, 'seconds');
-                    // const size = file.size;
-                    //convert bytes to mb
+                     }
                     const size = file.size / 1048576;
+                    if (process.env.NODE_ENV === 'development') {
                     console.log(size, 'size');
+                    }
                     if (duration > 7200) {
                         ToastNotification({ type: 'error', message: 'Only files less than 2 hours are allowed.' });
                         setAcceptedFiles([]);
@@ -129,7 +134,9 @@ function HomeScreen({ userName, creaditBalance }) {
                         "seconds": duration,
                         "size": size
                     });
+                    if (process.env.NODE_ENV === 'development') {
                     console.log(data, 'dataaaaaaaaaaaaaaaa');
+                    }
                     let config = {
                         method: 'post',
                         maxBodyLength: Infinity,
@@ -144,11 +151,16 @@ function HomeScreen({ userName, creaditBalance }) {
 
                     try {
                         const response = await axios.request(config);
+                        if (process.env.NODE_ENV === 'development') {
                         console.log(response, 'response');
+                        }
                         processFile(file);
                         setIsFileUploadedInput(true);
                         ToastNotification({ type: 'loading', message: `uploading ${acceptedFiles[0].name}!` });
                     } catch (error) {
+                        if (process.env.NODE_ENV === 'development') {
+                        console.log(error, 'error');
+                        }
                         setAcceptedFiles([]);
                         ToastNotification({ type: 'error', message: error.response.data.error });
                     }
@@ -160,7 +172,9 @@ function HomeScreen({ userName, creaditBalance }) {
 
         if (rejectedFiles.length > 0) {
             ToastNotification({ type: 'error', message: `File ${rejectedFiles[0].name} was rejected.` });
+            if (process.env.NODE_ENV === 'development') {
             console.log('Rejected files:', rejectedFiles);
+            }
         }
     };
     const {
@@ -396,7 +410,9 @@ function HomeScreen({ userName, creaditBalance }) {
                 setTotalBytes(size);
 
                 if (end + 1 === size) {
+                    if (process.env.NODE_ENV === 'development') {
                     console.log(responseData);
+                    }
                     setIsFileUploaded(false);
                     setIsFileUploadedInput(false);
                     setIsFileUploaded(false);

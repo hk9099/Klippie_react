@@ -76,8 +76,9 @@ const AccountModal = ({
                     },
                 }
             );
-
+            if (process.env.NODE_ENV === 'development') {    
             console.log(response);
+            } 
             ToastNotification({ type: 'success', message: response.data.message });
             setTimeout(() => {
                 window.location.reload();

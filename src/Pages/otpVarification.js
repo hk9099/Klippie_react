@@ -21,7 +21,9 @@ function Signin() {
 
     useEffect(() => {
         const encodedEmail = localStorage.getItem('_auth');
+        if (process.env.NODE_ENV === 'development') {
         console.log(encodedEmail, 'encodedEmail');
+        }
         if (encodedEmail) {
             setIsLoading(true);
             // const email = atob(encodedEmail); // Decode email
@@ -84,7 +86,9 @@ function Signin() {
             .post('https://dev-api.getklippie.com/v1/auth/verify-otp', payload)
             .then((response) => {
                 ToastNotification({ message: 'Code verified successfully', type: 'success' });
+                if (process.env.NODE_ENV === 'development') {
                 console.log(response.data);
+                }
                 navigate('/');
             })
             .catch((error) => {
@@ -146,7 +150,10 @@ function Signin() {
         if (resendButtonLoading) return;
         setResendButtonLoading(true);
         var getemail = atob(localStorage.getItem('_authemail'));
+
+        if (process.env.NODE_ENV === 'development') {
         console.log(getemail, 'getemail');
+        }
         const data = JSON.stringify({
             email: getemail,
         });
@@ -165,7 +172,9 @@ function Signin() {
         axios
             .request(config)
             .then((response) => {
+                if (process.env.NODE_ENV === 'development') {
                 console.log(JSON.stringify(response.data));
+                }
                 setResendButtonLoading(false);
                 if (attempts < 2) {
                     startResendTimer();

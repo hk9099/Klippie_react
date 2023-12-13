@@ -30,7 +30,9 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
         validationSchema,
         onSubmit: (values) => {
             setIsLoading(true);
+            if (process.env.NODE_ENV === 'development') {
             console.log('values', values);
+            }
             let data = new FormData();
             data.append('file', values.avatar);
             let config = {
@@ -47,7 +49,9 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
             axios.request(config)
                 .then((response) => {
                     var profile_image = response.data.data.profile_image;
+                    if (process.env.NODE_ENV === 'development') {
                     console.log(profile_image);
+                    }
                     let data = JSON.stringify({
                         "name": values.userNickname,
                         "profile_image": profile_image
@@ -75,7 +79,9 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
                             }, 3000);
                         })
                         .catch((error) => {
+                            if (process.env.NODE_ENV === 'development') {
                             console.log(error);
+                            }
                             setErrorMessage('Something went wrong');
                             setTimeout(() => {
                                 setErrorMessage(null);
@@ -83,7 +89,9 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
                         })
                 })
                 .catch((error) => {
+                    if (process.env.NODE_ENV === 'development') {
                     console.log(error);
+                    }
                     setErrorMessage('Something went wrong');
                     setTimeout(() => {
                         setErrorMessage(null);

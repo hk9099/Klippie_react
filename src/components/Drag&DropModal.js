@@ -94,25 +94,33 @@ function DragDropModal() {
     setAcceptedFiles(acceptedFiles);
     if (acceptedFiles.length > 0) {
       // Files were accepted, show a success notification
+      if (process.env.NODE_ENV === 'development') {
       console.log('Accepted files:', acceptedFiles[0].name);
-
+      }
       const file = acceptedFiles[0];
+      if (process.env.NODE_ENV === 'development') {
       console.log(file, 'file');
-
+      }
       if (file) {
         // Create a video element to read the video file
         const videoElement = document.createElement('video');
         videoElement.src = URL.createObjectURL(file);
+        if (process.env.NODE_ENV === 'development') {
         console.log(file.size, 'file.size');
+        }
 
         // When the video metadata is loaded, get the duration
         videoElement.onloadedmetadata = async () => {
           const duration = Math.floor(videoElement.duration);
+          if (process.env.NODE_ENV === 'development') {
           console.log('Video Duration:', duration, 'seconds');
+          }
           // const size = file.size;
           //convert bytes to mb
           const size = file.size / 1048576;
+          if (process.env.NODE_ENV === 'development') {
           console.log(size, 'size');
+          }
           if (duration > 7200) {
             ToastNotification({ type: 'error', message: 'Only files less than 2 hours are allowed.' });
             setAcceptedFiles([]);
@@ -126,7 +134,9 @@ function DragDropModal() {
             "seconds": duration,
             "size": size
           });
+          if (process.env.NODE_ENV === 'development') {
           console.log(data, 'dataaaaaaaaaaaaaaaa');
+          }
           let config = {
             method: 'post',
             maxBodyLength: Infinity,
@@ -141,7 +151,9 @@ function DragDropModal() {
 
           try {
             const response = await axios.request(config);
+            if (process.env.NODE_ENV === 'development') {
             console.log(response, 'response');
+            }
             processFile(file);
             setIsFileUploadedInput(true);
             ToastNotification({ type: 'loading', message: `uploading ${acceptedFiles[0].name}!` });
@@ -157,7 +169,9 @@ function DragDropModal() {
 
     if (rejectedFiles.length > 0) {
       ToastNotification({ type: 'error', message: `File ${rejectedFiles[0].name} was rejected.` });
+      if (process.env.NODE_ENV === 'development') {
       console.log('Rejected files:', rejectedFiles);
+      }
     }
   };
   const {
@@ -235,7 +249,9 @@ function DragDropModal() {
 
       if (response.ok) {
         const responseData = await response.json();
+        if (process.env.NODE_ENV === 'development') {
         console.log(responseData);
+        }
         if (start === 0 && !isFirstChunkLogged) {
           setIsFirstChunkLogged(true);
         }
@@ -247,7 +263,9 @@ function DragDropModal() {
         setTotalBytes(size);
 
         if (end + 1 === size) {
+          if (process.env.NODE_ENV === 'development') {
           console.log(responseData);
+          }
           setIsFileUploaded(false);
           setIsFileUploadedInput(false);
           setBytesUploaded(0);
@@ -258,11 +276,15 @@ function DragDropModal() {
 
 
       } else {
+        if (process.env.NODE_ENV === 'development') {
         console.error(`Failed to upload chunk ${start}-${end}`);
         console.error(await response.text());
+        }
       }
     } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
       console.error(`Error uploading chunk ${start}-${end}: ${error.message}`);
+      }
     }
   };
 

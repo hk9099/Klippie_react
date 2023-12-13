@@ -58,7 +58,9 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
       isDataLoadedRef.current = true;
     }
   }, [videoClips, setVideoCount]);
+  if (process.env.NODE_ENV === 'development') {
 console.log(videoClips, "videoClips");
+  }
   return (<>
     {/* {selectedRows.length > 0 && (
       <button

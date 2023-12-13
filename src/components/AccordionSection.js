@@ -20,7 +20,9 @@ import { Toaster } from 'react-hot-toast';
 
 export default function AccordionSection({ videoClips, videoURl, clips }) {
     const { fileselected, fileselecteddata, setFileDelete } = useFileSelected();
+    if (process.env.NODE_ENV === 'development') {
     console.log(fileselecteddata, "fileselecteddata");
+    }
     const [openStates, setOpenStates] = useState([true, true]);
     const [videoCount, setVideoCount] = useState(videoClips.length);
     const [downloadProgress, setDownloadProgress] = useState(0);
@@ -37,7 +39,9 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
         event.stopPropagation();
         for (let i = 0; i < fileselecteddata.length; i++) {
             const element = fileselecteddata[i];
+            if (process.env.NODE_ENV === 'development') {
             console.log(element.src);
+            }
 
             let data = qs.stringify({
                 'id': element.id,
@@ -57,13 +61,17 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
 
             axios.request(config)
                 .then((response) => {
+                    if (process.env.NODE_ENV === 'development') {
                     console.log(JSON.stringify(response.data));
+                    }
                     setVideoCount(videoCount - 1);
                     setFileDelete(true);
                     ToastNotification({ type: 'success', message: 'Video deleted successfully' });
                 })
                 .catch((error) => {
+                    if (process.env.NODE_ENV === 'development') {
                     console.log(error);
+                    }
                         ToastNotification({ type: 'error', message: error.response.data.message });
                     setFileDelete(false);
                 });

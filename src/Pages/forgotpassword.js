@@ -53,7 +53,9 @@ const MultiStepForm = () => {
                 }
             );
             const emailtoken = response.data.data;
+            if (process.env.NODE_ENV === 'development') {
             console.log(JSON.stringify(response.data));
+            }
             setEmailSent(true);
             setLoading(false);
             setStep(2);
@@ -84,13 +86,17 @@ const MultiStepForm = () => {
                     type: 'fp',
                 }
             );
+            if (process.env.NODE_ENV === 'development') {
             console.log(JSON.stringify(response.data));
+            }
             setOtpVerified(true);
             setLoading(false);
             setStep(3);
             ToastNotification({ message: 'Code verified successfully!', type: 'success' });
         } catch (error) {
+            if (process.env.NODE_ENV === 'development') {
             console.log(error.response.data.detail);
+            }
             setLoading(false);
             setError(error.response.data.detail);
             ToastNotification({ message: error.response.data.detail, type: 'error' });
@@ -112,13 +118,17 @@ const MultiStepForm = () => {
                     new_password: formData.password,
                 }
             );
+            if (process.env.NODE_ENV === 'development') {
             console.log(JSON.stringify(response.data));
+            }
             setLoading(false);
             setSuccess('Password reset successful!');
             ToastNotification({ message: 'Password reset successful!', type: 'success' });
             navigate('/');
         } catch (error) {
+            if (process.env.NODE_ENV === 'development') {
             console.log(error.response.data.detail);
+            }
             setLoading(false);
             setError(error.response.data.detail);
             ToastNotification({ message: error.response.data.detail, type: 'error' });

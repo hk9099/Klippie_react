@@ -240,7 +240,9 @@ export default function CloudinaryVideoPlayer({
 
             if (type === "mp4" || type === "video") {
                 const response = await fetch(src);
+                if (process.env.NODE_ENV === 'development') {
                 console.log(response);
+                }
                 const videoBlob = await response.blob();
 
                 const blobURL = URL.createObjectURL(videoBlob);
@@ -258,7 +260,9 @@ export default function CloudinaryVideoPlayer({
                 URL.revokeObjectURL(blobURL);
             } else {
                 const response = await fetch(src);
+                if (process.env.NODE_ENV === 'development') {
                 console.log(response);
+                }
                 const videoBlob = await response.blob();
 
                 const blobURL = URL.createObjectURL(videoBlob);
@@ -288,7 +292,9 @@ export default function CloudinaryVideoPlayer({
     const handleMediaEditorClick = () => {
         const mediaEditorTab = window.open(`/editor/${clipId}`, '_blank');
         const tabClosedListener = () => {
+            if (process.env.NODE_ENV === 'development') {
             console.log('Media editor tab closeddddddd');
+            }
             // window.location.reload();
             setPageLoaded(true);
             mediaEditorTab.removeEventListener('beforeunload', tabClosedListener);

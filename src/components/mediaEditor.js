@@ -45,19 +45,22 @@ const CloudinaryMediaEditor = ({ publicId, startTime, endTime }) => {
 
     myEditor.show();
 
-    myEditor.on('save', (result) => {
-
+    myEditor.on('save', (result) => { 
+      if (process.env.NODE_ENV === 'development') {
       console.log(result, 'result');
+      }
     }
     );
 
     myEditor.on('export', (data) => {
+      if (process.env.NODE_ENV === 'development') {
       console.log('Exported data:', data);
-
+      }
       // Create a Blob from the exported data
       const blob = new Blob([data.data], { type: data.format });
+      if (process.env.NODE_ENV === 'development') {
       console.log('blob', blob);
-
+      }
       // Create an object URL for the Blob
       const url = URL.createObjectURL(blob);
 

@@ -49,7 +49,6 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
             const data = await getSubscription();
             if (data.data !== null) {
                 setSubRetrieved(true);
-                console.log('subscribed');
                 setPlanSubscribed(true);
                 setSubscribed(true);
                 fetchSubscriptions();
@@ -83,7 +82,9 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
                             plan_id: id,
                             fprom_tid: ''
                         });
+                        if (process.env.NODE_ENV === 'development') {
                         console.log(checkout_hosted_page.data.data.hosted_page.url, 'checkout_hosted_page');
+                        }
                         return checkout_hosted_page.data.data.hosted_page
                     } catch (err) {
                         console.error(err);
@@ -102,14 +103,14 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
                     fetchSubscriptions();
                 },
                 step: () => {
-                    console.log('step')
+                    // console.log('step')
                 },
                 error: () => {
-                    console.log('error')
+                    // console.log('error')
                 },
             });
         } else {
-            console.log('ID not found');
+            // console.log('ID not found');
         }
 
     };

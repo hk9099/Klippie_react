@@ -10,7 +10,9 @@ import { useSubscription } from '../context/SubscriptionContext.js';
 
 export default function PricingCardsContainer({ isOpen, onClose }) {
     const { PlanSubscribed, setSubscription, setPlanSubscribed } = useSubscription();
-    console.log(PlanSubscribed);
+    if (process.env.NODE_ENV === 'development') {
+    console.log(PlanSubscribed, "planSubscribed");
+    }
     const [pricingData, setPricingData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const userToken = TokenManager.getToken()[1]
@@ -28,7 +30,9 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
         };
 
         const response = await axios(config);
+        if (process.env.NODE_ENV === 'development') {
         console.log(response, 'response.data.data.is_active');
+        }
         setSubscription(response.data.data);
         if (response.data.data === null) {
             setFreePlan(true);
@@ -93,7 +97,9 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                 setIsLoading(false);
             })
             .catch((error) => {
+                if (process.env.NODE_ENV === 'development') {
                 console.log(error);
+                }
                 setIsLoading(false);
             });
     }, []);

@@ -30,9 +30,13 @@ function Custum() {
 
             try{
             const response = await axios(config)
+            if (process.env.NODE_ENV === 'development') {
             console.log(JSON.stringify(response.data));
+            }
             } catch (error) {
+                if (process.env.NODE_ENV === 'development') {
                 console.log(error);
+                }
             }
         }
         fetchData();

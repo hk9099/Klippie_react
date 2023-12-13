@@ -129,8 +129,9 @@ function Signup({ errors, touched }) {
     
     try {
       const response = await axios.request(loc);
+      if (process.env.NODE_ENV === 'development') {
       console.log(response, "response");
-  
+      }
       const payload = {
         name: values.name,
         email: values.email,
@@ -140,7 +141,9 @@ function Signup({ errors, touched }) {
       };
   
       const signupResponse = await axios.post("https://dev-api.getklippie.com/v1/auth/signup", payload);
+      if (process.env.NODE_ENV === 'development') {
       console.log(signupResponse, "response");
+      }
       ToastNotification({
         message: signupResponse.data.message,
         type: "success",
@@ -149,7 +152,9 @@ function Signup({ errors, touched }) {
       localStorage.setItem("signupToken", signupToken);
       navigate("/otpVarification");
     } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
       console.log(error);
+      }
       if (error.response) {
         ToastNotification({
           message: error.response.data.detail,
@@ -162,7 +167,6 @@ function Signup({ errors, touched }) {
         });
       }
     } finally {
-      console.log("finally");
       setLoading(false);
       setSubmitting(false);
     }
