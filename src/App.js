@@ -10,7 +10,7 @@ import { SidebarProvider } from './context/SidebarContext.js';
 import { FileSelectedProvider } from "./context/SelectionContext.js";
 import { SnackbarProvider } from 'notistack';
 import { useParams } from 'react-router-dom';
-import Test from './components/ContectUs.js';
+// import Test from './components/confetti.js';
 import { ClipsFoundProvider } from './context/ClipsFoundContext.js';
 const Signin = lazy(() => import('./Pages/signin.js'));
 const Signup = lazy(() => import('./Pages/signup.js'));
@@ -26,6 +26,7 @@ const Editor = lazy(() => import('./components/Editor.js'));
 const CloudinaryMediaEditor = lazy(() => import('./components/mediaEditor.js'));
 const CloudinaryVideoPlayer = lazy(() => import('./components/cloudinaryVideoPlayer.js'));
 const NotFoundPage = lazy(() => import('./Pages/NotFoundPage.js'));
+const Test = lazy(() => import('./components/confetti.js'));
 function App() {
   const { projectId } = useParams();
   if (process.env.NODE_ENV === 'development') {

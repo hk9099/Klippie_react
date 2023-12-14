@@ -41,13 +41,17 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     const { setIsApiCompleted } = useSidebarContext();
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
     const location = useLocation();
+    const accordionVisibleRef = useRef(true);
 
     useEffect(() => {
         // Check the pathname of the current URL
         if (location.pathname !== '/dashboard') {
-            setAccordionVisible(true);
+            // Accessing the ref value
+            setAccordionVisible(accordionVisibleRef.current);
         } else {
             setAccordionVisible(false);
+            // Modify the ref value
+            accordionVisibleRef.current = false;
             navigate(`/dashboard`);
         }
     }, [location, navigate]);
@@ -151,7 +155,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
 
         } catch (error) {
             if (error.name === 'AbortError') {
-                ToastNotification({ message: 'API call aborted', type: 'loading' });
+                ToastNotification({ message: 'API call aborted', type: 'success' });
             } else {
                 // Handle error
                 console.error('API call failed:', error.message);

@@ -4,11 +4,13 @@ import PricingCardsContainer from '../Pages/PricingCardsContainer';
 import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
 import { useSubscription } from '../context/SubscriptionContext.js';
+import { useSidebarContext } from '../context/SidebarContext';
 
 const Navbar = ({ creaditBalance }) => {
-    const { subscribed ,setSubscribed,setSubscription} = useSubscription();
+    const { isApiCompleted } = useSidebarContext();
+    const { subscribed, setSubscribed, setSubscription } = useSubscription();
     if (process.env.NODE_ENV === 'development') {
-    console.log(subscribed, 'subscribed');
+        console.log(subscribed, 'subscribed');
     }
     const [isModalOpen, setIsModalOpen] = useState(false);
     const userToken = TokenManager.getToken()[1]
@@ -34,23 +36,33 @@ const Navbar = ({ creaditBalance }) => {
             try {
                 const response = await axios(config);
                 if (process.env.NODE_ENV === 'development') {
-                console.log(response.data.data, 'response.data.data');
+                    console.log(response.data.data, 'response.data.data');
                 }
-                setSubscription(response.data.data);
-                if (response.data.data.is_active === true) {
-                    setSubscribed(true);
-                } else if (response.data.data.is_lifetime === true) {
-                    setSubscribed(true);
+
+                const subscriptionData = response.data.data;
+
+                // Check if subscriptionData is not null
+                if (subscriptionData !== null) {
+                    setSubscription(subscriptionData);
+
+                    // Check if is_active or is_lifetime is true
+                    if (subscriptionData.is_active === true ) {
+                        setSubscribed(true);
+                    }
                 }
             } catch (error) {
                 if (process.env.NODE_ENV === 'development') {
-                console.log(error);
+                    console.log(error);
                 }
             }
-        }
+        };
+
         fetchSubscriptions();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isApiCompleted]);
+
+
+
     const secondsToHHMMSS = (seconds) => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -73,25 +85,36 @@ const Navbar = ({ creaditBalance }) => {
 
     const { hours, minutes, formattedTime, minutesClass } = secondsToHHMMSS(creaditBalance);
 
+    useEffect(() => {
+        secondsToHHMMSS(creaditBalance);
+    }, [isApiCompleted, creaditBalance])
+
     return (
         <>
             <nav className='border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent top-0 z-50 '>
                 <div className='flex justify-end items-center mx-auto'>
                     <div className='flex justify-end items-center w-100'>
-                        {(!isNaN(hours) && !isNaN(minutes)) && (
-                            <div className={`p-3 ${subscribed === true ? 'hidden' : 'block'}`}>
-                                <div className={`text-green-600 px-3 py-2  font-bold text-lg flex justify-center items-center select-none p-3 ${minutesClass}`}>
-                                    <BsStopwatch className={`me-2 `} />
-                                    <span >{formattedTime}</span>
+                        {subscribed === false && (!isNaN(hours) && !isNaN(minutes)) ? (
+                            <div className={`p-3 ${subscribed ? 'hidden' : 'block'}`}>
+                                <div className={`text-green-600 px-3 py-2 font-bold text-lg flex justify-center items-center select-none p-3 ${minutesClass}`}>
+                                    <BsStopwatch className={`me-2`} />
+                                    <span>{formattedTime}</span>
                                 </div>
                             </div>
+                        ) : (
+                            <div className={`p-4 transform transition-transform duration-500 ease-in-out hover:scale-105`}>
+  <div className={`bg-gradient-to-r from-purple-600 to-pink-400 text-white px-4 py-3 font-bold text-xxl flex justify-center items-center select-none rounded-lg shadow-lg`}>
+    <span className="mr-2">🚀</span> Lifetime Unlimited
+  </div>
+</div>
+
                         )}
-                            <button
-                                className={`upgradetopro text-gray-300 w-auto text-center px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed === true ? 'hidden' : 'block'}`}
-                                onClick={openModal}
-                            >
-                                <span className={`text-content select-none`}>Upgrade</span>
-                            </button>
+                        <button
+                            className={`upgradetopro text-gray-300 w-auto text-center px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed === true ? 'hidden' : 'block'}`}
+                            onClick={openModal}
+                        >
+                            <span className={`text-content select-none`}>Upgrade</span>
+                        </button>
                     </div>
                 </div>
             </nav>

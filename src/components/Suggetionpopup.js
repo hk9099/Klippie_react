@@ -32,7 +32,7 @@ function Suggetionpopup({ isOpen, onClose }) {
                   ></path>
                 </svg>
               </button>
-              <div className="p-6 space-y-6 flex justify-center items-center flex-col select-none	cursor-help">
+              <div className="p-6 space-y-6 flex justify-center items-center flex-col select-none	">
                 <img src={SuggetionImage} alt="Suggetion" width={150} height={150} className='select-none	' />
 
                 <div className="flex flex-col items-start">

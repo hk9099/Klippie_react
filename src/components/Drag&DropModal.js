@@ -156,7 +156,7 @@ function DragDropModal() {
             }
             processFile(file);
             setIsFileUploadedInput(true);
-            ToastNotification({ type: 'loading', message: `uploading ${acceptedFiles[0].name}!` });
+            ToastNotification({ type: 'success', message: `uploading ${acceptedFiles[0].name}!` });
           } catch (error) {
             setAcceptedFiles([]);
             ToastNotification({ type: 'error', message: error.response.data.error });

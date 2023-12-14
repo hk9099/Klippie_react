@@ -3,7 +3,7 @@ import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
 import { BiCheck } from 'react-icons/bi';
 import { useSubscription } from '../context/SubscriptionContext.js';
-
+import runConfetti from './confetti.js';
 function PricingCard({ title, price, time, description, planDetails, benefits, id, benefitTitle, highlightBorder ,onClose ,fetchSubscriptions}) {
     const { setPlanSubscribed ,setSubscribed} = useSubscription();
     const [subRetrieved, setSubRetrieved] = useState(false);
@@ -43,6 +43,8 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
             console.error(err);
         }
     };
+
+    runConfetti()
 
     const handlePolling = async () => {
         if (!subRetrieved) {
@@ -101,6 +103,7 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
                     setTimeout(closePolling, 20000);
                     setPlanSubscribed(true);
                     fetchSubscriptions();
+
                 },
                 step: () => {
                     // console.log('step')

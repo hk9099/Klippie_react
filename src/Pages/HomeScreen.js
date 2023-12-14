@@ -156,7 +156,7 @@ function HomeScreen({ userName, creaditBalance }) {
                         }
                         processFile(file);
                         setIsFileUploadedInput(true);
-                        ToastNotification({ type: 'loading', message: `uploading ${acceptedFiles[0].name}!` });
+                        ToastNotification({ type: 'success', message: `uploading ${acceptedFiles[0].name}!` });
                     } catch (error) {
                         if (process.env.NODE_ENV === 'development') {
                         console.log(error, 'error');
@@ -436,9 +436,9 @@ function HomeScreen({ userName, creaditBalance }) {
     return (
         <>
             <Toaster position="top-center" />
-            <div className="flex flex-col h-screen " >
+            <div className="flex flex-col  " >
                 <div className="">
-                    <Navbar creaditBalance={creaditBalance} />
+                    {/* <Navbar creaditBalance={creaditBalance} /> */}
                 </div>
                 <section {...getRootProps()} onClick={() => { fileInputRef.current && fileInputRef.current.click(); }}
 
@@ -552,7 +552,7 @@ function HomeScreen({ userName, creaditBalance }) {
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-center items-center flex-col select-none cursor-pointer file-input mt-2 mb-12" >
+                    <div className="flex justify-center items-center flex-col select-none cursor-pointer file-input mt-[5rem] mb-12" >
                         {/* <div
                             className={`text-white select-none cursor-pointer text-center font-bold text-lg w-[50%] inline-block border-dashed border-2 rounded-lg py-10 ${isDragging ? 'border-blue-500 bg-blue-100 dark:bg-[#ffffff2a]' : 'border-gray-500 dark:bg-transparent'} ${isFileUploaded ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : ''} ${isFileUploadedInput ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : ''}`}
                             onClick={() => { fileInputRef.current.click(); }}

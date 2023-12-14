@@ -10,7 +10,6 @@ const ToastNotification = ({ type, message }) => {
       case 'error':
         toast.error(message);
         break;
-      // Add more cases for other types if needed
       default:
         break;
     }

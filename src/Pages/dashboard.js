@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef} from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
@@ -17,20 +17,40 @@ import { TokenManager } from '../components/getToken.js';
 import PopupForm from '../components/sessionPopup.js';
 import DragDropModal from "../components/Drag&DropModal";
 import { useFileSelected } from "../context/SelectionContext.js";
-import ToastNotification   from "../components/ToastNotification";
+import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
 
 export default function Dashboard() {
-  const { fileDelete,pageLoaded ,setPageLoaded} = useFileSelected();
+  const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
   if (process.env.NODE_ENV === 'development') {
-  console.log(pageLoaded, 'pageLoaded');
+    console.log(pageLoaded, 'pageLoaded');
   }
   const location = useLocation();
   const userToken = TokenManager.getToken()[1]
   const loginCount = TokenManager.getToken()[0]
   const [showPopup, setShowPopup] = useState(false);
   const [mediaEditorClosed, setMediaEditorClosed] = useState(false);
+
+  useEffect(() => {
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://dev-api.getklippie.com/v1/project/current-running-project',
+      headers: {
+        'accept': 'application/json',
+        'Authorization': 'Bearer ' + userToken
+      }
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data), 'response.datttttttttttttta');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [])
 
   useEffect(() => {
     const handleMediaEditorClosed = () => {
@@ -69,18 +89,18 @@ export default function Dashboard() {
   const { setClipsFoundStatus } = useClipsFoundStatus();
   const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams();
-  const { cloudinaryResponse  } = useCloudinary();
+  const { cloudinaryResponse } = useCloudinary();
   const [projectId, setProjectId] = useState(null);
   const [newvideoClips, setNewvideoClips] = useState([]);
   const [newmainvideo, setnewMainVideo] = useState([]);
   const [accordionVisible, setAccordionVisible] = useState(true);
   if (process.env.NODE_ENV === 'development') {
-  console.log(accordionVisible, 'accordionVisible');
+    console.log(accordionVisible, 'accordionVisible');
   }
   const [errorMessage, setErrorMessage] = useState("");
   const [newProjectCount, setNewProjectCount] = useState('');
   if (process.env.NODE_ENV === 'development') {
-  console.log(newProjectCount, 'newProjectCount');
+    console.log(newProjectCount, 'newProjectCount');
   }
   const { userName } = useUserNickname();
   const { creaditBalance } = useUserNickname();
@@ -110,11 +130,11 @@ export default function Dashboard() {
     } else {
       setShowPopup(true);
     }
-  }, [userToken, navigate]);
+  }, [ navigate]);
 
   const handleSubmit = async (values) => {
     if (process.env.NODE_ENV === 'development') {
-    console.log('Form data:', values);
+      console.log('Form data:', values);
     }
     try {
       const response = await axios.post(
@@ -147,7 +167,7 @@ export default function Dashboard() {
         //     console.log('Cookie not found or expired.');
         // }
 
-        navigate('/dashboard');
+        navigate('/');
         setClipsFoundStatus(true);
       } else {
         ToastNotification({ type: 'error', message: 'Invalid response from the server.' });
@@ -169,7 +189,7 @@ export default function Dashboard() {
   var HOSTINGURL = 'https://dev-api.getklippie.com';
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-    console.log('routeProjectId', routeProjectId);
+      console.log('routeProjectId', routeProjectId);
     }
     if (!routeProjectId) {
       setAccordionVisible(false);
@@ -200,7 +220,7 @@ export default function Dashboard() {
 
       const response = await axios.request(mainconfig);
       if (process.env.NODE_ENV === 'development') {
-      console.log(response.data, 'responseeeeeeeeeeee.data');
+        console.log(response.data, 'responseeeeeeeeeeee.data');
       }
       const title = response.data.data.title;
       const description = response.data.data.description;
@@ -241,7 +261,7 @@ export default function Dashboard() {
 
           const publicId = clip?.clip_url?.split('/').pop().split('.')[0];
           if (process.env.NODE_ENV === 'development') {
-          console.log(publicId, 'publicId');
+            console.log(publicId, 'publicId');
           }
           return {
             id: clip.id,
@@ -251,8 +271,8 @@ export default function Dashboard() {
             status: clip.status,
             time: formattedTime,
             type: clip.type,
-            start_time : clip.start_time,
-            end_time : clip.end_time,
+            start_time: clip.start_time,
+            end_time: clip.end_time,
             publicId: publicId
           };
         }));
@@ -262,26 +282,32 @@ export default function Dashboard() {
       }
     };
 
-    
+
     if (pageLoaded === true) {
       handleProjectClick()
     } else {
       handleProjectClick()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo , fileDelete,projectId,pageLoaded]);
+  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo, fileDelete, projectId, pageLoaded]);
 
 
 
-  useEffect(() => {
-    if (projectId) {
-      setErrorMessage("");
-      setAccordionVisible(true);
-    } else {
-      setAccordionVisible(false);
-    }
-    setProjectId(projectId);
-  }, [projectId , pageLoaded]);
+
+  const accordionVisibleRef = useRef(false);
+
+    useEffect(() => {
+        if (projectId) {
+            setErrorMessage("");
+            // Accessing the ref value
+            setAccordionVisible(accordionVisibleRef.current);
+        } else {
+            setAccordionVisible(false);
+            // Modifying the ref value
+            accordionVisibleRef.current = false;
+        }
+        setProjectId(projectId);
+    }, [projectId, pageLoaded]);
 
   return (
     <div className="h-screen" style={{
@@ -302,8 +328,8 @@ export default function Dashboard() {
         )}
         <div className="w-full overflow-x-auto px-3 "  >
           <Modal className="z-50" />
-          {loginCount === 1 && (newProjectCount ===  undefined || '') ? (
-            null
+          {loginCount === 1 && (newProjectCount === undefined || '') ? (
+            <Navbar creaditBalance={creaditBalance} />
           ) : loginCount > 1 ? (
             <Navbar creaditBalance={creaditBalance} />
           ) : (
@@ -324,16 +350,16 @@ export default function Dashboard() {
                   userName={userName}
                   creaditBalance={creaditBalance}
                 />
-              ) : loginCount === 1 && (newProjectCount ===  undefined || '') ? (
+              ) : loginCount === 1 && (newProjectCount === undefined || '') ? (
                 <HomeScreen userName={userName} creaditBalance={creaditBalance} />
-              ) : loginCount === 1 && newProjectCount >= 1  ? (
-                  <DragDropModal className="z-50" />
-                ) : loginCount > 1 && (newProjectCount ===  undefined || '') ? (
-                  <DragDropModal className="z-50" />
-                ) : loginCount > 1 && newProjectCount >= 1 ?(
-                  <DragDropModal className="z-50" />
-                ) : (
-                  null
+              ) : loginCount === 1 && newProjectCount >= 1 ? (
+                <DragDropModal className="z-50" />
+              ) : loginCount > 1 && (newProjectCount === undefined || '') ? (
+                <DragDropModal className="z-50" />
+              ) : loginCount > 1 && newProjectCount >= 1 ? (
+                <DragDropModal className="z-50" />
+              ) : (
+                null
               )}
               {!accordionVisible && errorMessage && (
                 <div className="flex justify-center h-screen items-center">
