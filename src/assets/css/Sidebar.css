@@ -38,23 +38,23 @@
   /* Hide the delete button by default */
 }
 
-.row:hover .delete-button {
+.delete-button {
   display: inline-block;
   position: absolute;
   right: 10px;
   top: 4px;
-  font-size: 19px;
+  font-size: 18px;
   color: #fff;
   padding: 5px;
   border-radius: 4px;
 }
 
-.row:hover .edit-button {
+.edit-button {
   display: inline-block;
   position: absolute;
-  right: 40px;
-  top: 4px;
-  font-size: 19px;
+  right: 0;
+  top: 0;
+  font-size: 18px;
   color: #fff;
   padding: 5px;
   border-radius: 4px;
