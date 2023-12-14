@@ -41,17 +41,13 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     const { setIsApiCompleted } = useSidebarContext();
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
     const location = useLocation();
-    const accordionVisibleRef = useRef(true);
-
+    
     useEffect(() => {
         // Check the pathname of the current URL
         if (location.pathname !== '/dashboard') {
-            // Accessing the ref value
-            setAccordionVisible(accordionVisibleRef.current);
+            setAccordionVisible(true);
         } else {
             setAccordionVisible(false);
-            // Modify the ref value
-            accordionVisibleRef.current = false;
             navigate(`/dashboard`);
         }
     }, [location, navigate]);

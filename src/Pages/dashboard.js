@@ -294,20 +294,15 @@ export default function Dashboard() {
 
 
 
-  const accordionVisibleRef = useRef(false);
-
-    useEffect(() => {
-        if (projectId) {
-            setErrorMessage("");
-            // Accessing the ref value
-            setAccordionVisible(accordionVisibleRef.current);
-        } else {
-            setAccordionVisible(false);
-            // Modifying the ref value
-            accordionVisibleRef.current = false;
-        }
-        setProjectId(projectId);
-    }, [projectId, pageLoaded]);
+  useEffect(() => {
+    if (projectId) {
+      setErrorMessage("");
+      setAccordionVisible(true);
+    } else {
+      setAccordionVisible(false);
+    }
+    setProjectId(projectId);
+  }, [projectId, pageLoaded]);
 
   return (
     <div className="h-screen" style={{
