@@ -309,7 +309,7 @@ export default function Dashboard() {
       zIndex: '1',
       position: 'relative',
     }}>
-      <Toaster position="top-center" />
+      {/* <Toaster position="top-center" /> */}
       <div className="flex h-full">
         {showPopup ? null : (
           // Render the sidebar when showPopup is false
