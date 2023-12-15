@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect ,useRef} from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
@@ -130,7 +130,7 @@ export default function Dashboard() {
     } else {
       setShowPopup(true);
     }
-  }, [navigate]);
+  }, [ navigate]);
 
   const handleSubmit = async (values) => {
     if (process.env.NODE_ENV === 'development') {
@@ -321,53 +321,51 @@ export default function Dashboard() {
             setError={setError}
           />
         )}
-        <div className="overflow-auto w-full" id="main">
-          <div className="w-full overflow-x-auto px-3 " style={{ overflow: 'initial' }}>
-            <Modal className="z-50" />
-            {loginCount === 1 && (newProjectCount === undefined || '') ? (
-              <Navbar creaditBalance={creaditBalance} />
-            ) : loginCount > 1 ? (
-              <Navbar creaditBalance={creaditBalance} />
-            ) : (
-              <Navbar creaditBalance={creaditBalance} />
-            )}
-            {showPopup ? (
-              <PopupForm onSubmit={handleSubmit} onCancel={handleCancel} />
-            ) : (
-              <>
-                {(accordionVisible || cloudinaryResponse) ? (
-                  <Steps
-                    projectId={projectId}
-                    newhistoryvideoClips={newvideoClips}
-                    newmainvideo={newmainvideo}
-                    errorMessage={errorMessage}
-                    accordionVisible={accordionVisible}
-                    cloudinaryResponse={cloudinaryResponse}
-                    userName={userName}
-                    creaditBalance={creaditBalance}
-                  />
-                ) : loginCount === 1 && (newProjectCount === undefined || '') ? (
-                  <HomeScreen userName={userName} creaditBalance={creaditBalance} />
-                ) : loginCount === 1 && newProjectCount >= 1 ? (
-                  <DragDropModal className="z-50" />
-                ) : loginCount > 1 && (newProjectCount === undefined || '') ? (
-                  <DragDropModal className="z-50" />
-                ) : loginCount > 1 && newProjectCount >= 1 ? (
-                  <DragDropModal className="z-50" />
-                ) : (
-                  null
-                )}
-                {!accordionVisible && errorMessage && (
-                  <div className="flex justify-center h-screen items-center">
-                    <div className="text-red-500 text-center  inline-block p-2 font-bold text-lg">
-                      {errorMessage}
-                    </div>
+        <section className="w-full overflow-x-auto px-3 " style={{ overflow: 'auto' }}>
+          <Modal className="z-50" />
+          {loginCount === 1 && (newProjectCount === undefined || '') ? (
+            <Navbar creaditBalance={creaditBalance} />
+          ) : loginCount > 1 ? (
+            <Navbar creaditBalance={creaditBalance} />
+          ) : (
+            <Navbar creaditBalance={creaditBalance} />
+          )}
+          {showPopup ? (
+            <PopupForm onSubmit={handleSubmit} onCancel={handleCancel} />
+          ) : (
+            <>
+              {(accordionVisible || cloudinaryResponse) ? (
+                <Steps
+                  projectId={projectId}
+                  newhistoryvideoClips={newvideoClips}
+                  newmainvideo={newmainvideo}
+                  errorMessage={errorMessage}
+                  accordionVisible={accordionVisible}
+                  cloudinaryResponse={cloudinaryResponse}
+                  userName={userName}
+                  creaditBalance={creaditBalance}
+                />
+              ) : loginCount === 1 && (newProjectCount === undefined || '') ? (
+                <HomeScreen userName={userName} creaditBalance={creaditBalance} />
+              ) : loginCount === 1 && newProjectCount >= 1 ? (
+                <DragDropModal className="z-50" />
+              ) : loginCount > 1 && (newProjectCount === undefined || '') ? (
+                <DragDropModal className="z-50" />
+              ) : loginCount > 1 && newProjectCount >= 1 ? (
+                <DragDropModal className="z-50" />
+              ) : (
+                null
+              )}
+              {!accordionVisible && errorMessage && (
+                <div className="flex justify-center h-screen items-center">
+                  <div className="text-red-500 text-center  inline-block p-2 font-bold text-lg">
+                    {errorMessage}
                   </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
+                </div>
+              )}
+            </>
+          )}
+        </section>
       </div>
       <Analytics />
     </div>
