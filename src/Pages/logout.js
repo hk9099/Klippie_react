@@ -26,6 +26,7 @@ function Logout({ showLogout }) {
                 TokenManager.removeToken();
                 setIsLoading(false);
                 navigate('/');
+                window.location.reload();
             }, 1500);
 
             // Clean up the timer when the component unmounts
