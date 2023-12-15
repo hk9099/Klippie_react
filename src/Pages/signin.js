@@ -161,7 +161,7 @@ function Signin() {
                 navigate('/dashboard');
                 setTimeout(() => {
                     window.location.reload();
-                },1000);
+                },500);
             } else {
                 ToastNotification({message: 'Invalid response from the server.', type: 'error'});
             }
