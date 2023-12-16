@@ -5,6 +5,7 @@ import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
 import { useSubscription } from '../context/SubscriptionContext.js';
 import { useSidebarContext } from '../context/SidebarContext';
+import { useNavigate } from'react-router-dom';
 
 const Navbar = ({ creaditBalance }) => {
     const { isApiCompleted } = useSidebarContext();
@@ -13,8 +14,19 @@ const Navbar = ({ creaditBalance }) => {
         console.log(subscribed, 'subscribed');
     }
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const userToken = TokenManager.getToken()[1]
-    const openModal = () => {
+    const navigate = useNavigate();
+    const user = TokenManager.getToken()
+    const [userToken, setUserToken] = useState(null);
+    useEffect(() => {
+      if (user === undefined || user === null) {
+        navigate('/');
+        window.location.reload();
+        return;
+      } else {
+        const userToken = TokenManager.getToken()[1]
+        setUserToken(userToken);
+      }
+    }, [navigate, user]);    const openModal = () => {
         setIsModalOpen(true);
     };
 

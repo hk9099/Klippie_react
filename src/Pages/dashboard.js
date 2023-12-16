@@ -23,14 +23,29 @@ import { Toaster } from 'react-hot-toast';
 
 export default function Dashboard() {
   const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
-  if (process.env.NODE_ENV === 'development') {
-    console.log(pageLoaded, 'pageLoaded');
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log(pageLoaded, 'pageLoaded');
+  // }
+  
   const location = useLocation();
-  const userToken = TokenManager.getToken()[1]
-  const loginCount = TokenManager.getToken()[0]
   const [showPopup, setShowPopup] = useState(false);
   const [mediaEditorClosed, setMediaEditorClosed] = useState(false);
+  const navigate = useNavigate();
+  const user = TokenManager.getToken()
+  const [userToken, setUserToken] = useState(null);
+  const [loginCount, setLoginCount] = useState(0);
+  useEffect(() => {
+    if (user === undefined || user === null) {
+      navigate('/');
+      window.location.reload();
+      return;
+    } else {
+      const userToken = TokenManager.getToken()[1]
+      setUserToken(userToken);
+      const loginCount = TokenManager.getToken()[0]
+      setLoginCount(loginCount);
+    }
+  }, [navigate, user]);
 
   useEffect(() => {
     let config = {
@@ -87,21 +102,20 @@ export default function Dashboard() {
     };
   }, []);
   const { setClipsFoundStatus } = useClipsFoundStatus();
-  const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams();
   const { cloudinaryResponse } = useCloudinary();
   const [projectId, setProjectId] = useState(null);
   const [newvideoClips, setNewvideoClips] = useState([]);
   const [newmainvideo, setnewMainVideo] = useState([]);
   const [accordionVisible, setAccordionVisible] = useState(true);
-  if (process.env.NODE_ENV === 'development') {
-    console.log(accordionVisible, 'accordionVisible');
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log(accordionVisible, 'accordionVisible');
+  // }
   const [errorMessage, setErrorMessage] = useState("");
   const [newProjectCount, setNewProjectCount] = useState('');
-  if (process.env.NODE_ENV === 'development') {
-    console.log(newProjectCount, 'newProjectCount');
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log(newProjectCount, 'newProjectCount');
+  // }
   const { userName } = useUserNickname();
   const { creaditBalance } = useUserNickname();
   const setError = (message) => {
@@ -116,21 +130,29 @@ export default function Dashboard() {
   // }, [loginCount]);
 
   useEffect(() => {
-    if (location.pathname === '/dashboard') {
-      setClipsFoundStatus(false)
-      const increments = TokenManager.getToken()[2]
-      setNewProjectCount(increments);
+    if (user === undefined || user === null) {
+      navigate('/');
+      window.location.reload();
+      return;
+    } else {
+      if (location.pathname === '/dashboard') {
+        setClipsFoundStatus(false)
+        const increments = TokenManager.getToken()[2]
+        setNewProjectCount(increments);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   useEffect(() => {
-    if (userToken) {
+    if (user) {
       navigate('/dashboard');
     } else {
       setShowPopup(true);
     }
   }, [ navigate]);
+
+ 
 
   const handleSubmit = async (values) => {
     if (process.env.NODE_ENV === 'development') {

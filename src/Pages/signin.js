@@ -43,7 +43,8 @@ function Signin() {
             // const email = atob(encodedEmail); // Decode email
             navigate('/dashboard');
             // setClipsFoundStatus(false);
-        }
+        } 
+        
     }, [user, navigate , setClipsFoundStatus]);
 
     // const handleGoogleLogin = () => {
@@ -158,10 +159,8 @@ function Signin() {
                 //     console.log('Cookie not found or expired.');
                 // }
 
-                navigate('/dashboard');
-                setTimeout(() => {
+                navigate.user('/dashboard');
                     window.location.reload();
-                },500);
             } else {
                 ToastNotification({message: 'Invalid response from the server.', type: 'error'});
             }

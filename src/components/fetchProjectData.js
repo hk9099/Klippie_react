@@ -4,7 +4,7 @@ import { TokenManager } from '../components/getToken.js';
 var HOSTINGURL = 'https://dev-api.getklippie.com';
 
 async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL) {
-
+    
     const userToken = TokenManager.getToken()[1]
 
     if (!userToken) {

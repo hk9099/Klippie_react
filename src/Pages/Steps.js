@@ -22,8 +22,19 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     }
     const { setClipsFoundStatus, setShowHomeStatus, setProjectCreated } = useClipsFoundStatus();
     const { fileDelete } = useFileSelected();
-    const userToken = TokenManager.getToken()[1]
     const navigate = useNavigate();
+    const user = TokenManager.getToken()
+    const [userToken, setUserToken] = useState(null);
+    useEffect(() => {
+      if (user === undefined || user === null) {
+        navigate('/');
+        window.location.reload();
+        return;
+      } else {
+        const userToken = TokenManager.getToken()[1]
+        setUserToken(userToken);
+      }
+    }, [navigate, user]);
     const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
     const [currentProjectId, setProjectId] = useState();

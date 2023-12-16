@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
@@ -36,14 +36,25 @@ const AccountModal = ({
 }) => {
     const { Subscription } = useSubscription();
     // const [token, setToken] = useState(null);
-    const userToken = TokenManager.getToken()[1]
+    const navigate = useNavigate();
+    const user = TokenManager.getToken()
+    const [userToken, setUserToken] = useState(null);
+    useEffect(() => {
+      if (user === undefined || user === null) {
+        navigate('/');
+        window.location.reload();
+        return;
+      } else {
+        const userToken = TokenManager.getToken()[1]
+        setUserToken(userToken);
+      }
+    }, [navigate, user]);
     // const [googleToken, setGoogleToken] = useState(null);
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     //eslint-disable-next-line
     const [social, setSocial] = useState(false);
-    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(!social ? 'profile' : 'changePassword');
     // useEffect(() => {
     //     const encodedToken = localStorage.getItem('_sodfhgiuhih');

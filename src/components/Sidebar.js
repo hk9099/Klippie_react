@@ -28,7 +28,7 @@ import ConfirmationModal from "../components/DeleteConfirmationModal.js";
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
-const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError  }) => {
+const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { setCloudinaryResponse } = useCloudinary();
   // const { clipsFound } = useClipsFoundStatus();
   //eslint-disable-next-line
@@ -38,6 +38,18 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const { setUserEmail } = useUserNickname();
   const { setCreaditBalance } = useUserNickname();
   const navigate = useNavigate();
+  const user = TokenManager.getToken()
+  const [userToken, setUserToken] = useState(null);
+  useEffect(() => {
+    if (user === undefined || user === null) {
+      navigate('/');
+      window.location.reload();
+      return;
+    } else {
+      const userToken = TokenManager.getToken()[1]
+      setUserToken(userToken);
+    }
+  }, [navigate, user]);
   const [initialized, setInitialized] = useState(false);
   const [userEmailAddress, setUserEmailAddress] = useState("");
   const [creadit, setCreadit] = useState("");
@@ -64,8 +76,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const isMountedRef = useRef(false);
   const [projectData, setProjectData] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
-  const userToken = TokenManager.getToken()[1]
-  const [ showDeleteConfirmation,setShowDeleteConfirmation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [deleteProject, setDeleteProject] = useState(null);
   //eslint-disable-next-line
@@ -85,16 +96,22 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   useEffect(() => {
     if (!initialized) {
-      fetchUserProfile(
-        initialized,
-        navigate,
-        setUserNickname,
-        setUserEmailAddress,
-        setUserAvatar,
-        setCreadit,
-        HOSTINGURL
-      );
-      setRefreshProfile(false);
+      if (user === undefined || user === null) {
+        navigate('/');
+        window.location.reload();
+        return;
+      } else {
+        fetchUserProfile(
+          initialized,
+          navigate,
+          setUserNickname,
+          setUserEmailAddress,
+          setUserAvatar,
+          setCreadit,
+          HOSTINGURL
+        );
+        setRefreshProfile(false);
+      }
     }
     // eslint-disable-next-line
   }, [refreshProfile, projectCreated]);
@@ -112,11 +129,18 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-    console.log('isApiCompleted', isApiCompleted);
+      console.log('isApiCompleted', isApiCompleted);
     }
-    fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL);
-    for (let i = 0; i < Math.min(3, projectData.length); i++) {
+    if (user === undefined || user === null) {
+      navigate('/');
+      window.location.reload();
+      return;
+    } else {
+      fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL);
+      for (let i = 0; i < Math.min(3, projectData.length); i++) {
+      }
     }
+    
     // eslint-disable-next-line
   }, [isApiCompleted]);
 
@@ -157,7 +181,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       axios.request(config)
         .then((response) => {
           if (process.env.NODE_ENV === 'development') {
-          console.log(response.data, 'response.data');
+            console.log(response.data, 'response.data');
           }
           var userNickname = response.data.name;
           setUserNickname(userNickname);
@@ -176,13 +200,13 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               generateAvatar(userEmailAddress)
                 .then((avatarUrl) => {
                   if (process.env.NODE_ENV === 'development') {
-                  console.log(avatarUrl, 'avatarUrl');  
+                    console.log(avatarUrl, 'avatarUrl');
                   }
                   setUserAvatar(avatarUrl);
                 })
                 .catch((error) => {
                   if (process.env.NODE_ENV === 'development') {
-                  console.log(error);
+                    console.log(error);
                   }
                 });
             }
@@ -193,12 +217,12 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         })
         .catch((error) => {
           if (process.env.NODE_ENV === 'development') {
-          console.log(error);
+            console.log(error);
           }
         });
     }
     // eslint-disable-next-line
-  }, [ ]);
+  }, []);
 
   // Function to generate the avatar URL
   const generateAvatar = (emailAddress) => {
@@ -229,14 +253,14 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           .request(config)
           .then((response) => {
             if (process.env.NODE_ENV === 'development') {
-            console.log(response.data, 'response.data');
+              console.log(response.data, 'response.data');
             }
             // setUserAvatar(avatarData);
             setInitialized(true);
           })
           .catch((error) => {
             if (process.env.NODE_ENV === 'development') {
-            console.log(error);
+              console.log(error);
             }
           });
 
@@ -244,7 +268,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       })
       .catch((error) => {
         if (process.env.NODE_ENV === 'development') {
-        console.log(error);
+          console.log(error);
         }
         throw error;
       });
@@ -253,7 +277,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   const deleteLine = (index) => {
     if (process.env.NODE_ENV === 'development') {
-    console.log(projectData[index].name, 'index')
+      console.log(projectData[index].name, 'index')
     }
     setDeleteProject(projectData[index].name);
     setDeleteIndex(index);
@@ -303,14 +327,14 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           setError('');
         } catch (error) {
           if (process.env.NODE_ENV === 'development') {
-          console.log(error);
+            console.log(error);
           }
         }
         setShowDeleteConfirmation(false);
         setDeleteIndex(null);
       } catch (error) {
         if (process.env.NODE_ENV === 'development') {
-        console.log(error);
+          console.log(error);
         }
       }
     }
@@ -332,7 +356,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const handleSaveClick = (index) => {
     const updatedLine = tempLines[index];
     if (process.env.NODE_ENV === 'development') {
-    console.log(updatedLine, 'updatedLine')
+      console.log(updatedLine, 'updatedLine')
     }
     const data = qs.stringify({
       id: projectData[index].id,
@@ -354,7 +378,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     axios.request(config)
       .then((response) => {
         if (process.env.NODE_ENV === 'development') {
-        console.log(response.data, 'updatedLine');
+          console.log(response.data, 'updatedLine');
         }
         const newLines = [...lines];
         newLines[index] = updatedLine;
@@ -363,7 +387,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       })
       .catch((error) => {
         if (process.env.NODE_ENV === 'development') {
-        console.log(error);
+          console.log(error);
         }
       });
   };
@@ -375,7 +399,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   const handleProjectClick = async (index) => {
     if (process.env.NODE_ENV === 'development') {
-    console.log(projectData[index].id);
+      console.log(projectData[index].id);
     }
     const data = JSON.stringify({
       "id": projectData[index].id
@@ -394,13 +418,13 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
     const response = await axios.request(config);
     if (process.env.NODE_ENV === 'development') {
-    console.log(response.data, 'response.data');
+      console.log(response.data, 'response.data');
     }
     const message = response.data.data;
 
     if (message === "Transcribing video completed") {
       if (process.env.NODE_ENV === 'development') {
-      console.log(response.data.message, 'response.data.data.status')
+        console.log(response.data.message, 'response.data.data.status')
       }
       ToastNotification({ message: response.data.message, type: 'success' });
     }
@@ -482,7 +506,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           <button
             // disabled={!clipsFound}
             // data-tooltip-id={!clipsFound ? "disabled" : undefined}
-            className={`newProject flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full  dark:text-white  border-animation ${!open && "justify-center"}`}onClick={handleAddNewVideo}>
+            className={`newProject flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full  dark:text-white  border-animation ${!open && "justify-center"}`} onClick={handleAddNewVideo}>
             <div
               className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full bg-white dark:bg-gray-800 dark:text-white ${!open && "justify-center"
                 }`}
@@ -603,7 +627,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               )}
             </div>
           )}
- 
+
           {/* <div className="flex-grow w-1/4 p-4 bg-gray-200">
   <h2 className="text-2xl font-semibold">Video Preview</h2>
   {previewVideoURL && (

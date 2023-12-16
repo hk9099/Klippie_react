@@ -437,16 +437,9 @@ function HomeScreen({ userName, creaditBalance }) {
         <>
             <Toaster position="top-center" />
             <div className="flex flex-col  " >
-                <div className="">
-                    {/* <Navbar creaditBalance={creaditBalance} /> */}
-                </div>
                 <section {...getRootProps()} onClick={() => { fileInputRef.current && fileInputRef.current.click(); }}
-
-                    className={`flex-grow flex flex-col overflow-hidden dark:bg-transparent`}
-                >
-                    <div
-                        className={`overflow-y-auto flex-grow`}
-                    >
+                    className={`flex-grow flex flex-col overflow-hidden dark:bg-transparent`}>
+                    <div className={`overflow-y-auto flex-grow`}>
                         <div className="px-16 flex flex-col justify-evenly select-none ">
                             <h1 className="text-white  sm:text-2xl md:text-2xl lg:text-3xl xl:text-5xl 2xl:text-6xl 
                              text-left block font-medium w-full font-montserrat py-3">

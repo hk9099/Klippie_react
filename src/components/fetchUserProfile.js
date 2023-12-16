@@ -2,20 +2,28 @@ import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
 
 // Define the async function to fetch user profile
-var userToken = TokenManager.getToken()[1]
+const user = TokenManager.getToken()
+// var userToken = TokenManager.getToken()[1]
 const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserEmailAddress, setUserAvatar,setCreadit, HOSTINGURL) => {
+    if (user=== null || user === undefined) {
+        navigate("/");
+    } else {
+        var userToken = TokenManager.getToken()[1]
+    }
 
-    const getToken = () => {
-        const encodedToken = localStorage.getItem('_sodfhgiuhih');
+    // const getToken = () => {
+    //     const encodedToken = localStorage.getItem('_sodfhgiuhih');
 
-        if (encodedToken) {
-            const decodedToken = atob(encodedToken);
-            const userInfo = JSON.parse(decodedToken);
-            return userInfo.token.access_token;
-        } else {
-            return null;
-        }
-    };
+    //     if (encodedToken) {
+    //         const decodedToken = atob(encodedToken);
+    //         const userInfo = JSON.parse(decodedToken);
+    //         return userInfo.token.access_token;
+    //     } else {
+    //         return null;
+    //     }
+    // };
+   
+    
     if (!initialized) {
         // const encodedEmail = localStorage.getItem("_auth");
 
@@ -55,7 +63,7 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
                 if (userAvatarUrl) {
                     setUserAvatar(userAvatarUrl);
                 } else {
-                    await generateAvatar(userEmailAddress, setUserAvatar, getToken, HOSTINGURL);
+                    await generateAvatar(userEmailAddress, setUserAvatar, userToken, HOSTINGURL);
                 }
             } else {
                 setUserAvatar(userAvatar);
@@ -70,7 +78,7 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
 };
 
 // Define the async function to generate the avatar URL
-const generateAvatar = async (emailAddress, setUserAvatar, getToken, HOSTINGURL) => {
+const generateAvatar = async (emailAddress, setUserAvatar, userToken, HOSTINGURL) => {
     const userAvatar = emailAddress.split('@')[0];
     const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
 

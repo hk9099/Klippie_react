@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -7,7 +8,19 @@ import FilestackUploader from "./FileStackPicker";
 import { TokenManager } from '../components/getToken.js';
 // import { updateMainVideo } from "./data";
 const Modal = ({ onSubmit, isOpen, onClose }) => {
-    const userToken = TokenManager.getToken()[1]
+    const navigate = useNavigate();
+    const user = TokenManager.getToken()
+    const [userToken, setUserToken] = useState(null);
+    useEffect(() => {
+      if (user === undefined || user === null) {
+        navigate('/');
+        window.location.reload();
+        return;
+      } else {
+        const userToken = TokenManager.getToken()[1]
+        setUserToken(userToken);
+      }
+    }, [navigate, user]);
     //eslint-disable-next-line
     const [selectedOption, setSelectedOption] = useState("upload");
     //eslint-disable-next-line

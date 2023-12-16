@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -14,7 +15,19 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
     const [successMessage, setSuccessMessage] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
-    const userToken = TokenManager.getToken()[1]
+    const navigate = useNavigate();
+    const user = TokenManager.getToken()
+    const [userToken, setUserToken] = useState(null);
+    useEffect(() => {
+      if (user === undefined || user === null) {
+        navigate('/');
+        window.location.reload();
+        return;
+      } else {
+        const userToken = TokenManager.getToken()[1]
+        setUserToken(userToken);
+      }
+    }, [navigate, user]);
     const validationSchema = Yup.object({
         userNickname: Yup.string().required('Required'),
     });

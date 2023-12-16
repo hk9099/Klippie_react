@@ -17,6 +17,7 @@ import { TokenManager } from '../components/getToken.js';
 import ToastNotification from "../components/ToastNotification";
 import JSZip from 'jszip';
 import { Toaster } from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
 export default function AccordionSection({ videoClips, videoURl, clips }) {
     const { fileselected, fileselecteddata, setFileDelete } = useFileSelected();
@@ -28,8 +29,19 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
     const [downloadProgress, setDownloadProgress] = useState(0);
     const [currentDownloadingVideo, setCurrentDownloadingVideo] = useState(null);
     const [isDownloadModalOpen, setDownloadModalOpen] = useState(false);
-    const userToken = TokenManager.getToken()[1]
-    const toggleAccordion = (index) => {
+    const navigate = useNavigate();
+    const user = TokenManager.getToken()
+    const [userToken, setUserToken] = useState(null);
+    useEffect(() => {
+      if (user === undefined || user === null) {
+        navigate('/');
+        window.location.reload();
+        return;
+      } else {
+        const userToken = TokenManager.getToken()[1]
+        setUserToken(userToken);
+      }
+    }, [navigate, user]);    const toggleAccordion = (index) => {
         setOpenStates((prev) =>
             prev.map((state, i) => (i === index ? !state : state))
         );
