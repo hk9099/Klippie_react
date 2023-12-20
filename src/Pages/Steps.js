@@ -227,11 +227,11 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                                 setClipsFoundStatus(false);
                             }
 
-                            if (message === "Transcribing video completed") {
-                                // Set setIsApiCompleted(true)
-                                setIsApiCompleted(true);
-                                setClipsFoundStatus(false);
-                            }
+                        }
+                        if (message === "Transcribing video completed") {
+                            // Set setIsApiCompleted(true)
+                            setIsApiCompleted(true);
+                            setClipsFoundStatus(false);
                         }
 
                     } catch (error) {

@@ -545,7 +545,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             />
           )}
           <div className={` flex-grow overflow-auto backdrop-blur-xl history ${lines.length === 0 ? "flex items-center justify-center " : ""}  `}>
-            {isLoadingHistory ? (
+            {/* {isLoadingHistory ? (
               <div className="flex items-center justify-center mb-4 text-blue-500 h-[87%]">
                 <span className="" style={{ userSelect: "none" }}>
                   <RotatingLines
@@ -557,7 +557,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                   />
                 </span>
               </div>
-            ) : (
+            ) : ( */}
               <div className={` ${!open && "hidden"} relative`}>
                 {lines.length === 0 ? (
                   <div className="text-center text-gray-500 font-semibold dark:text-gray-300 select-none cursor-not-allowed">
@@ -636,7 +636,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                     ))
                 )}
               </div>
-            )}
+             {/* )} */}
 
             {/* <div className="flex-grow w-1/4 p-4 bg-gray-200">
   <h2 className="text-2xl font-semibold">Video Preview</h2>
