@@ -29,12 +29,13 @@ const ChangePasswordSchema = Yup.object().shape({
 
 const AccountModal = ({
     showAccount,
-    onclose,
+    onClose,
     userNickname,
     userEmailAddress,
     avatar,
 }) => {
     const { Subscription } = useSubscription();
+    console.log(Subscription, 'subscription')
     // const [token, setToken] = useState(null);
     const navigate = useNavigate();
     const user = TokenManager.getToken()
@@ -114,7 +115,7 @@ const AccountModal = ({
                     </h2>
                     <button
                         onClick={() => {
-                            onclose();
+                            onClose();
                         }}
                         className="text-gray-600 hover:text-gray-800 dark:text-gray-200 dark:hover:text-gray-300"
                     >
@@ -155,8 +156,8 @@ const AccountModal = ({
                         {!social && (
                             <button
                                 onClick={() => setActiveTab('subscriptions')}
-                                className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white ${Subscription === null ? 'hidden' : 'block'}`}
-                            >
+                                className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white ${Subscription ? 'block' : 'hidden'}`}
+                                >
                                 Subscriptions
                             </button>
                         )}

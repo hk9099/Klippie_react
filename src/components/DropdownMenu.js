@@ -49,7 +49,7 @@ const DropdownMenu = ({ isOpen, position, showLogout, userNickname, userEmailAdd
                         onClick={handleOpenContactUsModal} // Open Contact Us modal on click
                         className="flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
                         <span className='text-2xl h-6 w-12 flex items-center justify-center'><BsHeadset /></span>
-                        <span className='origin-left duration-300 hover:block text-sm'>Contect Us</span>
+                        <span className='origin-left duration-300 hover:block text-sm'>Contact Us</span>
                     </p>
 
                     {isContactUsModalOpen && (

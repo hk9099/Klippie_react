@@ -4,21 +4,35 @@ import PricingCard from '../components/PricingCard';
 // import Logo from '../assets/images/logo.svg';
 import axios from 'axios';
 import { RxCross2 } from "react-icons/rx";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TokenManager } from '../components/getToken.js';
 import { useSubscription } from '../context/SubscriptionContext.js';
-
 export default function PricingCardsContainer({ isOpen, onClose }) {
+    const navigate = useNavigate();
     const { PlanSubscribed, setSubscription, setPlanSubscribed } = useSubscription();
     if (process.env.NODE_ENV === 'development') {
-    console.log(PlanSubscribed, "planSubscribed");
+        console.log(PlanSubscribed, "planSubscribed");
     }
     const [pricingData, setPricingData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const userToken = TokenManager.getToken()[1]
+    const user = TokenManager.getToken()
+    const [userToken, setUserToken] = useState(null);
+    console.log(userToken, 'userToken');
+
+    useEffect(() => {
+        if (user === undefined || user === null) {
+            navigate('/');
+            window.location.reload();
+            return;
+        } else {
+            const userToken = TokenManager.getToken()[1]
+            setUserToken(userToken);
+        }
+    }, [navigate, user]);
     const [freePlan, setFreePlan] = useState(false);
     const [paidPlan, setPaidPlan] = useState(false);
     const fetchSubscriptions = async () => {
+        console.log('Fetching subscriptions');
         let config = {
             method: 'post',
             maxBodyLength: Infinity,
@@ -31,7 +45,7 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
 
         const response = await axios(config);
         if (process.env.NODE_ENV === 'development') {
-        console.log(response, 'response.data.data.is_active');
+            console.log(response, 'response.data.data.is_active');
         }
         setSubscription(response.data.data);
         if (response.data.data === null) {
@@ -45,9 +59,13 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
     }
 
     useEffect(() => {
-        fetchSubscriptions();
+        if (userToken === undefined || userToken === null) {
+            console.log('userToken is null');
+        } else {
+            fetchSubscriptions();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [userToken]);
 
     useEffect(() => {
         axios
@@ -80,7 +98,7 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                         time: 'Per Month',
                         description: 'For Individual Content Creators',
                         planDetails: [
-                            { Type: 'SPECIAL PLAN' },
+                            { Type: 'PREMIUM PLAN'},
                             { 'Upload Minutes': 'Unlimited' },
                             { Users: '1' },
                             // { Modal: 'Advanced' }
@@ -98,7 +116,7 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
             })
             .catch((error) => {
                 if (process.env.NODE_ENV === 'development') {
-                console.log(error);
+                    console.log(error);
                 }
                 setIsLoading(false);
             });

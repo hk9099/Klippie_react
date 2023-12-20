@@ -69,9 +69,13 @@ const Navbar = ({ creaditBalance }) => {
             }
         };
 
+        if (userToken === undefined || userToken === null) {
+            return;
+        } else {
         fetchSubscriptions();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isApiCompleted]);
+    }, [isApiCompleted,userToken]);
 
 
 

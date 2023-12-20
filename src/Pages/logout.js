@@ -7,10 +7,10 @@ import { HiOutlineLogout } from "react-icons/hi";
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
-function Logout({ showLogout }) {
+function Logout({ isOpen, onClose }) {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const [isOpen, setIsOpen] = useState(false);
+    // const [isOpen, setIsOpen] = useState(false);
 
     const handleLogout = () => {
         ToastNotification({message: 'Logging out...', type: 'loading'});
@@ -35,14 +35,14 @@ function Logout({ showLogout }) {
     }, [isLoading, navigate]);
 
     const handleDeactivate = () => {
-        setIsOpen(false); // Close the modal
-        handleLogout(); // Call the handleLogout function
+        setIsLoading(true);
+        handleLogout(); 
     };
 
     return (
         <>
             <Toaster position="top-center" />
-            {isLoading ? (
+            {/* {isLoading ? (
                 <p
                     className={`flex items-center gap-x-6 p-3 text-base font-normal rounded-lg cursor-pointer dark:text-white hover:bg-gray-200 dark:hover-bg-gray-700`}
                     onClick={() => setIsOpen(true)}
@@ -69,21 +69,21 @@ function Logout({ showLogout }) {
                         Log Out
                     </span>
                 </p>
-            )}
+            )} */}
 
-            {isOpen && (
+            
                 <div className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center inset-0 backdrop-blur-md bg-black bg-opacity-60 z-50">
                     <div className="bg-gray-800 w-full max-w-md p-6 rounded-lg border shadow-lg z-50 border-gray-700 text-white">
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-xl font-semibold">Log Out</h2>
-                            <RxCross2 className="text-2xl cursor-pointer" onClick={() => setIsOpen(false)} />
+                            <RxCross2 className="text-2xl cursor-pointer" onClick={onClose} />
                         </div>
                         <p className="text-gray-300 mb-4">
                             Are you sure you want to log out?
                         </p>
                         <div className="flex justify-end">
                             <button
-                                onClick={() => setIsOpen(false)}
+                                onClick={onClose}
                                 className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 mr-2"
                             >
                                 Cancel
@@ -93,12 +93,12 @@ function Logout({ showLogout }) {
                                 className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center"
                             >
                                 <HiOutlineLogout className="mr-2" />
-                                Log Out
+                                {isLoading ? 'Logging out...' : 'Log Out'}
                             </button>
                         </div>
                     </div>
                 </div>
-            )}
+           
         </>
     );
 }

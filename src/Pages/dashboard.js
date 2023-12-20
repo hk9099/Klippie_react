@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef} from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
@@ -18,8 +18,11 @@ import PopupForm from '../components/sessionPopup.js';
 import DragDropModal from "../components/Drag&DropModal";
 import { useFileSelected } from "../context/SelectionContext.js";
 import ToastNotification from "../components/ToastNotification";
-import { Toaster } from 'react-hot-toast';
-
+// import { Toaster } from 'react-hot-toast';
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+import '@mantine/dropzone/styles.css';
 
 export default function Dashboard() {
   const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
@@ -33,7 +36,9 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const user = TokenManager.getToken()
   const [userToken, setUserToken] = useState(null);
+  console.log(userToken, 'userToken');
   const [loginCount, setLoginCount] = useState(0);
+
   useEffect(() => {
     if (user === undefined || user === null) {
       navigate('/');
@@ -47,25 +52,25 @@ export default function Dashboard() {
     }
   }, [navigate, user]);
 
-  useEffect(() => {
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://dev-api.getklippie.com/v1/project/current-running-project',
-      headers: {
-        'accept': 'application/json',
-        'Authorization': 'Bearer ' + userToken
-      }
-    };
+  // useEffect(() => {
+  //   let config = {
+  //     method: 'post',
+  //     maxBodyLength: Infinity,
+  //     url: 'https://dev-api.getklippie.com/v1/project/current-running-project',
+  //     headers: {
+  //       'accept': 'application/json',
+  //       'Authorization': 'Bearer ' + userToken
+  //     }
+  //   };
 
-    axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data), 'response.datttttttttttttta');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [])
+  //   axios.request(config)
+  //     .then((response) => {
+  //       console.log(JSON.stringify(response.data), 'response.datttttttttttttta');
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, [userToken])
 
   useEffect(() => {
     const handleMediaEditorClosed = () => {
@@ -209,6 +214,8 @@ export default function Dashboard() {
     setShowPopup(false);
   };
   var HOSTINGURL = 'https://dev-api.getklippie.com';
+
+
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       console.log('routeProjectId', routeProjectId);
@@ -222,8 +229,17 @@ export default function Dashboard() {
       navigate(`/dashboard/${routeProjectId}`);
     }
 
-    const handleProjectClick = async (index) => {
+    if (!userToken) {
+      setAccordionVisible(false);
+      setProjectId('');
+      return;
+    } else {
+      setClipsFoundStatus(true);
+      navigate(`/dashboard/${routeProjectId}`);
+    }
 
+    const handleProjectClick = async (index) => {
+      // const userToken = TokenManager.getToken()[1]
       let maindata = JSON.stringify({
         "id": routeProjectId
       });
@@ -304,14 +320,10 @@ export default function Dashboard() {
       }
     };
 
-
-    if (pageLoaded === true) {
+    
       handleProjectClick()
-    } else {
-      handleProjectClick()
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo, fileDelete, projectId, pageLoaded]);
+  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo, fileDelete, projectId, pageLoaded,userToken]);
 
 
 
@@ -326,11 +338,16 @@ export default function Dashboard() {
     setProjectId(projectId);
   }, [projectId, pageLoaded]);
 
+  // const showToast = () => {
+  //   ToastNotification({ type: 'success', message:' error.response.data.detail' })
+  // }
+
   return (
     <div className="h-screen" style={{
       zIndex: '1',
       position: 'relative',
     }}>
+      <MantineProvider>
       {/* <Toaster position="top-center" /> */}
       <div className="flex h-full">
         {showPopup ? null : (
@@ -344,6 +361,7 @@ export default function Dashboard() {
           />
         )}
         <section className="w-full overflow-x-auto px-3 " style={{ overflow: 'auto' }}>
+          {/* <button type="button" className="" onClick={showToast}>Toast</button> */}
           <Modal className="z-50" />
           {loginCount === 1 && (newProjectCount === undefined || '') ? (
             <Navbar creaditBalance={creaditBalance} />
@@ -390,6 +408,7 @@ export default function Dashboard() {
         </section>
       </div>
       <Analytics />
+      </MantineProvider>
     </div>
 
   );

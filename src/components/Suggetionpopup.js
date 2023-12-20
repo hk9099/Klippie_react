@@ -44,7 +44,7 @@ function Suggetionpopup({ isOpen, onClose }) {
                       ⏳ This may take up to 15 minutes
                     </li>
                     <li className='font-bold text-lg'>
-                      📧 We will email you when it's complete
+                      📧 We’ll email you when they’re ready!
                     </li>
                   </ul>
                 </div>

@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
     },
     {
       target: ".upgradetopro",
-      content: "Upgrade to Pro to upload unlimited videos",
+      content: "Get Unlimited Uploads with Klippie Pro",
     }
   ]);
 

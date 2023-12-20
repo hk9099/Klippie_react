@@ -320,7 +320,7 @@ export default function CloudinaryVideoPlayer({
             logoOnclickUrl: 'https://klippie-react.vercel.app',
             colors: {
                 base: '#7360b96d',
-                accent: '#7360b96d',
+                accent: '7360b96d',
                 text: '#ffffff'
             },
             // floatingWhenNotVisible: 'right',

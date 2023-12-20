@@ -108,6 +108,7 @@ console.log(videoClips, "videoClips");
         showNavigationButtons={true}
         visible={videoClips.length > 0 ? true : false}
         displayMode="compact"
+        allowedPageSizes={[3, 5, 10]}
       />
       <Column
         dataField="video"
