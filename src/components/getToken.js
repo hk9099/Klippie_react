@@ -34,7 +34,7 @@ export const TokenManager = {
         Cookies.remove('userToken_expires');
         Cookies.remove('encodedUser');
         Cookies.remove('increment');
-        Cookies.remove('tourStatus');
+        // Cookies.remove('tourStatus');
     },
     isTokenExpired: () => {
         const expirationTime = new Date(Cookies.get('userToken_expires'));

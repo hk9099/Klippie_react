@@ -33,7 +33,7 @@ const ToastNotification = ({ type, message }) => {
       case 'error':
         toast.custom((t) => (
           <MantineProvider>
-          <div className="bg-red-500 p-4 rounded-md shadow-md w-auto d-flex border-l-8 border-red-700 flex items-center justify-between font-monospace">
+          <div className="bg-white p-4 rounded-md shadow-md w-auto d-flex border-l-8 border-red-500 flex items-center justify-between font-monospace">
             <div className="text-red-600">{message}</div>
             <CloseButton size="lg"
             styles={{

@@ -141,7 +141,7 @@ function Signin() {
             );
 
             if (response && response.data) {
-                ToastNotification({message: 'Log in successful',type: 'success'});
+                // ToastNotification({message: 'Log in successful',type: 'success'});
                 const encodedUser = btoa(JSON.stringify(response.data));
                 // localStorage.setItem('_sodfhgiuhih', encodedUser);
                 // const encodedEmail = btoa(values.email);

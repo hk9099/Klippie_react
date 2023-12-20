@@ -233,59 +233,50 @@ export default function CloudinaryVideoPlayer({
     const handleDownload = async () => {
         try {
             setIsLoading(true);
-
+    
             if (!src) {
                 ToastNotification({ message: 'No video source found', type: 'error' });
+                setIsLoading(false);
+                return;
             }
-
+    
+            // Ensure that the src URL uses HTTPS
+            const secureSrc = src.replace(/^http:/, 'https:');
+    
+            const response = await fetch(secureSrc);
+            if (process.env.NODE_ENV === 'development') {
+                console.log(response);
+            }
+    
+            const videoBlob = await response.blob();
+    
+            const blobURL = URL.createObjectURL(videoBlob);
+    
+            const downloadLink = document.createElement("a");
+            downloadLink.href = blobURL;
+    
             if (type === "mp4" || type === "video") {
-                const response = await fetch(src);
-                if (process.env.NODE_ENV === 'development') {
-                console.log(response);
-                }
-                const videoBlob = await response.blob();
-
-                const blobURL = URL.createObjectURL(videoBlob);
-
-                const downloadLink = document.createElement("a");
-                downloadLink.href = blobURL;
-                downloadLink.download = `${title}.mp4`
-                document.body.appendChild(downloadLink);
-
-                // Programmatically click the link to trigger the download
-                downloadLink.click();
-
-                // Clean up: Remove the download link and revoke the Blob object URL
-                document.body.removeChild(downloadLink);
-                URL.revokeObjectURL(blobURL);
+                downloadLink.download = `${title}.mp4`;
             } else {
-                const response = await fetch(src);
-                if (process.env.NODE_ENV === 'development') {
-                console.log(response);
-                }
-                const videoBlob = await response.blob();
-
-                const blobURL = URL.createObjectURL(videoBlob);
-
-                const downloadLink = document.createElement("a");
-                downloadLink.href = blobURL;
-                downloadLink.download = `${title}.mp3`
-                document.body.appendChild(downloadLink);
-
-                // Programmatically click the link to trigger the download
-                downloadLink.click();
-
-                // Clean up: Remove the download link and revoke the Blob object URL
-                document.body.removeChild(downloadLink);
-                URL.revokeObjectURL(blobURL);
+                downloadLink.download = `${title}.mp3`;
             }
-
+    
+            document.body.appendChild(downloadLink);
+    
+            // Programmatically click the link to trigger the download
+            downloadLink.click();
+    
+            // Clean up: Remove the download link and revoke the Blob object URL
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(blobURL);
+    
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
             console.error("Error while downloading the video:", error);
         }
     };
+    
 
     
 

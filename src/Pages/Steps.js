@@ -18,7 +18,7 @@ import { Toaster } from 'react-hot-toast';
 
 const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance }) => {
     if (process.env.NODE_ENV === 'development') {
-    console.log(cloudinaryResponse, 'cloudinaryResponse');
+        console.log(cloudinaryResponse, 'cloudinaryResponse');
     }
     const { setClipsFoundStatus, setShowHomeStatus, setProjectCreated } = useClipsFoundStatus();
     const { fileDelete } = useFileSelected();
@@ -26,14 +26,14 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     const user = TokenManager.getToken()
     const [userToken, setUserToken] = useState(null);
     useEffect(() => {
-      if (user === undefined || user === null) {
-        navigate('/');
-        window.location.reload();
-        return;
-      } else {
-        const userToken = TokenManager.getToken()[1]
-        setUserToken(userToken);
-      }
+        if (user === undefined || user === null) {
+            navigate('/');
+            window.location.reload();
+            return;
+        } else {
+            const userToken = TokenManager.getToken()[1]
+            setUserToken(userToken);
+        }
     }, [navigate, user]);
     const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
@@ -52,7 +52,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     const { setIsApiCompleted } = useSidebarContext();
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
     const location = useLocation();
-    
+
     useEffect(() => {
         // Check the pathname of the current URL
         if (location.pathname !== '/dashboard') {
@@ -66,7 +66,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
         if (process.env.NODE_ENV === 'development') {
-        console.log(newhistoryvideoClips, 'updatedVideoClips');
+            console.log(newhistoryvideoClips, 'updatedVideoClips');
         }
     }, [newhistoryvideoClips, fileDelete]);
 
@@ -151,7 +151,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                 setProjectId(response1.data.data.id);
             } catch (error) {
                 if (process.env.NODE_ENV === 'development') {
-                console.log(error.response.data.error, 'error.response.data.message');
+                    console.log(error.response.data.error, 'error.response.data.message');
                 }
                 ToastNotification({ message: error.response.data.error, type: 'error' });
             }
@@ -195,9 +195,14 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
 
                         const response = await axios.request(config);
                         if (process.env.NODE_ENV === 'development') {
-                        console.log(response.data, 'response.data');
+                            console.log(response.data, 'response.data');
                         }
                         const message = response.data.data;
+
+                        if (message === "Project Created") {
+                            setIsApiCompleted(true);
+                            setClipsFoundStatus(false);
+                        }
 
                         if (message === "Transcribing video completed") {
                             setIsApiCompleted(true);
@@ -221,7 +226,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                         // }
                     } catch (error) {
                         if (process.env.NODE_ENV === 'development') {
-                        console.log(error);
+                            console.log(error);
                         }
                     }
                 };

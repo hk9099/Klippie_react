@@ -25,22 +25,22 @@ function MyProgressBar({ bytesUploaded, totalBytes }) {
       className="custom-progress"
       theme={{
         error: {
-          symbol: percent + '%',
+          symbol: percent + '% Upload',
           trailColor: 'pink',
           color: 'red'
         },
         default: {
-          symbol: percent + '%',
+          symbol: percent + '% Upload',
           trailColor: 'lightblue',
           color: 'blue'
         },
         active: {
-          symbol: percent + '%',
+          symbol: percent + '% Upload',
           trailColor: 'yellow',
           color: 'orange'
         },
         success: {
-          symbol: percent + '%',
+          symbol: percent + '% Upload',
           trailColor: '#ACDF87',
           color: 'green'
         }

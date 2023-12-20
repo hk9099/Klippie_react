@@ -93,6 +93,7 @@ console.log(videoClips, "videoClips");
           setFileselecteddata([]);
         }
       }}
+      noDataText="No Clips Found For This Project"
     >
       <LoadPanel enabled={false} />
       <Selection
@@ -100,7 +101,7 @@ console.log(videoClips, "videoClips");
         selectAllMode="allPages"
         showCheckBoxesMode="always"
       />
-      <Paging defaultPageSize={3} 
+      <Paging defaultPageSize={20} 
       />
       <Pager
         showPageSizeSelector={true}
@@ -108,7 +109,7 @@ console.log(videoClips, "videoClips");
         showNavigationButtons={true}
         visible={videoClips.length > 0 ? true : false}
         displayMode="compact"
-        allowedPageSizes={[3, 5, 10]}
+        allowedPageSizes={[5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80]}
       />
       <Column
         dataField="video"
