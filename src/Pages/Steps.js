@@ -199,32 +199,41 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                         }
                         const message = response.data.data;
 
-                        if (message === "Project Created") {
-                            setIsApiCompleted(true);
-                            setClipsFoundStatus(false);
-                        }
+                        // if (message === "Project Created") {
+                        //     setIsApiCompleted(true);
+                        //     setClipsFoundStatus(false);
+                        // }
 
-                        if (message === "Transcribing video completed") {
-                            setIsApiCompleted(true);
-                            setClipsFoundStatus(false);
-                        }
+                        // if (message === "Transcribing video completed") {
+                        //     setIsApiCompleted(true);
+                        //     setClipsFoundStatus(false);
+                        // }
 
                         if (message === 'Clips generated') {
                             navigate(`/dashboard/${currentProjectId}`);
                             setProjectId('')
                             setError('');
-                            setIsApiCompleted(true);
                             setClipsFoundStatus(true);
                         }
 
                         // Check if the message is not in the list of unique messages
-                        // if (!uniqueMessages.includes(message)) {
-                        //     // Add the message to the list of unique messages
-                        //     setUniqueMessages([...uniqueMessages, message]);
+                        // Check if the message is not in the list of unique messages
+                        if (!uniqueMessages.includes(message)) {
+                            // Add the message to the list of unique messages
+                            setUniqueMessages([...uniqueMessages, message]);
 
-                        //     // Display the message (you can do this in your UI as needed)
-                        //     enqueueSnackbar(message, { variant: 'info', autoHideDuration: 2000 });
-                        // }
+                            if (message === "Project Created") {
+                                setIsApiCompleted(true);
+                                setClipsFoundStatus(false);
+                            }
+
+                            if (message === "Transcribing video completed") {
+                                // Set setIsApiCompleted(true)
+                                setIsApiCompleted(true);
+                                setClipsFoundStatus(false);
+                            }
+                        }
+
                     } catch (error) {
                         if (process.env.NODE_ENV === 'development') {
                             console.log(error);
