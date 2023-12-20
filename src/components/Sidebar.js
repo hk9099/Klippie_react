@@ -136,8 +136,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   // ) : null;
 
   useEffect(() => {
+    console.log('isApiCompleted', isApiCompleted);
     if (process.env.NODE_ENV === 'development') {
-      console.log('isApiCompleted', isApiCompleted);
     }
     if (user === undefined || user === null) {
       navigate('/');
@@ -145,8 +145,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       return;
     } else {
       fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL);
-      for (let i = 0; i < Math.min(3, projectData.length); i++) {
-      }
     }  
     // eslint-disable-next-line
   }, [isApiCompleted,projectCreated]);

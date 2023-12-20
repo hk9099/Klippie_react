@@ -210,10 +210,10 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                         }
 
                         if (message === 'Clips generated') {
-                            setIsApiCompleted(true);
                             navigate(`/dashboard/${currentProjectId}`);
                             setProjectId('')
                             setError('');
+                            setIsApiCompleted(true);
                             setClipsFoundStatus(true);
                         }
 
