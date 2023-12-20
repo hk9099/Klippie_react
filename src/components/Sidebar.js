@@ -65,7 +65,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [mobileMenu, setMobileMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   // const [showUserModal, setShowUserModal] = useState(false);
-  const { isApiCompleted } = useSidebarContext();
+  const { isApiCompleted ,setIsApiCompleted } = useSidebarContext();
   //eslint-disable-next-line
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   //eslint-disable-next-line
@@ -145,6 +145,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       return;
     } else {
       fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL);
+      setIsApiCompleted(false);
     }  
     // eslint-disable-next-line
   }, [isApiCompleted,projectCreated]);
