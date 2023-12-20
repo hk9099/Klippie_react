@@ -360,6 +360,12 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   const handleSaveClick = (index) => {
     const updatedLine = tempLines[index];
+
+    if (updatedLine === null || updatedLine.trim() === '') {
+      ToastNotification({ message: 'Project Title Cannot Be Empty', type: 'error' });
+      return;
+    }
+  
     if (process.env.NODE_ENV === 'development') {
       console.log(updatedLine, 'updatedLine')
     }

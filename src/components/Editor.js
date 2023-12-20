@@ -125,26 +125,61 @@ function Editor() {
                                             "export": "Save",
                                         },
                                     },
-                                }
+                                },
                             },
-                            theme: { logo: 'https://i.ibb.co/mvnxHH1/logo.png' },
+                            theme: { 
+                                logo: 'https://i.ibb.co/mvnxHH1/logo.png',
+                            },
                             transformation: {
                                 crop: 'limit',
                                 quality: 'auto',
                                 fetchFormat: 'auto',
+                                responsiveWidth: 'auto',
+                                responsiveHeight: 'auto',
+                                width: 'auto', 
                             },
-
+                            maxWidth: 1920,
+                            maxHeight: 1080,
                         });
 
                         myEditor.show();
 
                         myEditor.on('save', (result) => {
-                            if (process.env.NODE_ENV === 'development') {
                             console.log(result, 'result');
+                            if (process.env.NODE_ENV === 'development') {
                             }
                         });
 
+                         myEditor.on('error', (error) => {
+                             console.log(error, 'error');
+                            if (process.env.NODE_ENV === 'development') {
+                            }
+                        });
 
+                         myEditor.on('close', (result) => {
+                            console.log(result, 'close');
+                            
+                        });
+
+                         myEditor.on('open', (result) => {
+                             console.log(result, 'open');
+                            if (process.env.NODE_ENV === 'development') {
+                            }
+                        });
+
+                        myEditor.on('export-start', (result) => {
+                            console.log(result, 'export-start');
+                        }
+                        );
+
+                        myEditor.on('export-end', (result) => {
+                            console.log(result, 'export-end');
+                        })
+
+                        myEditor.on('export-progress', (result) => {
+                            console.log(result, 'export-progress');
+                        });
+                       
                         myEditor.on('export', async (data) => {
                             myEditor.hide();
                             setShowLoader(true);

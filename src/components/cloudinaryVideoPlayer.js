@@ -303,28 +303,43 @@ export default function CloudinaryVideoPlayer({
             height: 900,
             fluid: true,
             autoplay: true,
-            muted: true,
+            muted: false,
             aiHighlightsGraph: true,
             autoplayMode: 'on-scroll',
             sourceTypes: ['hls', 'webm', 'mp4'],
             logoImageUrl: 'https://res.cloudinary.com/delkyf33p/image/upload/v1701593905/tkfstyrkbhxjqg80yz21.png',
             logoOnclickUrl: 'https://klippie-react.vercel.app',
             colors: {
-                base: '#7360b96d',
-                accent: '7360b96d',
+                // base: '#dc2626',
+                accent: '#dc2626',
                 text: '#ffffff'
             },
             // floatingWhenNotVisible: 'right',
             hideContextMenu: true,
-            showJumpControls: true
+            showJumpControls: true,
         });
 
-        // return () => {
-        //     if (playerRef.current) {
-        //         playerRef.current.destroy();
-        //         playerRef.current = null;
-        //     }
-        // }
+        videoRef.current.volume = 0.5;
+        const handleMouseEnter = () => {
+            videoRef.current.play();
+        };
+
+        const handleMouseLeave = () => {
+            videoRef.current.pause();
+        };
+
+        videoRef.current.volume = 0.75;
+
+        videoRef.current.addEventListener('mouseenter', handleMouseEnter);
+        videoRef.current.addEventListener('mouseleave', handleMouseLeave);
+        videoRef.current.addEventListener('error', function (e) {
+            if (e.Player.videojs.error_) {
+                var title = document.querySelector('.vjs-modal-dialog-content');
+                title.innerHTML = 'Houston, we have a problem: ' + e.Player.videojs.error_.message + '. This is the status code: ' + e.Player.videojs.error_.statusCode;
+                title.style.color = 'red';
+            }
+        });
+
 
     }, [])
     return (

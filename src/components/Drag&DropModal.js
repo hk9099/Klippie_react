@@ -25,22 +25,22 @@ function MyProgressBar({ bytesUploaded, totalBytes }) {
       className="custom-progress"
       theme={{
         error: {
-          symbol: percent + '% Upload',
+          symbol: percent + '% Uploaded',
           trailColor: 'pink',
           color: 'red'
         },
         default: {
-          symbol: percent + '% Upload',
+          symbol: percent + '% Uploaded',
           trailColor: 'lightblue',
           color: 'blue'
         },
         active: {
-          symbol: percent + '% Upload',
+          symbol: percent + '% Uploaded',
           trailColor: 'yellow',
           color: 'orange'
         },
         success: {
-          symbol: percent + '% Upload',
+          symbol: percent + '% Uploaded',
           trailColor: '#ACDF87',
           color: 'green'
         }
@@ -303,14 +303,14 @@ function DragDropModal() {
         <button className="bg-red-700 hover:bg-red-500 text-white font-bold py-1 px-4 text-sm rounded-lg ml-3 mb-5">
           Upload
         </button>
-        <div className="flex justify-center items-center select-none" onClick={handleInputClick} data-tooltip-id={disabled ? "inputdisabled" : null}>
-          <span className="text-md font-semibold text-center text-gray-500 mr-2 font-ubuntu select-none" >
+        <div className="flex justify-center items-center w-full select-none" onClick={handleInputClick} data-tooltip-id={disabled ? "inputdisabled" : null}>
+          <span className="text-md  font-semibold text-center text-gray-500 mr-2 font-ubuntu select-none" >
             Paste YouTube Link :
           </span>
           <input
-            className={`border border-gray-300 dark:bg-[#ffffff2a] px-2 py-1 rounded-lg text-sm focus:outline-none text-white font-ubuntu ${disabled ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-700'}`}
+            className={` border border-gray-300 dark:bg-[#ffffff2a] px-2 py-1 rounded-lg text-sm focus:outline-none text-white font-ubuntu ${disabled ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-700'}`}
+            style={{ width: '50%' }}
             type="text"
-
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             disabled={disabled}
@@ -346,7 +346,7 @@ function DragDropModal() {
                         </div> */}
             </div>
           </>
-        ) : null}
+         ) : null} 
       </div>
     </div>
   );

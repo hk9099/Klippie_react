@@ -5,7 +5,7 @@ import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
 import { useSubscription } from '../context/SubscriptionContext.js';
 import { useSidebarContext } from '../context/SidebarContext';
-import { useNavigate } from'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ creaditBalance }) => {
     const { isApiCompleted } = useSidebarContext();
@@ -18,15 +18,15 @@ const Navbar = ({ creaditBalance }) => {
     const user = TokenManager.getToken()
     const [userToken, setUserToken] = useState(null);
     useEffect(() => {
-      if (user === undefined || user === null) {
-        navigate('/');
-        window.location.reload();
-        return;
-      } else {
-        const userToken = TokenManager.getToken()[1]
-        setUserToken(userToken);
-      }
-    }, [navigate, user]);    const openModal = () => {
+        if (user === undefined || user === null) {
+            navigate('/');
+            window.location.reload();
+            return;
+        } else {
+            const userToken = TokenManager.getToken()[1]
+            setUserToken(userToken);
+        }
+    }, [navigate, user]); const openModal = () => {
         setIsModalOpen(true);
     };
 
@@ -58,7 +58,7 @@ const Navbar = ({ creaditBalance }) => {
                     setSubscription(subscriptionData);
 
                     // Check if is_active or is_lifetime is true
-                    if (subscriptionData.is_active === true ) {
+                    if (subscriptionData.is_active === true) {
                         setSubscribed(true);
                     }
                 }
@@ -72,10 +72,10 @@ const Navbar = ({ creaditBalance }) => {
         if (userToken === undefined || userToken === null) {
             return;
         } else {
-        fetchSubscriptions();
+            fetchSubscriptions();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isApiCompleted,userToken]);
+    }, [isApiCompleted, userToken]);
 
 
 
@@ -119,18 +119,20 @@ const Navbar = ({ creaditBalance }) => {
                             </div>
                         ) : (
                             <div className={`p-4 transform transition-transform duration-500 ease-in-out hover:scale-105`}>
-  <div className={`bg-gradient-to-r from-purple-600 to-pink-400 text-white px-4 py-3 font-bold text-xxl flex justify-center items-center select-none rounded-lg shadow-lg`}>
-    <span className="mr-2">🚀</span> Lifetime Unlimited
-  </div>
-</div>
+                                <div className={`bg-gradient-to-r from-purple-600 to-pink-400 text-white px-4 py-3 font-bold text-xxl flex justify-center items-center select-none rounded-lg shadow-lg`}>
+                                    <span className="mr-2">🚀</span> Lifetime Unlimited
+                                </div>
+                            </div>
 
                         )}
                         <button
-                            className={`upgradetopro text-gray-300 w-auto text-center px-6 py-2 font-bold text-lg dark:bg-[#ffffff3a] p-3 rounded-lg ${subscribed === true ? 'hidden' : 'block'}`}
+                            className={`upgradetopro text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 w-auto text-center px-6 py-2 font-bold text-lg p-3 rounded-lg relative overflow-hidden focus:outline-none ${subscribed ? 'hidden' : 'block'}`}
                             onClick={openModal}
                         >
-                            <span className={`text-content select-none`}>Upgrade</span>
+                            <span className="text-content select-none">Upgrade 💎</span>
+                            <div className="absolute inset-0 border-2 border-dashed border-white rounded-lg transform scale-0 group-hover:scale-100 transition-transform"></div>
                         </button>
+
                     </div>
                 </div>
             </nav>
