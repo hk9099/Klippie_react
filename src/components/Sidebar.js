@@ -147,10 +147,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL);
       for (let i = 0; i < Math.min(3, projectData.length); i++) {
       }
-    }
-
+    }  
     // eslint-disable-next-line
-  }, [isApiCompleted]);
+  }, [isApiCompleted,projectCreated]);
 
   const handleUpdateProfileSuccess = () => {
     // Call fetchUserProfile to refresh the user's profile
