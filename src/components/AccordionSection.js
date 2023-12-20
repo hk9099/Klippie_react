@@ -100,17 +100,23 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
         setDownloadProgress(0);
     }, [fileselecteddata]);
 
+    const source = axios.CancelToken.source(); // Create a new cancel token source
+
     const handleDownloadClick = async (event) => {
         event.stopPropagation();
+    
         try {
             setDownloadModalOpen(true); // Open the modal
-
+    
             if (fileselecteddata.length === 1) {
                 // Download a single video
                 const element = fileselecteddata[0];
                 setCurrentDownloadingVideo(element.title);
                 const videoUrl = element.src;
                 const secureVideoUrl = videoUrl.replace(/^http:\/\//i, 'https://');
+    
+                const source = axios.CancelToken.source(); // Create a new cancel token source
+    
                 const response = await axios({
                     method: 'get',
                     url: secureVideoUrl,
@@ -119,8 +125,9 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                         setDownloadProgress(progress);
                     },
+                    cancelToken: source.token, // Pass the cancel token
                 });
-
+    
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
@@ -132,39 +139,35 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
             } else {
                 // Download a zip file containing all videos
                 const zip = new JSZip();
-
+    
                 const totalFiles = fileselecteddata.length;
-
-                const handleFileDownload = async (element, index) => {
-                    if (!element || !element.title || !element.src) {
-                        // Handle the case where element or its properties are null or undefined
-                        console.error('Invalid element:', element);
-                        return;
-                    }
-
+    
+                for (let i = 0; i < fileselecteddata.length; i++) {
+                    const element = fileselecteddata[i];
+                    const source = axios.CancelToken.source(); // Create a new cancel token source
+    
                     setCurrentDownloadingVideo(element.title);
                     const videoUrl = element.src;
                     const secureVideoUrl = videoUrl.replace(/^http:\/\//i, 'https://');
-
+    
                     try {
                         const response = await axios({
                             method: 'get',
                             url: secureVideoUrl,
                             responseType: 'blob',
+                            cancelToken: source.token, // Pass the cancel token
                         });
-
+    
                         zip.file(`${element.title}.${element.type}`, response.data);
-
-                        // Calculate progress based on the number of completed files
-                        const progress = Math.round(((index + 1) / totalFiles) * 100);
+    
+                        const progress = Math.round(((i + 1) / totalFiles) * 100);
                         setDownloadProgress(progress);
-
-                        if (index + 1 === totalFiles) {
-                            // All files have been downloaded, generate and initiate zip file download
+    
+                        if (i + 1 === totalFiles) {
                             const content = await zip.generateAsync({ type: 'blob' });
-                            const zipFileName = 'videos.zip';
+                            const zipFileName = 'Klippe Videos.zip';
                             const zipFileUrl = window.URL.createObjectURL(content);
-
+    
                             const zipLink = document.createElement('a');
                             zipLink.href = zipFileUrl;
                             zipLink.setAttribute('download', zipFileName);
@@ -172,26 +175,22 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                             zipLink.click();
                             zipLink.parentNode.removeChild(zipLink);
                             ToastNotification({ type: 'success', message: `Downloaded: ${zipFileName}` });
-
-                            // Reset progress and close the modal
-                            setDownloadProgress(0);
-                            setCurrentDownloadingVideo(null);
-                            setDownloadModalOpen(false);
                         }
                     } catch (error) {
-                        // Handle the axios error, e.g., display an error message
-                        console.error('Error downloading file:', error);
+                        if (axios.isCancel(error)) {
+                            // Download canceled
+                            console.log('Download canceled');
+                            setDownloadModalOpen(false);
+                            return;
+                        } else {
+                            console.error('Error downloading file:', error);
+                            ToastNotification({ type: 'error', message: 'Download failed' });
+                        }
                     }
-                };
-
-
-                // Initiate downloads for each file
-                for (let i = 0; i < fileselecteddata.length; i++) {
-                    await handleFileDownload(fileselecteddata[i], i);
                 }
             }
         } catch (error) {
-            console.error("Download Error:", error);
+            console.error('Download Error:', error);
             ToastNotification({ type: 'error', message: 'Download failed' });
         } finally {
             setDownloadProgress(0);
@@ -199,7 +198,14 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
             setDownloadModalOpen(false); // Close the modal
         }
     };
-
+    
+    // Function to cancel the download
+    const cancelDownload = () => {
+        // Cancel ongoing downloads by canceling the token
+        if (source) {
+            source.cancel('Download canceled by user');
+        }
+    };
 
 
     return (
@@ -306,6 +312,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                                         </div>
                                     </div>
                                 </div>
+
                             )}
                         </div>
                         <AccordionBody>
