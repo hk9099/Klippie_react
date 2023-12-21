@@ -53,15 +53,15 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
     const location = useLocation();
 
-    // useEffect(() => {
-    //     // Check the pathname of the current URL
-    //     if (location.pathname !== '/dashboard') {
-    //         setAccordionVisible(true);
-    //     } else {
-    //         setAccordionVisible(false);
-    //         navigate(`/dashboard`);
-    //     }
-    // }, [location, navigate]);
+    useEffect(() => {
+        // Check the pathname of the current URL
+        if (location.pathname !== '/dashboard') {
+            setAccordionVisible(true);
+        } else {
+            setAccordionVisible(false);
+            // navigate(`/dashboard`);
+        }
+    }, [location, navigate]);
 
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
