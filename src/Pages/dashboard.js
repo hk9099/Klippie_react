@@ -149,13 +149,13 @@ export default function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      setShowPopup(true);
-    }
-  }, [ navigate]);
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate('/dashboard');
+  //   } else {
+  //     setShowPopup(true);
+  //   }
+  // }, [ navigate]);
 
  
 

@@ -197,3 +197,16 @@
     color: rgba(0, 0, 0, 0.7);
     font-weight: 200;
 }
+
+.vjs-control-bar{
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+}
+
+.cld-video-player .vjs-title-bar{
+    display: none !important;
+}
+
+.cld-video-player .vjs-big-play-button{
+    width: 50px !important;
+}

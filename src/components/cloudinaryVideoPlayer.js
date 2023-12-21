@@ -203,12 +203,9 @@
 //     loadScript('https://unpkg.com/cloudinary-video-player/dist/cld-video-player.js', () => {
 import { useEffect, useRef ,useState} from 'react';
 import { HiOutlineDownload } from "react-icons/hi";
-// import CloudinaryMediaEditor from "../components/mediaEditor.js";
 import { Link } from "react-router-dom";
 import { BiSolidEdit } from 'react-icons/bi';
-// import { Tooltip } from 'react-tooltip';
 import ToastNotification from "../components/ToastNotification";
-// import { Toaster } from 'react-hot-toast';
 import { useFileSelected } from "../context/SelectionContext.js";
 
 export default function CloudinaryVideoPlayer({
@@ -294,54 +291,45 @@ export default function CloudinaryVideoPlayer({
         mediaEditorTab.addEventListener('beforeunload', tabClosedListener);
     };
     useEffect(() => {
-        if (playerRef.current) return;
-        playerRef.current = window.cloudinary;
-        playerRef.current.videoPlayer(videoRef.current, {
-            controls: true,
-            preload: 'auto',
-            width: 200,
-            height: 900,
-            fluid: true,
-            autoplay: true,
-            muted: false,
-            aiHighlightsGraph: true,
-            autoplayMode: 'on-scroll',
-            sourceTypes: ['hls', 'webm', 'mp4'],
-            logoImageUrl: 'https://res.cloudinary.com/delkyf33p/image/upload/v1701593905/tkfstyrkbhxjqg80yz21.png',
-            logoOnclickUrl: 'https://klippie-react.vercel.app',
-            colors: {
-                // base: '#dc2626',
-                accent: '#dc2626',
-                text: '#ffffff'
-            },
-            // floatingWhenNotVisible: 'right',
-            hideContextMenu: true,
-            showJumpControls: true,
-        });
-
-        videoRef.current.volume = 0.5;
-        const handleMouseEnter = () => {
-            videoRef.current.play();
-        };
-
-        const handleMouseLeave = () => {
-            videoRef.current.pause();
-        };
-
-        videoRef.current.volume = 0.75;
-
-        videoRef.current.addEventListener('mouseenter', handleMouseEnter);
-        videoRef.current.addEventListener('mouseleave', handleMouseLeave);
-        videoRef.current.addEventListener('error', function (e) {
-            if (e.Player.videojs.error_) {
-                var title = document.querySelector('.vjs-modal-dialog-content');
-                title.innerHTML = 'Houston, we have a problem: ' + e.Player.videojs.error_.message + '. This is the status code: ' + e.Player.videojs.error_.statusCode;
-                title.style.color = 'red';
+        const initializeVideoPlayer = async () => {
+            try {
+                if (!playerRef.current) {
+                    playerRef.current = window.cloudinary;
+                    await playerRef.current.videoPlayer(videoRef.current, {
+                        controls: true,
+                        preload: 'auto',
+                        width: 200,
+                        height: 900,
+                        fluid: true,
+                        autoplay: true,
+                        muted: false,
+                        aiHighlightsGraph: true,
+                        seekbar: true,
+                        autoplayMode: 'on-scroll',
+                        sourceTypes: ['hls', 'webm', 'mp4'],
+                        logoImageUrl: 'https://res.cloudinary.com/delkyf33p/image/upload/v1701593905/tkfstyrkbhxjqg80yz21.png',
+                        logoOnclickUrl: 'https://klippie-react.vercel.app',
+                        colors: {
+                            accent: '#dc2626',
+                            text: '#ffffff'
+                        },
+                        hideContextMenu: true,
+                        showJumpControls: true,
+                    });
+    
+                    videoRef.current.volume = 0.5;
+                    videoRef.current.currentTime = 0.5;
+                }
+            } catch (error) {
+                if (process.env.NODE_ENV === 'development') {
+                console.error('Error initializing Video.js:', error);
+                }
             }
-        });
-
-
-    }, [])
+        };
+    
+        initializeVideoPlayer();
+    }, []);
+    
     return (
         <>
         <div className={`cld-video-player cld-fluid w-full h-full ${sidebar ? 'hidden' : ''} border border-white border-opacity-60  backdrop-blur-4 flex rounded-[10px] text-center `}>
@@ -349,20 +337,8 @@ export default function CloudinaryVideoPlayer({
                 ref={videoRef}
                 src={`${src}`}
             />
-            <style jsx>{`
-                .vjs-control-bar{
-                    border-bottom-left-radius: 10px !important;
-                    border-bottom-right-radius: 10px !important;
-                }
-            
-                .cld-video-player .vjs-title-bar{
-                    display: none !important;
-                }
-            
-                .cld-video-player .vjs-big-play-button{
-                    width: 50px !important;
-                }
-            `}</style>
+
+
         </div>
               <div className="flex justify-between items-center ">
                 <button
