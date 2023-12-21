@@ -160,7 +160,7 @@ function Signin() {
                 // }
 
                 navigate.user('/dashboard');
-                    window.location.reload();
+                navigate();
             } else {
                 ToastNotification({message: 'Invalid response from the server.', type: 'error'});
             }
