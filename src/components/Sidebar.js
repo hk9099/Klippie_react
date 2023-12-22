@@ -481,17 +481,24 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
             } top-0 p-2 z-10 flex h-full flex-none flex-col space-y-2 text-[14px] sm:top-0 bg-gray-100 dark:border-gray-600 dark:bg-custom-color-dark`}
         >
 
-          <Link to="/dashboard" >
             <div
               className={`flex justify-start items-center select-none px-[10px] py-3 pr-0`}
             >
+     
               <img
                 src={Logo}
                 alt=""
                 className={`w-10  ${!open && "justify-center"
                   } bg-white rounded-full`}
+                  onClick={() => {
+                    navigate('/dashboard');
+                    setAccordionVisible(false);
+                  }}
               />
-              <div className="flex items-start">
+              <div className="flex items-start"  onClick={() => {
+                    navigate('/dashboard');
+                    setAccordionVisible(false);
+                  }}>
                 {open && (
                   <span
                     className={`text-2xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}
@@ -515,7 +522,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 }}
               />
             </div>
-          </Link>
 
           <div className="pt-4 pb-3">
             {/* <Tooltip id="disabled" content="To start, drag and drop a video or click Choose File."
