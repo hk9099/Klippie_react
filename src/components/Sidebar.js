@@ -500,7 +500,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 )}
                 {open && (
                   <span
-                    className={`text-xs ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`}
+                    className={`text-xs ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`} 
                   >
                     Beta
                   </span>
