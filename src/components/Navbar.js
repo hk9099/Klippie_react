@@ -129,7 +129,7 @@ const Navbar = ({ creaditBalance }) => {
                             className={`upgradetopro text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 w-auto text-center px-6 py-2 font-bold text-lg p-3 rounded-lg relative overflow-hidden focus:outline-none ${subscribed ? 'hidden' : 'block'}`}
                             onClick={openModal}
                         >
-                            <span className="text-content select-none">Upgrade 💎</span>
+                            <span className="text-content select-none">Upgrade</span>
                             <div className="absolute inset-0 border-2 border-dashed border-white rounded-lg transform scale-0 group-hover:scale-100 transition-transform"></div>
                         </button>
 

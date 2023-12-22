@@ -4,6 +4,7 @@ import { AiOutlineDelete, AiOutlineMenu, AiOutlinePlus, AiOutlineCheck, AiOutlin
 // import { Menu } from "@headlessui/react";
 import Logo from "../assets/images/logo.svg";
 import HamburgerButton from "./HumbergerButton";
+import { IconLayoutSidebar } from '@tabler/icons-react';
 import ".././assets/css/Sidebar.css";
 import Modal from "./Modal";
 import AccountModal from "./AccountModal";
@@ -65,7 +66,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [mobileMenu, setMobileMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   // const [showUserModal, setShowUserModal] = useState(false);
-  const { isApiCompleted ,setIsApiCompleted } = useSidebarContext();
+  const { isApiCompleted, setIsApiCompleted } = useSidebarContext();
   //eslint-disable-next-line
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   //eslint-disable-next-line
@@ -146,9 +147,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     } else {
       fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, setVideoURL);
       setIsApiCompleted(false);
-    }  
+    }
     // eslint-disable-next-line
-  }, [isApiCompleted,projectCreated]);
+  }, [isApiCompleted, projectCreated]);
 
   const handleUpdateProfileSuccess = () => {
     // Call fetchUserProfile to refresh the user's profile
@@ -363,7 +364,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       ToastNotification({ message: 'Project Title Cannot Be Empty', type: 'error' });
       return;
     }
-  
+
     if (process.env.NODE_ENV === 'development') {
       console.log(updatedLine, 'updatedLine')
     }
@@ -433,12 +434,16 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
     if (message === "Project Created") {
       ToastNotification({ message: response.data.message, type: 'success' });
+      navigate(`/dashboard`);
+      navigate()
     }
     if (message === "Transcribing video completed") {
       if (process.env.NODE_ENV === 'development') {
         console.log(response.data.message, 'response.data.data.status')
       }
       ToastNotification({ message: response.data.message, type: 'success' });
+      navigate(`/dashboard`);
+      navigate()
     }
     if (message === 'Clips generated') {
       navigate(`/dashboard/${projectData[index].id}`);
@@ -469,41 +474,45 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       <MantineProvider>
         <Toaster position="top-center" />
         <div
-          className={`${open ? "w-[260px]" : "w-fit"
-            } fixed top-0 p-2  z-10 flex h-full  flex-none flex-col space-y-2  text-[14px] transition-all sm:relative sm:top-0 bg-gray-100  dark:border-gray-600 dark:bg-custom-color-dark`}
+          className={`${open
+              ? "relative transition-all duration-300 ease-in-out"
+              : "absolute transition-all left-[-210px] duration-300 ease-in-out"
+            } top-0 p-2 z-10 flex h-full flex-none flex-col space-y-2 text-[14px] sm:top-0 bg-gray-100 dark:border-gray-600 dark:bg-custom-color-dark`}
         >
-          <AiOutlineMenu
-            className={`${!open && "rotate-180"
-              } absolute text-3xl bg-white fill-slate-800   cursor-pointer top-9 -right-4 dark:fill-gray-400 dark:bg-custom-color-dark`}
-            onClick={() => {
-              setOpen(!open);
-            }}
-          />
+
           <Link to="/dashboard" >
             <div
-              className={`flex ${open && "justify-center"
-                } justify-center items-center select-none px-[10px] py-3`}
+              className={`flex justify-start items-center select-none px-[10px] py-3 pr-0`}
             >
               <img
                 src={Logo}
                 alt=""
-                className={`w-17 h-[3rem] ${!open && "justify-center"
-                  } bg-white rounded-3xl`}
+                className={`w-10  ${!open && "justify-center"
+                  } bg-white rounded-full`}
               />
-              {open && (
-                <span
-                  className={`text-3xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}
-                >
-                  Klippie
-                </span>
-              )}
-              {open && (
-                <span
-                  className={`text-sm ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`}
-                >
-                  Beta
-                </span>
-              )}
+              <div className="flex items-start">
+                {open && (
+                  <span
+                    className={`text-2xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}
+                  >
+                    Klippie
+                  </span>
+                )}
+                {open && (
+                  <span
+                    className={`text-xs ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`}
+                  >
+                    Beta
+                  </span>
+                )}
+              </div>
+              <IconLayoutSidebar
+                className={`${!open && "rotate-180 absolute border w-[40px] rounded-lg h-[40px] p-2"
+                  } ml-6  text-[100px] cursor-pointer top-5 -right-[55px]  border w-[40px] rounded-lg h-[40px] p-2 text-gray-200`}
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              />
             </div>
           </Link>
 
@@ -558,61 +567,61 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 </span>
               </div>
             ) : ( */}
-              <div className={` ${!open && "hidden"} relative`}>
-                {lines.length === 0 ? (
-                  <div className="text-center text-gray-500 font-semibold dark:text-gray-300 select-none cursor-not-allowed">
-                    {/* The History is Currently Empty. */}
-                  </div>
-                ) : (
-                  lines
-                    .map((line, index) => (
-                      <div
-                        key={index}
-                        className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""
-                          }`}
-                        onMouseEnter={() => {
-                          setHoveredIndex(index);
-                          logVideoURL(index);
-                        }}
-                        onMouseLeave={() => setHoveredIndex(-1)}
-                        data-tooltip-id={`tooltip-${index}`}
-                      >
-                        {editIndex === index ? (
-                          <div className="width-full row relative">
-                            <input
-                              className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
-                              type="text"
-                              value={tempLines[index]}
-                              onChange={(event) => handleEditChange(event, index)}
-                            />
-                            <button onClick={() => handleSaveClick(index)} className="save-button">
-                              <AiOutlineCheck />
-                            </button>
-                            <button onClick={() => handleCancelClick()} className="cancel-button">
-                              <AiOutlineClose />
-                            </button>
-                          </div>
-                        ) : (
-                          <p
-                            className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
-                            style={{
-                              width: hoveredIndex === index ? "188px" : "236px",
-                              // width: "100%",
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              userSelect: "none",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => {
-                              setActiveIndex(index);
-                              handleProjectClick(index);
-                            }}
-                          >
-                            {line === undefined || line === null ? "New Project" : line}
-                          </p>
-                        )}
-                        {/* <Tooltip id={`tooltip-${index}`} content={videoDiv}
+            <div className={` ${!open && "hidden"} relative`}>
+              {lines.length === 0 ? (
+                <div className="text-center text-gray-500 font-semibold dark:text-gray-300 select-none cursor-not-allowed">
+                  {/* The History is Currently Empty. */}
+                </div>
+              ) : (
+                lines
+                  .map((line, index) => (
+                    <div
+                      key={index}
+                      className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""
+                        }`}
+                      onMouseEnter={() => {
+                        setHoveredIndex(index);
+                        logVideoURL(index);
+                      }}
+                      onMouseLeave={() => setHoveredIndex(-1)}
+                      data-tooltip-id={`tooltip-${index}`}
+                    >
+                      {editIndex === index ? (
+                        <div className="width-full row relative">
+                          <input
+                            className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
+                            type="text"
+                            value={tempLines[index]}
+                            onChange={(event) => handleEditChange(event, index)}
+                          />
+                          <button onClick={() => handleSaveClick(index)} className="save-button">
+                            <AiOutlineCheck />
+                          </button>
+                          <button onClick={() => handleCancelClick()} className="cancel-button">
+                            <AiOutlineClose />
+                          </button>
+                        </div>
+                      ) : (
+                        <p
+                          className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                          style={{
+                            width: hoveredIndex === index ? "188px" : "236px",
+                            // width: "100%",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            userSelect: "none",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            setActiveIndex(index);
+                            handleProjectClick(index);
+                          }}
+                        >
+                          {line === undefined || line === null ? "New Project" : line}
+                        </p>
+                      )}
+                      {/* <Tooltip id={`tooltip-${index}`} content={videoDiv}
                         place="right"
                         className="dark:custom-modal-bg-color dark:text-gray-300 font-semibold text-[2xl!important] font-ubuntu border-0 rounded-[50%!important]"
                         opacity={1}
@@ -620,23 +629,23 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                         clickable={true}
                         delayShow={3000}
                       /> */}
-                        <div className="hover-actions" >
-                          {editIndex !== index && (
-                            <>
-                              <button onClick={() => deleteLine(index)} className="delete-button">
-                                <AiOutlineDelete />
-                              </button>
-                              <button onClick={() => handleEditClick(index)} className="edit-button">
-                                <FiEdit2 />
-                              </button>
-                            </>
-                          )}
-                        </div>
+                      <div className="hover-actions" >
+                        {editIndex !== index && (
+                          <>
+                            <button onClick={() => deleteLine(index)} className="delete-button">
+                              <AiOutlineDelete />
+                            </button>
+                            <button onClick={() => handleEditClick(index)} className="edit-button">
+                              <FiEdit2 />
+                            </button>
+                          </>
+                        )}
                       </div>
-                    ))
-                )}
-              </div>
-             {/* )} */}
+                    </div>
+                  ))
+              )}
+            </div>
+            {/* )} */}
 
             {/* <div className="flex-grow w-1/4 p-4 bg-gray-200">
   <h2 className="text-2xl font-semibold">Video Preview</h2>
