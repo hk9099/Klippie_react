@@ -360,7 +360,7 @@ export default function Dashboard() {
             setError={setError}
           />
         )}
-        <section className="w-full overflow-x-auto px-3 " style={{ overflow: 'auto' }}>
+        <section className="w-full px-3 " style={{ overflow: 'auto' }}>
           {/* <button type="button" className="" onClick={showToast}>Toast</button> */}
           <Modal className="z-50" />
           {loginCount === 1 && (newProjectCount === undefined || '') ? (

@@ -456,6 +456,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     setCloudinaryResponse(null);
     //eslint-disable-next-line
     const newValue = TokenManager.incrementValue('increment');
+    navigate()
     navigate('/dashboard');
     // setShowModal(true); 
   };
