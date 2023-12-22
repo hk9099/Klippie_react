@@ -441,35 +441,35 @@ function HomeScreen({ userName, creaditBalance }) {
                     className={`flex-grow flex flex-col overflow-hidden dark:bg-transparent`}>
                     <div className={`overflow-y-auto flex-grow`}>
                         <div className="px-16 flex flex-col justify-evenly select-none ">
-                            <h1 className="text-white  sm:text-2xl md:text-2xl lg:text-3xl xl:text-5xl 2xl:text-6xl 
+                            <h1 className="text-white mb-2 custom-2xl:text-3xl custom-4xxl:text-4xl 3xl:text-5xl    
                              text-left block font-medium w-full font-montserrat py-3">
                                 {loginCount > 1 ? `Welcome to Klippie , ${userName} 😊` : `Hello, ${userName} 👋`}
                             </h1>
 
 
-                            <div className='flex justify-start items-start lg:flex-col xl:flex-row w-full prompt-card'>
+                            <div className='flex justify-start items-start sm:flex-col lg:flex-col custom-5xxxl:flex-row  w-full prompt-card'>
                                 <div className='w-full rounded-[60px] overflow-hidden mr-4'>
                                     <div className="text-white relative select-none cursor-pointer px-4 py-5 w-full  font-bold text-lg inline-block  dark:bg-[#ffffff2a] rounded-[50px] me-4 ">
                                         <div className="flex justify-center items-center px-3 mb-3  ">
                                             <span className="text-2xl font-bold text-white">🚀</span>
-                                            <h2 className="ms-3 text-gradient-ideas w-full font-bold text-3xl inline-block rounded-2xl bg-clip-text text-transparent ">
+                                            <h2 className="ms-3 text-gradient-ideas w-full font-bold  custom-4xxl:text-2xl  inline-block rounded-2xl bg-clip-text text-transparent ">
                                                 Find the best clips for your....
                                             </h2>
                                         </div>
                                         <div className="flex justify-start items-start flex-wrap flex-row">
-                                            <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20 font-InclusiveSans  ">
+                                            <div className="text-white select-none cursor-pointer px-3 py-2 sm:hidden  custom-5xl:block  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20 font-InclusiveSans  ">
                                                 <ReactEmoji text=":studio_microphone: Podcasts" />
                                             </div>
-                                            <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <div className="text-white select-none cursor-pointer px-3 py-2  sm:hidden  custom-5xl:block  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                                 <ReactEmoji text=":computer: Webinars" />
                                             </div>
-                                            <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <div className="text-white select-none cursor-pointer px-3 py-2  sm:hidden  custom-5xl:block  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                                 <ReactEmoji text=":female-technologist: Product Demos" />
                                             </div>
-                                            <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <div className="text-white select-none cursor-pointer px-3 py-2  sm:hidden  custom-5xl:block  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                                 <ReactEmoji text="📢 Speeches" />
                                             </div>
-                                            <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
+                                            <div className="text-white select-none cursor-pointer px-3 py-2   sm:hidden  custom-5xl:block font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                                 <ReactEmoji text=":books: Lectures" />
                                             </div>
                                             <div className="text-white select-none cursor-pointer px-3 py-2  font-medium text-lg inline-block mx-1 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
@@ -515,7 +515,7 @@ function HomeScreen({ userName, creaditBalance }) {
                                 <div className="text-white select-none cursor-pointer px-4 py-5 w-full  font-bold text-lg inline-block  dark:bg-[#ffffff2a] rounded-[50px] me-4">
                                     <div className="flex justify-center items-center px-3 mb-3  ">
                                         <span className="text-2xl font-bold text-white">💡</span>
-                                        <h2 className="ms-3 text-gradient-tips w-full font-bold text-3xl inline-block rounded-2xl bg-clip-text text-transparent ">
+                                        <h2 className="ms-3 text-gradient-tips w-full font-bold custom-4xxl:text-2xl inline-block rounded-2xl bg-clip-text text-transparent ">
                                             Getting Started...
                                         </h2>
                                     </div>
@@ -545,7 +545,7 @@ function HomeScreen({ userName, creaditBalance }) {
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-center items-center flex-col select-none cursor-pointer file-input mt-[5rem] mb-12" >
+                    <div className="flex justify-center items-center flex-col select-none cursor-pointer file-input  custom-3xl:mb-3 custom-5xl:mb-12 sm:mt-[5rem] custom-3xl:mt-[2rem]  custom-5xl:mt-[5rem]" >
                         {/* <div
                             className={`text-white select-none cursor-pointer text-center font-bold text-lg w-[50%] inline-block border-dashed border-2 rounded-lg py-10 ${isDragging ? 'border-blue-500 bg-blue-100 dark:bg-[#ffffff2a]' : 'border-gray-500 dark:bg-transparent'} ${isFileUploaded ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : ''} ${isFileUploadedInput ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : ''}`}
                             onClick={() => { fileInputRef.current.click(); }}
