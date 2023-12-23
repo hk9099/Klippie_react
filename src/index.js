@@ -8,6 +8,8 @@ import Background from './components/Background';
 import 'tailwindcss/tailwind.css';
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 // import { MantineProvider } from '@mantine/core';
+import store from './store/store';
+import { Provider } from 'react-redux';
 
 if (process.env.NODE_ENV === 'production') {
   console.log("Disabling React DevTools in production mode");
@@ -36,14 +38,15 @@ if (process.env.NODE_ENV === 'production') {
 
 const root = createRoot(document.getElementById('root'));
 root.render(
-
-  <React.StrictMode>
-    {/* <MantineProvider withGlobalStyles withNormalizeCSS> */}
-        <ThemeProvider>
-          <Background>
-            <App />
-          </Background>
-        </ThemeProvider>
-    {/* </MantineProvider> */}
-  </React.StrictMode>
+  <Provider store={store}>
+    <React.StrictMode>
+      {/* <MantineProvider withGlobalStyles withNormalizeCSS> */}
+      <ThemeProvider>
+        <Background>
+          <App />
+        </Background>
+      </ThemeProvider>
+      {/* </MantineProvider> */}
+    </React.StrictMode>
+  </Provider>
 );

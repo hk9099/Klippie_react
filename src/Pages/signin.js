@@ -17,8 +17,20 @@ import { TokenManager } from '../components/getToken.js';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../utils/signInAuth.js';
 function Signin() {
+    const dispatch = useDispatch();
+    const auth = useSelector((state) => state.auth);
+    console.log(auth, 'auth');
+    const handleSubmit = async (values, { setSubmitting }) => {
+        try {
+            await dispatch(login(values, navigate));
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
     const navigate = useNavigate();
     const user = TokenManager.getToken();
     useEffect(() => {
@@ -31,7 +43,7 @@ function Signin() {
     const incrementLoginCount = () => {
         const currentCount = parseInt(localStorage.getItem('loginCount')) || 0;
         const newCount = currentCount + 1;
-        
+
         localStorage.setItem('loginCount', newCount.toString());
         setLoginCount(newCount);
     };
@@ -43,9 +55,9 @@ function Signin() {
             // const email = atob(encodedEmail); // Decode email
             navigate('/dashboard');
             // setClipsFoundStatus(false);
-        } 
-        
-    }, [user, navigate , setClipsFoundStatus]);
+        }
+
+    }, [user, navigate, setClipsFoundStatus]);
 
     // const handleGoogleLogin = () => {
     //     const customProvider = new GoogleAuthProvider();
@@ -110,160 +122,160 @@ function Signin() {
 
     const validationSchema = Yup.object({
         email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required")
-        .max(50, "Email is too long - should be 50 chars maximum.")
-        .matches(
-          /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
-          "Invalid email address"
-        )
-        .lowercase(),
-                password: Yup.string().required('Required').min(8, 'Password is too short - should be 8 chars minimum.').matches(
+            .email("Invalid email address")
+            .required("Email is required")
+            .max(50, "Email is too long - should be 50 chars maximum.")
+            .matches(
+                /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+                "Invalid email address"
+            )
+            .lowercase(),
+        password: Yup.string().required('Required').min(8, 'Password is too short - should be 8 chars minimum.').matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
             'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
         ),
     });
-    
 
-    const handleSubmit = async (values, { setSubmitting }) => {
-        setIsLoading(true);
-        try {
-            const response = await axios.post(
-               'https://dev-api.getklippie.com/v1/auth/login',
-                {
-                    email: values.email,
-                    password: values.password,
-                    is_social: false,
-                    firebase_id: 'string',
-                    id_token: 'string',
-                    device_id: 'string'
-                }
-            );
 
-            if (response && response.data) {
-                // ToastNotification({message: 'Log in successful',type: 'success'});
-                const encodedUser = btoa(JSON.stringify(response.data));
-                // localStorage.setItem('_sodfhgiuhih', encodedUser);
-                // const encodedEmail = btoa(values.email);
-                // localStorage.setItem('_auth', encodedEmail);
-                incrementLoginCount();
-                TokenManager.setToken('userToken', 2160 ,encodedUser);
+    // const handleSubmit = async (values, { setSubmitting }) => {
+    //     setIsLoading(true);
+    //     try {
+    //         const response = await axios.post(
+    //            'https://dev-api.getklippie.com/v1/auth/login',
+    //             {
+    //                 email: values.email,
+    //                 password: values.password,
+    //                 is_social: false,
+    //                 firebase_id: 'string',
+    //                 id_token: 'string',
+    //                 device_id: 'string'
+    //             }
+    //         );
 
-                // const userToken = Cookies.get('userToken');
-                // if (userToken) {
-                //     //decode token to get user data
-                //     const decodedToken = atob(userToken);
-                //     const userInfo = JSON.parse(decodedToken);
-                //     console.log(userInfo, 'userInfo');
-                // } else {
-                //     console.log('Cookie not found or expired.');
-                // }
+    //         if (response && response.data) {
+    //             // ToastNotification({message: 'Log in successful',type: 'success'});
+    //             const encodedUser = btoa(JSON.stringify(response.data));
+    //             // localStorage.setItem('_sodfhgiuhih', encodedUser);
+    //             // const encodedEmail = btoa(values.email);
+    //             // localStorage.setItem('_auth', encodedEmail);
+    //             incrementLoginCount();
+    //             TokenManager.setToken('userToken', 2160 ,encodedUser);
 
-                navigate.user('/dashboard');
-                navigate();
-            } else {
-                ToastNotification({message: 'Invalid response from the server.', type: 'error'});
-            }
-        } catch (error) {
-            if (error.response.data.detail) {
-                ToastNotification({message: error.response.data.detail, type: 'error'});
-            } else {
-                navigate("/otpVarification");
-                ToastNotification({message: error.response.data.message, type: 'error'});
-            }
-        }
-        setIsLoading(false);
-        setSubmitting(false);
-    };
+    //             // const userToken = Cookies.get('userToken');
+    //             // if (userToken) {
+    //             //     //decode token to get user data
+    //             //     const decodedToken = atob(userToken);
+    //             //     const userInfo = JSON.parse(decodedToken);
+    //             //     console.log(userInfo, 'userInfo');
+    //             // } else {
+    //             //     console.log('Cookie not found or expired.');
+    //             // }
+
+    //             navigate.user('/dashboard');
+    //             navigate();
+    //         } else {
+    //             ToastNotification({message: 'Invalid response from the server.', type: 'error'});
+    //         }
+    //     } catch (error) {
+    //         if (error.response.data.detail) {
+    //             ToastNotification({message: error.response.data.detail, type: 'error'});
+    //         } else {
+    //             navigate("/otpVarification");
+    //             ToastNotification({message: error.response.data.message, type: 'error'});
+    //         }
+    //     }
+    //     setIsLoading(false);
+    //     setSubmitting(false);
+    // };
 
 
     return (
         <>
-        <Toaster position="top-center" />
-        <main>
-            <div className="h-full w-full">
-                <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
-                    <div className="left_heading text-center">
-                        <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-200">
-                            Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Klippie</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block', borderRadius: '50%' }} />
-                        </h1>
-                        <p className="text-gray-500 mt-2">Please Login to your account.</p>
-                    </div>
-                    <div className="mt-10 form_layout">
-                        <Formik
-                            initialValues={initialValues}
-                            validationSchema={validationSchema}
-                            onSubmit={handleSubmit}
-                        >
-                            {({ errors, touched }) => (
-                                <Form className="flex flex-col justify-center items-center">
-                                    <div className="emailinput form_layout mb-10">
-                                        <label className="text-gray-500 emailinput">Enter your email</label>
-                                        <div className="inputbox-container mt-2">
-                                            <Field
-                                                type="text"
-                                                name="email"
-                                                placeholder="Email"
-                                                className={`inputbox dark:bg-purple-200 text-black ${errors.email && touched.email ? 'border-red-500' : ''}`}
-                                            />
-                                            <span className="email-icon"><HiOutlineMail /></span>
-                                        </div>
-                                        <ErrorMessage name="email" component="div" className="error-message mt-2" />
-                                    </div>
-                                    <div className="passwordinput form_layout">
-                                        <label className="text-gray-500 mt-2">Enter your password <RiInformationLine data-tooltip-id='password-tooltip' className="password-tooltip" /></label>
-
-                                        <Tooltip id="password-tooltip" content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character" className="custom-tooltip" />
-                                        <div className="inputbox-container mt-2">
-                                            <Field
-                                                type={showPassword ? "text" : "password"}
-                                                name="password"
-                                                placeholder="Password"
-                                                className={`inputbox dark:bg-purple-200 text-black ${errors.password && touched.password ? 'border-red-500' : ''}`}
-                                                autoComplete="current-password"
-                                            />
-                                            <span className="password-icon" onClick={() => setShowPassword(!showPassword)}>
-                                                {showPassword ? < BsEyeFill /> : < BsEyeSlashFill />}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="create_acp">
-                                        {errors.password && (
-                                            <ErrorMessage
-                                                name="password"
-                                                component="div"
-                                                className="error-message mt-2"
-                                                value={errors.password}
-                                            />
-                                        )}
-                                        {!errors.password && (
-                                            <div className="default-error-message mt-2">
-
-                                            </div>
-                                        )}
-                                        <Link to="/forgotpassword" className="create_ac">
-                                            Forgot Password?
-                                        </Link>
-                                    </div>
-                                    <button
-                                        type="submit"
-                                        className="submitbutton mt-10 bg-purple-500 text-white font-bold py-2 px-4 rounded-full"
-                                        disabled={isLoading}
-                                        style={{ cursor: isLoading ? 'wait' : 'pointer' }}
-                                    >
-                                        {isLoading ? 'Sign in...' : 'Sign in'}
-                                    </button>
-                                </Form>
-                            )}
-                        </Formik>
-
-                        <div className="mt-3 text-center">
-                            <Link to="/signup" className="create_ac">
-                                Create New Account
-                            </Link>
+            <Toaster position="top-center" />
+            <main>
+                <div className="h-full w-full">
+                    <div className="flex flex-col justify-center items-center left_block left_backgroundinage">
+                        <div className="left_heading text-center">
+                            <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-200">
+                                Welcome to <span className="bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent mr-3">Klippie</span><img src={Hiiii} alt="Hiiii" style={{ width: '40px', height: '40px', display: 'inline-block', borderRadius: '50%' }} />
+                            </h1>
+                            <p className="text-gray-500 mt-2">Please Login to your account.</p>
                         </div>
-                        {/* <div title="OR" className="or_block">
+                        <div className="mt-10 form_layout">
+                            <Formik
+                                initialValues={initialValues}
+                                validationSchema={validationSchema}
+                                onSubmit={handleSubmit}
+                            >
+                                {({ errors, touched }) => (
+                                    <Form className="flex flex-col justify-center items-center">
+                                        <div className="emailinput form_layout mb-10">
+                                            <label className="text-gray-500 emailinput">Enter your email</label>
+                                            <div className="inputbox-container mt-2">
+                                                <Field
+                                                    type="text"
+                                                    name="email"
+                                                    placeholder="Email"
+                                                    className={`inputbox dark:bg-purple-200 text-black ${errors.email && touched.email ? 'border-red-500' : ''}`}
+                                                />
+                                                <span className="email-icon"><HiOutlineMail /></span>
+                                            </div>
+                                            <ErrorMessage name="email" component="div" className="error-message mt-2" />
+                                        </div>
+                                        <div className="passwordinput form_layout">
+                                            <label className="text-gray-500 mt-2">Enter your password <RiInformationLine data-tooltip-id='password-tooltip' className="password-tooltip" /></label>
+
+                                            <Tooltip id="password-tooltip" content="Password must contain 8 characters, one uppercase, one lowercase, one number and one special case character" className="custom-tooltip" />
+                                            <div className="inputbox-container mt-2">
+                                                <Field
+                                                    type={showPassword ? "text" : "password"}
+                                                    name="password"
+                                                    placeholder="Password"
+                                                    className={`inputbox dark:bg-purple-200 text-black ${errors.password && touched.password ? 'border-red-500' : ''}`}
+                                                    autoComplete="current-password"
+                                                />
+                                                <span className="password-icon" onClick={() => setShowPassword(!showPassword)}>
+                                                    {showPassword ? < BsEyeFill /> : < BsEyeSlashFill />}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="create_acp">
+                                            {errors.password && (
+                                                <ErrorMessage
+                                                    name="password"
+                                                    component="div"
+                                                    className="error-message mt-2"
+                                                    value={errors.password}
+                                                />
+                                            )}
+                                            {!errors.password && (
+                                                <div className="default-error-message mt-2">
+
+                                                </div>
+                                            )}
+                                            <Link to="/forgotpassword" className="create_ac">
+                                                Forgot Password?
+                                            </Link>
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            className="submitbutton mt-10 bg-purple-500 text-white font-bold py-2 px-4 rounded-full"
+                                            disabled={isLoading}
+                                            style={{ cursor: isLoading ? 'wait' : 'pointer' }}
+                                        >
+                                            {isLoading ? 'Sign in...' : 'Sign in'}
+                                        </button>
+                                    </Form>
+                                )}
+                            </Formik>
+
+                            <div className="mt-3 text-center">
+                                <Link to="/signup" className="create_ac">
+                                    Create New Account
+                                </Link>
+                            </div>
+                            {/* <div title="OR" className="or_block">
                             <div className="line"></div>
                             <p>OR</p>
                         </div>
@@ -277,9 +289,9 @@ function Signin() {
                             </div>
                             <div>Sign in with Google</div>
                         </button> */}
+                        </div>
                     </div>
                 </div>
-            </div>
             </main>
         </>
     );

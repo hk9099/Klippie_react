@@ -89,7 +89,7 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
 const generateAvatar = async (emailAddress, setUserAvatar, userToken, HOSTINGURL) => {
     const userAvatar = emailAddress.split('@')[0];
     // const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
-    const avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${userAvatar}`;
+    const avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${userAvatar}?background=%23b6e3f4,%23c0aede,%23ffdab9,%23fa8072,%23fff0f5,%23ffe4b5,%23f08080,%23ffdead,%23deb887,%23ffefd5,%23fffacd,%23fafad2,%23f5deb3,%23ffebcd,%23f5f5dc,%23faebd7,%23ffdab9,%230d8abc,%2387ceeb,%23d8bfd8,%23eee8aa&color=%23fff&bold=1&radius=50&size=128`;
 
 
     try {
