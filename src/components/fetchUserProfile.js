@@ -74,6 +74,13 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
             if (process.env.NODE_ENV === 'development') {
             console.log(error);
             }
+            if (error.response) {
+                if (error.response.status === 401) {
+                    TokenManager.removeToken();
+                    navigate('/');
+                    window.location.reload();
+                }
+            }
         }
     }
 };
