@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
-
+import { createAvatar } from '@dicebear/core';
+import { initials } from '@dicebear/collection';
 // Define the async function to fetch user profile
 const user = TokenManager.getToken()
 // var userToken = TokenManager.getToken()[1]
@@ -80,7 +81,9 @@ const fetchUserProfile = async (initialized, navigate, setUserNickname, setUserE
 // Define the async function to generate the avatar URL
 const generateAvatar = async (emailAddress, setUserAvatar, userToken, HOSTINGURL) => {
     const userAvatar = emailAddress.split('@')[0];
-    const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
+    // const avatarUrl = `https://ui-avatars.com/api/?name=${userAvatar}&background=0D8ABC&color=fff&size=128`;
+    const avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${userAvatar}`;
+
 
     try {
         const response = await axios.get(avatarUrl);
