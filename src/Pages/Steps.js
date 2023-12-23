@@ -16,11 +16,14 @@ import { useFileSelected } from "../context/SelectionContext.js";
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
-const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance }) => {
+const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance , startAgain}) => {
     if (process.env.NODE_ENV === 'development') {
         console.log(cloudinaryResponse, 'cloudinaryResponse');
     }
     const { setClipsFoundStatus, setShowHomeStatus, setProjectCreated } = useClipsFoundStatus();
+    if (process.env.NODE_ENV === 'development') {
+        console.log(startAgain, 'startAgainnnnnnn');
+    }
     const { fileDelete } = useFileSelected();
     const navigate = useNavigate();
     const user = TokenManager.getToken()
@@ -34,7 +37,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
             const userToken = TokenManager.getToken()[1]
             setUserToken(userToken);
         }
-    }, [navigate, user]);
+    }, [navigate, user ,startAgain]);
     const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
     const [currentProjectId, setProjectId] = useState();
@@ -173,13 +176,14 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
         }
     };
     useEffect(() => {
-
-        if (currentProjectId && userToken) {
+        const userToken = TokenManager.getToken()[1]
+        setUserToken(userToken);
+        if ( userToken ) {
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
                     try {
                         const data = JSON.stringify({
-                            "id": currentProjectId,
+                            "id": currentProjectId ||startAgain,
                         });
                         const config = {
                             method: 'post',
@@ -210,7 +214,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                         // }
 
                         if (message === 'Clips generated') {
-                            navigate(`/dashboard/${currentProjectId}`);
+                            navigate(`/dashboard/${currentProjectId || startAgain}`);
                             setProjectId('')
                             setError('');
                             setClipsFoundStatus(true);
@@ -246,7 +250,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
             return () => clearInterval(intervalId);
         }
         //eslint-disable-next-line
-    }, [currentProjectId, uniqueMessages, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus]);
+    }, [currentProjectId, uniqueMessages, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus,startAgain]);
 
     useEffect(() => {
         setProjectId(currentProjectId);

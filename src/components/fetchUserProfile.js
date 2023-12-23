@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { TokenManager } from '../components/getToken.js';
-import { createAvatar } from '@dicebear/core';
-import { initials } from '@dicebear/collection';
 // Define the async function to fetch user profile
 const user = TokenManager.getToken()
 // var userToken = TokenManager.getToken()[1]

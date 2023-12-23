@@ -8,6 +8,7 @@ export const ClipsFoundProvider = ({ children }) => {
     const [projectCreated, setProjectCreated] = useState(false);
     const [clipsFound, setClipsFound] = useState(false);
     const [showHome, setShowHome] = useState(true);
+    const [startAgain, setStartAgain] = useState("");
 
     const setClipsFoundStatus = (status) => {
         setClipsFound(status);
@@ -18,7 +19,7 @@ export const ClipsFoundProvider = ({ children }) => {
     };
 
     return (
-        <ClipsFoundContext.Provider value={{ clipsFound, setClipsFoundStatus, showHome, setShowHomeStatus ,projectCreated, setProjectCreated}}>
+        <ClipsFoundContext.Provider value={{ clipsFound, setClipsFoundStatus, showHome, setShowHomeStatus ,projectCreated, setProjectCreated,startAgain, setStartAgain}}>
             {children}
         </ClipsFoundContext.Provider>
     );

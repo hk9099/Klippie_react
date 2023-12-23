@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AiOutlineDelete, AiOutlineMenu, AiOutlinePlus, AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlinePlus, AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 // import { Menu } from "@headlessui/react";
 import Logo from "../assets/images/logo.svg";
 import HamburgerButton from "./HumbergerButton";
@@ -10,11 +10,11 @@ import Modal from "./Modal";
 import AccountModal from "./AccountModal";
 import axios from "axios";
 import qs from "qs";
-import DropdownMenu from "./DropdownMenu";
-import { BsThreeDots } from "react-icons/bs";
+// import DropdownMenu from "./DropdownMenu";
+// import { BsThreeDots } from "react-icons/bs";
 import fetchProjectsData from '../components/fetchProjectData';
 import { FiEdit2 } from "react-icons/fi";
-import { RotatingLines } from "react-loader-spinner";
+// import { RotatingLines } from "react-loader-spinner";
 import { useSidebarContext } from '../context/SidebarContext';
 import { useUserNickname } from "../context/userNicknameContext";
 import fetchUserProfile from '../components/fetchUserProfile';
@@ -37,9 +37,8 @@ import { Toaster } from 'react-hot-toast';
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { setCloudinaryResponse } = useCloudinary();
-  // const { clipsFound } = useClipsFoundStatus();
   //eslint-disable-next-line
-  const { setClipsFoundStatus, projectCreated } = useClipsFoundStatus();
+  const { setStartAgain, projectCreated  } = useClipsFoundStatus();
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { setUserName } = useUserNickname();
   const { setUserEmail } = useUserNickname();
@@ -73,7 +72,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [isLoading, setIsLoading] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [projectId] = useState(null);
-  const [dropdownPosition, setDropdownPosition] = useState("down");
+  const [dropdownPosition] = useState("down");
   const location = useLocation();
   const [lines, setLines] = useState([]);
   console.log(lines, 'lines');
@@ -163,10 +162,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     );
   };
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-    setDropdownPosition("up");
-  };
+  // const toggleDropdown = () => {
+  //   setDropdownOpen(!dropdownOpen);
+  //   setDropdownPosition("up");
+  // };
 
   useEffect(() => {
     localStorage.setItem("color-theme", "dark");
@@ -433,6 +432,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     const message = response.data.data;
 
     if (message === "Project Created") {
+      console.log(projectData[index].id, 'projectData[index].id');
+      setStartAgain(projectData[index].id)
       ToastNotification({ message: response.data.message, type: 'success' });
       navigate(`/dashboard`);
       navigate()
@@ -446,6 +447,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       navigate()
     }
     if (message === 'Clips generated') {
+      setStartAgain('')
       navigate(`/dashboard/${projectData[index].id}`);
     }
   };

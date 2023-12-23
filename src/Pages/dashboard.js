@@ -52,25 +52,25 @@ export default function Dashboard() {
     }
   }, [navigate, user]);
 
-  // useEffect(() => {
-  //   let config = {
-  //     method: 'post',
-  //     maxBodyLength: Infinity,
-  //     url: 'https://dev-api.getklippie.com/v1/project/current-running-project',
-  //     headers: {
-  //       'accept': 'application/json',
-  //       'Authorization': 'Bearer ' + userToken
-  //     }
-  //   };
+  useEffect(() => {
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://dev-api.getklippie.com/v1/project/current-running-project',
+      headers: {
+        'accept': 'application/json',
+        'Authorization': 'Bearer ' + userToken
+      }
+    };
 
-  //   axios.request(config)
-  //     .then((response) => {
-  //       console.log(JSON.stringify(response.data), 'response.datttttttttttttta');
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, [userToken])
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data), 'response.datttttttttttttta');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [userToken])
 
   useEffect(() => {
     const handleMediaEditorClosed = () => {
@@ -106,7 +106,8 @@ export default function Dashboard() {
       clearInterval(interval);
     };
   }, []);
-  const { setClipsFoundStatus } = useClipsFoundStatus();
+  const { setClipsFoundStatus ,startAgain} = useClipsFoundStatus();
+  console.log(startAgain, 'startAgain');
   const { projectId: routeProjectId } = useParams();
   const { cloudinaryResponse } = useCloudinary();
   const [projectId, setProjectId] = useState(null);
@@ -374,7 +375,7 @@ export default function Dashboard() {
             <PopupForm onSubmit={handleSubmit} onCancel={handleCancel} />
           ) : (
             <>
-              {(accordionVisible || cloudinaryResponse) ? (
+              {(accordionVisible || cloudinaryResponse || startAgain) ? (
                 <Steps
                   projectId={projectId}
                   newhistoryvideoClips={newvideoClips}
@@ -384,6 +385,7 @@ export default function Dashboard() {
                   cloudinaryResponse={cloudinaryResponse}
                   userName={userName}
                   creaditBalance={creaditBalance}
+                  startAgain={startAgain}
                 />
               ) : loginCount === 1 && (newProjectCount === undefined || '') ? (
                 <HomeScreen userName={userName} creaditBalance={creaditBalance} />
