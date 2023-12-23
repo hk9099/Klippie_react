@@ -28,7 +28,7 @@ export default function ToggleMenuButton({ position, showLogout, userNickname, u
     return (
         <>
             <Menu shadow="md" width={240}
-
+            transitionProps={{ transition: 'pop', duration: 150 }}
             >
                 <Menu.Target>
                     {/* <Button>Toggle menu</Button> */}

@@ -219,9 +219,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                             setError('');
                             setClipsFoundStatus(true);
                         }
-
-                        // Check if the message is not in the list of unique messages
-                        // Check if the message is not in the list of unique messages
+                        
                         if (!uniqueMessages.includes(message)) {
                             // Add the message to the list of unique messages
                             setUniqueMessages([...uniqueMessages, message]);
