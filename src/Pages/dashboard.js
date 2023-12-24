@@ -137,6 +137,7 @@ export default function Dashboard() {
     axios.request(config)
     .then((response) => {
       setIsApiCompleted(true);
+      setMakeNextAPICall(false);
     })
     .catch((error) => {
       console.log(error);
