@@ -342,7 +342,7 @@ export default function CloudinaryVideoPlayer({
         </div>
               <div className="flex justify-between items-center ">
                 <button
-                    className={`w-1/2 border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full  text-center p-2 gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center`}
+                    className={`w-1/2 border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full  text-center p-2 gap-3 m-auto mt-2 ${sidebar ? 'hidden' : ''} flex-row justify-center items-center ${setMainVideo ? 'w-full' : ''}`}
                     onClick={handleDownload}
                 >
                     <HiOutlineDownload />

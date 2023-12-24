@@ -213,5 +213,14 @@
 
 .runningProjects{
     width: fit-content!important;
-    
+    background: #343769!important;
+}
+
+.panelcolor{
+    border-color: transparent!important;
+}
+
+[data-mantine-color-scheme=light] .m-4271d21b:not(:disabled,[data-disabled]):hover, [data-mantine-color-scheme=light] .m-6939a5e9:not(:disabled,[data-disabled]):hover{
+    background-color: #404268!important;
+    border-radius: 10px!important;
 }

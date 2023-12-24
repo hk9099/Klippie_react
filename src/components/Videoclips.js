@@ -186,7 +186,7 @@ console.log(videoClips, "videoClips");
               <DropDownButton status={rowData.data.status} clipId={rowData.data.id} />
           </div>
         )}
-        width='auto'
+        width={200}
         allowSorting={false}
       />
       <Popup

@@ -22,6 +22,7 @@ const Mainvideo = () => {
       <DataGrid
         dataSource={MainVideo}
         keyExpr="id"
+        width='auto'
         showBorders={true}
         columnAutoWidth={true}
         showRowLines={true}
@@ -37,8 +38,6 @@ const Mainvideo = () => {
           cssClass='Video'
           cellRender={(rowData) => 
              <CloudinaryVideoPlayer src={rowData.data.src} title={rowData.data.title} type={rowData.data.type} setMainVideo={mainVideo} />
-            //  <CloudinaryVideoPlayer src={rowData.data.src} title={rowData.data.title} type={rowData.data.type} setMainVideo={mainVideo}} />
-
             }
             width={450}
         />
@@ -64,6 +63,7 @@ const Mainvideo = () => {
               {rowData.data.description}
             </div>
           )}
+          width='min-content'
         />
         <Column
           dataField="time"

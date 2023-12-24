@@ -22,8 +22,9 @@ import ToastNotification from "../components/ToastNotification";
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-import { Dialog, Group, Button, Loader, Text } from '@mantine/core';
+import { Dialog, Group, Button, Loader, Text, Accordion, List, ThemeIcon, rem } from '@mantine/core';
 import { useSidebarContext } from '../context/SidebarContext';
+import { IconCircleCheck, IconCircleDashed } from '@tabler/icons-react';
 
 export default function Dashboard() {
   const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
@@ -39,7 +40,7 @@ export default function Dashboard() {
   const [userToken, setUserToken] = useState(null);
   console.log(userToken, 'userToken');
   const [loginCount, setLoginCount] = useState(0);
-  const { setClipsFoundStatus, startAgain,projectCreated } = useClipsFoundStatus();
+  const { setClipsFoundStatus, startAgain, projectCreated } = useClipsFoundStatus();
   const { isApiCompleted, setIsApiCompleted } = useSidebarContext();
   console.log(startAgain, 'startAgain');
   const { projectId: routeProjectId } = useParams();
@@ -121,27 +122,27 @@ export default function Dashboard() {
     } else {
       fetchData();
     }
-  }, [userToken, makeNextAPICall,projectCreated]);
+  }, [userToken, makeNextAPICall, projectCreated]);
 
   const stopProcessing = async () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: 'https://dev-api.getklippie.com/v1/project/stop-process',
-      headers: { 
-        'accept': 'application/json', 
+      headers: {
+        'accept': 'application/json',
         'Authorization': 'Bearer ' + userToken
       }
     };
-    
+
     axios.request(config)
-    .then((response) => {
-      setIsApiCompleted(true);
-      setMakeNextAPICall(false);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((response) => {
+        setIsApiCompleted(true);
+        setMakeNextAPICall(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   useEffect(() => {
@@ -459,28 +460,73 @@ export default function Dashboard() {
               </>
             )}
 
-          {makeNextAPICall && (    
-            <Dialog opened={makeNextAPICall}  radius="md"
-            classNames={{
-              root: 'runningProjects', 
-            }}
+            {makeNextAPICall && (    
+            <Dialog opened={true}  radius="lg"
+              classNames={{
+                root: 'runningProjects',
+              }}
+              styles={{
+                root: {
+                  border: '1px solid #e3e3e3',
+                }
+              }}
             >
               <Group styles={{
-              root: {
-                zIndex: '9999!important',
-                width: 'auto!important',
-              }
-            }}>
+                root: {
+                  zIndex: '9999!important',
+                  width: 'auto!important',
+                }
+              }}>
                 <Loader size="md" />
-                <Text style={{ maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <Text style={{ width: '250px', maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color:'#fff'}}>
                   {runningData && runningData[0] && runningData[0].title || 'New Project'}
                 </Text>
                 <Button onClick={stopProcessing} color="red" variant="filled">
                   Stop Process
                 </Button>
               </Group>
+              <Accordion
+              styles={{
+                root: {
+                  border: '1px solid #e3e3e3',
+                  marginTop: '10px',
+                  borderRadius: '10px',
+                },
+                control: {
+                  "&:hover": {
+                    backgroundColor: "#000",
+                  },
+                  color: "#fff",
+                  borderBottom: "1px solid #e3e3e3",
+                  borderRadius: "10px",
+                },
+                content: {
+                  padding: "10px",
+                },
+              }}
+              >
+                <Accordion.Item value="Apples" classNames={{ item: 'panelcolor', }} >
+                  <Accordion.Control >
+                    Notes
+                  </Accordion.Control>
+                  <Accordion.Panel>
+                    <List spacing="md" size="md" center 
+                      styles={{
+                        item: {
+                          color: "#fff",
+                        },
+                      }}
+                    // icon={ <ThemeIcon color="teal" size={24} radius="xl"> <IconCircleCheck style={{ width: rem(16), height: rem(16) }} /> </ThemeIcon> }
+                     >
+                      <List.Item>🕵️‍♂️ Klippie is finding your clips</List.Item>
+                      <List.Item>⏳ This may take up to 15 minutes</List.Item>
+                      <List.Item>📧 We’ll email you when they’re ready!</List.Item>
+                    </List>
+                  </Accordion.Panel>
+                </Accordion.Item>
+              </Accordion>
             </Dialog>
-          )}
+            )}
           </section>
         </div>
         <Analytics />
