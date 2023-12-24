@@ -182,11 +182,10 @@ console.log(videoClips, "videoClips");
         resizable={true}
         columnAutoWidth={true}
         cellRender={(rowData) => (
-          <div style={{ textAlign: "center" , color: '#000!important'}}>
+          <div style={{ textAlign: "center" , color: '#000!important', maxWidth:'200px'}}>
               <DropDownButton status={rowData.data.status} clipId={rowData.data.id} />
           </div>
         )}
-        width={200}
         allowSorting={false}
       />
       <Popup
