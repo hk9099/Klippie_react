@@ -23,6 +23,7 @@ import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import { Dialog, Group, Button, Loader, Text } from '@mantine/core';
+import { useSidebarContext } from '../context/SidebarContext';
 
 export default function Dashboard() {
   const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
@@ -40,6 +41,7 @@ export default function Dashboard() {
   console.log(userToken, 'userToken');
   const [loginCount, setLoginCount] = useState(0);
   const { setClipsFoundStatus, startAgain,clipsFound } = useClipsFoundStatus();
+  const { isApiCompleted, setIsApiCompleted } = useSidebarContext();
   console.log(startAgain, 'startAgain');
   const { projectId: routeProjectId } = useParams();
   const { cloudinaryResponse } = useCloudinary();
@@ -135,7 +137,7 @@ export default function Dashboard() {
     
     axios.request(config)
     .then((response) => {
-      console.log(JSON.stringify(response.data));
+      setIsApiCompleted(true);
     })
     .catch((error) => {
       console.log(error);
@@ -457,7 +459,7 @@ export default function Dashboard() {
               </>
             )}
 
-
+          {makeNextAPICall && (    
             <Dialog opened={makeNextAPICall}  radius="md"
             classNames={{
               root: 'runningProjects', 
@@ -478,6 +480,7 @@ export default function Dashboard() {
                 </Button>
               </Group>
             </Dialog>
+          )}
           </section>
         </div>
         <Analytics />

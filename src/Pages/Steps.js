@@ -16,7 +16,7 @@ import { useFileSelected } from "../context/SelectionContext.js";
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
-const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance , startAgain}) => {
+const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance, startAgain }) => {
     if (process.env.NODE_ENV === 'development') {
         console.log(cloudinaryResponse, 'cloudinaryResponse');
     }
@@ -37,7 +37,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
             const userToken = TokenManager.getToken()[1]
             setUserToken(userToken);
         }
-    }, [navigate, user ,startAgain]);
+    }, [navigate, user, startAgain]);
     const { projectId: routeProjectId } = useParams();
     //eslint-disable-next-line
     const [currentProjectId, setProjectId] = useState();
@@ -178,12 +178,12 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     useEffect(() => {
         const userToken = TokenManager.getToken()[1]
         setUserToken(userToken);
-    if ( userToken && (currentProjectId || startAgain !== '')) {
+        if (userToken && (currentProjectId || startAgain !== '')) {
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
                     try {
                         const data = JSON.stringify({
-                            "id": currentProjectId ||startAgain,
+                            "id": currentProjectId || startAgain,
                         });
                         const config = {
                             method: 'post',
@@ -219,7 +219,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                             setError('');
                             setClipsFoundStatus(true);
                         }
-                        
+
                         if (!uniqueMessages.includes(message)) {
                             // Add the message to the list of unique messages
                             setUniqueMessages([...uniqueMessages, message]);
@@ -248,7 +248,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
             return () => clearInterval(intervalId);
         }
         //eslint-disable-next-line
-    }, [currentProjectId, uniqueMessages, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus,startAgain]);
+    }, [currentProjectId, uniqueMessages, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus, startAgain]);
 
     useEffect(() => {
         setProjectId(currentProjectId);
