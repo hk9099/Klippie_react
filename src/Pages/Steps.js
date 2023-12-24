@@ -178,7 +178,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     useEffect(() => {
         const userToken = TokenManager.getToken()[1]
         setUserToken(userToken);
-        if ( userToken ) {
+    if ( userToken && (currentProjectId || startAgain !== '')) {
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
                     try {

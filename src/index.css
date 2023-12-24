@@ -210,3 +210,8 @@
 .cld-video-player .vjs-big-play-button{
     width: 50px !important;
 }
+
+.runningProjects{
+    width: fit-content!important;
+    
+}

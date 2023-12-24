@@ -22,14 +22,15 @@ import ToastNotification from "../components/ToastNotification";
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-import '@mantine/dropzone/styles.css';
+import { Dialog, Group, Button, Loader, Text } from '@mantine/core';
 
 export default function Dashboard() {
   const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
+
   // if (process.env.NODE_ENV === 'development') {
   //   console.log(pageLoaded, 'pageLoaded');
   // }
-  
+
   const location = useLocation();
   const [showPopup, setShowPopup] = useState(false);
   const [mediaEditorClosed, setMediaEditorClosed] = useState(false);
@@ -38,6 +39,27 @@ export default function Dashboard() {
   const [userToken, setUserToken] = useState(null);
   console.log(userToken, 'userToken');
   const [loginCount, setLoginCount] = useState(0);
+  const { setClipsFoundStatus, startAgain,clipsFound } = useClipsFoundStatus();
+  console.log(startAgain, 'startAgain');
+  const { projectId: routeProjectId } = useParams();
+  const { cloudinaryResponse } = useCloudinary();
+  const [projectId, setProjectId] = useState(null);
+  const [newvideoClips, setNewvideoClips] = useState([]);
+  const [newmainvideo, setnewMainVideo] = useState([]);
+  const [accordionVisible, setAccordionVisible] = useState(true);
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log(accordionVisible, 'accordionVisible');
+  // }
+  const [errorMessage, setErrorMessage] = useState("");
+  const [newProjectCount, setNewProjectCount] = useState('');
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log(newProjectCount, 'newProjectCount');
+  // }
+  const { userName } = useUserNickname();
+  const { creaditBalance } = useUserNickname();
+  const setError = (message) => {
+    setErrorMessage(message);
+  };
 
   useEffect(() => {
     if (user === undefined || user === null) {
@@ -52,25 +74,73 @@ export default function Dashboard() {
     }
   }, [navigate, user]);
 
+  const [makeNextAPICall, setMakeNextAPICall] = useState(false);
+  const [runningData, setRunningData] = useState(null);
+
   useEffect(() => {
+    const fetchData = () => {
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://dev-api.getklippie.com/v1/project/current-running-project',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer ' + userToken
+        }
+      };
+
+      axios.request(config)
+        .then((response) => {
+          if (response.data.data && response.data.data.length !== 0) {
+            setMakeNextAPICall(true);
+            setRunningData(response.data.data);
+          } else {
+            setMakeNextAPICall(false);
+            console.log('Making next API call.');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    const userToken = TokenManager.getToken()[1];
+    setUserToken(userToken);
+
+    if (makeNextAPICall !== false) {
+      console.log('makeNextAPICall is not false. Setting up interval.');
+
+      // Set up an interval to continuously make API calls
+      const intervalId = setInterval(() => {
+        fetchData();
+      }, 5000);
+
+      // Clean up the interval when the component unmounts or when makeNextAPICall becomes false
+      return () => clearInterval(intervalId);
+    } else {
+      fetchData();
+    }
+  }, [userToken, makeNextAPICall,clipsFound]);
+
+  const stopProcessing = async () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://dev-api.getklippie.com/v1/project/current-running-project',
-      headers: {
-        'accept': 'application/json',
+      url: 'https://dev-api.getklippie.com/v1/project/stop-process',
+      headers: { 
+        'accept': 'application/json', 
         'Authorization': 'Bearer ' + userToken
       }
     };
-
+    
     axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data), 'response.datttttttttttttta');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [userToken])
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
 
   useEffect(() => {
     const handleMediaEditorClosed = () => {
@@ -106,27 +176,6 @@ export default function Dashboard() {
       clearInterval(interval);
     };
   }, []);
-  const { setClipsFoundStatus ,startAgain} = useClipsFoundStatus();
-  console.log(startAgain, 'startAgain');
-  const { projectId: routeProjectId } = useParams();
-  const { cloudinaryResponse } = useCloudinary();
-  const [projectId, setProjectId] = useState(null);
-  const [newvideoClips, setNewvideoClips] = useState([]);
-  const [newmainvideo, setnewMainVideo] = useState([]);
-  const [accordionVisible, setAccordionVisible] = useState(true);
-  // if (process.env.NODE_ENV === 'development') {
-  //   console.log(accordionVisible, 'accordionVisible');
-  // }
-  const [errorMessage, setErrorMessage] = useState("");
-  const [newProjectCount, setNewProjectCount] = useState('');
-  // if (process.env.NODE_ENV === 'development') {
-  //   console.log(newProjectCount, 'newProjectCount');
-  // }
-  const { userName } = useUserNickname();
-  const { creaditBalance } = useUserNickname();
-  const setError = (message) => {
-    setErrorMessage(message);
-  };
 
   // useEffect(() => {
   //   setTimeout(() => {
@@ -158,7 +207,7 @@ export default function Dashboard() {
   //   }
   // }, [ navigate]);
 
- 
+
 
   const handleSubmit = async (values) => {
     if (process.env.NODE_ENV === 'development') {
@@ -321,10 +370,10 @@ export default function Dashboard() {
       }
     };
 
-    
-      handleProjectClick()
+
+    handleProjectClick()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo, fileDelete, projectId, pageLoaded,userToken]);
+  }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo, fileDelete, projectId, pageLoaded, userToken]);
 
 
 
@@ -349,67 +398,89 @@ export default function Dashboard() {
       position: 'relative',
     }}>
       <MantineProvider>
-      {/* <Toaster position="top-center" /> */}
-      <div className="flex h-full">
-        {showPopup ? null : (
-          // Render the sidebar when showPopup is false
-          <Sidebar
-            setProjectId={setProjectId}
-            setNewvideoClips={setNewvideoClips}
-            setnewMainVideo={setnewMainVideo}
-            setAccordionVisible={setAccordionVisible}
-            setError={setError}
-          />
-        )}
-        <section className="w-full px-3 " style={{ overflow: 'auto' }}>
-          {/* <button type="button" className="" onClick={showToast}>Toast</button> */}
-          <Modal className="z-50" />
-          {loginCount === 1 && (newProjectCount === undefined || '') ? (
-            <Navbar creaditBalance={creaditBalance} />
-          ) : loginCount > 1 ? (
-            <Navbar creaditBalance={creaditBalance} />
-          ) : (
-            <Navbar creaditBalance={creaditBalance} />
+        {/* <Toaster position="top-center" /> */}
+        <div className="flex h-full">
+          {showPopup ? null : (
+            // Render the sidebar when showPopup is false
+            <Sidebar
+              setProjectId={setProjectId}
+              setNewvideoClips={setNewvideoClips}
+              setnewMainVideo={setnewMainVideo}
+              setAccordionVisible={setAccordionVisible}
+              setError={setError}
+            />
           )}
-          {showPopup ? (
-            <PopupForm onSubmit={handleSubmit} onCancel={handleCancel} />
-          ) : (
-            <>
-              {(accordionVisible || cloudinaryResponse || startAgain) ? (
-                <Steps
-                  projectId={projectId}
-                  newhistoryvideoClips={newvideoClips}
-                  newmainvideo={newmainvideo}
-                  errorMessage={errorMessage}
-                  accordionVisible={accordionVisible}
-                  cloudinaryResponse={cloudinaryResponse}
-                  userName={userName}
-                  creaditBalance={creaditBalance}
-                  startAgain={startAgain}
-                />
-              ) : loginCount === 1 && (newProjectCount === undefined || '') ? (
-                <HomeScreen userName={userName} creaditBalance={creaditBalance} />
-              ) : loginCount === 1 && newProjectCount >= 1 ? (
-                <DragDropModal className="z-50" />
-              ) : loginCount > 1 && (newProjectCount === undefined || '') ? (
-                <DragDropModal className="z-50" />
-              ) : loginCount > 1 && newProjectCount >= 1 ? (
-                <DragDropModal className="z-50" />
-              ) : (
-                null
-              )}
-              {!accordionVisible && errorMessage && (
-                <div className="flex justify-center h-screen items-center">
-                  <div className="text-red-500 text-center  inline-block p-2 font-bold text-lg">
-                    {errorMessage}
+          <section className="w-full px-3 " style={{ overflow: 'auto' }}>
+            {/* <button type="button" className="" onClick={showToast}>Toast</button> */}
+            <Modal className="z-50" />
+            {loginCount === 1 && (newProjectCount === undefined || '') ? (
+              <Navbar creaditBalance={creaditBalance} />
+            ) : loginCount > 1 ? (
+              <Navbar creaditBalance={creaditBalance} />
+            ) : (
+              <Navbar creaditBalance={creaditBalance} />
+            )}
+            {showPopup ? (
+              <PopupForm onSubmit={handleSubmit} onCancel={handleCancel} />
+            ) : (
+              <>
+                {(accordionVisible || cloudinaryResponse || startAgain) ? (
+                  <Steps
+                    projectId={projectId}
+                    newhistoryvideoClips={newvideoClips}
+                    newmainvideo={newmainvideo}
+                    errorMessage={errorMessage}
+                    accordionVisible={accordionVisible}
+                    cloudinaryResponse={cloudinaryResponse}
+                    userName={userName}
+                    creaditBalance={creaditBalance}
+                    startAgain={startAgain}
+                  />
+                ) : loginCount === 1 && (newProjectCount === undefined || '') ? (
+                  <HomeScreen userName={userName} creaditBalance={creaditBalance} />
+                ) : loginCount === 1 && newProjectCount >= 1 ? (
+                  <DragDropModal className="z-50" />
+                ) : loginCount > 1 && (newProjectCount === undefined || '') ? (
+                  <DragDropModal className="z-50" />
+                ) : loginCount > 1 && newProjectCount >= 1 ? (
+                  <DragDropModal className="z-50" />
+                ) : (
+                  null
+                )}
+                {!accordionVisible && errorMessage && (
+                  <div className="flex justify-center h-screen items-center">
+                    <div className="text-red-500 text-center  inline-block p-2 font-bold text-lg">
+                      {errorMessage}
+                    </div>
                   </div>
-                </div>
-              )}
-            </>
-          )}
-        </section>
-      </div>
-      <Analytics />
+                )}
+              </>
+            )}
+
+
+            <Dialog opened={makeNextAPICall}  radius="md"
+            classNames={{
+              root: 'runningProjects', 
+            }}
+            >
+              <Group styles={{
+              root: {
+                zIndex: '9999!important',
+                width: 'auto!important',
+              }
+            }}>
+                <Loader size="md" />
+                <Text style={{ maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {runningData && runningData[0] && runningData[0].title || 'New Project'}
+                </Text>
+                <Button onClick={stopProcessing} color="red" variant="filled">
+                  Stop Process
+                </Button>
+              </Group>
+            </Dialog>
+          </section>
+        </div>
+        <Analytics />
       </MantineProvider>
     </div>
 

@@ -442,6 +442,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
       if (process.env.NODE_ENV === 'development') {
         console.log(response.data.message, 'response.data.data.status')
       }
+      setStartAgain('')
       ToastNotification({ message: response.data.message, type: 'success' });
       navigate(`/dashboard`);
       navigate()
