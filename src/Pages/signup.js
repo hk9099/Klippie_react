@@ -153,16 +153,16 @@ function Signup({ errors, touched }) {
       navigate("/otpVarification");
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-      console.log(error);
+      console.log(error.response.data.message);
       }
       if (error.response) {
         ToastNotification({
-          message: error.response.data.detail,
+          message: error.response.data.detail || error.response.data.message,
           type: "error",
         });
       } else {
         ToastNotification({
-          message: "An error occurred",
+          message: error.response.data.message,
           type: "error",
         });
       }
