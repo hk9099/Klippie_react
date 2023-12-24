@@ -27,7 +27,6 @@ import { useSidebarContext } from '../context/SidebarContext';
 
 export default function Dashboard() {
   const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
-
   // if (process.env.NODE_ENV === 'development') {
   //   console.log(pageLoaded, 'pageLoaded');
   // }
@@ -40,7 +39,7 @@ export default function Dashboard() {
   const [userToken, setUserToken] = useState(null);
   console.log(userToken, 'userToken');
   const [loginCount, setLoginCount] = useState(0);
-  const { setClipsFoundStatus, startAgain,clipsFound } = useClipsFoundStatus();
+  const { setClipsFoundStatus, startAgain,projectCreated } = useClipsFoundStatus();
   const { isApiCompleted, setIsApiCompleted } = useSidebarContext();
   console.log(startAgain, 'startAgain');
   const { projectId: routeProjectId } = useParams();
@@ -122,7 +121,7 @@ export default function Dashboard() {
     } else {
       fetchData();
     }
-  }, [userToken, makeNextAPICall,clipsFound]);
+  }, [userToken, makeNextAPICall,projectCreated]);
 
   const stopProcessing = async () => {
     let config = {
