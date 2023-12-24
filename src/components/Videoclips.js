@@ -109,7 +109,7 @@ console.log(videoClips, "videoClips");
         showNavigationButtons={true}
         visible={videoClips.length > 0 ? true : false}
         displayMode="compact"
-        allowedPageSizes={[5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80]}
+        allowedPageSizes={[5,10,15,20,25,30,35,40]}
       />
       <Column
         dataField="video"
@@ -182,7 +182,7 @@ console.log(videoClips, "videoClips");
         resizable={true}
         columnAutoWidth={true}
         cellRender={(rowData) => (
-          <div style={{ textAlign: "center" , color: '#000!important', maxWidth:'200px'}}>
+          <div style={{ textAlign: "center" , color: '#000!important', maxWidth:'180px'}}>
               <DropDownButton status={rowData.data.status} clipId={rowData.data.id} />
           </div>
         )}

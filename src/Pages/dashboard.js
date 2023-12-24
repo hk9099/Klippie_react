@@ -53,6 +53,7 @@ export default function Dashboard() {
   //   console.log(accordionVisible, 'accordionVisible');
   // }
   const [errorMessage, setErrorMessage] = useState("");
+  console.log(errorMessage, 'errorMessage');
   const [newProjectCount, setNewProjectCount] = useState('');
   // if (process.env.NODE_ENV === 'development') {
   //   console.log(newProjectCount, 'newProjectCount');
@@ -293,6 +294,7 @@ export default function Dashboard() {
 
     const handleProjectClick = async (index) => {
       // const userToken = TokenManager.getToken()[1]
+      try {
       let maindata = JSON.stringify({
         "id": routeProjectId
       });
@@ -370,6 +372,18 @@ export default function Dashboard() {
         setNewvideoClips(newvideoClips);
         setAccordionVisible(true);
         setPageLoaded(false);
+      }
+      if (response.status === 200) {
+        setErrorMessage('')
+      }
+      } 
+      catch (error) {
+        if (error.response.data.message) {
+          setAccordionVisible(false);
+          setErrorMessage(error.response.data.message);
+        } else {
+          setErrorMessage('');
+        }
       }
     };
 
@@ -450,15 +464,23 @@ export default function Dashboard() {
                 ) : (
                   null
                 )}
-                {!accordionVisible && errorMessage && (
-                  <div className="flex justify-center h-screen items-center">
-                    <div className="text-red-500 text-center  inline-block p-2 font-bold text-lg">
-                      {errorMessage}
-                    </div>
-                  </div>
-                )}
               </>
             )}
+          {errorMessage && (
+  <div className="flex flex-col items-center h-[87vh] justify-center">
+    <div className="text-6xl font-extrabold mb-4 animate-bounce text-red-500">🤯 Oops!</div>
+    <div className="bg-gradient-to-r from-red-500 to-pink-500 border border-red-600 text-white px-6 py-4 rounded-lg shadow-lg transform scale-105 transition-transform duration-300">
+      <p className="font-semibold text-lg">{errorMessage}</p>
+    </div>
+  </div>
+)}
+
+
+
+
+
+
+
 
             {makeNextAPICall && (    
             <Dialog opened={true}  radius="lg"

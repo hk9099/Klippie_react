@@ -120,7 +120,7 @@ const Navbar = ({ creaditBalance }) => {
                         ) : (
                             <div className={`p-4 transform transition-transform duration-500 ease-in-out hover:scale-105`}>
                                 <div className={`bg-gradient-to-r from-purple-600 to-pink-400 text-white px-4 py-3 font-bold text-xxl flex justify-center items-center select-none rounded-lg shadow-lg`}>
-                                    <span className="mr-2">🚀</span> Lifetime Unlimited
+                                    Lifetime Unlimited
                                 </div>
                             </div>
 
