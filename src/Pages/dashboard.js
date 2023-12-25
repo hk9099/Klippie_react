@@ -79,7 +79,7 @@ export default function Dashboard() {
 
   const [makeNextAPICall, setMakeNextAPICall] = useState(false);
   const [runningData, setRunningData] = useState(null);
-
+  const [runningID, setRunningID] = useState(null);
   useEffect(() => {
     const fetchData = () => {
       const config = {
@@ -97,10 +97,11 @@ export default function Dashboard() {
           if (response.data.data && response.data.data.length !== 0) {
             setMakeNextAPICall(true);
             setRunningData(response.data.data);
+            setRunningID(response.data.data[0].id);
           } else {
             setMakeNextAPICall(false);
-            navigate(`/dashboard/${response.data.data[0].id}`);
-            console.log('Making next API call.');
+            navigate(`/dashboard/${runningID}`);
+            setRunningID(null);
           }
         })
         .catch((error) => {
@@ -117,7 +118,7 @@ export default function Dashboard() {
       // Set up an interval to continuously make API calls
       const intervalId = setInterval(() => {
         fetchData();
-      }, 5000);
+      }, 2000);
 
       // Clean up the interval when the component unmounts or when makeNextAPICall becomes false
       return () => clearInterval(intervalId);
@@ -419,7 +420,6 @@ export default function Dashboard() {
         {/* <Toaster position="top-center" /> */}
         <div className="flex h-full">
           {showPopup ? null : (
-            // Render the sidebar when showPopup is false
             <Sidebar
               setProjectId={setProjectId}
               setNewvideoClips={setNewvideoClips}
