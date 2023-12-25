@@ -8,7 +8,7 @@ import AccordionSection from '../components/AccordionSection';
 import { useSidebarContext } from '../context/SidebarContext.js';
 import { AiOutlineClose } from 'react-icons/ai';
 // import HomeScreen from './HomeScreen';
-import Suggetionpopup from '../components/Suggetionpopup';
+// import Suggetionpopup from '../components/Suggetionpopup';
 import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
 import { TokenManager } from '../components/getToken.js';
 import DragDropModal from '../components/Drag&DropModal';
@@ -53,6 +53,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     //eslint-disable-next-line
     const [accordionVisible, setAccordionVisible] = useState(true);
     const { setIsApiCompleted } = useSidebarContext();
+    // eslint-disable-next-line
     const [isSuggetionpopupOpen, setIsSuggetionpopupOpen] = useState(false);
     const location = useLocation();
 
@@ -271,9 +272,9 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
             <Toaster position="top-center" />
             {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
             <div className="text-center w-full">
-                {isSuggetionpopupOpen && (
+                {/* {isSuggetionpopupOpen && (
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
-                )}
+                )} */}
                 {!accordionVisible && (
                     <DragDropModal className="z-50" />
                 )}

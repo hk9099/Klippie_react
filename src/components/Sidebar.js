@@ -25,11 +25,12 @@ import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/dropzone/styles.css';
-import { Menu } from '@mantine/core';
+import { Menu, HoverCard, Button, Text, Group } from '@mantine/core';
 import ToggleMenuButton from './ToggleMenuButton';
 // import { Tooltip } from 'react-tooltip';
 //eslint-disable-next-line
 import VideoPlayer from "../Pages/videoplayer.js";
+import CloudinaryVideoPlayer from "../components/cloudinaryVideoPlayer.js";
 // import Example from "./testDropdown";
 import ConfirmationModal from "../components/DeleteConfirmationModal.js";
 import ToastNotification from "../components/ToastNotification";
@@ -38,7 +39,7 @@ import { Toaster } from 'react-hot-toast';
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { setCloudinaryResponse } = useCloudinary();
   //eslint-disable-next-line
-  const { setStartAgain, projectCreated  } = useClipsFoundStatus();
+  const { setStartAgain, projectCreated } = useClipsFoundStatus();
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { setUserName } = useUserNickname();
   const { setUserEmail } = useUserNickname();
@@ -129,11 +130,11 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     }
   }
 
-  // const videoDiv = previewVideoURL ? (
-  //   <div>
-  //     <VideoPlayer src={previewVideoURL} sidebar={true} />
-  //   </div>
-  // ) : null;
+  const videoDiv = previewVideoURL ? (
+    <div>
+      <CloudinaryVideoPlayer src={previewVideoURL} sidebar={true} />
+    </div>
+  ) : null;
 
   useEffect(() => {
     console.log('isApiCompleted', isApiCompleted);
@@ -479,52 +480,52 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         <Toaster position="top-center" />
         <div
           className={`${open
-              ? "relative transition-all duration-300 ease-in-out"
-              : "absolute transition-all left-[-210px] duration-300 ease-in-out"
+            ? "relative transition-all duration-300 ease-in-out"
+            : "absolute transition-all left-[-210px] duration-300 ease-in-out"
             } top-0 p-2 z-10 flex h-full flex-none flex-col space-y-2 text-[14px] sm:top-0 bg-gray-100 dark:border-gray-600 dark:bg-custom-color-dark`}
         >
 
-            <div
-              className={`flex justify-start items-center select-none px-[10px] py-3 pr-0`}
-            >
-     
-              <img
-                src={Logo}
-                alt=""
-                className={`w-10  ${!open && "justify-center"
-                  } bg-white rounded-full`}
-                  onClick={() => {
-                    navigate('/dashboard');
-                    setAccordionVisible(false);
-                  }}
-              />
-              <div className="flex items-start"  onClick={() => {
-                    navigate('/dashboard');
-                    setAccordionVisible(false);
-                  }}>
-                {open && (
-                  <span
-                    className={`text-2xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}
-                  >
-                    Klippie
-                  </span>
-                )}
-                {open && (
-                  <span
-                    className={`text-xs ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`} 
-                  >
-                    Beta
-                  </span>
-                )}
-              </div>
-              <IconLayoutSidebar
-                className={`${!open && "rotate-180 absolute border w-[40px] rounded-lg h-[40px] p-2"
-                  } ml-6  text-[100px] cursor-pointer top-5 -right-[55px]  border w-[40px] rounded-lg h-[40px] p-2 text-gray-200`}
-                onClick={() => {
-                  setOpen(!open);
-                }}
-              />
+          <div
+            className={`flex justify-start items-center select-none px-[10px] py-3 pr-0`}
+          >
+
+            <img
+              src={Logo}
+              alt=""
+              className={`w-10  ${!open && "justify-center"
+                } bg-white rounded-full`}
+              onClick={() => {
+                navigate('/dashboard');
+                setAccordionVisible(false);
+              }}
+            />
+            <div className="flex items-start" onClick={() => {
+              navigate('/dashboard');
+              setAccordionVisible(false);
+            }}>
+              {open && (
+                <span
+                  className={`text-2xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}
+                >
+                  Klippie
+                </span>
+              )}
+              {open && (
+                <span
+                  className={`text-xs ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`}
+                >
+                  Beta
+                </span>
+              )}
             </div>
+            <IconLayoutSidebar
+              className={`${!open && "rotate-180 absolute border w-[40px] rounded-lg h-[40px] p-2"
+                } ml-6  text-[100px] cursor-pointer top-5 -right-[55px]  border w-[40px] rounded-lg h-[40px] p-2 text-gray-200`}
+              onClick={() => {
+                setOpen(!open);
+              }}
+            />
+          </div>
 
           <div className="pt-4 pb-3">
             {/* <Tooltip id="disabled" content="To start, drag and drop a video or click Choose File."
@@ -578,6 +579,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               </div>
             ) : ( */}
             <div className={` ${!open && "hidden"} relative`}>
+
               {lines.length === 0 ? (
                 <div className="text-center text-gray-500 font-semibold dark:text-gray-300 select-none cursor-not-allowed">
                   {/* The History is Currently Empty. */}
@@ -585,53 +587,73 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               ) : (
                 lines
                   .map((line, index) => (
-                    <div
-                      key={index}
-                      className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""
-                        }`}
-                      onMouseEnter={() => {
-                        setHoveredIndex(index);
-                        logVideoURL(index);
+                    <HoverCard shadow="md" openDelay={3000}
+                      position="right"
+                      styles={{
+                        dropdown: {
+                          backgroundColor: '#B3B5E2',
+                          color: '#020913',
+                          padding: '0px',
+                          overflow: 'hidden',
+                          borderRadius: '10px',
+                          border: '0px',
+                        },
+                        root: {
+                          width: '400px',
+                        },
                       }}
-                      onMouseLeave={() => setHoveredIndex(-1)}
-                      data-tooltip-id={`tooltip-${index}`}
                     >
-                      {editIndex === index ? (
-                        <div className="width-full row relative">
-                          <input
-                            className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
-                            type="text"
-                            value={tempLines[index]}
-                            onChange={(event) => handleEditChange(event, index)}
-                          />
-                          <button onClick={() => handleSaveClick(index)} className="save-button">
-                            <AiOutlineCheck />
-                          </button>
-                          <button onClick={() => handleCancelClick()} className="cancel-button">
-                            <AiOutlineClose />
-                          </button>
-                        </div>
-                      ) : (
-                        <p
-                          className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
-                          style={{
-                            width: hoveredIndex === index ? "188px" : "236px",
-                            // width: "100%",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            userSelect: "none",
-                            cursor: "pointer",
+                      <HoverCard.Target>
+                        <div
+                          key={index}
+                          className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""
+                            }`}
+                          onMouseEnter={() => {
+                            setHoveredIndex(index);
+                            logVideoURL(index);
                           }}
-                          onClick={() => {
-                            setActiveIndex(index);
-                            handleProjectClick(index);
-                          }}
+                          onMouseLeave={() => setHoveredIndex(-1)}
+                          data-tooltip-id={`tooltip-${index}`}
                         >
-                          {line === undefined || line === null ? "New Project" : line}
-                        </p>
-                      )}
-                      {/* <Tooltip id={`tooltip-${index}`} content={videoDiv}
+                          {editIndex === index ? (
+                            <div className="width-full row relative">
+                              <input
+                                className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
+                                type="text"
+                                value={tempLines[index]}
+                                onChange={(event) => handleEditChange(event, index)}
+                              />
+                              <button onClick={() => handleSaveClick(index)} className="save-button">
+                                <AiOutlineCheck />
+                              </button>
+                              <button onClick={() => handleCancelClick()} className="cancel-button">
+                                <AiOutlineClose />
+                              </button>
+                            </div>
+                          ) : (
+
+
+                            <p
+                              className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                              style={{
+                                width: hoveredIndex === index ? "188px" : "236px",
+                                // width: "100%",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                userSelect: "none",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                setActiveIndex(index);
+                                handleProjectClick(index);
+                              }}
+                            >
+                              {line === undefined || line === null ? "New Project" : line}
+                            </p>
+
+                          )}
+                          {/* <Tooltip id={`tooltip-${index}`} content={videoDiv}
                         place="right"
                         className="dark:custom-modal-bg-color dark:text-gray-300 font-semibold text-[2xl!important] font-ubuntu border-0 rounded-[50%!important]"
                         opacity={1}
@@ -639,21 +661,37 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                         clickable={true}
                         delayShow={3000}
                       /> */}
-                      <div className="hover-actions" >
-                        {editIndex !== index && (
-                          <>
-                            <button onClick={() => deleteLine(index)} className="delete-button">
-                              <AiOutlineDelete />
-                            </button>
-                            <button onClick={() => handleEditClick(index)} className="edit-button">
-                              <FiEdit2 />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
+                          {/* <HoverCard shadow="md" openDelay={1000}>
+        <HoverCard.Target>
+          <Button>1000ms open delay</Button>
+        </HoverCard.Target>
+        <HoverCard.Dropdown>
+          <Text size="sm">Opened with 1000ms delay</Text>
+        </HoverCard.Dropdown>
+      </HoverCard> */}
+                          <div className="hover-actions" >
+                            {editIndex !== index && (
+                              <>
+                                <button onClick={() => deleteLine(index)} className="delete-button">
+                                  <AiOutlineDelete />
+                                </button>
+                                <button onClick={() => handleEditClick(index)} className="edit-button">
+                                  <FiEdit2 />
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </HoverCard.Target>
+                      <HoverCard.Dropdown>
+                        <div className="w-[400px]">
+                          {videoDiv}
+                        </div>
+                      </HoverCard.Dropdown>
+                    </HoverCard>
                   ))
               )}
+
             </div>
             {/* )} */}
 

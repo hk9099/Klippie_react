@@ -22,9 +22,9 @@ import ToastNotification from "../components/ToastNotification";
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-import { Dialog, Group, Button, Loader, Text, Accordion, List, ThemeIcon, rem } from '@mantine/core';
+import { Dialog, Group, Button, Loader, Text, Accordion, List } from '@mantine/core';
 import { useSidebarContext } from '../context/SidebarContext';
-import { IconCircleCheck, IconCircleDashed } from '@tabler/icons-react';
+// import { IconCircleCheck, IconCircleDashed } from '@tabler/icons-react';
 
 export default function Dashboard() {
   const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
@@ -41,7 +41,7 @@ export default function Dashboard() {
   console.log(userToken, 'userToken');
   const [loginCount, setLoginCount] = useState(0);
   const { setClipsFoundStatus, startAgain, projectCreated } = useClipsFoundStatus();
-  const { isApiCompleted, setIsApiCompleted } = useSidebarContext();
+  const { setIsApiCompleted } = useSidebarContext();
   console.log(startAgain, 'startAgain');
   const { projectId: routeProjectId } = useParams();
   const { cloudinaryResponse } = useCloudinary();
@@ -98,6 +98,7 @@ export default function Dashboard() {
             setMakeNextAPICall(true);
             setRunningData(response.data.data);
           } else {
+            navigate(`/dashboard/${response.data.data[0].id}`);
             setMakeNextAPICall(false);
             console.log('Making next API call.');
           }
@@ -295,88 +296,88 @@ export default function Dashboard() {
     const handleProjectClick = async (index) => {
       // const userToken = TokenManager.getToken()[1]
       try {
-      let maindata = JSON.stringify({
-        "id": routeProjectId
-      });
+        let maindata = JSON.stringify({
+          "id": routeProjectId
+        });
 
-      let mainconfig = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${HOSTINGURL}/v1/project/get-by-id`,
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userToken}`
-        },
-        data: maindata
-      };
+        let mainconfig = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: `${HOSTINGURL}/v1/project/get-by-id`,
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userToken}`
+          },
+          data: maindata
+        };
 
-      const response = await axios.request(mainconfig);
-      if (process.env.NODE_ENV === 'development') {
-        console.log(response.data, 'responseeeeeeeeeeee.data');
+        const response = await axios.request(mainconfig);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(response.data, 'responseeeeeeeeeeee.data');
+        }
+        const title = response.data.data.title;
+        const description = response.data.data.description;
+        const src = response.data.data.video_url;
+        const id = response.data.data.id;
+        const type = response.data.data.type;
+
+        // Calculate the duration of the video (assuming src is the video URL)
+        const videoElement = document.createElement('video');
+        videoElement.src = src;
+        videoElement.onloadedmetadata = () => {
+          const durationInSeconds = Math.floor(videoElement.duration);
+
+          // Convert duration to HH:MM:SS format
+          const hours = Math.floor(durationInSeconds / 3600);
+          const minutes = Math.floor((durationInSeconds % 3600) / 60);
+          const seconds = durationInSeconds % 60;
+          const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+          var newMainVideo = [
+            { title, description, src, id, time: formattedDuration, type }
+          ];
+          updateMainVideo(newMainVideo);
+          setnewMainVideo(newMainVideo);
+        };
+        if (response.data.data.clips && Array.isArray(response.data.data.clips)) {
+          const newvideoClips = await Promise.all(response.data.data.clips.map(async (clip) => {
+            // Split the time string into parts
+            const timeParts = clip.duration.split(':');
+
+            // Extract hours, minutes, seconds
+            const hours = parseInt(timeParts[0]);
+            const minutes = parseInt(timeParts[1]);
+            const seconds = parseInt(timeParts[2].split('.')[0]);
+
+            // Format the time in HH:MM:SS
+            const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            const publicId = clip?.clip_url?.split('/').pop().split('.')[0];
+            if (process.env.NODE_ENV === 'development') {
+              console.log(publicId, 'publicId');
+            }
+            return {
+              id: clip.id,
+              src: clip.clip_url,
+              title: clip.title,
+              description: clip.summary,
+              status: clip.status,
+              time: formattedTime,
+              type: clip.type,
+              start_time: clip.start_time,
+              end_time: clip.end_time,
+              publicId: publicId
+            };
+          }));
+          setNewvideoClips(newvideoClips);
+          setAccordionVisible(true);
+          setPageLoaded(false);
+        }
+        if (response.status === 200) {
+          setErrorMessage('')
+        }
       }
-      const title = response.data.data.title;
-      const description = response.data.data.description;
-      const src = response.data.data.video_url;
-      const id = response.data.data.id;
-      const type = response.data.data.type;
-
-      // Calculate the duration of the video (assuming src is the video URL)
-      const videoElement = document.createElement('video');
-      videoElement.src = src;
-      videoElement.onloadedmetadata = () => {
-        const durationInSeconds = Math.floor(videoElement.duration);
-
-        // Convert duration to HH:MM:SS format
-        const hours = Math.floor(durationInSeconds / 3600);
-        const minutes = Math.floor((durationInSeconds % 3600) / 60);
-        const seconds = durationInSeconds % 60;
-        const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-        var newMainVideo = [
-          { title, description, src, id, time: formattedDuration, type }
-        ];
-        updateMainVideo(newMainVideo);
-        setnewMainVideo(newMainVideo);
-      };
-      if (response.data.data.clips && Array.isArray(response.data.data.clips)) {
-        const newvideoClips = await Promise.all(response.data.data.clips.map(async (clip) => {
-          // Split the time string into parts
-          const timeParts = clip.duration.split(':');
-
-          // Extract hours, minutes, seconds
-          const hours = parseInt(timeParts[0]);
-          const minutes = parseInt(timeParts[1]);
-          const seconds = parseInt(timeParts[2].split('.')[0]);
-
-          // Format the time in HH:MM:SS
-          const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-          const publicId = clip?.clip_url?.split('/').pop().split('.')[0];
-          if (process.env.NODE_ENV === 'development') {
-            console.log(publicId, 'publicId');
-          }
-          return {
-            id: clip.id,
-            src: clip.clip_url,
-            title: clip.title,
-            description: clip.summary,
-            status: clip.status,
-            time: formattedTime,
-            type: clip.type,
-            start_time: clip.start_time,
-            end_time: clip.end_time,
-            publicId: publicId
-          };
-        }));
-        setNewvideoClips(newvideoClips);
-        setAccordionVisible(true);
-        setPageLoaded(false);
-      }
-      if (response.status === 200) {
-        setErrorMessage('')
-      }
-      } 
       catch (error) {
         if (error.response.data.message) {
           setAccordionVisible(false);
@@ -466,88 +467,81 @@ export default function Dashboard() {
                 )}
               </>
             )}
-          {errorMessage && (
-  <div className="flex flex-col items-center h-[87vh] justify-center">
-    <div className="text-6xl font-extrabold mb-4 animate-bounce text-red-500">🤯 Oops!</div>
-    <div className="bg-gradient-to-r from-red-500 to-pink-500 border border-red-600 text-white px-6 py-4 rounded-lg shadow-lg transform scale-105 transition-transform duration-300">
-      <p className="font-semibold text-lg">{errorMessage}</p>
-    </div>
-  </div>
-)}
-
-
-
-
-
-
-
-
-            {makeNextAPICall && (    
-            <Dialog opened={true}  radius="lg"
-              classNames={{
-                root: 'runningProjects',
-              }}
-              styles={{
-                root: {
-                  border: '1px solid #e3e3e3',
-                }
-              }}
-            >
-              <Group styles={{
-                root: {
-                  zIndex: '9999!important',
-                  width: 'auto!important',
-                }
-              }}>
-                <Loader size="md" />
-                <Text style={{ width: '250px', maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color:'#fff'}}>
-                  {runningData && runningData[0] && runningData[0].title || 'New Project'}
-                </Text>
-                <Button onClick={stopProcessing} color="red" variant="filled">
-                  Stop Process
-                </Button>
-              </Group>
-              <Accordion
-              styles={{
-                root: {
-                  border: '1px solid #e3e3e3',
-                  marginTop: '10px',
-                  borderRadius: '10px',
-                },
-                control: {
-                  "&:hover": {
-                    backgroundColor: "#000",
-                  },
-                  color: "#fff",
-                  borderBottom: "1px solid #e3e3e3",
-                  borderRadius: "10px",
-                },
-                content: {
-                  padding: "10px",
-                },
-              }}
+            {errorMessage && (
+              <div className="flex flex-col items-center h-[87vh] justify-center text-center">
+                <div className="text-7xl font-extrabold mb-4 animate-bounce text-red-600">😟 Oops!</div>
+                <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg border border-pink-600 text-white px-8 py-6 rounded-xl shadow-2xl transform scale-105 transition-transform duration-500">
+                  <p className="font-semibold text-lg">{errorMessage}</p>
+                  <p className="text-gray-300 mt-2">Oh no! It seems like we couldn't find the project you're looking for. 🌌</p>
+                </div>
+              </div>
+            )}
+            {makeNextAPICall && (
+              <Dialog opened={true} radius="lg"
+                classNames={{
+                  root: 'runningProjects',
+                }}
+                styles={{
+                  root: {
+                    border: '1px solid #e3e3e3',
+                  }
+                }}
               >
-                <Accordion.Item value="Apples" classNames={{ item: 'panelcolor', }} >
-                  <Accordion.Control >
-                    Notes
-                  </Accordion.Control>
-                  <Accordion.Panel>
-                    <List spacing="md" size="md" center 
-                      styles={{
-                        item: {
-                          color: "#fff",
-                        },
-                      }}
-                    // icon={ <ThemeIcon color="teal" size={24} radius="xl"> <IconCircleCheck style={{ width: rem(16), height: rem(16) }} /> </ThemeIcon> }
-                     >
-                      <List.Item>🕵️‍♂️ Klippie is finding your clips</List.Item>
-                      <List.Item>⏳ This may take up to 15 minutes</List.Item>
-                      <List.Item>📧 We’ll email you when they’re ready!</List.Item>
-                    </List>
-                  </Accordion.Panel>
-                </Accordion.Item>
-              </Accordion>
-            </Dialog>
+                <Group styles={{
+                  root: {
+                    zIndex: '9999!important',
+                    width: 'auto!important',
+                  }
+                }}>
+                  <Loader size="md" />
+                  <Text style={{ width: '250px', maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#fff' }}>
+                    {(runningData && runningData[0] && runningData[0].title) || 'New Project'}
+                  </Text>
+                  <Button onClick={stopProcessing} color="red" variant="filled">
+                    Stop Process
+                  </Button>
+                </Group>
+                <Accordion
+                  styles={{
+                    root: {
+                      border: '1px solid #e3e3e3',
+                      marginTop: '10px',
+                      borderRadius: '10px',
+                    },
+                    control: {
+                      "&:hover": {
+                        backgroundColor: "#000",
+                      },
+                      color: "#fff",
+                      borderBottom: "1px solid #e3e3e3",
+                      borderRadius: "10px",
+                    },
+                    content: {
+                      padding: "10px",
+                    },
+                  }}
+                >
+                  <Accordion.Item value="Apples" classNames={{ item: 'panelcolor', }} >
+                    <Accordion.Control >
+                      Notes
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <List spacing="md" size="md" center
+                        styles={{
+                          item: {
+                            color: "#fff",
+                          },
+                        }}
+                      // icon={ <ThemeIcon color="teal" size={24} radius="xl"> <IconCircleCheck style={{ width: rem(16), height: rem(16) }} /> </ThemeIcon> }
+                      >
+                        <List.Item>🕵️‍♂️ Klippie is finding your clips</List.Item>
+                        <List.Item>⏳ This may take up to 15 minutes</List.Item>
+                        <List.Item>📧 We’ll email you when they’re ready!</List.Item>
+                      </List>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                </Accordion>
+              </Dialog>
             )}
           </section>
         </div>
