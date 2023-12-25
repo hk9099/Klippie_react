@@ -80,6 +80,7 @@ export default function Dashboard() {
   const [makeNextAPICall, setMakeNextAPICall] = useState(false);
   const [runningData, setRunningData] = useState(null);
   const [runningID, setRunningID] = useState(null);
+
   useEffect(() => {
     const fetchData = () => {
       const config = {
@@ -100,8 +101,10 @@ export default function Dashboard() {
             setRunningID(response.data.data[0].id);
           } else {
             setMakeNextAPICall(false);
+            if (runningID !== null){
             navigate(`/dashboard/${runningID}`);
             setRunningID(null);
+            }
           }
         })
         .catch((error) => {
@@ -142,6 +145,7 @@ export default function Dashboard() {
       .then((response) => {
         setIsApiCompleted(true);
         setMakeNextAPICall(false);
+        setRunningID(null);
       })
       .catch((error) => {
         console.log(error);

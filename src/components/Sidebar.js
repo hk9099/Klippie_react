@@ -457,6 +457,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const handleAddNewVideo = () => {
     setAccordionVisible(false);
     setProjectId('');
+    setError('');
     setCloudinaryResponse(null);
     //eslint-disable-next-line
     const newValue = TokenManager.incrementValue('increment');
