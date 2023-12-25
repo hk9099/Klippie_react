@@ -98,8 +98,8 @@ export default function Dashboard() {
             setMakeNextAPICall(true);
             setRunningData(response.data.data);
           } else {
-            navigate(`/dashboard/${response.data.data[0].id}`);
             setMakeNextAPICall(false);
+            navigate(`/dashboard/${response.data.data[0].id}`);
             console.log('Making next API call.');
           }
         })
