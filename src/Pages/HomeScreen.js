@@ -14,13 +14,13 @@ import { Tooltip } from 'react-tooltip';
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-import { Dialog, Text ,Progress } from '@mantine/core';
+import { Dialog, Text, Progress } from '@mantine/core';
 
 // function MyProgressBar({ bytesUploaded, totalBytes }) {
 //     const percent = Math.round((bytesUploaded / totalBytes) * 100) || 0;
 
 //     return (
-        
+
 //         <Progress
 //             percent={percent}
 //             type="line"
@@ -99,86 +99,86 @@ function HomeScreen({ userName, creaditBalance }) {
     const userToken = TokenManager.getToken()[1]
     function MyProgressBar({ bytesUploaded, totalBytes }) {
         const percent = Math.round((bytesUploaded / totalBytes) * 100) || 0;
-    
+
         return (
-          <>
-            <MantineProvider>
-              <Dialog opened size="lg" radius="md"
-                styles={{
-                  // root: {
-                  //   display: 'flex',
-                  // },
-                }}
-              >
-                <div className='flex flex-col'>
-                {acceptedFiles.length > 0 && (
-                <div className="select-none" onClick={handleInputClick}>
-                  <ul className="pl-0 list-inside text-white">
-                    {acceptedFiles.map((file) => (
-                      <li key={file.path} className="text-md text-black">
-                        {file.path} - {(file.size / 1048576).toFixed(2)} MB
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                )}
-                <div className='flex'>
-                  <Progress size="lg" value={percent} animated
-                    styles={{
-                      root: {
-                        width: '100%',
-                        margin: 10,
-                        marginLeft: 0,
-                      },
-                    }}
-                    onProgressChange={(value) => {
-                      if (value === 100) {
-                        // setTimeout(() => {
-                        //   setIsFileUploaded(true);
-                        // }
-                        //   , 1000);
-                      }
-                    }}
-                  />
-                  <Text align="center" size="lg" >
-                    {percent}%&nbsp;Uploaded
-                  </Text>
-                </div>
-                </div>
-              </Dialog>
-            </MantineProvider>
-          </>
-          // <Progress
-          //   percent={percent}
-          //   type="line"
-          //   status="success"
-          //   percentage={true}
-          //   className="custom-progress"
-          //   theme={{
-          //     error: {
-          //       symbol: percent + '% Uploaded',
-          //       trailColor: 'pink',
-          //       color: 'red'
-          //     },
-          //     default: {
-          //       symbol: percent + '% Uploaded',
-          //       trailColor: 'lightblue',
-          //       color: 'blue'
-          //     },
-          //     active: {
-          //       symbol: percent + '% Uploaded',
-          //       trailColor: 'yellow',
-          //       color: 'orange'
-          //     },
-          //     success: {
-          //       symbol: percent + '% Uploaded',
-          //       trailColor: '#ACDF87',
-          //       color: 'green'
-          //     }
-          //   }}
-          // />
+            <>
+                <MantineProvider>
+                    <Dialog opened size="lg" radius="md"
+                        styles={{
+                            // root: {
+                            //   display: 'flex',
+                            // },
+                        }}
+                    >
+                        <div className='flex flex-col'>
+                            {acceptedFiles.length > 0 && (
+                                <div className="select-none" onClick={handleInputClick}>
+                                    <ul className="pl-0 list-inside text-white">
+                                        {acceptedFiles.map((file) => (
+                                            <li key={file.path} className="text-md text-black">
+                                                {file.path} - {(file.size / 1048576).toFixed(2)} MB
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                            <div className='flex'>
+                                <Progress size="lg" value={percent} animated
+                                    styles={{
+                                        root: {
+                                            width: '100%',
+                                            margin: 10,
+                                            marginLeft: 0,
+                                        },
+                                    }}
+                                    onProgressChange={(value) => {
+                                        if (value === 100) {
+                                            // setTimeout(() => {
+                                            //   setIsFileUploaded(true);
+                                            // }
+                                            //   , 1000);
+                                        }
+                                    }}
+                                />
+                                <Text align="center" size="lg" >
+                                    {percent}%&nbsp;Uploaded
+                                </Text>
+                            </div>
+                        </div>
+                    </Dialog>
+                </MantineProvider>
+            </>
+            // <Progress
+            //   percent={percent}
+            //   type="line"
+            //   status="success"
+            //   percentage={true}
+            //   className="custom-progress"
+            //   theme={{
+            //     error: {
+            //       symbol: percent + '% Uploaded',
+            //       trailColor: 'pink',
+            //       color: 'red'
+            //     },
+            //     default: {
+            //       symbol: percent + '% Uploaded',
+            //       trailColor: 'lightblue',
+            //       color: 'blue'
+            //     },
+            //     active: {
+            //       symbol: percent + '% Uploaded',
+            //       trailColor: 'yellow',
+            //       color: 'orange'
+            //     },
+            //     success: {
+            //       symbol: percent + '% Uploaded',
+            //       trailColor: '#ACDF87',
+            //       color: 'green'
+            //     }
+            //   }}
+            // />
         );
-      }
+    }
     const onDrop = (acceptedFiles, rejectedFiles) => {
         setAcceptedFiles(acceptedFiles);
         if (acceptedFiles.length > 0) {
@@ -242,7 +242,7 @@ function HomeScreen({ userName, creaditBalance }) {
                         }
                         processFile(file);
                         setIsFileUploadedInput(true);
-                        ToastNotification({ type: 'success', message: `uploading ${acceptedFiles[0].name}!` });
+                        // ToastNotification({ type: 'success', message: `uploading ${acceptedFiles[0].name}!` });
                     } catch (error) {
                         if (process.env.NODE_ENV === 'development') {
                             console.log(error, 'error');
@@ -443,8 +443,8 @@ function HomeScreen({ userName, creaditBalance }) {
 
     const processFile = async (file) => {
         // Set your cloud name and unsigned upload preset here:
-        const YOUR_CLOUD_NAME = "delkyf33p";
-        const YOUR_UNSIGNED_UPLOAD_PRESET = "klippie";
+        const YOUR_CLOUD_NAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+        const YOUR_UNSIGNED_UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UNSIGNED_UPLOAD_PRESET;
 
         const POST_URL = `https://api.cloudinary.com/v1_1/${YOUR_CLOUD_NAME}/auto/upload`;
 
@@ -670,8 +670,8 @@ function HomeScreen({ userName, creaditBalance }) {
                             {isFileUploadedInput || isFileUploaded ? (
                                 <>
                                     {/* <div className="text-white w-full text-center font-ubuntu font-semibold flex justify-center items-center"> */}
-                                        <MyProgressBar bytesUploaded={bytesUploaded} totalBytes={totalBytes} />
-                                        {/* <div className="text-white text-center font-ubuntu font-semibold">
+                                    <MyProgressBar bytesUploaded={bytesUploaded} totalBytes={totalBytes} />
+                                    {/* <div className="text-white text-center font-ubuntu font-semibold">
                             {(bytesUploaded / 1048576).toFixed(2)}&nbsp;/&nbsp;{(totalBytes / 1048576).toFixed(2)}&nbsp;MB
                         </div> */}
                                     {/* </div> */}

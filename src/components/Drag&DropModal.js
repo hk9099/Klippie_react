@@ -256,9 +256,8 @@ function DragDropModal() {
   };
 
   const processFile = async (file) => {
-    // Set your cloud name and unsigned upload preset here:
-    const YOUR_CLOUD_NAME = "delkyf33p";
-    const YOUR_UNSIGNED_UPLOAD_PRESET = "klippie";
+    const YOUR_CLOUD_NAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+  const YOUR_UNSIGNED_UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UNSIGNED_UPLOAD_PRESET;
 
     const POST_URL = `https://api.cloudinary.com/v1_1/${YOUR_CLOUD_NAME}/auto/upload`;
 
@@ -337,7 +336,6 @@ function DragDropModal() {
       }
     }
   };
-
   return (
     <div className="flex justify-center items-center h-[85vh]">
       <Toaster />
