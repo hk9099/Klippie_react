@@ -524,6 +524,7 @@ export default function Dashboard() {
                       padding: "10px",
                     },
                   }}
+                  defaultValue="Apples"
                 >
                   <Accordion.Item value="Apples" classNames={{ item: 'panelcolor', }} >
                     <Accordion.Control >

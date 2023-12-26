@@ -4,7 +4,7 @@ import { IoMdCloudUpload } from 'react-icons/io';
 // import { useNavigate } from 'react-router-dom';
 // import { useUserNickname } from '../components/userNicknameContext.js';
 import { useCloudinary } from '../context/CloudinaryContext.js';
-import { Progress } from 'react-sweet-progress';
+// import { Progress } from 'react-sweet-progress';
 // import { useClipsFoundStatus } from '../components/ClipsFoundContext.js';
 import { TokenManager } from '../components/getToken.js';
 // import PopupForm from '../components/sessionPopup.js';
@@ -12,42 +12,11 @@ import axios from 'axios';
 import { Tooltip } from 'react-tooltip';
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+import { Dialog, Group, Button, Progress, Text } from '@mantine/core';
 
-function MyProgressBar({ bytesUploaded, totalBytes }) {
-  const percent = Math.round((bytesUploaded / totalBytes) * 100) || 0;
-
-  return (
-    <Progress
-      percent={percent}
-      type="line"
-      status="success"
-      percentage={true}
-      className="custom-progress"
-      theme={{
-        error: {
-          symbol: percent + '% Uploaded',
-          trailColor: 'pink',
-          color: 'red'
-        },
-        default: {
-          symbol: percent + '% Uploaded',
-          trailColor: 'lightblue',
-          color: 'blue'
-        },
-        active: {
-          symbol: percent + '% Uploaded',
-          trailColor: 'yellow',
-          color: 'orange'
-        },
-        success: {
-          symbol: percent + '% Uploaded',
-          trailColor: '#ACDF87',
-          color: 'green'
-        }
-      }}
-    />
-  );
-}
 const baseStyle = {
   display: 'flex',
   flexDirection: 'column',
@@ -89,37 +58,118 @@ function DragDropModal() {
   // var loginCount = localStorage.getItem('loginCount');
   const userToken = TokenManager.getToken()[1]
 
+  function MyProgressBar({ bytesUploaded, totalBytes }) {
+    const percent = Math.round((bytesUploaded / totalBytes) * 100) || 0;
 
+    return (
+      <>
+        <MantineProvider>
+          <Dialog opened size="lg" radius="md"
+            styles={{
+              // root: {
+              //   display: 'flex',
+              // },
+            }}
+          >
+            <div className='flex flex-col'>
+            {acceptedFiles.length > 0 && (
+            <div className="select-none" onClick={handleInputClick}>
+              <ul className="pl-0 list-inside text-white">
+                {acceptedFiles.map((file) => (
+                  <li key={file.path} className="text-md text-black">
+                    {file.path} - {(file.size / 1048576).toFixed(2)} MB
+                  </li>
+                ))}
+              </ul>
+            </div>
+            )}
+            <div className='flex'>
+              <Progress size="lg" value={percent} animated
+                styles={{
+                  root: {
+                    width: '100%',
+                    margin: 10,
+                    marginLeft: 0,
+                  },
+                }}
+                onProgressChange={(value) => {
+                  if (value === 100) {
+                    // setTimeout(() => {
+                    //   setIsFileUploaded(true);
+                    // }
+                    //   , 1000);
+                  }
+                }}
+              />
+              <Text align="center" size="lg" >
+                {percent}%&nbsp;Uploaded
+              </Text>
+            </div>
+            </div>
+          </Dialog>
+        </MantineProvider>
+      </>
+      // <Progress
+      //   percent={percent}
+      //   type="line"
+      //   status="success"
+      //   percentage={true}
+      //   className="custom-progress"
+      //   theme={{
+      //     error: {
+      //       symbol: percent + '% Uploaded',
+      //       trailColor: 'pink',
+      //       color: 'red'
+      //     },
+      //     default: {
+      //       symbol: percent + '% Uploaded',
+      //       trailColor: 'lightblue',
+      //       color: 'blue'
+      //     },
+      //     active: {
+      //       symbol: percent + '% Uploaded',
+      //       trailColor: 'yellow',
+      //       color: 'orange'
+      //     },
+      //     success: {
+      //       symbol: percent + '% Uploaded',
+      //       trailColor: '#ACDF87',
+      //       color: 'green'
+      //     }
+      //   }}
+      // />
+    );
+  }
   const onDrop = (acceptedFiles, rejectedFiles) => {
     setAcceptedFiles(acceptedFiles);
     if (acceptedFiles.length > 0) {
       // Files were accepted, show a success notification
       if (process.env.NODE_ENV === 'development') {
-      console.log('Accepted files:', acceptedFiles[0].name);
+        console.log('Accepted files:', acceptedFiles[0].name);
       }
       const file = acceptedFiles[0];
       if (process.env.NODE_ENV === 'development') {
-      console.log(file, 'file');
+        console.log(file, 'file');
       }
       if (file) {
         // Create a video element to read the video file
         const videoElement = document.createElement('video');
         videoElement.src = URL.createObjectURL(file);
         if (process.env.NODE_ENV === 'development') {
-        console.log(file.size, 'file.size');
+          console.log(file.size, 'file.size');
         }
 
         // When the video metadata is loaded, get the duration
         videoElement.onloadedmetadata = async () => {
           const duration = Math.floor(videoElement.duration);
           if (process.env.NODE_ENV === 'development') {
-          console.log('Video Duration:', duration, 'seconds');
+            console.log('Video Duration:', duration, 'seconds');
           }
           // const size = file.size;
           //convert bytes to mb
           const size = file.size / 1048576;
           if (process.env.NODE_ENV === 'development') {
-          console.log(size, 'size');
+            console.log(size, 'size');
           }
           if (duration > 7200) {
             ToastNotification({ type: 'error', message: 'Only files less than 2 hours are allowed.' });
@@ -135,7 +185,7 @@ function DragDropModal() {
             "size": size
           });
           if (process.env.NODE_ENV === 'development') {
-          console.log(data, 'dataaaaaaaaaaaaaaaa');
+            console.log(data, 'dataaaaaaaaaaaaaaaa');
           }
           let config = {
             method: 'post',
@@ -152,11 +202,11 @@ function DragDropModal() {
           try {
             const response = await axios.request(config);
             if (process.env.NODE_ENV === 'development') {
-            console.log(response, 'response');
+              console.log(response, 'response');
             }
             processFile(file);
             setIsFileUploadedInput(true);
-            ToastNotification({ type: 'success', message: `uploading ${acceptedFiles[0].name}!` });
+            // ToastNotification({ type: 'success', message: `uploading ${acceptedFiles[0].name}!` });
           } catch (error) {
             setAcceptedFiles([]);
             ToastNotification({ type: 'error', message: error.response.data.error });
@@ -170,7 +220,7 @@ function DragDropModal() {
     if (rejectedFiles.length > 0) {
       ToastNotification({ type: 'error', message: `File ${rejectedFiles[0].name} was rejected.` });
       if (process.env.NODE_ENV === 'development') {
-      console.log('Rejected files:', rejectedFiles);
+        console.log('Rejected files:', rejectedFiles);
       }
     }
   };
@@ -250,7 +300,7 @@ function DragDropModal() {
       if (response.ok) {
         const responseData = await response.json();
         if (process.env.NODE_ENV === 'development') {
-        console.log(responseData);
+          console.log(responseData);
         }
         if (start === 0 && !isFirstChunkLogged) {
           setIsFirstChunkLogged(true);
@@ -264,7 +314,7 @@ function DragDropModal() {
 
         if (end + 1 === size) {
           if (process.env.NODE_ENV === 'development') {
-          console.log(responseData);
+            console.log(responseData);
           }
           setIsFileUploaded(false);
           setIsFileUploadedInput(false);
@@ -277,13 +327,13 @@ function DragDropModal() {
 
       } else {
         if (process.env.NODE_ENV === 'development') {
-        console.error(`Failed to upload chunk ${start}-${end}`);
-        console.error(await response.text());
+          console.error(`Failed to upload chunk ${start}-${end}`);
+          console.error(await response.text());
         }
       }
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-      console.error(`Error uploading chunk ${start}-${end}: ${error.message}`);
+        console.error(`Error uploading chunk ${start}-${end}: ${error.message}`);
       }
     }
   };
@@ -325,29 +375,12 @@ function DragDropModal() {
             Submit
           </button>
         </div>
-        {acceptedFiles.length > 0 && (
-          <div className="mt-4 select-none" onClick={handleInputClick}>
-            <hr className="mb-4" />
-            <ul className="list-inside text-white">
-              {acceptedFiles.map((file) => (
-                <li key={file.path} className="text-sm">
-                  {file.path} - {(file.size / 1048576).toFixed(2)} MB
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {isFileUploadedInput || isFileUploaded ? (
-          <>
-            <div className="text-white w-full text-center font-ubuntu font-semibold flex justify-center items-center">
-              <MyProgressBar bytesUploaded={bytesUploaded} totalBytes={totalBytes} />
-              {/* <div className="text-white text-center font-ubuntu font-semibold">
-                            {(bytesUploaded / 1048576).toFixed(2)}&nbsp;/&nbsp;{(totalBytes / 1048576).toFixed(2)}&nbsp;MB
-                        </div> */}
-            </div>
-          </>
-         ) : null} 
       </div>
+      {isFileUploadedInput || isFileUploaded ? (
+      <>
+        <MyProgressBar bytesUploaded={bytesUploaded} totalBytes={totalBytes} />
+      </>
+      ) : null} 
     </div>
   );
 }
