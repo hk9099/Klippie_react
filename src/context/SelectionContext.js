@@ -11,8 +11,9 @@ export function FileSelectedProvider({ children }) {
     const [fileselecteddata , setFileselecteddata] = useState([]);
     const [fileDelete , setFileDelete] = useState(false);
     const [pageLoaded , setPageLoaded] = useState(false);
+    const [deselect , setDeselect] = useState(false);
     return (
-        <FileSelectedContext.Provider value={{ fileselected , setFileselected , fileselecteddata , setFileselecteddata , fileDelete , setFileDelete , pageLoaded , setPageLoaded }}>
+        <FileSelectedContext.Provider value={{ fileselected , setFileselected , fileselecteddata , setFileselecteddata , fileDelete , setFileDelete , pageLoaded , setPageLoaded,deselect , setDeselect }}>
             {children}
         </FileSelectedContext.Provider>
     );

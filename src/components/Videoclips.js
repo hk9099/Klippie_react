@@ -1,4 +1,4 @@
-import React, { useState,useRef ,useEffect} from "react";
+import React, { useState, useRef, useEffect } from "react";
 import DataGrid, {
   Column,
   Selection,
@@ -19,11 +19,11 @@ import CloudinaryVideoPlayer from "../components/cloudinaryVideoPlayer.js";
 // import VideoDownload from "./VideoDownload.js";
 
 const Videoclips = ({ videoClips, setVideoCount }) => {
-  const { setFileselected ,setFileselecteddata} = useFileSelected();
+  const { setFileselected, setFileselecteddata ,deselect,setDeselect} = useFileSelected();
   //eslint-disable-next-line
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
-  const isDataLoadedRef = useRef(false); 
+  const isDataLoadedRef = useRef(false);
   // const [modalVisible, setModalVisible] = useState(false);
 
   // const handleDownloadClick = () => {
@@ -45,9 +45,20 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
   //   setPopupVisible(false);
   // };
 
-  
+  const deselectAll = (gridRef) => {
+    if (gridRef && gridRef.current && gridRef.current.instance) {
+      gridRef.current.instance.deselectAll();
+      setDeselect(false);
+    } else {
+      if (process.env.NODE_ENV === 'development'){
+      console.error("Invalid grid reference or instance.");
+    }
+    }
+  };
 
-
+  useEffect(() => {
+    deselectAll(gridRef);
+  },[deselect]);
 
   useEffect(() => {
     // Update the video count whenever the videoClips data changes
@@ -59,8 +70,9 @@ const Videoclips = ({ videoClips, setVideoCount }) => {
     }
   }, [videoClips, setVideoCount]);
   if (process.env.NODE_ENV === 'development') {
-console.log(videoClips, "videoClips");
+    console.log(videoClips, "videoClips");
   }
+  const gridRef = useRef(null);
   return (<>
     {/* {selectedRows.length > 0 && (
       <button
@@ -82,11 +94,12 @@ console.log(videoClips, "videoClips");
       showBorders={true}
       columnAutoWidth={true}
       width={"100%"}
+      ref={gridRef}
       height={videoClips.length > 0 ? "100%" : "30vh"}
       showRowLines={true}
       onSelectionChanged={(e) => {
         if (e.selectedRowsData.length > 0) {
-          setFileselected(true); 
+          setFileselected(true);
           setFileselecteddata(e.selectedRowsData);
         } else {
           setFileselected(false);
@@ -101,7 +114,7 @@ console.log(videoClips, "videoClips");
         selectAllMode="allPages"
         showCheckBoxesMode="always"
       />
-      <Paging defaultPageSize={20} 
+      <Paging defaultPageSize={20}
       />
       <Pager
         showPageSizeSelector={true}
@@ -109,7 +122,7 @@ console.log(videoClips, "videoClips");
         showNavigationButtons={true}
         visible={videoClips.length > 0 ? true : false}
         displayMode="compact"
-        allowedPageSizes={[5,10,15,20,25,30,35,40]}
+        allowedPageSizes={[5, 10, 15, 20, 25, 30, 35, 40]}
       />
       <Column
         dataField="video"
@@ -117,7 +130,7 @@ console.log(videoClips, "videoClips");
         alignment='center'
         cssClass="Video"
         cellRender={(rowData) =>
-            // <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
+          // <VideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
           <CloudinaryVideoPlayer src={rowData.data?.src ? rowData.data.src : ""} title={rowData.data?.title ? rowData.data.title : ""} type={rowData.data?.type ? rowData.data.type : ""} publicId={rowData.data?.publicId ? rowData.data.publicId : ""} startTime={rowData.data?.start_time ? rowData.data.start_time : ""} endTime={rowData.data?.end_time ? rowData.data.end_time : ""} clipId={rowData.data?.id ? rowData.data.id : ""} />
         }
         width={415}
@@ -142,7 +155,7 @@ console.log(videoClips, "videoClips");
           </div>
         )}
       />
-     <Column
+      <Column
         dataField="description"
         alignment='center'
         width="auto"
@@ -182,8 +195,8 @@ console.log(videoClips, "videoClips");
         resizable={true}
         columnAutoWidth={true}
         cellRender={(rowData) => (
-          <div style={{ textAlign: "center" , color: '#000!important', maxWidth:'180px'}}>
-              <DropDownButton status={rowData.data.status} clipId={rowData.data.id} />
+          <div style={{ textAlign: "center", color: '#000!important', maxWidth: '180px' }}>
+            <DropDownButton status={rowData.data.status} clipId={rowData.data.id} />
           </div>
         )}
         allowSorting={false}
@@ -202,8 +215,16 @@ console.log(videoClips, "videoClips");
         </Form>
       </Popup>
     </DataGrid>
+    <button type="button"
+      onClick={() => {
+        gridRef.current.instance.deselectAll();
+      }}
+      className="fixed bottom-0 right-0 m-4 p-4 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 z-50">
+
+    </button>
   </>
   );
 };
+
 
 export default Videoclips;

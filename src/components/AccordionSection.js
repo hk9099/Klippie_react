@@ -22,9 +22,10 @@ import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/dropzone/styles.css';
-import { Code } from '@mantine/core';
+import { Code, Dialog, Group, Button, CloseButton, Text } from '@mantine/core';
+import { IconDownload ,IconTrash} from '@tabler/icons-react';
 export default function AccordionSection({ videoClips, videoURl, clips }) {
-    const { fileselected, fileselecteddata, setFileDelete } = useFileSelected();
+    const { fileselected, fileselecteddata, setFileDelete, setDeselect } = useFileSelected();
     if (process.env.NODE_ENV === 'development') {
         console.log(fileselecteddata, "fileselecteddata");
     }
@@ -52,6 +53,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
     };
 
     const handleDeleteClick = (event) => {
+        setDeselect(true)
         event.stopPropagation();
         for (let i = 0; i < fileselecteddata.length; i++) {
             const element = fileselecteddata[i];
@@ -104,19 +106,19 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
 
     const handleDownloadClick = async (event) => {
         event.stopPropagation();
-    
+        setDeselect(true)
         try {
             setDownloadModalOpen(true); // Open the modal
-    
+
             if (fileselecteddata.length === 1) {
                 // Download a single video
                 const element = fileselecteddata[0];
                 setCurrentDownloadingVideo(element.title);
                 const videoUrl = element.src;
                 const secureVideoUrl = videoUrl.replace(/^http:\/\//i, 'https://');
-    
+
                 const source = axios.CancelToken.source(); // Create a new cancel token source
-    
+
                 const response = await axios({
                     method: 'get',
                     url: secureVideoUrl,
@@ -127,7 +129,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                     },
                     cancelToken: source.token, // Pass the cancel token
                 });
-    
+
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
@@ -139,17 +141,17 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
             } else {
                 // Download a zip file containing all videos
                 const zip = new JSZip();
-    
+
                 const totalFiles = fileselecteddata.length;
-    
+
                 for (let i = 0; i < fileselecteddata.length; i++) {
                     const element = fileselecteddata[i];
                     const source = axios.CancelToken.source(); // Create a new cancel token source
-    
+
                     setCurrentDownloadingVideo(element.title);
                     const videoUrl = element.src;
                     const secureVideoUrl = videoUrl.replace(/^http:\/\//i, 'https://');
-    
+
                     try {
                         const response = await axios({
                             method: 'get',
@@ -157,17 +159,17 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                             responseType: 'blob',
                             cancelToken: source.token, // Pass the cancel token
                         });
-    
+
                         zip.file(`${element.title}.${element.type}`, response.data);
-    
+
                         const progress = Math.round(((i + 1) / totalFiles) * 100);
                         setDownloadProgress(progress);
-    
+
                         if (i + 1 === totalFiles) {
                             const content = await zip.generateAsync({ type: 'blob' });
                             const zipFileName = 'Klippe Videos.zip';
                             const zipFileUrl = window.URL.createObjectURL(content);
-    
+
                             const zipLink = document.createElement('a');
                             zipLink.href = zipFileUrl;
                             zipLink.setAttribute('download', zipFileName);
@@ -198,7 +200,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
             setDownloadModalOpen(false); // Close the modal
         }
     };
-    
+
     // Function to cancel the download
     const cancelDownload = () => {
         // Cancel ongoing downloads by canceling the token
@@ -206,6 +208,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
             source.cancel('Download canceled by user');
         }
     };
+
 
 
     return (
@@ -259,23 +262,96 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                                 </div>
                             </AccordionHeader>
                             {fileselected && (
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center justify-between bg-[#D1FAE5] rounded-[10px] border border-green-500 p-2 cursor-pointer select-none mr-2"
-                                        onClick={handleDownloadClick}>
-                                        <span className="text-sm font-bold text-gray-900 mr-1">
-                                            Download
-                                            ({fileselecteddata.length})
-                                        </span>
-                                        <HiDownload className="text-green-600 text-xl " />
-                                    </div>
-                                    <div className="flex items-center justify-between bg-[#FEE2E2] rounded-[10px] border border-red-500 p-2 cursor-pointer select-none" onClick={handleDeleteClick}>
-                                        <span className="text-sm font-bold text-gray-900 mr-1">
-                                            Delete
-                                            ({fileselecteddata.length})
-                                        </span>
-                                        <AiFillDelete className="text-red-600 text-xl " />
-                                    </div>
-                                </div>
+                                <>
+                                    {/* <div className="flex items-center justify-between">
+                                        <div className="flex items-center justify-between bg-[#D1FAE5] rounded-[10px] border border-green-500 p-2 cursor-pointer select-none mr-2"
+                                            onClick={handleDownloadClick}>
+                                            <span className="text-sm font-bold text-gray-900 mr-1">
+                                                Download
+                                                ({fileselecteddata.length})
+                                            </span>
+                                            <HiDownload className="text-green-600 text-xl " />
+                                        </div>
+                                        <div className="flex items-center justify-between bg-[#FEE2E2] rounded-[10px] border border-red-500 p-2 cursor-pointer select-none" onClick={handleDeleteClick}>
+                                            <span className="text-sm font-bold text-gray-900 mr-1">
+                                                Delete
+                                                ({fileselecteddata.length})
+                                            </span>
+                                            <AiFillDelete className="text-red-600 text-xl " />
+                                        </div>
+                                    </div> */}
+                                    <Dialog
+                                        opened={fileselected}
+                                        position={{ bottom: 20, left: '40%', }}
+                                        size="lg"
+                                        radius="lg"
+                                        classNames={{
+                                            root: 'p-[0px!important] w-[auto!important] h-[auto!important] min-h-[auto!important] select-none'
+                                        }}
+                                        styles={{
+                                            root: {
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }
+                                        }}
+                                    >
+                                        <Text classNames={{
+                                            root: 'px-[30px!important] w-auto inline-block bg-[#282C76] rounded-l-xl text-[white!important] font-[900!important]',
+                                        }}
+                                            styles={{
+                                                root: {
+                                                    fontSize: '3rem',
+                                                }
+                                            }}
+                                        >
+                                            {fileselecteddata.length}
+                                        </Text>
+                                        <Text
+                                            classNames={{
+                                                root: 'px-[30px!important] w-auto inline-block  font-[300!important]',
+                                            }}
+                                            styles={{
+                                                root: {
+                                                    fontSize: '1.5rem',
+                                                    color: '#323338',
+                                                }
+                                            }}
+                                        >
+                                            Clips Selected
+                                        </Text>
+                                        <div className="flex flex-col items-center justify-center text-[#323338] pr-4 hover:text-green-500 w-auto cursor-pointer"
+                                        onClick={handleDownloadClick}
+                                        >
+                                            <IconDownload />
+                                            <span className="mt-1">
+                                                Download
+                                            </span>
+                                        </div>
+                                        <div className="flex flex-col items-center justify-center text-[#323338] pr-4 hover:text-red-600 w-auto cursor-pointer"
+                                        onClick={handleDeleteClick}
+                                        >
+                                            <IconTrash />
+                                            <span className="mt-1">
+                                                Delete
+                                            </span>
+                                        </div>
+                                        <div className="h-[100%] p-[15px!important] border-l-4">
+                                            <CloseButton
+                                                onClick={() => { setDeselect(true) }}
+                                                size="xl" variant="transparent"
+                                                classNames={{
+                                                    root: '',
+                                                }}
+                                                styles={{
+                                                    root: {
+                                                        border: '1px solid #000!important',
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    </Dialog>
+                                </>
                             )}
                             {downloadProgress > 0 && isDownloadModalOpen && (
                                 <div className="fixed top-auto left-auto mb-4 mr-4 bottom-0 right-0 flex items-center justify-center z-50 inset-0 animate__animated animate__fadeInRight">
