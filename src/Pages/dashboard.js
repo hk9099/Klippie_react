@@ -501,7 +501,7 @@ export default function Dashboard() {
                 <div className="text-7xl font-extrabold mb-4 animate-bounce text-red-600">😟 Oops!</div>
                 <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg border border-pink-600 text-white px-8 py-6 rounded-xl shadow-2xl transform scale-105 transition-transform duration-500">
                   <p className="font-semibold text-lg">{errorMessage}</p>
-                  <p className="text-gray-300 mt-2">Oh no! It seems like we couldn't find the project you're looking for. 🌌</p>
+                  <p className="text-gray-300 mt-2">Oh no! It seems like we couldn't find the project you're looking for.</p>
                 </div>
               </div>
             )}

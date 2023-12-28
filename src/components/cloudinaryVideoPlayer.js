@@ -309,7 +309,7 @@ export default function CloudinaryVideoPlayer({
                         autoplayMode: 'on-scroll',
                         sourceTypes: ['hls', 'webm', 'mp4'],
                         logoImageUrl: 'https://res.cloudinary.com/delkyf33p/image/upload/v1701593905/tkfstyrkbhxjqg80yz21.png',
-                        logoOnclickUrl: 'https://klippie-react.vercel.app',
+                        logoOnclickUrl: '',
                         colors: {
                             accent: '#dc2626',
                             text: '#ffffff'
