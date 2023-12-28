@@ -179,12 +179,12 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     useEffect(() => {
         const userToken = TokenManager.getToken()[1]
         setUserToken(userToken);
-        if (userToken && (currentProjectId || startAgain !== '')) {
+        if (userToken && (currentProjectId )) {
             const intervalId = setInterval(() => {
                 const fetchData = async () => {
                     try {
                         const data = JSON.stringify({
-                            "id": currentProjectId || startAgain,
+                            "id": currentProjectId ,
                         });
                         const config = {
                             method: 'post',
@@ -219,6 +219,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                             setProjectId('')
                             setError('');
                             setClipsFoundStatus(true);
+                            setProjectCreated(true);
                         }
 
                         if (!uniqueMessages.includes(message)) {
@@ -235,12 +236,18 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                             // Set setIsApiCompleted(true)
                             setIsApiCompleted(true);
                             setClipsFoundStatus(false);
+                            setProjectCreated(false);
                         }
 
                     } catch (error) {
                         if (process.env.NODE_ENV === 'development') {
-                            console.log(error);
+                            console.log(error, 'Error');
                         }
+                        setAccordionVisible(false);
+                        setClipsFoundStatus(false);
+                        setIsApiCompleted(false);
+                        setProjectId('')
+                        setProjectCreated(false);
                     }
                 };
 
@@ -249,10 +256,11 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
             return () => clearInterval(intervalId);
         }
         //eslint-disable-next-line
-    }, [currentProjectId, uniqueMessages, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus, startAgain]);
+    }, [currentProjectId, uniqueMessages, setIsApiCompleted, routeProjectId, navigate, setClipsFoundStatus]);
 
     useEffect(() => {
         setProjectId(currentProjectId);
+       
     }, [currentProjectId])
 
     useEffect(() => {
@@ -270,7 +278,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     return (
         <div className="flex items-baseline justify-center">
             <Toaster position="top-center" />
-            {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
+            {/* {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>} */}
             <div className="text-center w-full">
                 {/* {isSuggetionpopupOpen && (
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />

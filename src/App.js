@@ -11,6 +11,7 @@ import { FileSelectedProvider } from "./context/SelectionContext.js";
 import { SnackbarProvider } from 'notistack';
 import { useParams } from 'react-router-dom';
 // import Test from './components/confetti.js';
+import "monday-ui-react-core/tokens";
 import { ClipsFoundProvider } from './context/ClipsFoundContext.js';
 const Signin = lazy(() => import('./Pages/signin.js'));
 const Signup = lazy(() => import('./Pages/signup.js'));

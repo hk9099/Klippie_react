@@ -25,6 +25,7 @@ import '@mantine/dates/styles.css';
 import { Dialog, Group, Button, Loader, Text, Accordion, List } from '@mantine/core';
 import { useSidebarContext } from '../context/SidebarContext';
 // import { IconCircleCheck, IconCircleDashed } from '@tabler/icons-react';
+import SchoolPride from "../components/confetti.js";
 
 export default function Dashboard() {
   const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
@@ -60,6 +61,18 @@ export default function Dashboard() {
   // }
   const { userName } = useUserNickname();
   const { creaditBalance } = useUserNickname();
+  const [startAnimation, setStartAnimation] = useState(false);
+
+  useEffect(() => {
+    // Start the animation after 5 seconds
+    const timeoutId = setTimeout(() => {
+      setStartAnimation(true);
+    }, 5000);
+
+    // Cleanup the timeout to avoid memory leaks
+    return () => clearTimeout(timeoutId);
+  }, []);
+  
   const setError = (message) => {
     setErrorMessage(message);
   };
@@ -420,6 +433,18 @@ export default function Dashboard() {
       zIndex: '1',
       position: 'relative',
     }}>
+       <div style={{
+        zIndex: '999999999999999999999999999',
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100%',
+        display: 'none',
+       }}>
+      {/* Render the SchoolPride component and pass startAnimation as a prop */}
+      {/* <SchoolPride shouldStartAnimation={startAnimation} /> */}
+    </div>
       <MantineProvider>
         {/* <Toaster position="top-center" /> */}
         <div className="flex h-full">
@@ -528,7 +553,7 @@ export default function Dashboard() {
                 >
                   <Accordion.Item value="Apples" classNames={{ item: 'panelcolor', }} >
                     <Accordion.Control >
-                      Notes
+                      Status
                     </Accordion.Control>
                     <Accordion.Panel>
                       <List spacing="md" size="md" center
