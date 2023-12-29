@@ -80,7 +80,7 @@ export default function ContactUs({ isOpen, onClose }) {
                 {success ? (
                     <div className="success-message">
                         <FaCheckCircle size={80} color="#2ecc71" className="success-icon" />
-                        <p className="text-white">Your request has been successfully submitted. We'll get back to you shortly.</p>
+                        <p className="text-white">Your request has been submitted successfully. We’ll get back to you shortly.</p>
                     </div>
                 ) : (
                     <form>

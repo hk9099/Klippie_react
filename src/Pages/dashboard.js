@@ -180,7 +180,6 @@ export default function Dashboard() {
     };
   }, [setPageLoaded]);
 
-  // Reset the state or perform other actions when the media editor tab is closed
   useEffect(() => {
     if (mediaEditorClosed) {
       setMediaEditorClosed(false);
@@ -229,8 +228,6 @@ export default function Dashboard() {
   //     setShowPopup(true);
   //   }
   // }, [ navigate]);
-
-
 
   const handleSubmit = async (values) => {
     if (process.env.NODE_ENV === 'development') {
@@ -410,9 +407,6 @@ export default function Dashboard() {
     handleProjectClick()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeProjectId, setAccordionVisible, setProjectId, setErrorMessage, setNewvideoClips, setnewMainVideo, fileDelete, projectId, pageLoaded, userToken]);
-
-
-
 
   useEffect(() => {
     if (projectId) {

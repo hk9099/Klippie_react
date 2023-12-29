@@ -31,7 +31,7 @@ async function fetchProjectsData(setProjectData, setLines, setIsLoadingHistory, 
         }
         setProjectData(projectData);
         if (projectData.length > 0) {
-            setLines(projectData.map(project => project.name));
+            setLines(projectData.map(project => project.title));
             setVideoURL(projectData.map(project => project.video_url));
         }
         setIsLoadingHistory(false);

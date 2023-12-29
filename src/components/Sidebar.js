@@ -4,7 +4,7 @@ import { AiOutlineDelete, AiOutlinePlus, AiOutlineCheck, AiOutlineClose } from "
 // import { Menu } from "@headlessui/react";
 import Logo from "../assets/images/logo.svg";
 import HamburgerButton from "./HumbergerButton";
-import { IconLayoutSidebar } from '@tabler/icons-react';
+import { IconChevronRight } from '@tabler/icons-react';
 import ".././assets/css/Sidebar.css";
 import Modal from "./Modal";
 import AccountModal from "./AccountModal";
@@ -35,12 +35,14 @@ import CloudinaryVideoPlayer from "../components/cloudinaryVideoPlayer.js";
 import ConfirmationModal from "../components/DeleteConfirmationModal.js";
 import ToastNotification from "../components/ToastNotification";
 import { Toaster } from 'react-hot-toast';
+import { useFileSelected } from "../context/SelectionContext.js";
 
 const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
   const { setCloudinaryResponse } = useCloudinary();
   //eslint-disable-next-line
   const { setStartAgain, projectCreated } = useClipsFoundStatus();
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
+  const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
   const { setUserName } = useUserNickname();
   const { setUserEmail } = useUserNickname();
   const { setCreaditBalance } = useUserNickname();
@@ -370,7 +372,8 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     }
     const data = qs.stringify({
       id: projectData[index].id,
-      name: updatedLine
+      name: updatedLine,
+      title: updatedLine
     });
 
     const config = {
@@ -394,6 +397,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         newLines[index] = updatedLine;
         setLines(newLines);
         setEditIndex(-1);
+        setPageLoaded(true)
       })
       .catch((error) => {
         if (process.env.NODE_ENV === 'development') {
@@ -435,7 +439,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     if (message === "Project Created") {
       console.log(projectData[index].id, 'projectData[index].id');
       setStartAgain(projectData[index].id)
-      ToastNotification({ message: response.data.message, type: 'success' });
+      ToastNotification({ message: response.data.message, type: 'info' });
       navigate(`/dashboard`);
       navigate()
     }
@@ -444,7 +448,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         console.log(response.data.message, 'response.data.data.status')
       }
       setStartAgain('')
-      ToastNotification({ message: response.data.message, type: 'success' });
+      ToastNotification({ message: response.data.message, type: 'info' });
       navigate(`/dashboard`);
       navigate()
     }
@@ -519,7 +523,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 </span>
               )}
             </div>
-            <IconLayoutSidebar
+            <IconChevronRight
               className={`${!open && "rotate-180 absolute border w-[40px] rounded-lg h-[40px] p-2"
                 } ml-6  text-[100px] cursor-pointer top-5 -right-[55px]  border w-[40px] rounded-lg h-[40px] p-2 text-gray-200`}
               onClick={() => {

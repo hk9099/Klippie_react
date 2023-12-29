@@ -49,6 +49,25 @@ const ToastNotification = ({ type, message }) => {
           duration: Infinity,
         });
         break;
+      case 'info':
+        toast.custom((t) => (
+          <MantineProvider>
+          <div className="bg-white p-4 rounded-md shadow-md w-auto d-flex border-l-8 border-blue-500 flex items-center justify-between font-monospace">
+            <div className="text-blue-600">{message}</div>
+            <CloseButton size="lg"
+            styles={{
+              root: {
+                marginLeft: '10px',
+              },
+            }}
+                onClick={() => toast.remove(t.id)}
+              />
+          </div>
+          </MantineProvider>
+        ), {
+          duration: Infinity,
+        });
+        break;
       default:
         break;
     }
