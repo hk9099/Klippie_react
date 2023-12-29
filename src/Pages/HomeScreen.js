@@ -631,7 +631,7 @@ function HomeScreen({ userName, creaditBalance }) {
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-center items-center flex-col select-none cursor-pointer file-input  custom-3xl:mb-3 custom-5xl:mb-12 sm:mt-[5rem] custom-3xl:mt-[2rem]  custom-5xl:mt-[5rem]" >
+                    <div className="flex justify-center items-center flex-col select-none cursor-pointer file-input  custom-3xl:mb-1 custom-5xl:mb-1 sm:mt-[3rem] custom-3xl:mt-[2rem]  custom-5xl:mt-[3rem]" >
                         {/* <div
                             className={`text-white select-none cursor-pointer text-center font-bold text-lg w-[50%] inline-block border-dashed border-2 rounded-lg py-10 ${isDragging ? 'border-blue-500 bg-blue-100 dark:bg-[#ffffff2a]' : 'border-gray-500 dark:bg-transparent'} ${isFileUploaded ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : ''} ${isFileUploadedInput ? 'border-dashed border-2 border-green-500 dark:bg-[#ffffff2a]' : ''}`}
                             onClick={() => { fileInputRef.current.click(); }}
