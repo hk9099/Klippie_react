@@ -119,14 +119,14 @@ const Navbar = ({ creaditBalance }) => {
                             </div>
                         ) : (
                             <div className={`p-4 transform transition-transform duration-500 ease-in-out hover:scale-105`}>
-                                <div className={`bg-gradient-to-r from-purple-600 to-pink-400 text-white px-4 py-3 font-bold text-xxl flex justify-center items-center select-none rounded-lg shadow-lg`}>
+                                <div className={`bg-gradient-to-r from-indigo-400 to-blue-900 text-white px-4 py-3 font-bold text-xxl flex justify-center items-center select-none rounded-lg shadow-lg`}>
                                     Lifetime Unlimited
                                 </div>
                             </div>
 
                         )}
                         <button
-                            className={`upgradetopro text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 w-auto text-center px-6 py-2 font-bold text-lg p-3 rounded-lg relative overflow-hidden focus:outline-none ${subscribed ? 'hidden' : 'block'}`}
+                            className={`upgradetopro text-white bg-gradient-to-r from-indigo-400 to-blue-900 hover:from-indigo-500 hover:to-blue-800 w-auto text-center px-6 py-2 font-bold text-lg p-3 rounded-lg relative overflow-hidden focus:outline-none ${subscribed ? 'hidden' : 'block'}`}
                             onClick={openModal}
                         >
                             <span className="text-content select-none">Upgrade</span>

@@ -283,6 +283,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                                     <Dialog
                                         opened={fileselected}
                                         position={{ bottom: 20, left: '40%', }}
+                                        onClose={() => { setDeselect(true) }}
                                         size="lg"
                                         radius="lg"
                                         classNames={{
@@ -297,7 +298,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                                         }}
                                     >
                                         <Text classNames={{
-                                            root: 'px-[30px!important] w-auto inline-block bg-gradient-to-r from-purple-600 to-pink-400 text-white rounded-l-xl text-[white!important] font-[900!important]',
+                                            root: 'px-[30px!important] w-auto inline-block bg-gradient-to-r from-indigo-400 to-blue-900 text-white rounded-l-xl text-[white!important] font-[900!important]',
                                         }}
                                             styles={{
                                                 root: {
