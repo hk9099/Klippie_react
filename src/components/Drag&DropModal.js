@@ -348,7 +348,7 @@ function DragDropModal() {
         <p className="text-3xl font-bold w-[400px] text-center text-white mb-4 select-none">
           or
         </p>
-        <button className="bg-red-700 hover:bg-red-500 text-white font-bold py-2 px-6 text-lg rounded-lg ml-3 mb-5">
+        <button className="bg-red-700 hover:bg-red-500 text-white font-bold py-3 px-6 text-xl rounded-lg ml-3 mb-5">
           Upload
         </button>
         <div className="flex justify-center items-center w-full select-none" onClick={handleInputClick} data-tooltip-id={disabled ? "inputdisabled" : null}>

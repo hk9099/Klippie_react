@@ -297,7 +297,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                                         }}
                                     >
                                         <Text classNames={{
-                                            root: 'px-[30px!important] w-auto inline-block bg-[#282C76] rounded-l-xl text-[white!important] font-[900!important]',
+                                            root: 'px-[30px!important] w-auto inline-block bg-gradient-to-r from-purple-600 to-pink-400 text-white rounded-l-xl text-[white!important] font-[900!important]',
                                         }}
                                             styles={{
                                                 root: {

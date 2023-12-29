@@ -47,7 +47,7 @@ function Editor() {
     useEffect(() => {
         var button = document.querySelector('.iMAXtE');
         if (process.env.NODE_ENV === 'development') {
-        console.log(button, 'button');
+            console.log(button, 'button');
         }
         // Check if the button is found
         if (button) {
@@ -55,13 +55,13 @@ function Editor() {
             button.addEventListener('click', function () {
                 // Perform actions when the button is clicked
                 if (process.env.NODE_ENV === 'development') {
-                console.log('Button clicked!');
+                    console.log('Button clicked!');
                 }
-                
+
             });
         } else {
             if (process.env.NODE_ENV === 'development') {
-            console.log('Button not found');
+                console.log('Button not found');
             }
         }
     }, []);
@@ -87,7 +87,7 @@ function Editor() {
                 axios(config)
                     .then(function (response) {
                         if (process.env.NODE_ENV === 'development') {
-                        console.log(response, 'response');
+                            console.log(response, 'response');
                         }
                         const startTimeInSeconds = parseInt(parseTimeToSeconds(response.data.data.start_time));
                         const endTimeInSeconds = parseInt(parseTimeToSeconds(response.data.data.end_time));
@@ -113,7 +113,6 @@ function Editor() {
                                     endOffset: endTimeInSeconds,
                                     maxDuration: maxDurations,
                                     minDuration: minDurations,
-                                    units: 'seconds',
                                 },
                             },
                             language: {
@@ -127,7 +126,22 @@ function Editor() {
                                     },
                                 },
                             },
-                            theme: { 
+                            presets: {
+                                export: {
+                                    quality: 80,
+                                    format: 'mp4',
+                                    transformation: {
+                                        crop: 'limit',
+                                        quality: 'auto',
+                                        fetchFormat: 'auto',
+                                        responsiveWidth: 'auto',
+                                        responsiveHeight: 'auto',
+                                        width: 'auto',
+                                    },
+                                },
+                            },
+                            
+                            theme: {
                                 logo: 'https://i.ibb.co/mvnxHH1/logo.png',
                             },
                             transformation: {
@@ -136,7 +150,7 @@ function Editor() {
                                 fetchFormat: 'auto',
                                 responsiveWidth: 'auto',
                                 responsiveHeight: 'auto',
-                                width: 'auto', 
+                                width: 'auto',
                             },
                             maxWidth: 1920,
                             maxHeight: 1080,
@@ -150,19 +164,19 @@ function Editor() {
                             }
                         });
 
-                         myEditor.on('error', (error) => {
-                             console.log(error, 'error');
+                        myEditor.on('error', (error) => {
+                            console.log(error, 'error');
                             if (process.env.NODE_ENV === 'development') {
                             }
                         });
 
-                         myEditor.on('close', (result) => {
+                        myEditor.on('close', (result) => {
                             console.log(result, 'close');
-                            
+
                         });
 
-                         myEditor.on('open', (result) => {
-                             console.log(result, 'open');
+                        myEditor.on('open', (result) => {
+                            console.log(result, 'open');
                             if (process.env.NODE_ENV === 'development') {
                             }
                         });
@@ -179,12 +193,12 @@ function Editor() {
                         myEditor.on('export-progress', (result) => {
                             console.log(result, 'export-progress');
                         });
-                       
+
                         myEditor.on('export', async (data) => {
                             myEditor.hide();
                             setShowLoader(true);
                             if (process.env.NODE_ENV === 'development') {
-                            console.log('Exported data:', data);
+                                console.log('Exported data:', data);
                             }
 
                             // const downloadUrl = data.assets[0].downloadUrl;
@@ -193,8 +207,8 @@ function Editor() {
 
                             const { formattedStartTime, formattedEndTime } = extractStartEndTime(data);
                             if (process.env.NODE_ENV === 'development') {
-                            console.log("Start Time:", formattedStartTime);
-                            console.log("End Time:", formattedEndTime);
+                                console.log("Start Time:", formattedStartTime);
+                                console.log("End Time:", formattedEndTime);
                             }
                             // const downloadAttempts = 3; // Number of download attempts
 
@@ -280,15 +294,15 @@ function Editor() {
                             try {
                                 const response = await axios(config);
                                 if (process.env.NODE_ENV === 'development') {
-                                console.log(response, 'response');
+                                    console.log(response, 'response');
                                 }
                                 myEditor.hide();
                                 setShowProgressBar(false);
                                 setShowLoader(false);
-                                window.close();
+                                // window.close();
                             } catch (error) {
                                 if (process.env.NODE_ENV === 'development') {
-                                console.log(error);
+                                    console.log(error);
                                 }
                                 setShowProgressBar(false);
                                 setShowLoader(false);
@@ -307,12 +321,12 @@ function Editor() {
                     })
                     .catch(function (error) {
                         if (process.env.NODE_ENV === 'development') {
-                        console.log(error);
+                            console.log(error);
                         }
                     });
             } catch (error) {
                 if (process.env.NODE_ENV === 'development') {
-                console.log(error);
+                    console.log(error);
                 }
             }
 
@@ -342,6 +356,14 @@ function Editor() {
                     <div className="h-4 bg-blue-500 rounded-full"></div>
                 </div>
             ) : null}
+            <style jsx>
+                {`
+        .Layout__Wrapper-bNbQqD {
+          background: #fff!important;
+        }
+      `}
+            </style>
+
         </div>
     );
 }

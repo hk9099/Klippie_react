@@ -1,6 +1,8 @@
 // PricingCardsContainer.js
 import React, { useEffect, useState } from 'react';
 import PricingCard from '../components/PricingCard';
+import PaidPlanCard from '../components/PaidPlanCard';
+import { Switch } from '@mantine/core';
 // import Logo from '../assets/images/logo.svg';
 import axios from 'axios';
 import { RxCross2 } from "react-icons/rx";
@@ -14,6 +16,9 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
         console.log(PlanSubscribed, "planSubscribed");
     }
     const [pricingData, setPricingData] = useState([]);
+    const [freePricingData, setFreePricingData] = useState([]);
+    const [paidPricingDatamonth, setPaidPricingDatamonth] = useState([]);
+    const [paidPricingDatayear, setPaidPricingDatayear] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const user = TokenManager.getToken()
     const [userToken, setUserToken] = useState(null);
@@ -50,9 +55,11 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
         setSubscription(response.data.data);
         if (response.data.data === null) {
             setFreePlan(true);
+            setPaidPlan(false);
             setIsLoading(false);
         } else {
             setPaidPlan(true);
+            setFreePlan(false);
             setPlanSubscribed(true);
             setIsLoading(false);
         }
@@ -71,10 +78,11 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
         axios
             .post('https://dev-api.getklippie.com/v1/plans/get-all')
             .then((response) => {
+                console.log(response, 'respoooooooooooooooooonse');
                 const pricing = [
                     {
                         title: 'Free',
-                        id: response?.data?.data[0]?.chargebee_prices[0]?.id ?? null,
+                        id: null,
                         description: 'For Your Hobby Projects',
                         price: '$0',
                         time: 'Per Month',
@@ -86,32 +94,57 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                         ],
                         benefitTitle: 'Benefits',
                         benefits: [
-                            'Upload Up to 1 Hour of Audio or Video Per Project',
+                            'Upload Up to 1 Hour of Video Per Project',
                             '2 Hours of Free Upload Minutes Per Month',
                             'Access to Clips for Up to 7 Days'
                         ]
                     },
-                    {
+                    [{
                         title: 'Unlimited Plan',
                         price: '$50',
-                        id: response?.data?.data[1]?.chargebee_prices[0]?.id ?? null,
+                        id: response?.data?.data[0]?.chargebee_prices[1]?.id ?? null,
                         time: 'Per Month',
                         description: 'For Individual Content Creators',
                         planDetails: [
-                            { Type: 'PREMIUM PLAN'},
+                            { Type: 'PREMIUM PLAN' },
                             { 'Upload Minutes': 'Unlimited' },
                             { Users: '1' },
                             // { Modal: 'Advanced' }
                         ],
                         benefitTitle: 'Benefits',
                         benefits: [
-                            'Upload Up to 2 Hours of Audio or Video Per Project',
+                            'Upload Up to 2 Hours of Video Per Project',
+                            'Unlimited Upload Minutes Per Month',
+                            'Unlimited Clips Created Per Month'
+                        ]
+                    },
+                    {
+                        title: 'Enterprise Plan',
+                        price: '$499',
+                        id: response?.data?.data[0]?.chargebee_prices[0]?.id ?? null,
+                        time: 'Yearly ',
+                        description: 'For Teams and Businesses',
+                        planDetails: [
+                            { Type: 'ENTERPRISE PLAN' },
+                            { 'Upload Minutes': 'Unlimited' },
+                            { Users: 'Unlimited' },
+                            // { Modal: 'Advanced' }
+                        ],
+                        benefitTitle: 'Benefits',
+                        benefits: [
+                            'Upload Up to 2 Hours of Video Per Project',
                             'Unlimited Upload Minutes Per Month',
                             'Unlimited Clips Created Per Month'
                         ]
                     }
+                    ]
                 ];
+                console.log(pricing[0], 'pricing');
                 setPricingData(pricing);
+                setFreePricingData(pricing[0]);
+                setPaidPricingDatamonth(pricing[1][0]);
+                setPaidPricingDatayear(pricing[1][1]);
+                setPaidPricingData(pricing[1][1]);
                 setIsLoading(false);
             })
             .catch((error) => {
@@ -122,7 +155,13 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
             });
     }, []);
 
-
+    const [selectedInterval, setSelectedInterval] = useState('month');
+    const [paidPricingData, setPaidPricingData] = useState(paidPricingDatamonth);
+    const handleSwitchChange = (event) => {
+        const newInterval = event.target.checked ? 'year' : 'month';
+        setSelectedInterval(newInterval);
+        setPaidPricingData(newInterval === 'month' ? paidPricingDatamonth : paidPricingDatayear);
+    };
 
 
     return (
@@ -142,16 +181,46 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                                     <RxCross2 className="text-2xl text-white cursor-pointer" onClick={onClose} />
                                 </button>
                             </div>
+
                             <div className="p-6 overflow-y-auto">
                                 <div className="flex items-center justify-center">
+
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 text-center lg:grid-cols-2 gap-4">
-                                        {pricingData.map((data, index) => (
-                                            <PricingCard key={index} {...data} highlightBorder={
-                                                (freePlan && index === 0) || (paidPlan && index === 1)
-                                            } onClose={onClose}
+                                        <div >
+                                            <p className="p-4"></p>
+                                            <PricingCard
+                                                freePricingData={freePricingData}
+                                                highlightBorder={freePlan}
+                                                onClose={onClose}
                                                 fetchSubscriptions={fetchSubscriptions}
                                             />
-                                        ))}
+                                        </div>
+                                        <div>
+                                            <div className='flex justify-center items-center mb-3'>
+                                                <span className="text-gray-700 dark:text-gray-100 text-sm font-bold font-nunito mr-2">Month</span>
+                                                <Switch
+                                                    checked={selectedInterval === 'year'}
+                                                    onChange={handleSwitchChange}
+                                                    styles={{
+                                                        root: {
+                                                            width: 'fit-content',
+                                                        }
+                                                    }}
+                                                />
+                                                <span className="text-gray-700 dark:text-gray-100 text-sm font-bold font-nunito ml-2">Year</span>
+                                            </div>
+                                            {paidPricingData ? (
+                                                <PaidPlanCard
+                                                    {...paidPricingData}
+                                                    highlightBorder={paidPlan}
+                                                    onClose={onClose}
+                                                    fetchSubscriptions={fetchSubscriptions}
+                                                />
+                                            ) : (
+                                                null
+                                            )}
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
