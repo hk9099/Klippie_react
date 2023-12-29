@@ -61,6 +61,9 @@ const Layout = ({ children }) => {
             backgroundColor: "gray",
             border: "1px solid rgb(183 183 183)",
           },
+          options: {
+            primaryColor: '#3b82f6',
+          }
         }}
         callback={handleJoyrideCallback}
       />

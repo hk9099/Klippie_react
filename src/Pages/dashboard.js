@@ -134,7 +134,7 @@ export default function Dashboard() {
       // Set up an interval to continuously make API calls
       const intervalId = setInterval(() => {
         fetchData();
-      }, 2000);
+      }, 5000);
 
       // Clean up the interval when the component unmounts or when makeNextAPICall becomes false
       return () => clearInterval(intervalId);

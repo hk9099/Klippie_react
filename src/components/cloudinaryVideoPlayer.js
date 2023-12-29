@@ -302,14 +302,12 @@ export default function CloudinaryVideoPlayer({
                         width: 200,
                         height: 900,
                         fluid: true,
-                        autoplay: true,
+                        autoplay: false,
                         muted: false,
                         aiHighlightsGraph: true,
                         seekbar: true,
-                        // autoplayMode: 'on-scroll',
+                        showLogo: false,
                         sourceTypes: ['hls', 'webm', 'mp4'],
-                        logoImageUrl: 'https://res.cloudinary.com/delkyf33p/image/upload/v1701593905/tkfstyrkbhxjqg80yz21.png',
-                        logoOnclickUrl: '',
                         colors: {
                             accent: '#dc2626',
                             text: '#ffffff'

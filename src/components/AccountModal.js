@@ -93,6 +93,7 @@ const AccountModal = ({
             } 
             ToastNotification({ type: 'success', message: response.data.message });
             setTimeout(() => {
+                navigate('/dashboard');
                 window.location.reload();
             }, 1500);
         } catch (error) {
