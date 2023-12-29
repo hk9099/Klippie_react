@@ -34,7 +34,7 @@ function Editor() {
             const startTime = startTimeMatch ? parseInt(startTimeMatch[1], 10) : null;
             const endTime = endTimeMatch ? parseInt(endTimeMatch[1], 10) : null;
 
-            const formattedStartTime = startTime !== null ? formatTime(startTime) : null;
+            const formattedStartTime = startTime !== null ? formatTime(startTime) : 0;
             const formattedEndTime = endTime !== null ? formatTime(endTime) : null;
 
             return { formattedStartTime, formattedEndTime };
@@ -86,9 +86,6 @@ function Editor() {
             try {
                 axios(config)
                     .then(function (response) {
-                        if (process.env.NODE_ENV === 'development') {
-                            console.log(response, 'response');
-                        }
                         const startTimeInSeconds = parseInt(parseTimeToSeconds(response.data.data.start_time));
                         const endTimeInSeconds = parseInt(parseTimeToSeconds(response.data.data.end_time));
                         const maxDurations = endTimeInSeconds - startTimeInSeconds + 2000000000000000000000000000000000000000;
@@ -140,7 +137,7 @@ function Editor() {
                                     },
                                 },
                             },
-                            
+
                             theme: {
                                 logo: 'https://i.ibb.co/mvnxHH1/logo.png',
                             },
@@ -159,39 +156,31 @@ function Editor() {
                         myEditor.show();
 
                         myEditor.on('save', (result) => {
-                            console.log(result, 'result');
                             if (process.env.NODE_ENV === 'development') {
                             }
                         });
 
                         myEditor.on('error', (error) => {
-                            console.log(error, 'error');
                             if (process.env.NODE_ENV === 'development') {
                             }
                         });
 
                         myEditor.on('close', (result) => {
-                            console.log(result, 'close');
-
                         });
 
                         myEditor.on('open', (result) => {
-                            console.log(result, 'open');
                             if (process.env.NODE_ENV === 'development') {
                             }
                         });
 
                         myEditor.on('export-start', (result) => {
-                            console.log(result, 'export-start');
                         }
                         );
 
                         myEditor.on('export-end', (result) => {
-                            console.log(result, 'export-end');
                         })
 
                         myEditor.on('export-progress', (result) => {
-                            console.log(result, 'export-progress');
                         });
 
                         myEditor.on('export', async (data) => {
@@ -200,85 +189,19 @@ function Editor() {
                             if (process.env.NODE_ENV === 'development') {
                                 console.log('Exported data:', data);
                             }
-
-                            // const downloadUrl = data.assets[0].downloadUrl;
                             const secureUrl = data.assets[0].url;
-
-
                             const { formattedStartTime, formattedEndTime } = extractStartEndTime(data);
-                            if (process.env.NODE_ENV === 'development') {
-                                console.log("Start Time:", formattedStartTime);
-                                console.log("End Time:", formattedEndTime);
-                            }
-                            // const downloadAttempts = 3; // Number of download attempts
-
-                            //   async function downloadVideo(attempt) {
-                            //         const xhr = new XMLHttpRequest();
-                            //         xhr.open('GET', downloadUrl, true);
-                            //         xhr.responseType = 'blob';
-
-                            //         xhr.onload = () => {
-                            //             if (xhr.status === 200) {
-                            //                 const videoBlob = xhr.response;
-                            //                 const blobUrl = URL.createObjectURL(videoBlob);
-
-                            //                 const downloadLink = document.createElement('a');
-                            //                 downloadLink.style.display = 'none';
-
-                            //                 downloadLink.href = blobUrl;
-                            //                 downloadLink.download = `${response.data.data.title}.${response.data.data.type}`;
-
-                            //                 document.body.appendChild(downloadLink);
-                            //                 downloadLink.click();
-
-                            //                 document.body.removeChild(downloadLink);
-                            //                 URL.revokeObjectURL(blobUrl);
-                            //                 myEditor.hide();
-                            //             setShowProgressBar(false);
-                            //             window.close();
-                            //             } else {
-                            //                 if (attempt < downloadAttempts) {
-                            //                     // Retry the download
-                            //                     console.log(`Download attempt ${attempt + 1}`);
-                            //                     downloadVideo(attempt + 1);
-                            //                 } else {
-                            //                     console.error('Failed to fetch the video content after multiple attempts');
-                            //                 }
-                            //             }
-                            //         };
-                            //         xhr.send();
-
-                            //     }
-
-
-                            // let updateData = JSON.stringify({
-                            //     "id": id,
-                            //     // "clip_url": secureUrl,
-                            //     'title': '',
-                            //     'summary': '',
-                            //     "transformations": data.transformation
-                            // });
-
-                            // let config = {
-                            //     method: 'post',
-                            //     maxBodyLength: Infinity,
-                            //     url: 'https://dev-api.getklippie.com/v1/clip/update',
-                            //     headers: {
-                            //         'accept': 'application/json', 
-                            //         'Content-Type': 'application/x-www-form-urlencoded', 
-                            //         'Authorization': `Bearer ${userToken}`,
-                            //     },
-                            //     data: updateData
-                            // };
-
+                            const transformationArray = data.transformation.split(',');
+                            const eoValue = transformationArray[0] || data.main_video_duratiob
+                            const soValue = transformationArray[1] || 'so_0'
+                            const joinedValue = [eoValue, soValue].join(',');
                             let updatedata = qs.stringify({
                                 'id': id,
                                 'title': '',
                                 'summary': '',
-                                'transformations': data.transformation,
+                                'transformations': joinedValue,
                                 'clip_url': secureUrl
                             });
-
                             let config = {
                                 method: 'post',
                                 maxBodyLength: Infinity,
@@ -290,7 +213,6 @@ function Editor() {
                                 },
                                 data: updatedata
                             };
-
                             try {
                                 const response = await axios(config);
                                 if (process.env.NODE_ENV === 'development') {
@@ -356,14 +278,6 @@ function Editor() {
                     <div className="h-4 bg-blue-500 rounded-full"></div>
                 </div>
             ) : null}
-            <style jsx>
-                {`
-        .Layout__Wrapper-bNbQqD {
-          background: #fff!important;
-        }
-      `}
-            </style>
-
         </div>
     );
 }

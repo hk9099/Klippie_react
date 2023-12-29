@@ -221,7 +221,6 @@ export default function CloudinaryVideoPlayer({
     cloudName,
     videoId,
 }) {
-    console.log("CloudinaryVideoPlayer",sidebar);
     const { setPageLoaded } = useFileSelected();
     const playerRef = useRef(null);
     const videoRef = useRef(null);
@@ -314,6 +313,7 @@ export default function CloudinaryVideoPlayer({
                         },
                         hideContextMenu: true,
                         showJumpControls: true,
+                        showLogo: false,
                     });
 
                     videoRef.current.volume = 0.5;

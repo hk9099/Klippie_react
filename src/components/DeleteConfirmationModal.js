@@ -21,7 +21,6 @@ function ConfirmationModal({ show, onConfirm, onCancel, projectName }) {
 
   const handleInputChange = (e) => {
     setConfirmationText(e.target.value);
-    console.log(confirmationText, "confirmationText");
     setError(null);
   };
 

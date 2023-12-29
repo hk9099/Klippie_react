@@ -39,11 +39,9 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const user = TokenManager.getToken()
   const [userToken, setUserToken] = useState(null);
-  console.log(userToken, 'userToken');
   const [loginCount, setLoginCount] = useState(0);
   const { setClipsFoundStatus, startAgain, projectCreated } = useClipsFoundStatus();
   const { setIsApiCompleted } = useSidebarContext();
-  console.log(startAgain, 'startAgain');
   const { projectId: routeProjectId } = useParams();
   const { cloudinaryResponse } = useCloudinary();
   const [projectId, setProjectId] = useState(null);
@@ -54,7 +52,6 @@ export default function Dashboard() {
   //   console.log(accordionVisible, 'accordionVisible');
   // }
   const [errorMessage, setErrorMessage] = useState("");
-  console.log(errorMessage, 'errorMessage');
   const [newProjectCount, setNewProjectCount] = useState('');
   // if (process.env.NODE_ENV === 'development') {
   //   console.log(newProjectCount, 'newProjectCount');
@@ -121,7 +118,6 @@ export default function Dashboard() {
           }
         })
         .catch((error) => {
-          console.log(error);
         });
     };
 
@@ -129,7 +125,6 @@ export default function Dashboard() {
     setUserToken(userToken);
 
     if (makeNextAPICall !== false) {
-      console.log('makeNextAPICall is not false. Setting up interval.');
 
       // Set up an interval to continuously make API calls
       const intervalId = setInterval(() => {
@@ -161,7 +156,6 @@ export default function Dashboard() {
         setRunningID(null);
       })
       .catch((error) => {
-        console.log(error);
       });
   }
 
@@ -288,7 +282,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      console.log('routeProjectId', routeProjectId);
     }
     if (!routeProjectId) {
       setAccordionVisible(false);

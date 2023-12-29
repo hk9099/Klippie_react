@@ -7,7 +7,7 @@ import runConfetti from './confetti.js';
 import { NumberFormatter } from '@mantine/core';
 
 function PricingCard({ title, price, time, description, planDetails, benefits, id, benefitTitle, highlightBorder ,onClose ,fetchSubscriptions}) {
-    console.log(benefits, 'benefitsprops');
+
     const { setPlanSubscribed ,setSubscribed} = useSubscription();
     const [subRetrieved, setSubRetrieved] = useState(false);
     const userToken = TokenManager.getToken()[1]
@@ -74,7 +74,6 @@ function PricingCard({ title, price, time, description, planDetails, benefits, i
     };
 
     const handleButtonClick = () => {
-        console.log('handleButtonClick',id);
         if (id !== null) {
 
             const cbInstance = window.Chargebee.init({

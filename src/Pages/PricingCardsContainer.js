@@ -22,7 +22,6 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
     const [isLoading, setIsLoading] = useState(true);
     const user = TokenManager.getToken()
     const [userToken, setUserToken] = useState(null);
-    console.log(userToken, 'userToken');
 
     useEffect(() => {
         if (user === undefined || user === null) {
@@ -37,7 +36,6 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
     const [freePlan, setFreePlan] = useState(false);
     const [paidPlan, setPaidPlan] = useState(false);
     const fetchSubscriptions = async () => {
-        console.log('Fetching subscriptions');
         let config = {
             method: 'post',
             maxBodyLength: Infinity,
@@ -78,7 +76,6 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
         axios
             .post('https://dev-api.getklippie.com/v1/plans/get-all')
             .then((response) => {
-                console.log(response, 'respoooooooooooooooooonse');
                 const pricing = [
                     {
                         title: 'Free',

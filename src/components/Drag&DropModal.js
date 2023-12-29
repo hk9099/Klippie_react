@@ -251,7 +251,6 @@ function DragDropModal() {
   };
 
   const handleSubmit = () => {
-    // console.log("Input Text Value: " + inputText);
     setInputText('');
   };
 

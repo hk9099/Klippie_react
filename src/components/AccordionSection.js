@@ -180,8 +180,6 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                         }
                     } catch (error) {
                         if (axios.isCancel(error)) {
-                            // Download canceled
-                            console.log('Download canceled');
                             setDownloadModalOpen(false);
                             return;
                         } else {

@@ -35,7 +35,6 @@ const AccountModal = ({
     avatar,
 }) => {
     const { Subscription } = useSubscription();
-    console.log(Subscription, 'subscription')
     // const [token, setToken] = useState(null);
     const navigate = useNavigate();
     const user = TokenManager.getToken()

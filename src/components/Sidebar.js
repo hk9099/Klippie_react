@@ -78,7 +78,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const [dropdownPosition] = useState("down");
   const location = useLocation();
   const [lines, setLines] = useState([]);
-  console.log(lines, 'lines');
   const [tempLines, setTempLines] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [editIndex, setEditIndex] = useState(-1);
@@ -139,9 +138,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   ) : null;
 
   useEffect(() => {
-    console.log('isApiCompleted', isApiCompleted);
-    if (process.env.NODE_ENV === 'development') {
-    }
     if (user === undefined || user === null) {
       navigate('/');
       window.location.reload();
@@ -437,7 +433,6 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
     const message = response.data.data;
 
     if (message === "Project Created") {
-      console.log(projectData[index].id, 'projectData[index].id');
       setStartAgain(projectData[index].id)
       ToastNotification({ message: response.data.message, type: 'info' });
       navigate(`/dashboard`);
