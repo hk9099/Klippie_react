@@ -87,7 +87,7 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                         price: '$0',
                         time: 'Per Month',
                         planDetails: [
-                            { Type: 'Free Plan' },
+                            { Type: 'FREE PLAN' },
                             { "Upload Minutes": '120 Minutes Per Month' },
                             { Users: '1' },
                             // { Modal: 'Base' }
@@ -100,7 +100,7 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                         ]
                     },
                     [{
-                        title: 'Unlimited Plan',
+                        title: 'Unlimited',
                         price: '$50',
                         id: response?.data?.data[0]?.chargebee_prices[1]?.id ?? null,
                         time: 'Per Month',
@@ -119,15 +119,15 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                         ]
                     },
                     {
-                        title: 'Enterprise Plan',
+                        title: 'Unlimited',
                         price: '$499',
                         id: response?.data?.data[0]?.chargebee_prices[0]?.id ?? null,
                         time: 'Yearly ',
                         description: 'For Teams and Businesses',
                         planDetails: [
-                            { Type: 'ENTERPRISE PLAN' },
+                            { Type: 'PREMIUM PLAN' },
                             { 'Upload Minutes': 'Unlimited' },
-                            { Users: 'Unlimited' },
+                            { Users: '1' },
                             // { Modal: 'Advanced' }
                         ],
                         benefitTitle: 'Benefits',
@@ -183,43 +183,49 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                             </div>
 
                             <div className="p-6 overflow-y-auto">
+                                <div className='flex justify-center items-center mb-3 w-full bg-indigo-900  text-white font-extrabold py-3 rounded-lg'>
+                                    <span className="text-gray-700 dark:text-gray-100 text-sm font-extrabold font-nunito mr-2">Month</span>
+                                    <Switch
+                                        checked={selectedInterval === 'year'}
+                                        onChange={handleSwitchChange}
+                                        color="#4338ca"
+                                        styles={{
+                                            root: {
+                                                width: 'fit-content',
+                                            },
+                                            track: {
+                                                border: '1px solid #fff',
+                                            },
+                                            thumb: {
+                                                backgroundColor: '#4338ca',
+                                            },
+                                        }}
+                                    />
+                                    <span className="text-gray-700 dark:text-gray-100 text-sm font-extrabold font-nunito ml-2">Annual</span>
+                                    <span className="text-gray-700 dark:text-gray-100 text-lg font-extrabold font- ml-2">
+                                        SAVE UP TO 20%
+                                    </span>
+                                </div>
                                 <div className="flex items-center justify-center">
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 text-center lg:grid-cols-2 gap-4">
-                                        <div >
-                                            <p className="p-4"></p>
-                                            <PricingCard
-                                                freePricingData={freePricingData}
-                                                highlightBorder={freePlan}
+
+                                        <PricingCard
+                                            freePricingData={freePricingData}
+                                            highlightBorder={freePlan}
+                                            onClose={onClose}
+                                            fetchSubscriptions={fetchSubscriptions}
+                                        />
+                                        {paidPricingData ? (
+                                            <PaidPlanCard
+                                                {...paidPricingData}
+                                                highlightBorder={paidPlan}
                                                 onClose={onClose}
                                                 fetchSubscriptions={fetchSubscriptions}
                                             />
-                                        </div>
-                                        <div>
-                                            <div className='flex justify-center items-center mb-3'>
-                                                <span className="text-gray-700 dark:text-gray-100 text-sm font-bold font-nunito mr-2">Month</span>
-                                                <Switch
-                                                    checked={selectedInterval === 'year'}
-                                                    onChange={handleSwitchChange}
-                                                    styles={{
-                                                        root: {
-                                                            width: 'fit-content',
-                                                        }
-                                                    }}
-                                                />
-                                                <span className="text-gray-700 dark:text-gray-100 text-sm font-bold font-nunito ml-2">Year</span>
-                                            </div>
-                                            {paidPricingData ? (
-                                                <PaidPlanCard
-                                                    {...paidPricingData}
-                                                    highlightBorder={paidPlan}
-                                                    onClose={onClose}
-                                                    fetchSubscriptions={fetchSubscriptions}
-                                                />
-                                            ) : (
-                                                null
-                                            )}
-                                        </div>
+                                        ) : (
+                                            null
+                                        )}
 
                                     </div>
                                 </div>
