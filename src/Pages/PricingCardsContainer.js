@@ -183,12 +183,12 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                             </div>
 
                             <div className="p-6 overflow-y-auto">
-                                <div className='flex justify-center items-center mb-3 w-full bg-indigo-900  text-white font-extrabold py-3 rounded-lg'>
-                                    <span className="text-gray-700 dark:text-gray-100 text-sm font-extrabold font-nunito mr-2">Month</span>
+                                <div className='flex justify-center items-center mb-3 w-full bg-gradient-to-r from-purple-800 to-indigo-900 text-white font-bold py-3 rounded-lg'>
+                                    <span className="text-gray-300 dark:text-gray-100 text-sm font-extrabold font-mono mr-2">Monthly</span>
                                     <Switch
                                         checked={selectedInterval === 'year'}
                                         onChange={handleSwitchChange}
-                                        color="#4338ca"
+                                        color="#7052f5"
                                         styles={{
                                             root: {
                                                 width: 'fit-content',
@@ -197,15 +197,17 @@ export default function PricingCardsContainer({ isOpen, onClose }) {
                                                 border: '1px solid #fff',
                                             },
                                             thumb: {
-                                                backgroundColor: '#4338ca',
+                                                backgroundColor: '#7052f5',
                                             },
                                         }}
                                     />
-                                    <span className="text-gray-700 dark:text-gray-100 text-sm font-extrabold font-nunito ml-2">Annual</span>
-                                    <span className="text-gray-700 dark:text-gray-100 text-lg font-extrabold font- ml-2">
+                                    <span className="text-gray-300 dark:text-gray-100 text-sm font-extrabold font-mono ml-2">Annual</span>
+                                    <span className="text-yellow-300 dark:text-yellow-400 text-lg font-extrabold ml-2">
                                         SAVE UP TO 20%
                                     </span>
                                 </div>
+
+
                                 <div className="flex items-center justify-center">
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 text-center lg:grid-cols-2 gap-4">

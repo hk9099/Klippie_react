@@ -23,7 +23,7 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/dropzone/styles.css';
 import { Code, Dialog, Group, Button, CloseButton, Text } from '@mantine/core';
-import { IconDownload ,IconTrash} from '@tabler/icons-react';
+import { IconDownload, IconTrash } from '@tabler/icons-react';
 export default function AccordionSection({ videoClips, videoURl, clips }) {
     const { fileselected, fileselecteddata, setFileDelete, setDeselect } = useFileSelected();
     if (process.env.NODE_ENV === 'development') {
@@ -302,7 +302,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                                         }}
                                             styles={{
                                                 root: {
-                                                    fontSize: '3rem',
+                                                    fontSize: '2.5rem',
                                                 }
                                             }}
                                         >
@@ -322,22 +322,22 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                                             Clips Selected
                                         </Text>
                                         <div className="flex flex-col items-center justify-center text-[#323338] pr-4 hover:text-green-500 w-auto cursor-pointer"
-                                        onClick={handleDownloadClick}
+                                            onClick={handleDownloadClick}
                                         >
-                                            <IconDownload />
-                                            <span className="mt-1">
+                                            <IconDownload className=" w-5"/>
+                                            <span className="mt-1 text-sm">
                                                 Download
                                             </span>
                                         </div>
                                         <div className="flex flex-col items-center justify-center text-[#323338] pr-4 hover:text-red-600 w-auto cursor-pointer"
-                                        onClick={handleDeleteClick}
+                                            onClick={handleDeleteClick}
                                         >
-                                            <IconTrash />
-                                            <span className="mt-1">
+                                            <IconTrash className=" w-5"/>
+                                            <span className="mt-1 text-sm">
                                                 Delete
                                             </span>
                                         </div>
-                                        <div className="h-[100%] p-[15px!important] border-l-4">
+                                        <div className="h-[100%] p-[8px!important] border-l-4">
                                             <CloseButton
                                                 onClick={() => { setDeselect(true) }}
                                                 size="xl" variant="transparent"

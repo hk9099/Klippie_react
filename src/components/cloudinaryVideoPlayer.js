@@ -306,7 +306,7 @@ export default function CloudinaryVideoPlayer({
                         muted: false,
                         aiHighlightsGraph: true,
                         seekbar: true,
-                        autoplayMode: 'on-scroll',
+                        // autoplayMode: 'on-scroll',
                         sourceTypes: ['hls', 'webm', 'mp4'],
                         logoImageUrl: 'https://res.cloudinary.com/delkyf33p/image/upload/v1701593905/tkfstyrkbhxjqg80yz21.png',
                         logoOnclickUrl: '',
