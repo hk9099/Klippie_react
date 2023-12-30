@@ -11,10 +11,10 @@ import useBaseUrl from '../Config/Hooks/useBaseUrl.js';
 
 function Editor() {
     const baseUrl = useBaseUrl();
-    // const navigate = useNavigate();
     const { clipId: id } = useParams();
     const userToken = TokenManager.getToken()[1];
     const hasMounted = useRef(false);
+    const baseUrlRef = useRef(baseUrl);
     const [editorLoaded, setEditorLoaded] = useState(false);
     const [showLoader, setShowLoader] = useState(true);
     const [showProgressBar, setShowProgressBar] = useState(false);
@@ -46,31 +46,34 @@ function Editor() {
         }
     }
 
-    useEffect(() => {
-        var button = document.querySelector('.iMAXtE');
-        if (process.env.NODE_ENV === 'development') {
-            console.log(button, 'button');
-        }
-        // Check if the button is found
-        if (button) {
-            // Add a click event listener to the button
-            button.addEventListener('click', function () {
-                // Perform actions when the button is clicked
-                if (process.env.NODE_ENV === 'development') {
-                    console.log('Button clicked!');
-                }
+    // useEffect(() => {
+    //     var button = document.querySelector('.iMAXtE');
+    //     if (process.env.NODE_ENV === 'development') {
+    //         console.log(button, 'button');
+    //     }
+    //     // Check if the button is found
+    //     if (button) {
+    //         // Add a click event listener to the button
+    //         button.addEventListener('click', function () {
+    //             // Perform actions when the button is clicked
+    //             if (process.env.NODE_ENV === 'development') {
+    //                 console.log('Button clicked!');
+    //             }
 
-            });
-        } else {
-            if (process.env.NODE_ENV === 'development') {
-                console.log('Button not found');
-            }
-        }
-    }, []);
+    //         });
+    //     } else {
+    //         if (process.env.NODE_ENV === 'development') {
+    //             console.log('Button not found');
+    //         }
+    //     }
+    // }, []);
 
 
     useEffect(() => {
         if (!hasMounted.current) {
+            if (!baseUrl) {
+                return;
+              }
             let data = qs.stringify({ 'clip_id': id });
 
             let config = {
@@ -256,7 +259,7 @@ function Editor() {
 
             hasMounted.current = true;
         }
-    }, [hasMounted, id, userToken]);
+    }, [hasMounted, id, userToken,baseUrl]);
 
     function parseTimeToSeconds(time) {
         const [hours, minutes, seconds] = time.split(':').map(parseFloat);
