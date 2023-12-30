@@ -92,11 +92,9 @@ export default function Dashboard() {
   const baseUrlRef = useRef(baseUrl); 
 
   useEffect(() => {
-    // Check if baseUrl is available
-    if (!baseUrlRef.current) {
-      return; // Do not proceed if baseUrl is not available
+    if (!baseUrl) {
+      return;
     }
-
     const fetchData = () => {
       const config = {
         method: 'post',
