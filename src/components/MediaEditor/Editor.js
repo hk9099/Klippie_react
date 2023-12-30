@@ -226,7 +226,7 @@ function Editor() {
                                 myEditor.hide();
                                 setShowProgressBar(false);
                                 setShowLoader(false);
-                                // window.close();
+                                window.close();
                             } catch (error) {
                                 if (process.env.NODE_ENV === 'development') {
                                     console.log(error);
