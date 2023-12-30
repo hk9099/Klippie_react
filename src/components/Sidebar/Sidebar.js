@@ -106,13 +106,14 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
   useEffect(() => {
     if (!initializedRef.current) {
+      if (!baseUrl) {
+        return;
+      }
       if (user === undefined || user === null) {
         navigate('/');
         window.location.reload();
         return;
-      }
-
-      if (baseUrl) {
+      } else {
         fetchUserProfile(
           initializedRef.current,
           navigate,
@@ -122,7 +123,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
           setCreadit,
           baseUrl
         );
-        initializedRef.current = true; // Set the ref to true after the first API call
+        initializedRef.current = false;
         setRefreshProfile(false);
       }
     }
