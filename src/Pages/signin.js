@@ -13,12 +13,14 @@ import '../assets/css/signin.css';
 import axios from 'axios';
 import Hiiii from '../assets/images/hi_40x40.gif';
 import { HiOutlineMail } from 'react-icons/hi';
-import { TokenManager } from '../components/getToken.js';
-import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
-import ToastNotification from "../components/ToastNotification";
+import { TokenManager } from '../components/Config/Token/getToken.js';
+import { useClipsFoundStatus } from '../components/HomeScreen/Hooks/Context/ClipsFoundContext.js';
+import ToastNotification from "../components/Notification/ToastNotification";
 import { Toaster } from 'react-hot-toast';
+import useBaseUrl from '../../src/components/Config/Hooks/useBaseUrl.js';
 
 function Signin() {
+    const baseUrl = useBaseUrl();
     const navigate = useNavigate();
     const user = TokenManager.getToken();
     useEffect(() => {
@@ -129,7 +131,7 @@ function Signin() {
         setIsLoading(true);
         try {
             const response = await axios.post(
-               'https://dev-api.getklippie.com/v1/auth/login',
+               `${baseUrl}/v1/auth/login`,
                 {
                     email: values.email,
                     password: values.password,

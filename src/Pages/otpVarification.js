@@ -3,14 +3,16 @@ import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import '../assets/css/signin.css';
-import Loader from './Loader.js';
+import Loader from '../components/Loader/Loader.js';
 import axios from 'axios';
 // import { FaMobileAlt } from 'react-icons/fa';
-import { useClipsFoundStatus } from '../context/ClipsFoundContext.js';
-import ToastNotification from "../components/ToastNotification";
+import { useClipsFoundStatus } from '../components/HomeScreen/Hooks/Context/ClipsFoundContext.js';
+import ToastNotification from "../components/Notification/ToastNotification";
 import { Toaster } from 'react-hot-toast';
+import useBaseUrl from '../../src/components/Config/Hooks/useBaseUrl.js';
 
 function Signin() {
+    const baseUrl = useBaseUrl();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [resendTimer, setResendTimer] = useState(30);
@@ -83,7 +85,7 @@ function Signin() {
         };
         localStorage.removeItem('signupToken');
         axios
-            .post('https://dev-api.getklippie.com/v1/auth/verify-otp', payload)
+            .post(`${baseUrl}/v1/auth/verify-otp`, payload)
             .then((response) => {
                 ToastNotification({ message: 'Code verified successfully', type: 'success' });
                 if (process.env.NODE_ENV === 'development') {
@@ -118,7 +120,7 @@ function Signin() {
     //     const config = {
     //         method: 'post',
     //         maxBodyLength: Infinity,
-    //         url: 'https://dev-api.getklippie.com/v1/auth/signup-resend-otp',
+    //         url: `${baseUrl}/v1/auth/signup-resend-otp`,
     //         headers: {
     //             accept: 'application/json',
     //             'Content-Type': 'application/json',
@@ -161,7 +163,7 @@ function Signin() {
         const config = {
             method: 'post',
             maxBodyLength: Infinity,
-            url: 'https://dev-api.getklippie.com/v1/auth/signup-resend-otp',
+            url: `${baseUrl}/v1/auth/signup-resend-otp`,
             headers: {
                 accept: 'application/json',
                 'Content-Type': 'application/json',

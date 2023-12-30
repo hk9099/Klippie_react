@@ -3,31 +3,28 @@ import 'devextreme/dist/css/dx.light.css';
 import React, { lazy, Suspense,useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RotatingLines } from "react-loader-spinner";
-import { UserNicknameProvider } from './context/userNicknameContext.js';
-import { CloudinaryProvider } from './context/CloudinaryContext.js';
-import { SubscriptionProvider } from './context/SubscriptionContext.js';
-import { SidebarProvider } from './context/SidebarContext.js';
-import { FileSelectedProvider } from "./context/SelectionContext.js";
+import { UserNicknameProvider } from './components/Sidebar/Hooks/Context/userNicknameContext.js';
+import { CloudinaryProvider } from './components/HomeScreen/Hooks/Context/CloudinaryContext.js';
+import { SubscriptionProvider } from './components/chargebee/Hooks/Context/SubscriptionContext.js';
+import { SidebarProvider } from './components/Sidebar/Hooks/Context/SidebarContext.js';
+import { FileSelectedProvider } from "./components/Table/Hooks/Context/SelectionContext.js";
 import { SnackbarProvider } from 'notistack';
 import { useParams } from 'react-router-dom';
 // import Test from './components/confetti.js';
 import "monday-ui-react-core/tokens";
-import { ClipsFoundProvider } from './context/ClipsFoundContext.js';
+import { ClipsFoundProvider } from './components/HomeScreen/Hooks/Context/ClipsFoundContext.js';
 const Signin = lazy(() => import('./Pages/signin.js'));
 const Signup = lazy(() => import('./Pages/signup.js'));
 const Forgotpassword = lazy(() => import('./Pages/forgotpassword.js'));
-const Dashboard = lazy(() => import('./Pages/dashboard.js'));
+const Dashboard = lazy(() => import('./components/DashBoard/dashboard.js'));
 const OtpVarification = lazy(() => import('./Pages/otpVarification.js'));
-const Layout = lazy(() => import('./Pages/Layout.js'));
-const Steps = lazy(() => import('./Pages/Steps.js'));
-const HomeScreen = lazy(() => import('./Pages/HomeScreen.js'));
-const PricingCardsContainer = lazy(() => import('./Pages/PricingCardsContainer.js'));
-// const YouTube = lazy(() => import('./components/YouTube.js'));
-const Editor = lazy(() => import('./components/Editor.js'));
-const CloudinaryMediaEditor = lazy(() => import('./components/mediaEditor.js'));
-const CloudinaryVideoPlayer = lazy(() => import('./components/cloudinaryVideoPlayer.js'));
+const Layout = lazy(() => import('./components/Parent/Layout.js'));
+const Steps = lazy(() => import('./components/HomeScreen/Hooks/Context/ProjectProcess/Steps.js'));
+const HomeScreen = lazy(() => import('./components/HomeScreen/FirstScreen/HomeScreen.js'));
+const PricingCardsContainer = lazy(() => import('./components/chargebee/CardContainer/PricingCardsContainer.js'));
+const Editor = lazy(() => import('./components/MediaEditor/Editor.js'));
 const NotFoundPage = lazy(() => import('./Pages/NotFoundPage.js'));
-const Test = lazy(() => import('./components/confetti.js'));
+const Test = lazy(() => import('./components/Testing/confetti.js'));
 function App() {
   const { projectId } = useParams();
   if (process.env.NODE_ENV === 'development') {
@@ -87,8 +84,6 @@ function App() {
                         <Route path="/Test" element={<Test />} />
                         <Route path="/pricing" element={<PricingCardsContainer />} />
                         <Route path="/editor/:clipId" element={<Editor />} />
-                        <Route path="/youtube" element={<CloudinaryMediaEditor />} />
-                        <Route path="/cloudinaryVideoPlayer" element={<CloudinaryVideoPlayer />} />
                       </Routes>
                     </CloudinaryProvider>
                   </SidebarProvider>

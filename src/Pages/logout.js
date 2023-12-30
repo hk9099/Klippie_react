@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { BiLogOut } from 'react-icons/bi';
 import React, { useState, useEffect } from 'react';
-import { TokenManager } from '../components/getToken.js';
+import { TokenManager } from '../components/Config/Token/getToken.js';
 import { RxCross2 } from "react-icons/rx";
 import { HiOutlineLogout } from "react-icons/hi";
-import ToastNotification from "../components/ToastNotification";
+import ToastNotification from "../components/Notification/ToastNotification";
 import { Toaster } from 'react-hot-toast';
 
 function Logout({ isOpen, onClose }) {

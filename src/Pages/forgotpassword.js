@@ -11,10 +11,12 @@ import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
 import { Tooltip } from 'react-tooltip';
 import think from '../assets/images/think_40x40.gif';
 import { useNavigate } from 'react-router-dom';
-import ToastNotification from "../components/ToastNotification";
+import ToastNotification from "../components/Notification/ToastNotification";
 import { Toaster } from 'react-hot-toast';
+import useBaseUrl from '../../src/components/Config/Hooks/useBaseUrl.js';
 
 const MultiStepForm = () => {
+const baseUrl = useBaseUrl();
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({});
@@ -47,7 +49,7 @@ const MultiStepForm = () => {
 
         try {
             const response = await axios.post(
-                'https://dev-api.getklippie.com/v1/auth/forgot-password-send-otp',
+                `${baseUrl}/v1/auth/forgot-password-send-otp`,
                 {
                     email: formData.email,
                 }
@@ -79,7 +81,7 @@ const MultiStepForm = () => {
 
             //eslint-disable-next-line
             const response = await axios.post(
-                'https://dev-api.getklippie.com/v1/auth/verify-otp',
+                `${baseUrl}/v1/auth/verify-otp`,
                 {
                     token: emailToken,
                     otp: formData.otp,
@@ -112,7 +114,7 @@ const MultiStepForm = () => {
         try {
             //eslint-disable-next-line
             const response = await axios.post(
-                'https://dev-api.getklippie.com/v1/auth/reset-forgot-password',
+                `${baseUrl}/v1/auth/reset-forgot-password`,
                 {
                     token: emailToken,
                     new_password: formData.password,

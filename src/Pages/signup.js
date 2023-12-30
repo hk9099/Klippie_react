@@ -13,10 +13,12 @@ import "../assets/css/signup.css";
 import Hiiii from "../assets/images/hi_40x40.gif";
 // import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 // import { auth } from "../components/config";
-import ToastNotification from "../components/ToastNotification";
+import ToastNotification from "../components/Notification/ToastNotification";
 import { Toaster } from 'react-hot-toast';
+import useBaseUrl from '../../src/components/Config/Hooks/useBaseUrl.js';
 
 function Signup({ errors, touched }) {
+  const baseUrl = useBaseUrl();
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
@@ -117,6 +119,7 @@ function Signup({ errors, touched }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (values, { setSubmitting }) => {
+    
     setLoading(true);
     const _authemail = btoa(values.email);
     localStorage.setItem("_authemail", _authemail);
@@ -140,7 +143,7 @@ function Signup({ errors, touched }) {
         device_id: response.data.IPv4,
       };
   
-      const signupResponse = await axios.post("https://dev-api.getklippie.com/v1/auth/signup", payload);
+      const signupResponse = await axios.post(`${baseUrl}/v1/auth/signup`, payload);
       if (process.env.NODE_ENV === 'development') {
       console.log(signupResponse, "response");
       }
