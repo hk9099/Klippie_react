@@ -24,7 +24,7 @@
 
 // export default PPP;
 
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import {
   Table,
   TableHeader,
@@ -37,7 +37,9 @@ import {
   Clickable,
   EditableHeading,
   EditableText,
-  Dropdown
+  Dropdown,
+  useClickableProps,
+  Text
 } from "monday-ui-react-core";
 import CloudinaryVideoPlayer from "../VideoPlayer/cloudinaryVideoPlayer.js";
 // Placeholder data and functions, replace them with your actual implementations
@@ -201,65 +203,66 @@ function Confetti() {
     console.log("Clicked row data:", rowItem);
     // Add your logic to handle the clicked row data
   };
+  const ref = useRef(null);
+  const onClick = useCallback(() => alert("click!"), []);
+  const onChange = useCallback(() => alert("change!"), []);
+  const clickableProps = useClickableProps({
+    onClick: onClick,
+    onChange: onChange,
+    id: "clickable-id",
+    ariaHidden: false,
+    ariaHasPopup: false,
+    ariaExpanded: false
+  }, ref);
   return (
-    <div style={{
-      height: 500,
-      width: "100%"
-    }}>
-      <Table
-        errorState={<TableErrorState />}
-        emptyState={<TableEmptyState />}
-        columns={emailColumns}
-        data-testid="email-table"
-        dataState={tableData}
-        id={"email-table"}
-        size="medium"
-        style={{ width: "100%", marginTop: "40px" }}
-      >
-        <TableHeader>
-          {emailColumns.map((headerCell, index) => (
-            <TableHeaderCell
-              key={index}
-              title={headerCell.title}
-              icon={headerCell.icon}
-              infoContent={headerCell.infoContent}
-              // onSortClicked={(sortState) =>
-              //   onSort(headerCell.id, sortState)
-              // }
-              // sortState={sorting[headerCell.id]}
-              id={headerCell.id}
-            />
-          ))}
-        </TableHeader>
-        <TableBody>
-          {tableData.map((rowItem) => (
-            <TableRow
-              key={rowItem.id}
-              style={{
-                height: "auto",
-              }}
-            >
-              <TableCell
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  height: "auto",
-                }}
-              >
+    <Table
+      errorState={<TableErrorState />}
+      emptyState={<TableEmptyState />}
+      columns={emailColumns}
+      data-testid="email-table"
+      dataState={tableData}
+      id={"email-table"}
+      size="medium"
+      style={{ width: "100%", marginTop: "40px" }}
+    >
+      <TableHeader>
+        {emailColumns.map((headerCell, index) => (
+          <TableHeaderCell
+            key={index}
+            title={headerCell.title}
+            icon={headerCell.icon}
+            infoContent={headerCell.infoContent}
+            // onSortClicked={(sortState) =>
+            //   onSort(headerCell.id, sortState)
+            // }
+            // sortState={sorting[headerCell.id]}
+            id={headerCell.id}
+          />
+        ))}
+      </TableHeader>
+      <TableBody>
+        {tableData.map((rowItem) => (
+          <Clickable
+            key={rowItem.id}
+            className="monday-story-clickable_first-element"
+            // onClick={() => handleRowClick(rowItem)}
+          >
+            <TableRow>
+              <TableCell>
+                <Text size="small" color="secondary"
+                  {...clickableProps}
+                > {rowItem.sentOn}</Text>
                 <EditableText
-                  type="textarea"
+                  size="small"
+                  color="secondary"
+                  type='textarea'
+                  onChange={function noRefCheck() { }}
                   value={rowItem.sentOn}
-                  ellipsis={true}
-                  tooltip={true}
+                  infoContent={false}
+
                 />
               </TableCell>
               <TableCell>{rowItem.subject}</TableCell>
-              {/* <Clickable
-                key={rowItem.id}
-
-                onClick={() => handleRowClick(rowItem)}
-              > */}
               <TableCell>
                 <Avatar
                   text={rowItem.sentBy.charAt(0)}
@@ -269,58 +272,19 @@ function Confetti() {
                   ariaLabel="User Avatar"
                 />
               </TableCell>
-              {/* </Clickable> */}
               <TableCell>
-                <Dropdown
-                  className=" w-full"
-                  // onBlur={function noRefCheck() { }}
-                  // onChange={function noRefCheck() { }}
-                  // onClear={function noRefCheck() { }}
-                  // onFocus={function noRefCheck() { }}
-                  // onInputChange={function noRefCheck() { }}
-                  // onKeyDown={function noRefCheck() { }}
-                  // onMenuClose={function noRefCheck() { }}
-                  // onMenuOpen={function noRefCheck() { }}
-                  // onOptionRemove={function noRefCheck() { }}
-                  // onOptionSelect={function noRefCheck() { }}
-                  // openMenuOnFocus={function noRefCheck() { }}
-                  insideOverflowWithTransformContainer={true}
-                  searchable={false}
-                  size="medium"
-                  options={[
-                    {
-                      label: 'Option 1',
-                      value: 1
-                    },
-                    {
-                      label: 'Option 2',
-                      value: 2
-                    },
-                    {
-                      label: 'Option 3',
-                      value: 3
-                    }
-                  ]}
-                  placeholder="Placeholder text here"
+                <Label
+                  text={rowItem.status}
+                  isAnimationDisabled
+                  color="positive"
                 />
               </TableCell>
-              <TableCell
-                style={{
-                }}
-              >
-                <div style={{ 
-                  display: "flex", alignItems: "center" ,
-                  flexDirection: "column" 
-                  }}>
-                <CloudinaryVideoPlayer src={"http://res.cloudinary.com/delkyf33p/video/upload/so_793.6543/eo_851.84503/test1703570210215"} />
-                </div>
-              </TableCell>
+              <TableCell>{rowItem.emailsSent}</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-    </div>
+          </Clickable>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
 

@@ -534,13 +534,13 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 </span>
               )}
             </div>
-            <IconChevronRight
-              className={`${!open && "rotate-180 absolute border w-[40px] rounded-lg h-[40px] p-2"
-                } ml-6  text-[100px] cursor-pointer top-5 -right-[55px]  border w-[40px] rounded-lg h-[40px] p-2 text-gray-200`}
-              onClick={() => {
-                setOpen(!open);
-              }}
-            />
+            <div   className={`${!open && "rotate-0 absolute border w-[40px] rounded-lg h-[40px] p-2"
+                } ml-6 rotate-180 text-[100px] cursor-pointer top-5 -right-[130px]  border w-[40px] rounded-lg h-[40px] p-2 text-gray-200`}
+                onClick={() => {
+                  setOpen(!open);
+                }}>
+            <IconChevronRight />
+            </div>
           </div>
 
           <div className="pt-4 pb-3">
