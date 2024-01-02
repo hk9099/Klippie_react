@@ -25,6 +25,8 @@ const PricingCardsContainer = lazy(() => import('./components/chargebee/CardCont
 const Editor = lazy(() => import('./components/MediaEditor/Editor.js'));
 const NotFoundPage = lazy(() => import('./Pages/NotFoundPage.js'));
 const Test = lazy(() => import('./components/Testing/confetti.js'));
+const NewTable = lazy(() => import('./components/Testing/newtable.js'));
+
 function App() {
   const { projectId } = useParams();
   if (process.env.NODE_ENV === 'development') {
@@ -82,6 +84,7 @@ function App() {
                         <Route path="/" element={<Signin />} />
                         <Route path="/homescreen" element={<Layout><HomeScreen /></Layout>} />
                         <Route path="/Test" element={<Test />} />
+                        <Route path='/newtable' element={<NewTable />} />
                         <Route path="/pricing" element={<PricingCardsContainer />} />
                         <Route path="/editor/:clipId" element={<Editor />} />
                       </Routes>
