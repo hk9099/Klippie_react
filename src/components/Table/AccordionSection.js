@@ -27,11 +27,13 @@ import { Code, Dialog, Group, Button, CloseButton, Text } from '@mantine/core';
 import { IconDownload, IconTrash } from '@tabler/icons-react';
 import useBaseUrl from '../Config/Hooks/useBaseUrl.js';
 import NewTable from '../Testing/newtable.js';
-export default function AccordionSection({ videoClips, videoURl, clips }) {
+import MainVideoTable from '../Testing/MainVideoTable.js';
+
+export default function AccordionSection({ videoClips, videoURl, clips,newmainClips }) {
     const baseUrl = useBaseUrl();
     const { fileselected, fileselecteddata, setFileDelete, setDeselect } = useFileSelected();
     if (process.env.NODE_ENV === 'development') {
-        console.log(fileselecteddata, "fileselecteddata");
+        console.log(newmainClips, "newmainClips");
     }
     const [openStates, setOpenStates] = useState([true, true]);
     const [videoCount, setVideoCount] = useState(videoClips.length);
@@ -235,8 +237,9 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                             </div>
                         </AccordionHeader>
                         <AccordionBody>
-                            <div className="relative w-full h-fit overflow-y-auto rounded-[10px] border border-gray-200 dark:border-gray-700 ">
-                                <Mainvideo />
+                            <div className="relative w-full h-fit overflow-y-auto rounded-[10px] ">
+                                {/* <Mainvideo /> */}
+                                <MainVideoTable newmainClips={newmainClips} />
                             </div>
                         </AccordionBody>
                     </AccordionItem>

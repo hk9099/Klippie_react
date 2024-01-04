@@ -44,6 +44,7 @@ export default function Dashboard() {
   const [projectId, setProjectId] = useState(null);
   const [newvideoClips, setNewvideoClips] = useState([]);
   const [newmainvideo, setnewMainVideo] = useState([]);
+  console.log(newmainvideo, "newmainvideo");
   const [accordionVisible, setAccordionVisible] = useState(true);
   // if (process.env.NODE_ENV === 'development') {
   //   console.log(accordionVisible, 'accordionVisible');

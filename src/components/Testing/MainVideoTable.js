@@ -20,10 +20,10 @@ import { IconCopy, IconCheck } from '@tabler/icons-react';
 import DropDownButton from "../Table/Action/GridDropdown.js";
 import axios from 'axios';
 
-function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUrl }) {
+function MainVideoTable({newmainClips, setVideoCount, userToken, useBaseUrl }) {
     useEffect(() => {
-        setData(videoClips)
-    }, [videoClips])
+        setData(newmainClips)
+    }, [newmainClips])
     function CustomCell({ getValue, row: { index }, column: { id }, table }) {
         const initialValue = getValue();
         const [value, setValue] = useState(initialValue);
@@ -213,39 +213,39 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
     const columnHelper = createColumnHelper(); // Replace 'Person' with the actual type
 
     const columns = [
-        {
-            id: 'select',
-            header: ({ table }) => (
-                <IndeterminateCheckbox
-                    {...{
-                        checked: table.getIsAllRowsSelected(),
-                        indeterminate: table.getIsSomeRowsSelected(),
-                        onChange: table.getToggleAllRowsSelectedHandler(),
-                    }}
-                />
-            ),
-            cell: ({ row }) => (
-                <div className="px-1 text-center  justify-center">
-                    <IndeterminateCheckbox
-                        {...{
-                            checked: row.getIsSelected(),
-                            disabled: !row.getCanSelect(),
-                            indeterminate: row.getIsSomeSelected(),
-                            onChange: row.getToggleSelectedHandler(),
-                        }}
-                    />
-                </div>
-            ),
-            size: 50,
-        },
+        // {
+        //     id: 'select',
+        //     header: ({ table }) => (
+        //         <IndeterminateCheckbox
+        //             {...{
+        //                 checked: table.getIsAllRowsSelected(),
+        //                 indeterminate: table.getIsSomeRowsSelected(),
+        //                 onChange: table.getToggleAllRowsSelectedHandler(),
+        //             }}
+        //         />
+        //     ),
+        //     cell: ({ row }) => (
+        //         <div className="px-1 text-center  justify-center">
+        //             <IndeterminateCheckbox
+        //                 {...{
+        //                     checked: row.getIsSelected(),
+        //                     disabled: !row.getCanSelect(),
+        //                     indeterminate: row.getIsSomeSelected(),
+        //                     onChange: row.getToggleSelectedHandler(),
+        //                 }}
+        //             />
+        //         </div>
+        //     ),
+        //     size: 50,
+        // },
         columnHelper.accessor('src', {
             header: 'Video',
             cell: ({ row }) => {
                 const value = row;
-                console.log(value, 'valuuuuuuuuuuuue');
+                console.log(value, 'valuuuuuurrrrrrrrrrruuuuuue');
                 return (
                     <div className="w-full">
-                        <CloudinaryVideoPlayer src={value.original?.src ? value.original.src : ""} title={value.original?.title ? value.original.title : ""} type={value.original?.type ? value.original.type : ""} publicId={value.original?.publicId ? value.original.publicId : ""} startTime={value.original?.start_time ? value.original.start_time : ""} endTime={value.original?.end_time ? value.original.end_time : ""} clipId={value.original?.id ? value.original.id : ""} />
+                        <CloudinaryVideoPlayer src={row.original.src} title={row.original.title} type={row.original.type} setMainVideo={true}/>
                     </div>
                 )
             },
@@ -431,34 +431,34 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                                         }}
                                         onClick={() => {
                                             setVisible(true)
-                                            let data = JSON.stringify({
-                                                "id": row.original.id,
-                                                "description": value,
-                                            });
-                                            let config = {
-                                                method: 'post',
-                                                maxBodyLength: Infinity,
-                                                url: `${useBaseUrl}/v1/clip/update`,
-                                                headers: {
-                                                    'accept': 'application/json',
-                                                    'Content-Type': 'application/json',
-                                                    'Authorization': 'Bearer ' + userToken
-                                                },
-                                                data: data
-                                            };
-                                            axios.request(config)
-                                                .then((response) => {
-                                                    console.log(JSON.stringify(response.data), 'ytjfghjgfhjghjgfhjhg');
-                                                    setVisible(false)
-                                                })
-                                                .catch((error) => {
-                                                    console.log(error);
-                                                    setError(error.response.data.detail)
-                                                    setVisible(false)
-                                                    setTimeout(() => {
-                                                        setError(null)
-                                                    }, 7000);
-                                                });
+                                            // let data = JSON.stringify({
+                                            //     "id": row.original.id,
+                                            //     "description": value,
+                                            // });
+                                            // let config = {
+                                            //     method: 'post',
+                                            //     maxBodyLength: Infinity,
+                                            //     url: `${useBaseUrl}/v1/clip/update`,
+                                            //     headers: {
+                                            //         'accept': 'application/json',
+                                            //         'Content-Type': 'application/json',
+                                            //         'Authorization': 'Bearer ' + userToken
+                                            //     },
+                                            //     data: data
+                                            // };
+                                            // axios.request(config)
+                                            //     .then((response) => {
+                                            //         console.log(JSON.stringify(response.data), 'ytjfghjgfhjghjgfhjhg');
+                                            //         setVisible(false)
+                                            //     })
+                                            //     .catch((error) => {
+                                            //         console.log(error);
+                                            //         setError(error.response.data.detail)
+                                            //         setVisible(false)
+                                            //         setTimeout(() => {
+                                            //             setError(null)
+                                            //         }, 7000);
+                                            //     });
                                         }}
                                     >
                                         Save
@@ -486,9 +486,9 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
         }),
     ];
 
-    const [data, setData] = useState(videoClips);
+    const [data, setData] = useState(newmainClips);
 
-    console.log("New Table", videoClips)
+    console.log("New Table", newmainClips)
     // const refreshData = () => setData([]);
 
     const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
@@ -532,7 +532,7 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
     });
 
     return (
-        <div className="p-2">
+        <div className="">
             <div className="block max-w-full rounded-lg overflow-x-scroll overflow-y-hidden custum_border">
                 <table
                     {...{
@@ -611,7 +611,7 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                     </tbody>
                 </table>
             </div>
-            <div className="h-2" />
+            {/* <div className="h-2" />
             <div className="flex items-center gap-2">
                 <button
                     className="border rounded p-1"
@@ -677,14 +677,11 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
             </div>
             <div>{table.getRowModel().rows.length} Rows</div>
             <div>
-                {/* <button onClick={() => refreshData()}>Refresh Data</button> */}
-            </div>
-            <div>
                 <label>Row Selection State:</label>
                 <pre>{JSON.stringify(table.getSelectedRowModel().rows, null, 2)}</pre>
-            </div>
+            </div> */}
         </div>
     );
 }
 
-export default NewTable;
+export default MainVideoTable;

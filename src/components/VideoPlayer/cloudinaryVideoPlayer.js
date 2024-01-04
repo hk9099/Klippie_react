@@ -221,6 +221,7 @@ export default function CloudinaryVideoPlayer({
     cloudName,
     videoId,
 }) {
+    console.log(type, 'typeeeeeeeeeeeeeeeeeeeeee');
     const { setPageLoaded } = useFileSelected();
     const playerRef = useRef(null);
     const videoRef = useRef(null);
@@ -403,7 +404,7 @@ export default function CloudinaryVideoPlayer({
                     onClick={handleDownload}
                 >
                     <HiOutlineDownload />
-                    {isLoading ? "Downloading..." : `Download${``}${type === 'mp4' || type === ' video' ? ' Video' : ' Audio'}`}
+                    {isLoading ? "Downloading..." : `Download ${type === 'mp4' || type === 'video' ? 'Video' : 'Audio'}`}
                 </button>
 
                 <Link

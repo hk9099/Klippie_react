@@ -22,7 +22,7 @@ import qs from 'qs';
 // import VideoPlayer from '../Pages/videoplayer.js';
 import CloudinaryVideoPlayer from "../../VideoPlayer/cloudinaryVideoPlayer.js";
 
-const Mainvideo = () => {
+const Mainvideo = ({newmainClips}) => {
   // eslint-disable-next-line no-unused-vars
   const userToken = TokenManager.getToken()[1];
   const [mainVideo, setMainVideo] = useState(true);
@@ -34,7 +34,7 @@ const Mainvideo = () => {
   return (
     <div>
       <DataGrid
-        dataSource={MainVideo || newData}
+        dataSource={newmainClips || newData}
         keyExpr="id"
         width='auto'
         showBorders={true}

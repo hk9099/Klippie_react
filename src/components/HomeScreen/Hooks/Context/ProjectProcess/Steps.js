@@ -17,7 +17,7 @@ import ToastNotification from "../../../../Notification/ToastNotification.js";
 import { Toaster } from 'react-hot-toast';
 import useBaseUrl from '../../../../Config/Hooks/useBaseUrl.js';
 
-const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance, startAgain }) => {
+const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userName, creaditBalance, startAgain,newmainvideo }) => {
     const baseUrl = useBaseUrl();
     if (process.env.NODE_ENV === 'development') {
         console.log(cloudinaryResponse, 'cloudinaryResponse');
@@ -45,6 +45,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
     const [currentProjectId, setProjectId] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const [newvideoClips, setNewvideoClips] = useState([]);
+    const [newmainClips, setNewmainClips] = useState([]);
     //eslint-disable-next-line
     const [allApiCompleted, setAllApiCompleted] = useState(false);
     const [error, setError] = useState('');
@@ -71,10 +72,8 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
 
     useEffect(() => {
         setNewvideoClips(newhistoryvideoClips);
-        if (process.env.NODE_ENV === 'development') {
-            console.log(newhistoryvideoClips, 'updatedVideoClips');
-        }
-    }, [newhistoryvideoClips, fileDelete]);
+        setNewmainClips(newmainvideo); 
+    }, [newhistoryvideoClips, fileDelete, newmainvideo]);
 
 
 
@@ -292,7 +291,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
             </div>
             {closeButton}
             {!isLoading && accordionVisible && (
-                <AccordionSection videoClips={newvideoClips} />
+                <AccordionSection videoClips={newvideoClips} newmainClips={newmainClips}/>
             )}
         </div>
     );
