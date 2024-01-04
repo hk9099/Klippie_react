@@ -532,7 +532,7 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
     });
 
     return (
-        <div className="p-2">
+        <div className="">
             <div className="block max-w-full rounded-lg overflow-x-scroll overflow-y-hidden custum_border">
                 <table
                     {...{
