@@ -603,7 +603,10 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
               ) : (
                 lines
                   .map((line, index) => (
-                    <HoverCard shadow="md" openDelay={3000}
+                    <HoverCard 
+                    shadow="md" 
+                    openDelay={3000}
+                    key={index}
                       position="right"
                       styles={{
                         dropdown: {
@@ -632,17 +635,18 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                           data-tooltip-id={`tooltip-${index}`}
                         >
                           {editIndex === index ? (
-                            <div className="width-full row relative">
+                            <div className="width-full row relative"  key={index}>
                               <input
                                 className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
                                 type="text"
+                                key={index}
                                 value={tempLines[index]}
                                 onChange={(event) => handleEditChange(event, index)}
                               />
-                              <button onClick={() => handleSaveClick(index)} className="save-button">
+                              <button onClick={() => handleSaveClick(index)}  key={index}className="save-button">
                                 <AiOutlineCheck />
                               </button>
-                              <button onClick={() => handleCancelClick()} className="cancel-button">
+                              <button onClick={() => handleCancelClick()} key={index} className="cancel-button">
                                 <AiOutlineClose />
                               </button>
                             </div>
@@ -650,6 +654,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
 
 
                             <p
+                            key={index}
                               className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
                               style={{
                                 width: hoveredIndex === index ? "188px" : "236px",

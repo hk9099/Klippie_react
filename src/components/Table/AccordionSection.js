@@ -26,7 +26,7 @@ import '@mantine/dropzone/styles.css';
 import { Code, Dialog, Group, Button, CloseButton, Text } from '@mantine/core';
 import { IconDownload, IconTrash } from '@tabler/icons-react';
 import useBaseUrl from '../Config/Hooks/useBaseUrl.js';
-
+import NewTable from '../Testing/newtable.js';
 export default function AccordionSection({ videoClips, videoURl, clips }) {
     const baseUrl = useBaseUrl();
     const { fileselected, fileselecteddata, setFileDelete, setDeselect } = useFileSelected();
@@ -214,7 +214,7 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
 
 
     return (
-        <div className="flex-grow-0 flex-shrink-0 w-[100%] h-[90%] overflow-y-auto overflow-x-scroll">
+        <div className="flex-grow-0 flex-shrink-0 w-[100%] h-[90%] overflow-y-auto">
             <MantineProvider>
                 <Toaster />
                 <Accordion alwaysOpen={true} className="p-4">
@@ -396,7 +396,8 @@ export default function AccordionSection({ videoClips, videoURl, clips }) {
                         </div>
                         <AccordionBody>
                             <div className="relative w-full overflow-y-auto  ">
-                                <Videoclips setVideoCount={setVideoCount} videoClips={videoClips} />
+                                {/* <Videoclips setVideoCount={setVideoCount} videoClips={videoClips} /> */}
+                                <NewTable setVideoCount={setVideoCount} videoClips={videoClips} userToken={userToken} useBaseUrl={baseUrl}/>
                             </div>
                         </AccordionBody>
                     </AccordionItem>

@@ -15,6 +15,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 const noop = () => { };
 
+window.addEventListener('online', function() {
+  console.log("The browser is online");
+});
+
+window.addEventListener('offline', function() {
+  console.log("The browser is offline");
+});
+
 
 if (process.env.NODE_ENV === 'production') {
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {

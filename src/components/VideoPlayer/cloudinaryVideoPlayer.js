@@ -294,8 +294,35 @@ export default function CloudinaryVideoPlayer({
         const initializeVideoPlayer = async () => {
             try {
                 if (!playerRef.current) {
-                    playerRef.current = window.cloudinary;
-                    await playerRef.current.videoPlayer(videoRef.current, {
+                    // playerRef.current = window.cloudinary;
+                    // await playerRef.current.videoPlayer(videoRef.current, {
+                    //     controls: true,
+                    //     preload: 'auto',
+                    //     width: 200,
+                    //     height: 900,
+                    //     fluid: true,
+                    //     autoplay: false,
+                    //     muted: false,
+                    //     aiHighlightsGraph: true,
+                    //     seekbar: true,
+                    //     showLogo: false,
+                    //     sourceTypes: ['hls', 'webm', 'mp4'],
+                    //     colors: {
+                    //         accent: '#dc2626',
+                    //         text: '#ffffff'
+                    //     },
+                    //     hideContextMenu: true,
+                    //     showJumpControls: true,
+                    // });
+
+                    // videoRef.current.volume = 0.5;
+                    // videoRef.current.currentTime = 0.5;
+                    // videoRef.current.source = (event, data) => {
+                    //     if (process.env.NODE_ENV === 'development') {
+                    //         console.log('loadeddata', event, data);
+                    //     }
+                    // }
+                    const player = window.cloudinary.videoPlayer(videoRef.current, {
                         controls: true,
                         preload: 'auto',
                         width: 200,
@@ -313,11 +340,43 @@ export default function CloudinaryVideoPlayer({
                         },
                         hideContextMenu: true,
                         showJumpControls: true,
-                        showLogo: false,
                     });
 
-                    videoRef.current.volume = 0.5;
-                    videoRef.current.currentTime = 0.5;
+                    player.on('abort', function (e) {
+                        console.error('Errrrrrrrrrrrrror code: ' + e);
+                        if (e.Player.videojs.error_) {
+                            var title = document.querySelector('.error-container');
+                            title.innerHTML = 'Houston, we have a problem: ' + e.Player.videojs.error_.message + '. This is the status code: ' + e.Player.videojs.error_.statusCode;
+                            title.style.color = 'red';
+                        }
+                    })
+
+                    player.source(
+                        'outdoors',
+                        {
+                            textTracks: {
+                                captions: {
+                                    label: 'English(captions)',
+                                    language: 'en',
+                                    default: true,
+                                    url: 'https://res.cloudinary.com/demo/raw/upload/outdoors.vtt'
+                                },
+                                subtitles: [
+                                    {
+                                        label: 'English',
+                                        language: 'en',
+                                        url: 'https://res.cloudinary.com/demo/raw/upload/outdoors.vtt'
+                                    }
+                                ]
+                            },
+                            chapters: {
+                                url:
+                                    "https://res.cloudinary.com/demo/raw/upload/docs/chapters_example.vtt"
+                            },
+                            controlBar: {
+                                chaptersButton: true
+                            }
+                        });
                 }
             } catch (error) {
                 if (process.env.NODE_ENV === 'development') {
@@ -337,14 +396,14 @@ export default function CloudinaryVideoPlayer({
                     src={`${src}`}
                 />
             </div>
-            <div className={`flex justify-between items-center ${sidebar === true ? 'hidden' : 'block'}
+            <div className={`flex justify-between items-center w-[370px] ${sidebar === true ? 'hidden' : 'block'}
             `}>
                 <button
                     className={`w-1/2 border border-white border-opacity-60 bg-[rgba(42,42,63,0.64)] backdrop-blur-4 flex rounded-full  text-center p-2 gap-3 m-auto mt-2 ${sidebar ? '' : ''} flex-row justify-center items-center ${setMainVideo ? 'w-full' : ''}`}
                     onClick={handleDownload}
                 >
                     <HiOutlineDownload />
-                    {isLoading ? "Downloading..." : `Download ${type === 'mp4' || type === 'video' ? 'Video' : 'Audio'}`}
+                    {isLoading ? "Downloading..." : `Download${``}${type === 'mp4' || type === ' video' ? ' Video' : ' Audio'}`}
                 </button>
 
                 <Link

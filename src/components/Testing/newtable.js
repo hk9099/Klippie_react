@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useMemo, useEffect, useCallback, useRef, useReducer } from 'react';
 import {
     Column,
@@ -13,179 +14,206 @@ import {
 } from '@tanstack/react-table';
 import CloudinaryVideoPlayer from "../VideoPlayer/cloudinaryVideoPlayer.js";
 import '../../assets/css/Table.css'
+import { TextInput, Checkbox, Textarea, Button, CopyButton, ActionIcon, Tooltip, rem, Group, Pagination } from '@mantine/core';
+import { IconCopy, IconCheck } from '@tabler/icons-react';
+import DropDownButton from "../Table/Action/GridDropdown.js";
+import axios from 'axios';
 
-
-function CustomCell({ getValue, row: { index }, column: { id }, table }) {
-    const initialValue = getValue();
-    const [value, setValue] = useState(initialValue);
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleChange = (e) => {
-        setValue(e.target.value);
-    };
-
-    const handleMouseEnter = () => {
-        setIsHovered(true);
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovered(false);
-    };
-
-    const onBlur = () => {
-        console.log('Saving value:', value);
-        table.options.meta?.updateData(index, id, value);
-    };
-
-
+function NewTable({ videoClips, setVideoCount, userToken,useBaseUrl }) {
     useEffect(() => {
-        setValue(initialValue);
-    }, [initialValue]);
+        setData(videoClips)
+    }, [videoClips])
+    function CustomCell({ getValue, row: { index }, column: { id }, table }) {
+        const initialValue = getValue();
+        const [value, setValue] = useState(initialValue);
+        const [isHovered, setIsHovered] = useState(false);
 
-    if (id === 'Video') {
-        return (
-            <div className='w-full'>
-                <CloudinaryVideoPlayer src={"http://res.cloudinary.com/delkyf33p/video/upload/so_41.26318/eo_73.06174/test1703932905600"} />
-            </div>
-        )
-    }
+        const handleChange = (e) => {
+            setValue(e.target.value);
+        };
 
-    if (id === 'Title') {
-        return (
-            <div
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                className='relative w-full'
-            >
-                <input
-                    value={value}
-                    onChange={handleChange}
-                    onBlur={onBlur}
-                    className='bg-transparent text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none '
-                />
-                {isHovered && (
-                    <button
-                        onClick={onBlur}
-                        className='absolute right-0 top-0 p-1 bg-blue-500 text-white hover:bg-blue-700'
-                    >
-                        Save
-                    </button>
-                )}
-            </div>
-        );
-    }
+        const handleMouseEnter = () => {
+            setIsHovered(true);
+        };
 
-    if (id === 'discription') {
-        return (
-            <div
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                className='relative w-full'
-            >
-                <textarea
-                    value={value}
-                    onChange={handleChange}
-                    onBlur={onBlur}
-                    className='bg-transparent text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none '
-                />
-                {isHovered && (
-                    <button
-                        onClick={onBlur}
-                        className='absolute right-0 top-0 p-1 bg-blue-500 text-white hover:bg-blue-700'
-                    >
-                        Saved
-                    </button>
-                )}
-            </div>
-        );
-    }
+        const handleMouseLeave = () => {
+            setIsHovered(false);
+        };
 
-    return (
-        <input
-            value={value}
-            onChange={handleChange}
-            onBlur={onBlur}
-            className='bg-transparent text-white p-0 border-0 hover:border hover:border-white'
-        />
-    );
-}
+        const onBlur = () => {
+            console.log('Saving value:', value);
+            table.options.meta?.updateData(index, id, value);
+        };
 
-const defaultColumn = {
-    cell: CustomCell,
-};
 
-function useSkipper() {
-    const shouldSkipRef = useRef(true);
-    const shouldSkip = shouldSkipRef.current;
+        useEffect(() => {
+            setValue(initialValue);
+        }, [initialValue]);
 
-    const skip = useCallback(() => {
-        shouldSkipRef.current = false;
-    }, []);
-
-    useEffect(() => {
-        shouldSkipRef.current = true;
-    });
-
-    return [shouldSkip, skip];
-}
-
-function IndeterminateCheckbox({
-    indeterminate,
-    className = '',
-    ...rest
-}) {
-    const ref = React.useRef(null);
-
-    React.useEffect(() => {
-        if (typeof indeterminate === 'boolean') {
-            ref.current.indeterminate = !rest.checked && indeterminate;
+        if (id === 'src') {
+            return (
+                <div className='w-full'>
+                    <CloudinaryVideoPlayer src={getValue()} title={getValue()} type={getValue()} publicId={getValue()} startTime={getValue()} endTime={getValue()} clipId={getValue()} />
+                </div>
+            )
         }
-    }, [ref, indeterminate, rest.checked]);
 
-    return (
-        <input
-            type="checkbox"
-            ref={ref}
-            className={className + ' cursor-pointer'}
-            {...rest}
-        />
-    );
-}
+        if (id === 'title') {
+            return (
+                <div
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    className='relative'
+                >
+                    {/* <input
+                        value={value}
+                        onChange={handleChange}
+                        onBlur={onBlur}
+                        className='bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none '
+                    /> */}
+                    <Textarea
+                        variant="unstyled"
+                        value={value}
+                        onChange={handleChange}
+                        onBlur={onBlur}
+                        placeholder=""
+                        color='white'
+                        classNames={{
+                            input: 'bg-transparent w-auto text-[#fff!important] p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none',
+                            // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
+                        }}
+                    />
+                    {isHovered && (
+                        <button
+                            onClick={onBlur}
+                            className='absolute right-0 top-0 p-1 bg-blue-500 text-white hover:bg-blue-700'
+                        >
+                            Save
+                        </button>
+                    )}
+                </div>
+            );
+        }
 
-function NewTable() {
+        if (id === 'description') {
+            return (
+                <div
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    className='relative w-full'
+                >
+                    <textarea
+                        value={value}
+                        onChange={handleChange}
+                        onBlur={onBlur}
+                        className='bg-transparent text-white p-0 border-0 hover:border hover:border-white outline-none h-auto resize-none '
+                    />
+                    {isHovered && (
+                        <button
+                            onClick={onBlur}
+                            className='absolute right-0 top-0 p-1 bg-blue-500 text-white hover:bg-blue-700'
+                        >
+                            Saved
+                        </button>
+                    )}
+                </div>
+            );
+        }
+
+        const readOnly = true
+
+        return (
+            // <input
+            //     value={value}
+            //     onChange={handleChange}
+            //     onBlur={onBlur}
+            //     readOnly={readOnly}
+            //     className={`bg-transparent text-white outline-none p-0 border-0 ${readOnly ? 'cursor-pointer' : 'hover:border hover:border-white outline-none h-12 resize-none'}`}
+            // />
+            <TextInput
+                variant="unstyled"
+                value={value}
+                onChange={handleChange}
+                onBlur={onBlur}
+                disabled={readOnly}
+                placeholder=""
+                styles={{
+                    input: {
+                        color: '#fff',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        outline: 'none',
+                        cursor: readOnly ? 'pointer' : 'text',
+                        fontSize: '1rem',
+                        lineHeight: '1.5rem',
+                        fontWeight: 900,
+                        textAlign: 'center',
+                    },
+                    root: {
+                        color: '#FFFFFF',
+                        justifyContent: 'center',
+                    },
+                }}
+            />
+        );
+    }
+
+    // const defaultColumn = {
+    //     cell: CustomCell,
+    // };
+
+    function useSkipper() {
+        const shouldSkipRef = useRef(true);
+        const shouldSkip = shouldSkipRef.current;
+
+        const skip = useCallback(() => {
+            shouldSkipRef.current = false;
+        }, []);
+
+        useEffect(() => {
+            shouldSkipRef.current = true;
+        });
+
+        return [shouldSkip, skip];
+    }
+
+    function IndeterminateCheckbox({
+        indeterminate,
+        className = '',
+        ...rest
+    }) {
+        const ref = React.useRef(null);
+
+        React.useEffect(() => {
+            if (typeof indeterminate === 'boolean') {
+                ref.current.indeterminate = indeterminate;
+            }
+        }, [indeterminate]);
+
+        return (
+            <Checkbox
+                ref={ref}
+                className={className + ' cursor-pointer '}
+                indeterminate={indeterminate}
+                styles={{
+                    body: {
+                        textAlign: 'center',
+                        justifyContent: 'center'
+                    }
+                }}
+                {...rest}
+            />
+        );
+    }
+
+
     const [rowSelection, setRowSelection] = React.useState({})
 
     const columnHelper = createColumnHelper(); // Replace 'Person' with the actual type
 
     const columns = [
-        columnHelper.accessor('Video', {
-            header: 'First Name',
-            footer: info => info.column.id,
-            size: 500,
-        }),
-        columnHelper.accessor('Title', {
-            header: 'Last Name',
-            footer: info => info.column.id,
-            size: 300,
-        }),
-        columnHelper.accessor('discription', {
-            header: 'Discription ',
-            footer: info => info.column.id,
-        }),
-        columnHelper.accessor('visits', {
-            header: () => <span>Visits</span>,
-            footer: info => info.column.id,
-        }),
-        columnHelper.accessor('status', {
-            header: 'Status',
-            footer: info => info.column.id,
-        }),
-        columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: info => info.column.id,
-        }),
         {
-            id: 'select-all',
+            id: 'select',
             header: ({ table }) => (
                 <IndeterminateCheckbox
                     {...{
@@ -196,7 +224,7 @@ function NewTable() {
                 />
             ),
             cell: ({ row }) => (
-                <div className="px-1">
+                <div className="px-1 text-center  justify-center">
                     <IndeterminateCheckbox
                         {...{
                             checked: row.getIsSelected(),
@@ -207,54 +235,257 @@ function NewTable() {
                     />
                 </div>
             ),
+            size: 50,
         },
+        columnHelper.accessor('src', {
+            header: 'Video',
+            cell: ({ row }) => {
+                const value = row;
+                console.log(value, 'valuuuuuuuuuuuue');
+                return (
+                    <div className="w-full">
+                        <CloudinaryVideoPlayer src={value.original?.src ? value.original.src : ""} title={value.original?.title ? value.original.title : ""} type={value.original?.type ? value.original.type : ""} publicId={value.original?.publicId ? value.original.publicId : ""} startTime={value.original?.start_time ? value.original.start_time : ""} endTime={value.original?.end_time ? value.original.end_time : ""} clipId={value.original?.id ? value.original.id : ""} />
+                    </div>
+                )
+            },
+            footer: info => info.column.id,
+            // size: 410,
+        }),
+        columnHelper.accessor('title', {
+            header: 'Title',
+            cell: ({ getValue }) => {
+                const initialValue = getValue();
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const [valuee, setValue] = useState(initialValue);
+                const [isHovered, setIsHovered] = useState(false);
+
+                const handleChange = (e) => {
+                    setValue(e.target.value);
+                };
+
+                const handleMouseEnter = () => {
+                    setIsHovered(true);
+                };
+
+                const handleMouseLeave = () => {
+                    setIsHovered(false);
+                };
+
+                useEffect(() => {
+                    setValue(initialValue);
+                }, [initialValue]);
+
+                return (
+                    <div
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                        className='relative'
+                    >
+                        {/* <input
+                            value={value}
+                            onChange={handleChange}
+                            onBlur={onBlur}
+                            className='bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none '
+                        /> */}
+                        <Textarea
+                            variant="unstyled"
+                            value={valuee}
+                            onChange={handleChange}
+                            placeholder=""
+                            autosize
+                            minRows={9}
+                            maxRows={9}
+                            color='white'
+                            classNames={{
+                                input: 'bg-transparent w-[auto!important]  p-[5px!important] text-[#fff!important] p-0 border-0 hover:border hover:border-white outline-none ',
+                                // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
+                            }}
+                            styles={{
+                                input: {
+                                    fontSize: '14px',
+                                }
+                            }}
+                        />
+                        <div className='flex justify-end'>
+                            {isHovered && (
+                                <div className='flex justify-end items-center mt-2'>
+                                    <CopyButton value={valuee} >
+                                        {({ copied, copy }) => (
+                                            <Button color={copied ? 'teal' : 'blue'} onClick={copy}>
+                                                {copied ? 'Copied' : 'Copy'}
+                                            </Button>
+                                        )}
+                                    </CopyButton>
+                                    <Button
+                                        variant="filled"
+                                        color="green"
+                                        styles={{
+                                            root: {
+                                                marginLeft: rem(10),
+                                            },
+                                        }}
+                                    >
+                                        Save
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )
+            },
+            footer: info => info.column.id,
+            // size: 200,
+        }),
+        columnHelper.accessor('description', {
+            header: 'Discription ',
+            footer: info => info.column.id,
+            cell: ({ row }) => {
+                const initialValue = row.original.description
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const [value, setValue] = useState(initialValue);
+                const [isHovered, setIsHovered] = useState(false);
+
+                const handleChange = (e) => {
+                    setValue(e.target.value);
+                };
+
+                const handleMouseEnter = () => {
+                    setIsHovered(true);
+                };
+
+                const handleMouseLeave = () => {
+                    setIsHovered(false);
+                };
+
+                useEffect(() => {
+                    setValue(initialValue);
+                }, [initialValue]);
+
+                return (
+                    <div
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                        className=' '
+                    >
+                        {/* <input
+                            value={value}
+                            onChange={handleChange}
+                            onBlur={onBlur}
+                            className='bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none '
+                        /> */}
+                        <Textarea
+                            variant="unstyled"
+                            value={value}
+                            onChange={handleChange}
+                            placeholder=""
+                            autosize
+                            minRows={9}
+                            maxRows={9}
+                            color='white'
+                            classNames={{
+                                input: 'bg-transparent  p-[5px!important] text-[#fff!important]  hover:border hover:border-white outline-none  resize-none',
+                                // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
+                            }}
+                            styles={{
+                                input: {
+                                    fontSize: '14px'
+                                }
+                            }}
+                        />
+                        <div className='flex justify-end'>
+                            {isHovered && (
+                                <div className='flex justify-end items-center mt-2'>
+                                    <CopyButton value={value} >
+                                        {({ copied, copy }) => (
+                                            <Button color={copied ? 'teal' : 'blue'} onClick={copy}>
+                                                {copied ? 'Copied' : 'Copy'}
+                                            </Button>
+                                        )}
+                                    </CopyButton>
+                                    <Button
+                                        variant="filled"
+                                        color="green"
+                                        styles={{
+                                            root: {
+                                                marginLeft: rem(10),
+                                            },
+                                        }}
+                                        onClick={() => {
+                                            let data = JSON.stringify({
+                                                "id": row.original.id,
+                                                "description": value,
+
+                                            });
+
+                                            let config = {
+                                                method: 'post',
+                                                maxBodyLength: Infinity,
+                                                url: `${useBaseUrl}/v1/clip/update`,
+                                                headers: {
+                                                    'accept': 'application/json',
+                                                    'Content-Type': 'application/json',
+                                                    'Authorization': 'Bearer ' + userToken
+                                                },
+                                                data: data
+                                            };
+
+                                            axios.request(config)
+                                                .then((response) => {
+                                                    console.log(JSON.stringify(response.data),'ytjfghjgfhjghjgfhjhg');
+                                                })
+                                                .catch((error) => {
+                                                    console.log(error);
+                                                });
+
+                                        }}
+                                    >
+                                        Save
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )
+            },
+            size: 'auto',
+        }),
+        columnHelper.accessor('time', {
+            header: 'Duration',
+            footer: info => info.column.id,
+        }),
+        columnHelper.accessor('status', {
+            header: 'Status',
+            footer: info => info.column.id,
+            cell: ({ row }) => {
+                return (
+                    <DropDownButton status={row.original.status} clipId={row.original.id} />
+                )
+            }
+        }),
     ];
 
+    const [data, setData] = useState(videoClips);
 
-    const [data, setData] = useState([
-        { Video: 'John', Title: 'Doe', discription: 25, visits: 10, status: 'Active', progress: 50 },
-        { Video: 'Jane', Title: 'Smith', discription: 30, visits: 15, status: 'Inactive', progress: 75 },
-        { Video: 'Jack', Title: 'Jones', discription: 15, visits: 5, status: 'Active', progress: 90 },
-        { Video: 'Jack', Title: 'Jones', discription: 15, visits: 5, status: 'Active', progress: 90 },
-        { Video: 'Jack', Title: 'Jones', discription: 15, visits: 5, status: 'Active', progress: 90 },
-        { Video: 'Jack', Title: 'Jones', discription: 15, visits: 5, status: 'Active', progress: 90 },
-        { Video: 'Jack', Title: 'Jones', discription: 15, visits: 5, status: 'Active', progress: 90 },
-        { Video: 'Jack', Title: 'Jones', discription: 15, visits: 5, status: 'Active', progress: 90 },
-        { Video: 'Jack', Title: 'Jones', discription: 15, visits: 5, status: 'Active', progress: 90 },
-        { Video: 'Jack', Title: 'Jones', discription: 15, visits: 5, status: 'Active', progress: 90 },
-        { Video: 'John', Title: 'Doe', discription: 25, visits: 10, status: 'Active', progress: 50 },
-        { Video: 'Jane', Title: 'Smith', discription: 30, visits: 15, status: 'Inactive', progress: 75 },
-        { Video: 'John', Title: 'Doe', discription: 25, visits: 10, status: 'Active', progress: 50 },
-        { Video: 'Jane', Title: 'Smith', discription: 30, visits: 15, status: 'Inactive', progress: 75 },
-        { Video: 'John', Title: 'Doe', discription: 25, visits: 10, status: 'Active', progress: 50 },
-        { Video: 'Jane', Title: 'Smith', discription: 30, visits: 15, status: 'Inactive', progress: 75 },
-        { Video: 'John', Title: 'Doe', discription: 25, visits: 10, status: 'Active', progress: 50 },
-        { Video: 'Jane', Title: 'Smith', discription: 30, visits: 15, status: 'Inactive', progress: 75 }, { Video: 'John', Title: 'Doe', discription: 25, visits: 10, status: 'Active', progress: 50 },
-        { Video: 'Jane', Title: 'Smith', discription: 30, visits: 15, status: 'Inactive', progress: 75 },
-        { Video: 'John', Title: 'Doe', discription: 25, visits: 10, status: 'Active', progress: 50 },
-        { Video: 'Jane', Title: 'Smith', discription: 30, visits: 15, status: 'Inactive', progress: 75 },
-    ]);
-
-    const refreshData = () => setData([]);
+    console.log("New Table", videoClips)
+    // const refreshData = () => setData([]);
 
     const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
 
     const columnResizeMode = 'onChange';
-
     const columnResizeDirection = 'ltr';
-
+    // console.log("defaultColumn", defaultColumn)
     const table = useReactTable({
         data,
         columns,
-        defaultColumn,
+        // defaultColumn,
         state: {
             rowSelection,
         },
         columnResizeMode,
         columnResizeDirection,
-        debugTable: true,
-        debugHeaders: true,
-        debugColumns: true,
+        debugTable: false,
+        debugHeaders: false,
+        debugColumns: false,
         getCoreRowModel: getCoreRowModel(),
         onRowSelectionChange: setRowSelection,
         getFilteredRowModel: getFilteredRowModel(),
@@ -279,15 +510,15 @@ function NewTable() {
     });
 
     return (
-        <div className="p-2 overflow-y-scroll h-screen">
-            <div className="overflow-x-auto">
+        <div className="p-2">
+            <div className="block max-w-full rounded-lg overflow-x-scroll overflow-y-hidden custum_border">
                 <table
                     {...{
                         style: {
                             width: table.getCenterTotalSize(),
                         },
                     }}
-                >
+                    className=" border">
                     <thead>
                         {table.getHeaderGroups().map(headerGroup => (
                             <tr key={headerGroup.id}>
@@ -307,7 +538,7 @@ function NewTable() {
                                                 header.column.columnDef.header,
                                                 header.getContext()
                                             )}
-                                        <div
+                                        {/* <div
                                             {...{
                                                 onDoubleClick: () => header.column.resetSize(),
                                                 onMouseDown: header.getResizeHandler(),
@@ -329,7 +560,7 @@ function NewTable() {
                                                             : '',
                                                 },
                                             }}
-                                        />
+                                        /> */}
                                     </th>
                                 ))}
                             </tr>
@@ -424,7 +655,7 @@ function NewTable() {
             </div>
             <div>{table.getRowModel().rows.length} Rows</div>
             <div>
-                <button onClick={() => refreshData()}>Refresh Data</button>
+                {/* <button onClick={() => refreshData()}>Refresh Data</button> */}
             </div>
             <div>
                 <label>Row Selection State:</label>
