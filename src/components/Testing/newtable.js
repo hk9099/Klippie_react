@@ -14,12 +14,13 @@ import {
 } from '@tanstack/react-table';
 import CloudinaryVideoPlayer from "../VideoPlayer/cloudinaryVideoPlayer.js";
 import '../../assets/css/Table.css'
-import { TextInput, Checkbox, Textarea, Button, CopyButton, ActionIcon, Tooltip, rem, Group, Pagination } from '@mantine/core';
+import { TextInput, Checkbox, Textarea, Button, CopyButton, ActionIcon, Tooltip, rem, Group, Pagination, LoadingOverlay, Box } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { IconCopy, IconCheck } from '@tabler/icons-react';
 import DropDownButton from "../Table/Action/GridDropdown.js";
 import axios from 'axios';
 
-function NewTable({ videoClips, setVideoCount, userToken,useBaseUrl }) {
+function NewTable({ videoClips, setVideoCount, userToken, useBaseUrl }) {
     useEffect(() => {
         setData(videoClips)
     }, [videoClips])
@@ -274,6 +275,7 @@ function NewTable({ videoClips, setVideoCount, userToken,useBaseUrl }) {
                 useEffect(() => {
                     setValue(initialValue);
                 }, [initialValue]);
+                const [visible, setVisible] = useState(false);
 
                 return (
                     <div
@@ -281,31 +283,31 @@ function NewTable({ videoClips, setVideoCount, userToken,useBaseUrl }) {
                         onMouseLeave={handleMouseLeave}
                         className='relative'
                     >
-                        {/* <input
-                            value={value}
-                            onChange={handleChange}
-                            onBlur={onBlur}
-                            className='bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none '
-                        /> */}
-                        <Textarea
-                            variant="unstyled"
-                            value={valuee}
-                            onChange={handleChange}
-                            placeholder=""
-                            autosize
-                            minRows={9}
-                            maxRows={9}
-                            color='white'
-                            classNames={{
-                                input: 'bg-transparent w-[auto!important]  p-[5px!important] text-[#fff!important] p-0 border-0 hover:border hover:border-white outline-none ',
-                                // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
-                            }}
-                            styles={{
-                                input: {
-                                    fontSize: '14px',
-                                }
-                            }}
-                        />
+                        <Box pos="relative">
+                            <LoadingOverlay visible={visible}
+                                overlayProps={{ radius: 'sm', blur: 0, opacity: 0.6 }}
+                                loaderProps={{ color: 'violet', type: 'bars' }}
+                            />
+                            <Textarea
+                                variant="unstyled"
+                                value={valuee}
+                                onChange={handleChange}
+                                placeholder=""
+                                autosize
+                                minRows={9}
+                                maxRows={9}
+                                color='white'
+                                classNames={{
+                                    input: 'bg-transparent w-[auto!important]  p-[5px!important] text-[#fff!important] p-0 border-0 hover:border hover:border-white outline-none ',
+                                    // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
+                                }}
+                                styles={{
+                                    input: {
+                                        fontSize: '14px',
+                                    }
+                                }}
+                            />
+                        </Box>
                         <div className='flex justify-end'>
                             {isHovered && (
                                 <div className='flex justify-end items-center mt-2'>
@@ -323,6 +325,9 @@ function NewTable({ videoClips, setVideoCount, userToken,useBaseUrl }) {
                                             root: {
                                                 marginLeft: rem(10),
                                             },
+                                        }}
+                                        onClick={() => {
+                                            setVisible(true)
                                         }}
                                     >
                                         Save
@@ -360,6 +365,7 @@ function NewTable({ videoClips, setVideoCount, userToken,useBaseUrl }) {
                 useEffect(() => {
                     setValue(initialValue);
                 }, [initialValue]);
+                const [visible, setVisible] = useState(false);
 
                 return (
                     <div
@@ -367,31 +373,32 @@ function NewTable({ videoClips, setVideoCount, userToken,useBaseUrl }) {
                         onMouseLeave={handleMouseLeave}
                         className=' '
                     >
-                        {/* <input
-                            value={value}
-                            onChange={handleChange}
-                            onBlur={onBlur}
-                            className='bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none '
-                        /> */}
-                        <Textarea
-                            variant="unstyled"
-                            value={value}
-                            onChange={handleChange}
-                            placeholder=""
-                            autosize
-                            minRows={9}
-                            maxRows={9}
-                            color='white'
-                            classNames={{
-                                input: 'bg-transparent  p-[5px!important] text-[#fff!important]  hover:border hover:border-white outline-none  resize-none',
-                                // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
-                            }}
-                            styles={{
-                                input: {
-                                    fontSize: '14px'
-                                }
-                            }}
-                        />
+
+                        <Box pos="relative">
+                            <LoadingOverlay visible={visible}
+                                overlayProps={{ radius: 'sm', blur: 0, opacity: 0.6 }}
+                                loaderProps={{ color: 'violet', type: 'bars' }}
+                            />
+                            <Textarea
+                                variant="unstyled"
+                                value={value}
+                                onChange={handleChange}
+                                placeholder=""
+                                autosize
+                                minRows={9}
+                                maxRows={9}
+                                color='white'
+                                classNames={{
+                                    input: 'bg-transparent  p-[5px!important] text-[#fff!important]  hover:border hover:border-white outline-none  resize-none',
+                                    // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
+                                }}
+                                styles={{
+                                    input: {
+                                        fontSize: '14px'
+                                    }
+                                }}
+                            />
+                        </Box>
                         <div className='flex justify-end'>
                             {isHovered && (
                                 <div className='flex justify-end items-center mt-2'>
@@ -411,12 +418,11 @@ function NewTable({ videoClips, setVideoCount, userToken,useBaseUrl }) {
                                             },
                                         }}
                                         onClick={() => {
+                                            setVisible(true)
                                             let data = JSON.stringify({
                                                 "id": row.original.id,
                                                 "description": value,
-
                                             });
-
                                             let config = {
                                                 method: 'post',
                                                 maxBodyLength: Infinity,
@@ -428,15 +434,15 @@ function NewTable({ videoClips, setVideoCount, userToken,useBaseUrl }) {
                                                 },
                                                 data: data
                                             };
-
                                             axios.request(config)
                                                 .then((response) => {
-                                                    console.log(JSON.stringify(response.data),'ytjfghjgfhjghjgfhjhg');
+                                                    console.log(JSON.stringify(response.data), 'ytjfghjgfhjghjgfhjhg');
+                                                    setVisible(false)
                                                 })
                                                 .catch((error) => {
                                                     console.log(error);
+                                                    setVisible(false)
                                                 });
-
                                         }}
                                     >
                                         Save
