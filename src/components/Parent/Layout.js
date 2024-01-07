@@ -25,7 +25,7 @@ const Layout = ({ children }) => {
     const tourStatus = Cookies.get("tourStatus");
     if (tourStatus === "finished") {
       setRun(false);
-      setSteps([]); // Reset steps if the tour is finished
+      setSteps([]);
     }
   }, []);
 
@@ -36,7 +36,6 @@ const Layout = ({ children }) => {
       console.log(data);
       }
     } else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
-      // Set cookie to mark the tour as finished
       Cookies.set("tourStatus", "finished");
       setRun(false);
       setSteps([]);

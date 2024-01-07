@@ -537,7 +537,7 @@ function HomeScreen({ userName, creaditBalance }) {
                                     </div>
                                     <div className="flex justify-center items-start flex-col">
                                         <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
-                                            <ReactEmoji text=":arrow_up: Upload up to 2 hours of audio or video" />                                        </div>
+                                            <ReactEmoji text=":arrow_up: Upload up to 2 hours of video" />                                        </div>
                                         <div className="text-white select-none cursor-pointer px-3 py-2 font-medium text-lg inline-block mx-3 my-1 dark:bg-[#ffffff2a] rounded-full transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-20">
                                             <ReactEmoji text=":robot_face: Klippie Finds the best clips" />
                                         </div>

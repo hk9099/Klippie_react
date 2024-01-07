@@ -149,21 +149,21 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         window.location.reload();
         return;
       }
-  
+
       // Wait until baseUrl is available
       while (!baseUrl) {
         await new Promise(resolve => setTimeout(resolve, 100)); // Adjust the timeout as needed
       }
-  
+
       // Now that baseUrl is available, proceed with fetching data
       fetchProjectsData(baseUrl, setProjectData, setLines, setIsLoadingHistory, setVideoURL);
       setIsApiCompleted(false);
     };
-  
+
     fetchData();
     // eslint-disable-next-line
-  }, [isApiCompleted, projectCreated,baseUrl]);
-  
+  }, [isApiCompleted, projectCreated, baseUrl]);
+
 
   const handleUpdateProfileSuccess = () => {
     // Call fetchUserProfile to refresh the user's profile
@@ -534,12 +534,16 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 </span>
               )}
             </div>
-            <div   className={`${!open && "rotate-0 absolute border w-[40px] rounded-lg h-[40px] p-2"
-                } ml-6 rotate-180 text-[100px] cursor-pointer top-5 -right-[130px]  border w-[40px] rounded-lg h-[40px] p-2 text-gray-200`}
-                onClick={() => {
-                  setOpen(!open);
-                }}>
-            <IconChevronRight />
+            <div
+              className={`${!open
+                  ? 'rotate-0 absolute border w-[40px] rounded-lg h-[40px] p-2'
+                  : 'rotate-180 '
+                } ml-6 text-[100px] cursor-pointer top-5 -right-[70px] border w-[40px] rounded-lg h-[40px] p-2 text-gray-200`}
+              onClick={() => {
+                setOpen(!open);
+              }}
+            >
+              <IconChevronRight />
             </div>
           </div>
 
@@ -731,7 +735,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                   showLogout={open}
                   avatar={userAvatar} />
               </Menu>
-            
+
 
               <AccountModal
                 avatar={userAvatar}

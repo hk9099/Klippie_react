@@ -64,7 +64,7 @@ const Navbar = ({ creaditBalance }) => {
                     time: 'Per Month',
                     description: 'For Individual Content Creators',
                     planDetails: [
-                        { Type: 'PREMIUM PLAN' },
+                        { Type: 'PRO PLAN' },
                         { 'Upload Minutes': 'Unlimited' },
                         { Users: '1' },
                         // { Modal: 'Advanced' }
@@ -83,7 +83,7 @@ const Navbar = ({ creaditBalance }) => {
                     time: 'Yearly ',
                     description: 'For Teams and Businesses',
                     planDetails: [
-                        { Type: 'PREMIUM PLAN' },
+                        { Type: 'PRO PLAN' },
                         { 'Upload Minutes': 'Unlimited' },
                         { Users: '1' },
                         // { Modal: 'Advanced' }
@@ -210,7 +210,7 @@ const Navbar = ({ creaditBalance }) => {
                         ) : (
                             <div className={`p-4 transform transition-transform duration-500 ease-in-out hover:scale-105`}>
                                 <div className={`bg-gradient-to-r from-indigo-400 to-blue-900 text-white px-4 py-3 font-bold text-xxl flex justify-center items-center select-none rounded-lg shadow-lg`}>
-                                    Lifetime Unlimited
+                                Unlimited Plan
                                 </div>
                             </div>
 
