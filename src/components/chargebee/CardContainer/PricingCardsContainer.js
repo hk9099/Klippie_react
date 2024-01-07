@@ -88,7 +88,7 @@ export default function PricingCardsContainer({ isOpen, onClose,pricingData, fre
             {isLoading ? (
                 <></>
             ) : (
-                <div className={`fixed inset-0 flex justify-center items-center z-50 ${isOpen ? 'block' : 'hidden'} h-screen overflow-y-auto select-none`}>
+                <div className={`fixed inset-0 flex justify-center items-center z-50 ${isOpen ? 'block' : 'hidden'} h-screen overflow-y-auto select-none`} >
                     <div className="fixed inset-0 backdrop-blur-md bg-black bg-opacity-60 z-40"></div>
                     <div className="relative w-auto max-h-full z-50">
                         <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">

@@ -136,7 +136,7 @@ const UserModal = ({ isOpen, userNickname, userEmailAddress, avatar, social }) =
 
     return (
         <>
-            <div className="bg-white rounded-lg w-full dark:bg-gray-800">
+            <div className="bg-white rounded-lg w-full dark:bg-gray-800 p-2">
                 {successMessage && (
                     <div className="bg-green-200 p-2 text-green-800 mb-2 rounded">
                         {successMessage}

@@ -295,35 +295,8 @@ export default function CloudinaryVideoPlayer({
         const initializeVideoPlayer = async () => {
             try {
                 if (!playerRef.current) {
-                    // playerRef.current = window.cloudinary;
-                    // await playerRef.current.videoPlayer(videoRef.current, {
-                    //     controls: true,
-                    //     preload: 'auto',
-                    //     width: 200,
-                    //     height: 900,
-                    //     fluid: true,
-                    //     autoplay: false,
-                    //     muted: false,
-                    //     aiHighlightsGraph: true,
-                    //     seekbar: true,
-                    //     showLogo: false,
-                    //     sourceTypes: ['hls', 'webm', 'mp4'],
-                    //     colors: {
-                    //         accent: '#dc2626',
-                    //         text: '#ffffff'
-                    //     },
-                    //     hideContextMenu: true,
-                    //     showJumpControls: true,
-                    // });
-
-                    // videoRef.current.volume = 0.5;
-                    // videoRef.current.currentTime = 0.5;
-                    // videoRef.current.source = (event, data) => {
-                    //     if (process.env.NODE_ENV === 'development') {
-                    //         console.log('loadeddata', event, data);
-                    //     }
-                    // }
-                    const player = window.cloudinary.videoPlayer(videoRef.current, {
+                    playerRef.current = window.cloudinary;
+                    await playerRef.current.videoPlayer(videoRef.current, {
                         controls: true,
                         preload: 'auto',
                         width: 200,
@@ -343,41 +316,68 @@ export default function CloudinaryVideoPlayer({
                         showJumpControls: true,
                     });
 
-                    player.on('abort', function (e) {
-                        console.error('Errrrrrrrrrrrrror code: ' + e);
-                        if (e.Player.videojs.error_) {
-                            var title = document.querySelector('.error-container');
-                            title.innerHTML = 'Houston, we have a problem: ' + e.Player.videojs.error_.message + '. This is the status code: ' + e.Player.videojs.error_.statusCode;
-                            title.style.color = 'red';
+                    videoRef.current.volume = 0.5;
+                    videoRef.current.currentTime = 0.5;
+                    videoRef.current.source = (event, data) => {
+                        if (process.env.NODE_ENV === 'development') {
+                            console.log('loadeddata', event, data);
                         }
-                    })
+                    }
+                    // const player = window.cloudinary.videoPlayer(videoRef.current, {
+                    //     controls: true,
+                    //     preload: 'auto',
+                    //     width: 200,
+                    //     height: 900,
+                    //     fluid: true,
+                    //     autoplay: false,
+                    //     muted: false,
+                    //     aiHighlightsGraph: true,
+                    //     seekbar: true,
+                    //     showLogo: false,
+                    //     sourceTypes: ['hls', 'webm', 'mp4'],
+                    //     colors: {
+                    //         accent: '#dc2626',
+                    //         text: '#ffffff'
+                    //     },
+                    //     hideContextMenu: true,
+                    //     showJumpControls: true,
+                    // });
 
-                    player.source(
-                        'outdoors',
-                        {
-                            textTracks: {
-                                captions: {
-                                    label: 'English(captions)',
-                                    language: 'en',
-                                    default: true,
-                                    url: 'https://res.cloudinary.com/demo/raw/upload/outdoors.vtt'
-                                },
-                                subtitles: [
-                                    {
-                                        label: 'English',
-                                        language: 'en',
-                                        url: 'https://res.cloudinary.com/demo/raw/upload/outdoors.vtt'
-                                    }
-                                ]
-                            },
-                            chapters: {
-                                url:
-                                    "https://res.cloudinary.com/demo/raw/upload/docs/chapters_example.vtt"
-                            },
-                            controlBar: {
-                                chaptersButton: true
-                            }
-                        });
+                    // player.on('abort', function (e) {
+                    //     console.error('Errrrrrrrrrrrrror code: ' + e);
+                    //     if (e.Player.videojs.error_) {
+                    //         var title = document.querySelector('.error-container');
+                    //         title.innerHTML = 'Houston, we have a problem: ' + e.Player.videojs.error_.message + '. This is the status code: ' + e.Player.videojs.error_.statusCode;
+                    //         title.style.color = 'red';
+                    //     }
+                    // })
+
+                    // player.source(
+                    //     'outdoors',
+                    //     {
+                    //         textTracks: {
+                    //             captions: {
+                    //                 label: 'English(captions)',
+                    //                 language: 'en',
+                    //                 default: true,
+                    //                 url: 'https://res.cloudinary.com/demo/raw/upload/outdoors.vtt'
+                    //             },
+                    //             subtitles: [
+                    //                 {
+                    //                     label: 'English',
+                    //                     language: 'en',
+                    //                     url: 'https://res.cloudinary.com/demo/raw/upload/outdoors.vtt'
+                    //                 }
+                    //             ]
+                    //         },
+                    //         chapters: {
+                    //             url:
+                    //                 "https://res.cloudinary.com/demo/raw/upload/docs/chapters_example.vtt"
+                    //         },
+                    //         controlBar: {
+                    //             chaptersButton: true
+                    //         }
+                    //     });
                 }
             } catch (error) {
                 if (process.env.NODE_ENV === 'development') {

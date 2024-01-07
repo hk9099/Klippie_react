@@ -18,11 +18,12 @@ import fetchUserProfile from './Hooks/UserProfile/fetchUserProfile.js';
 import { useCloudinary } from '../HomeScreen/Hooks/Context/CloudinaryContext.js';
 import { useClipsFoundStatus } from '../HomeScreen/Hooks/Context/ClipsFoundContext.js';
 import { TokenManager } from '../Config/Token/getToken.js';
+import { useDisclosure } from '@mantine/hooks';
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/dropzone/styles.css';
-import { Menu, HoverCard, Button, Text, Group } from '@mantine/core';
+import { Menu, HoverCard, Button, Group, AppShell, Burger, ScrollArea, Skeleton, Text } from '@mantine/core';
 import ToggleMenuButton from '../Setting/ToggleMenuButton.js';
 // import { Tooltip } from 'react-tooltip';
 //eslint-disable-next-line
@@ -34,17 +35,18 @@ import ToastNotification from "../Notification/ToastNotification.js";
 import { Toaster } from 'react-hot-toast';
 import { useFileSelected } from "../Table/Hooks/Context/SelectionContext.js";
 import useBaseUrl from '../Config/Hooks/useBaseUrl.js';
+import { IconMenu } from '@tabler/icons-react';
+import Navbar from "../Navbar/Navbar.js";
 
-const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError }) => {
+
+const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordionVisible, setError, children }) => {
   const { setCloudinaryResponse } = useCloudinary();
   const baseUrl = useBaseUrl();
   //eslint-disable-next-line
-  const { setStartAgain, projectCreated } = useClipsFoundStatus();
+  const { setStartAgain, projectCreated, setClipsFoundStatus } = useClipsFoundStatus();
   const { refreshProfile, setRefreshProfile } = useSidebarContext();
   const { fileDelete, pageLoaded, setPageLoaded } = useFileSelected();
-  const { setUserName } = useUserNickname();
-  const { setUserEmail } = useUserNickname();
-  const { setCreaditBalance } = useUserNickname();
+  const { setCreaditBalance, creaditBalance, setUserName, setUserEmail } = useUserNickname();
   const navigate = useNavigate();
   const user = TokenManager.getToken()
   const [userToken, setUserToken] = useState(null);
@@ -94,6 +96,27 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   const closeDropdown = () => {
     setDropdownOpen(false);
   };
+  const [loginCount, setLoginCount] = useState(0);
+  const [newProjectCount, setNewProjectCount] = useState('');
+  useEffect(() => {
+    if (user === undefined || user === null) {
+      navigate('/');
+      window.location.reload();
+      return;
+    } else {
+      const userToken = TokenManager.getToken()[1]
+      setUserToken(userToken);
+      const loginCount = TokenManager.getToken()[0]
+      setLoginCount(loginCount);
+      if (location.pathname === '/dashboard') {
+        setClipsFoundStatus(false)
+        const increments = TokenManager.getToken()[2]
+        setNewProjectCount(increments);
+      }
+    }
+  }, [location.pathname, navigate, user]);
+
+
 
   useEffect(() => {
     setUserName(userNickname);
@@ -149,21 +172,21 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
         window.location.reload();
         return;
       }
-  
+
       // Wait until baseUrl is available
       while (!baseUrl) {
         await new Promise(resolve => setTimeout(resolve, 100)); // Adjust the timeout as needed
       }
-  
+
       // Now that baseUrl is available, proceed with fetching data
       fetchProjectsData(baseUrl, setProjectData, setLines, setIsLoadingHistory, setVideoURL);
       setIsApiCompleted(false);
     };
-  
+
     fetchData();
     // eslint-disable-next-line
-  }, [isApiCompleted, projectCreated,baseUrl]);
-  
+  }, [isApiCompleted, projectCreated, baseUrl]);
+
 
   const handleUpdateProfileSuccess = () => {
     // Call fetchUserProfile to refresh the user's profile
@@ -470,9 +493,9 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   };
 
   const handleAddNewVideo = () => {
-    setAccordionVisible(false);
-    setProjectId('');
-    setError('');
+    // setAccordionVisible(false);
+    // setProjectId('');
+    // setError('');
     setCloudinaryResponse(null);
     //eslint-disable-next-line
     const newValue = TokenManager.incrementValue('increment');
@@ -489,99 +512,154 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
   // const handleUserModal = () => {
   //   setShowUserModal(true);
   // };
+  const [opened, { toggle }] = useDisclosure();
 
   return (
     <>
       <MantineProvider>
-        <Toaster position="top-center" />
-        <div
-          className={`${open
-            ? "relative transition-all duration-300 ease-in-out"
-            : "absolute transition-all left-[-210px] duration-300 ease-in-out"
-            } top-0 p-2 z-10 flex h-full flex-none flex-col space-y-2 text-[14px] sm:top-0 bg-gray-100 dark:border-gray-600 dark:bg-custom-color-dark`}
+        <AppShell
+          layout="alt"
+          header={{ height: 60  }}
+          navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened, desktop: opened } }}
+          padding="md"
+          styles={{
+            body: {
+              backgroundColor: '#0D0E20',
+            },
+          }}
         >
-
-          <div
-            className={`flex justify-start items-center select-none px-[10px] py-3 pr-0`}
+          <AppShell.Header
+            styles={{
+              header: {
+                backgroundColor: '#0D0E20',
+                borderBottom: '1px solid transparent',
+              },
+            }}
           >
-
-            <img
-              src={Logo}
-              alt=""
-              className={`w-10  ${!open && "justify-center"
-                } bg-white rounded-full`}
-              onClick={() => {
-                navigate('/dashboard');
-                setAccordionVisible(false);
-              }}
-            />
-            <div className="flex items-start" onClick={() => {
-              navigate('/dashboard');
-              setAccordionVisible(false);
+            <Group h="100%" px="md" styles={{
+              root: {
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: '1rem',
+              },
             }}>
-              {open && (
-                <span
-                  className={`text-2xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}
-                >
-                  Klippie
-                </span>
-              )}
-              {open && (
-                <span
-                  className={`text-xs ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`}
-                >
-                  Beta
-                </span>
-              )}
-            </div>
-            <div   className={`${!open && "rotate-0 absolute border w-[40px] rounded-lg h-[40px] p-2"
-                } ml-6 rotate-180 text-[100px] cursor-pointer top-5 -right-[130px]  border w-[40px] rounded-lg h-[40px] p-2 text-gray-200`}
-                onClick={() => {
-                  setOpen(!open);
+              <div className="flex">
+                <img
+                  src={Logo}
+                  alt=""
+                  className={`w-10  ${!open && "justify-center"
+                    } bg-white rounded-full cursor-pointer`}
+                  onClick={() => {
+                    navigate('/dashboard');
+                    window.location.reload();
+                  }}
+                />
+                <div className="flex items-start cursor-pointer" onClick={() => {
+                  navigate('/dashboard');
+                  window.location.reload();
                 }}>
-            <IconChevronRight />
-            </div>
-          </div>
-
-          <div className="pt-4 pb-3">
-            {/* <Tooltip id="disabled" content="To start, drag and drop a video or click Choose File."
+                  {open && (
+                    <span
+                      className={`text-2xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}
+                    >
+                      Klippie
+                    </span>
+                  )}
+                  {open && (
+                    <span
+                      className={`text-xs ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`}
+                    >
+                      Beta
+                    </span>
+                  )}
+                </div>
+              </div>
+              <Burger color="white" opened={opened} onClick={toggle} size="sm" />
+            </Group>
+          </AppShell.Header>
+          <AppShell.Navbar p="md" size="lg"
+            styles={{
+              navbar: {
+                backgroundColor: '#0D0E20',
+                borderRight: '1px solid transparent',
+              },
+            }}
+          >
+            <AppShell.Section
+              styles={{
+                section: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                },
+              }}
+            >
+              <div className="flex">
+                <img
+                  src={Logo}
+                  alt=""
+                  className={`w-10  ${!open && "justify-center"
+                    } bg-white rounded-full cursor-pointer`}
+                  onClick={() => {
+                    navigate('/dashboard');
+                    window.location.reload();
+                  }}
+                />
+                <div className="flex items-start cursor-pointer" onClick={() => {
+                  navigate('/dashboard');
+                  window.location.reload();
+                }}>
+                  {open && (
+                    <span
+                      className={`text-2xl ml-4 font-bold font-poppins whitespace-nowrap dark:text-white`}
+                    >
+                      Klippie
+                    </span>
+                  )}
+                  {open && (
+                    <span
+                      className={`text-xs ml-2 text-white rounded-full px-2 py-0 border border-dashed border-white`}
+                    >
+                      Beta
+                    </span>
+                  )}
+                </div>
+              </div>
+              <Burger color="white" opened={opened} onClick={toggle} size="sm" />
+            </AppShell.Section>
+            <AppShell.Section>
+              <div className="pt-4 pb-3">
+                {/* <Tooltip id="disabled" content="To start, drag and drop a video or click Choose File."
             place="right"
             className="dark:custom-modal-bg-color dark:text-gray-300 font-semibold text-[2xl!important] font-ubuntu "
             opacity={1}
             style={{ backgroundColor: '#B3B5E2', color: '#020913' }}
           /> */}
-            <button
-              // disabled={!clipsFound}
-              // data-tooltip-id={!clipsFound ? "disabled" : undefined}
-              className={`newProject flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full  dark:text-white  border-animation ${!open && "justify-center"}`} onClick={handleAddNewVideo}>
-              <div
-                className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full bg-white dark:bg-gray-800 dark:text-white ${!open && "justify-center"
-                  }`}
-              >
-                <span
-                  className={`text-2xl `}
-                >
-                  <AiOutlinePlus className={`${!open && "justify-center"}`} />
-                </span>
-                <span
-                  className={`${!open && "hidden"
-                    } origin-left duration-300 hover:block font-semibold text-md font-ubuntu select-none`}
-                >
-                  New Project
-                </span>
+                <button
+                  // disabled={!clipsFound}
+                  // data-tooltip-id={!clipsFound ? "disabled" : undefined}
+                  className={`newProject flex items-center w-full gap-x-6 p-[0.12rem] text-base rounded-full  dark:text-white  border-animation ${!open && "justify-center"}`} onClick={handleAddNewVideo}>
+                  <div className={`flex items-center w-full gap-x-6 p-3 text-base rounded-full bg-white dark:bg-gray-800 dark:text-white ${!open && "justify-center"}`}
+                  >
+                    <span
+                      className={`text-2xl `}
+                    >
+                      <AiOutlinePlus className={`${!open && "justify-center"}`} />
+                    </span>
+                    <span
+                      className={`${!open && "hidden"
+                        } origin-left duration-300 hover:block font-semibold text-md font-ubuntu select-none`}
+                    >
+                      New Project
+                    </span>
+                  </div>
+                </button>
               </div>
-            </button>
-          </div>
-          {projectId ? null : (
-            <Modal
-              onSubmit={handleFormSubmit}
-              isOpen={showModal}
-              onClose={() => setShowModal(false)}
-              setProjectId={setProjectId}
-            />
-          )}
-          <div className={` flex-grow overflow-auto backdrop-blur-xl history ${lines.length === 0 ? "flex items-center justify-center " : ""}  `}>
-            {/* {isLoadingHistory ? (
+            </AppShell.Section>
+            <AppShell.Section grow my="md" component={ScrollArea} offsetScrollbars >
+              <div className={` flex-grow overflow-auto backdrop-blur-xl history ${lines.length === 0 ? "flex items-center justify-center " : ""}  `}>
+                {/* {isLoadingHistory ? (
               <div className="flex items-center justify-center mb-4 text-blue-500 h-[87%]">
                 <span className="" style={{ userSelect: "none" }}>
                   <RotatingLines
@@ -594,137 +672,112 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 </span>
               </div>
             ) : ( */}
-            <div className={` ${!open && "hidden"} relative`}>
+                <div className={` ${!open && "hidden"} relative`}>
 
-              {lines.length === 0 ? (
-                <div className="text-center text-gray-500 font-semibold dark:text-gray-300 select-none cursor-not-allowed">
-                  {/* The History is Currently Empty. */}
-                </div>
-              ) : (
-                lines
-                  .map((line, index) => (
-                    <HoverCard 
-                    shadow="md" 
-                    openDelay={3000}
-                    key={index}
-                      position="right"
-                      styles={{
-                        dropdown: {
-                          backgroundColor: '#B3B5E2',
-                          color: '#020913',
-                          padding: '0px',
-                          overflow: 'hidden',
-                          borderRadius: '10px',
-                          border: '0px',
-                        },
-                        root: {
-                          width: '400px',
-                        },
-                      }}
-                    >
-                      <HoverCard.Target>
-                        <div
+                  {lines.length === 0 ? (
+                    <div className="text-center text-gray-500 font-semibold dark:text-gray-300 select-none cursor-not-allowed">
+                      {/* The History is Currently Empty. */}
+                    </div>
+                  ) : (
+                    lines
+                      .map((line, index) => (
+                        <HoverCard
+                          shadow="md"
+                          openDelay={3000}
                           key={index}
-                          className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""
-                            }`}
-                          onMouseEnter={() => {
-                            setHoveredIndex(index);
-                            logVideoURL(index);
+                          position="right"
+                          styles={{
+                            dropdown: {
+                              backgroundColor: '#B3B5E2',
+                              color: '#020913',
+                              padding: '0px',
+                              overflow: 'hidden',
+                              borderRadius: '10px',
+                              border: '0px',
+                            },
+                            root: {
+                              width: '400px',
+                            },
                           }}
-                          onMouseLeave={() => setHoveredIndex(-1)}
-                          data-tooltip-id={`tooltip-${index}`}
                         >
-                          {editIndex === index ? (
-                            <div className="width-full row relative"  key={index}>
-                              <input
-                                className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
-                                type="text"
-                                key={index}
-                                value={tempLines[index]}
-                                onChange={(event) => handleEditChange(event, index)}
-                              />
-                              <button onClick={() => handleSaveClick(index)}  key={index}className="save-button">
-                                <AiOutlineCheck />
-                              </button>
-                              <button onClick={() => handleCancelClick()} key={index} className="cancel-button">
-                                <AiOutlineClose />
-                              </button>
-                            </div>
-                          ) : (
-
-
-                            <p
-                            key={index}
-                              className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
-                              style={{
-                                width: hoveredIndex === index ? "188px" : "236px",
-                                // width: "100%",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                userSelect: "none",
-                                cursor: "pointer",
+                          <HoverCard.Target>
+                            <div
+                              key={index}
+                              className={`width-full row relative my-4 mx-auto pe-2 ${index === activeIndex ? "active" : ""
+                                }`}
+                              onMouseEnter={() => {
+                                setHoveredIndex(index);
+                                logVideoURL(index);
                               }}
-                              onClick={() => {
-                                setActiveIndex(index);
-                                handleProjectClick(index);
-                              }}
+                              onMouseLeave={() => setHoveredIndex(-1)}
+                              data-tooltip-id={`tooltip-${index}`}
                             >
-                              {line === undefined || line === null ? "New Project" : line}
-                            </p>
+                              {editIndex === index ? (
+                                <div className="width-full row relative" key={index}>
+                                  <input
+                                    className="py-2 px-2 text-sm font-medium dark:text-gray-300 hover:text-gray-900 border-0 outline-none bg-[#F3F4F6] dark:bg-[#1F2937] w-[100%] pe-[55px]"
+                                    type="text"
+                                    key={index}
+                                    value={tempLines[index]}
+                                    onChange={(event) => handleEditChange(event, index)}
+                                  />
+                                  <button onClick={() => handleSaveClick(index)} key={index} className="save-button">
+                                    <AiOutlineCheck />
+                                  </button>
+                                  <button onClick={() => handleCancelClick()} key={index} className="cancel-button">
+                                    <AiOutlineClose />
+                                  </button>
+                                </div>
+                              ) : (
 
-                          )}
-                          {/* <Tooltip id={`tooltip-${index}`} content={videoDiv}
-                        place="right"
-                        className="dark:custom-modal-bg-color dark:text-gray-300 font-semibold text-[2xl!important] font-ubuntu border-0 rounded-[50%!important]"
-                        opacity={1}
-                        style={{ backgroundColor: '#B3B5E2', color: '#020913', padding: '0px' }}
-                        clickable={true}
-                        delayShow={3000}
-                      /> */}
-                          {/* <HoverCard shadow="md" openDelay={1000}>
-        <HoverCard.Target>
-          <Button>1000ms open delay</Button>
-        </HoverCard.Target>
-        <HoverCard.Dropdown>
-          <Text size="sm">Opened with 1000ms delay</Text>
-        </HoverCard.Dropdown>
-      </HoverCard> */}
-                          <div className="hover-actions" >
-                            {editIndex !== index && (
-                              <>
-                                <button onClick={() => deleteLine(index)} className="delete-button">
-                                  <AiOutlineDelete />
-                                </button>
-                                <button onClick={() => handleEditClick(index)} className="edit-button">
-                                  <FiEdit2 />
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </HoverCard.Target>
-                      <HoverCard.Dropdown>
-                        <div className="w-[400px]">
-                          {videoDiv}
-                        </div>
-                      </HoverCard.Dropdown>
-                    </HoverCard>
-                  ))
-              )}
 
-            </div>
-            {/* )} */}
+                                <p
+                                  key={index}
+                                  className="py-2 px-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-l-2 hover:border-gray-900 dark:hover:border-white"
+                                  style={{
+                                    width: hoveredIndex === index ? "188px" : "188px",
+                                    // width: "100%",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    userSelect: "none",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setActiveIndex(index);
+                                    handleProjectClick(index);
+                                  }}
+                                >
+                                  {line === undefined || line === null ? "New Project" : line}
+                                </p>
 
-            {/* <div className="flex-grow w-1/4 p-4 bg-gray-200">
-  <h2 className="text-2xl font-semibold">Video Preview</h2>
-  {previewVideoURL && (
-    <video src={previewVideoURL} controls width="100%" />
-  )}
-</div> */}
-          </div>
-          <div className={` bottom-0 left-0 right-0 `}>
-            <div className=" flex flex-col gap-1">
+                              )}
+                              <div className="hover-actions" >
+                                {editIndex !== index && (
+                                  <>
+                                    <button onClick={() => deleteLine(index)} className="delete-button">
+                                      <AiOutlineDelete />
+                                    </button>
+                                    <button onClick={() => handleEditClick(index)} className="edit-button">
+                                      <FiEdit2 />
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </HoverCard.Target>
+                          <HoverCard.Dropdown>
+                            <div className="w-[400px]">
+                              {videoDiv}
+                            </div>
+                          </HoverCard.Dropdown>
+                        </HoverCard>
+                      ))
+                  )}
+                </div>
+              </div>
+            </AppShell.Section>
+            <AppShell.Section>
               <Menu shadow="md" width={200}>
                 <ToggleMenuButton
                   isOpen={dropdownOpen}
@@ -736,7 +789,7 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                   showLogout={open}
                   avatar={userAvatar} />
               </Menu>
-            
+
 
               <AccountModal
                 avatar={userAvatar}
@@ -748,26 +801,48 @@ const Sidebar = ({ setProjectId, setNewvideoClips, setnewMainVideo, setAccordion
                 setUserAvatar={setUserAvatar}
                 onUpdateProfileSuccess={handleUpdateProfileSuccess}
               />
-            </div>
-          </div>
-        </div>
-        {/* Mobile Menu */}
-        <div className="sm:hidden">
-          <div
-            className={`${mobileMenu ? "flex" : "hidden"
-              } absolute z-50 flex-col items-center self-end py-8 mt-16 space-y-6 font-bold sm:w-auto left-6 right-6 dark:text-white  bg-blackk-50 dark:bg-slate-800 drop-shadow md rounded-xl`}
+            </AppShell.Section>
+          </AppShell.Navbar>
+          <AppShell.Main 
+            styles={{
+              main: {
+               overflowY: 'scroll',
+               height: '100vh',
+              },
+            }}
           >
-            <Link to="/dashboard" onClick={() => setMobileMenu(false)}>
-              <span
-                className={` ${location.pathname === "/dashboard" &&
-                  "bg-gray-200 dark:bg-gray-700"
-                  } p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700`}
-              >
-                Dashboard
-              </span>
-            </Link>
-          </div>
-        </div>
+            <AppShell.Header
+              styles={{
+                header: {
+                  backgroundColor: '#0D0E20',
+                  borderBottom: '1px solid transparent',
+                },
+              }}
+              visibleFrom="sm"
+            >
+              <Group h="100%" px="md" styles={{
+                root: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: `${opened ? 'space-between' : 'end'}`,
+                },
+              }}>
+                <Burger color="white" opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+                {opened && (
+                  <Burger color="white" opened={opened} onClick={toggle} size="sm" visibleFrom="sm" />
+                )}
+                {loginCount === 1 && (newProjectCount === undefined || '') ? (
+                  <Navbar creaditBalance={creaditBalance} />
+                ) : loginCount > 1 ? (
+                  <Navbar creaditBalance={creaditBalance} />
+                ) : (
+                  <Navbar creaditBalance={creaditBalance} />
+                )}
+              </Group>
+            </AppShell.Header>
+            {children}
+          </AppShell.Main>
+        </AppShell>
         <ConfirmationModal
           show={showDeleteConfirmation}
           onConfirm={confirmDelete}

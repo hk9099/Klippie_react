@@ -23,12 +23,12 @@ function SubscriptionModal({ Subscription }) {
   };
 
   return (
-    <div className="dark:bg-transparent pt-0 p-4 rounded-lg dark:text-white select-none">
+    <div className="dark:bg-gray-800  p-3 rounded-lg dark:text-white select-none">
       <h2 className="text-2xl mb-2 text-center dark:text-white font-bold">
         Subscription Details 📋
       </h2>
       <hr className="mb-4" />
-      <div className="dark:bg-transparent rounded-lg mb-4 dark:text-white">
+      <div className="dark:bg-transparent rounded-lg  dark:text-white">
         <p className="mb-2 break-all text-ellipsis font-bold">
           ID: <span className="text-gray-100 font-medium">{Subscription.id}</span>
         </p>
@@ -54,7 +54,7 @@ function SubscriptionModal({ Subscription }) {
         <p className="mb-2">
           <span className="font-bold">Start Date:</span> {convertToUserTimeZone(Subscription.current_period_start)} 🚀
         </p>
-        <p className="mb-2">
+        <p className="">
           <span className="font-bold">End Date:</span> {convertToUserTimeZone(Subscription.current_period_end)} 🏁
         </p>
       </div>

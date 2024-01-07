@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,8 @@ import SubscriptionModal from '../Subscription/SubscriptionModal.js';
 import { useSubscription } from '../../chargebee/Hooks/Context/SubscriptionContext.js';
 import ToastNotification from "../../Notification/ToastNotification.js";
 import { Toaster } from 'react-hot-toast';
+import { useDisclosure } from '@mantine/hooks';
+import { Modal, Button } from '@mantine/core';
 
 var HOSTINGURL = process.env.REACT_APP_DEV_HOSTING_URL;
 
@@ -40,14 +42,14 @@ const AccountModal = ({
     const user = TokenManager.getToken()
     const [userToken, setUserToken] = useState(null);
     useEffect(() => {
-      if (user === undefined || user === null) {
-        navigate('/');
-        window.location.reload();
-        return;
-      } else {
-        const userToken = TokenManager.getToken()[1]
-        setUserToken(userToken);
-      }
+        if (user === undefined || user === null) {
+            navigate('/');
+            window.location.reload();
+            return;
+        } else {
+            const userToken = TokenManager.getToken()[1]
+            setUserToken(userToken);
+        }
     }, [navigate, user]);
     // const [googleToken, setGoogleToken] = useState(null);
     const [showOldPassword, setShowOldPassword] = useState(false);
@@ -87,9 +89,9 @@ const AccountModal = ({
                     },
                 }
             );
-            if (process.env.NODE_ENV === 'development') {    
-            console.log(response);
-            } 
+            if (process.env.NODE_ENV === 'development') {
+                console.log(response);
+            }
             ToastNotification({ type: 'success', message: response.data.message });
             setTimeout(() => {
                 navigate('/dashboard');
@@ -103,257 +105,304 @@ const AccountModal = ({
 
 
     return (
-        <div
-            className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center  z-50 inset-0 backdrop-blur-md bg-black bg-opacity-60 ${showAccount ? '' : 'hidden'
-                } `}
-        >
-            <Toaster />
-            <div className={`bg-white rounded-3xl border p-4 flex flex-col gap-4 dark:bg-gray-800 ${!social ? 'w-[600px]' : 'w-[400px]'}  dark:border-gray-700`}>
-                <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-
-                    </h2>
-                    <button
-                        onClick={() => {
-                            onClose();
+        <>
+         <Toaster />
+            <Modal.Root opened={showAccount} onClose={() => { onClose() }} size='xl' centered
+                styles={{
+                    body: {
+                        backgroundColor: '#374151',
+                        paddingTop: '1rem',
+                    },
+                    header: {
+                        backgroundColor: '#374151',
+                        borderBottom: '1px solid #fff',
+                    },
+                    content: {
+                        borderRadius: '1rem',
+                        border: 'none',
+                    },
+                }}
+            >
+                <Modal.Overlay />
+                <Modal.Content >
+                    <Modal.Header >
+                        <Modal.Title styles={{
+                            title: {
+                                color: '#fff',
+                            }
+                        }}>
+                            Settings
+                        </Modal.Title>
+                        <Modal.CloseButton 
+                        styles={{
+                           close: {
+                                 color: '#fff',
+                                    backgroundColor: '#374151',
+                                    borderRadius: '50%',
+                           }
                         }}
-                        className="text-gray-600 hover:text-gray-800 dark:text-gray-200 dark:hover:text-gray-300"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M5.293 6.293a1 1 0 011.414 0L10 8.586l3.293-3.293a1 1 0 111.414 1.414L11.414 10l3.293 3.293a1 1 0 01-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 01-1.414-1.414L8.586 10 5.293 6.707a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                    </button>
-                </div>
-                <div className="flex flex-row">
-                    <div className="w-25 flex flex-col gap-2">
-                        {!social && (
-                            <button
-                                onClick={() => setActiveTab('profile')}
-                                className={`${activeTab === 'profile' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'
-                                    } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
-                            >
-                                Profile
-                            </button>
-                        )}
-                        {!social && (
-                            <button
-                                onClick={() => setActiveTab('changePassword')}
-                                className={`${activeTab === 'changePassword' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
-                            >
-                                Change&nbsp;Password
-                            </button>
-                        )}
-                        {!social && (
-                            <button
-                                onClick={() => setActiveTab('subscriptions')}
-                                className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white ${Subscription ? 'block' : 'hidden'}`}
-                                >
-                                Subscriptions
-                            </button>
-                        )}
-                        {/* //create general tab */}
-                        {!social && (
-                            <button onClick={() => setActiveTab('general')} className={`${activeTab === 'general' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}>
-                                General
-                            </button>
-                        )}
-                    </div>
+                        />
+                    </Modal.Header>
+                    <Modal.Body >
+                        <div className="flex flex-row">
+                            <div className="w-25 flex flex-col gap-2">
+                                {!social && (
+                                    <button
+                                        onClick={() => setActiveTab('profile')}
+                                        className={`${activeTab === 'profile' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'
+                                            } text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
+                                    >
+                                        Profile
+                                    </button>
+                                )}
+                                {!social && (
+                                    <button
+                                        onClick={() => setActiveTab('changePassword')}
+                                        className={`${activeTab === 'changePassword' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}
+                                    >
+                                        Change&nbsp;Password
+                                    </button>
+                                )}
+                                {!social && (
+                                    <button
+                                        onClick={() => setActiveTab('subscriptions')}
+                                        className={`${activeTab === 'subscriptions' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white ${Subscription ? 'block' : 'hidden'}`}
+                                    >
+                                        Subscriptions
+                                    </button>
+                                )}
+                                {/* //create general tab */}
+                                {!social && (
+                                    <button onClick={() => setActiveTab('general')} className={`${activeTab === 'general' ? 'dark:bg-blue-500' : 'dark:bg-gray-700'} text-white px-4 py-2 font-extrabold rounded-md dark:text-white`}>
+                                        General
+                                    </button>
+                                )}
+                            </div>
 
-                    {!social && (
-                        <div className="w-1 border-r border-gray-200 dark:border-gray-700 mx-3" />
-                    )}
+                            {!social && (
+                                <div className="w-1 border-r border-gray-200 dark:border-gray-200 mx-3" />
+                            )}
 
-                    <div className="w-[100%]">
-                        {activeTab === 'changePassword' && (
-                            <Formik
-                                initialValues={{
-                                    oldPassword: '',
-                                    newPassword: '',
-                                    confirmNewPassword: '',
-                                }}
-                                validationSchema={ChangePasswordSchema}
-                                onSubmit={async (values, { setSubmitting }) => {
-                                    try {
-                                        const response = await axios.post(
-                                            `${HOSTINGURL}/v1/auth/change-password`,
-                                            {
-                                                old_password: values.oldPassword,
-                                                new_password: values.confirmNewPassword,
-                                            },
-                                            {
-                                                headers: {
-                                                    accept: 'application/json',
-                                                    'Content-Type': 'application/json',
-                                                    Authorization: `Bearer ${userToken}`,
-                                                },
+                            <div className="w-[100%]">
+                                {activeTab === 'changePassword' && (
+                                    <Formik
+                                        initialValues={{
+                                            oldPassword: '',
+                                            newPassword: '',
+                                            confirmNewPassword: '',
+                                        }}
+                                        validationSchema={ChangePasswordSchema}
+                                        onSubmit={async (values, { setSubmitting }) => {
+                                            try {
+                                                const response = await axios.post(
+                                                    `${HOSTINGURL}/v1/auth/change-password`,
+                                                    {
+                                                        old_password: values.oldPassword,
+                                                        new_password: values.confirmNewPassword,
+                                                    },
+                                                    {
+                                                        headers: {
+                                                            accept: 'application/json',
+                                                            'Content-Type': 'application/json',
+                                                            Authorization: `Bearer ${userToken}`,
+                                                        },
+                                                    }
+                                                );
+                                                ToastNotification({ type: 'success', message: response.data.message })
+                                                localStorage.removeItem('_auth');
+                                                localStorage.removeItem('_sodfhgiuhih');
+                                                navigate('/');
+                                                setSubmitting(false);
+                                            } catch (error) {
+                                                console.error(error);
+                                                ToastNotification({ type: 'error', message: error.response.data.message })
+                                                setSubmitting(false);
                                             }
-                                        );
-                                        ToastNotification({ type: 'success', message: response.data.message })
-                                        localStorage.removeItem('_auth');
-                                        localStorage.removeItem('_sodfhgiuhih');
-                                        navigate('/');
-                                        setSubmitting(false);
-                                    } catch (error) {
-                                        console.error(error);
-                                        ToastNotification({ type: 'error', message: error.response.data.message })
-                                        setSubmitting(false);
-                                    }
-                                }}
-                            >
-                                {(formikProps) => (
-                                    <Form className="flex flex-col gap-3">
-                                        <div className="flex flex-col gap-2 relative">
-                                            {/* <label
+                                        }}
+                                    >
+                                        {(formikProps) => (
+                                            <Form className="flex flex-col gap-3 p-3 dark:bg-gray-800 rounded-md">
+                                                <div className="flex flex-col gap-2 relative">
+                                                    {/* <label
                                                 htmlFor="oldPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
                                                 Current Password
                                             </label> */}
-                                            <Field
-                                                type={showOldPassword ? 'text' : 'password'}
-                                                name="oldPassword"
-                                                className="px-4 py-2 border rounded-lg relative placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
-                                                placeholder="Enter your current password"
-                                            />
-                                            <div
-                                                className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer text-gray-400"
-                                                onClick={() =>
-                                                    setShowOldPassword((prev) => !prev)
-                                                }
-                                            >
-                                                {showOldPassword ? (
-                                                    <IoMdEyeOff size={20} className='text-gray-400' />
-                                                ) : (
-                                                    <IoMdEye size={20} />
-                                                )}
-                                            </div>
-                                        </div>
-                                        <ErrorMessage
-                                            name="oldPassword"
-                                            component="p"
-                                            className="text-red-500 text-sm"
-                                        />
-                                        <div className="flex flex-col gap-2 relative">
-                                            {/* <label
+                                                    <Field
+                                                        type={showOldPassword ? 'text' : 'password'}
+                                                        name="oldPassword"
+                                                        className="px-4 py-2 border rounded-lg relative placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
+                                                        placeholder="Enter your current password"
+                                                    />
+                                                    <div
+                                                        className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer text-gray-400"
+                                                        onClick={() =>
+                                                            setShowOldPassword((prev) => !prev)
+                                                        }
+                                                    >
+                                                        {showOldPassword ? (
+                                                            <IoMdEyeOff size={20} className='text-gray-400' />
+                                                        ) : (
+                                                            <IoMdEye size={20} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <ErrorMessage
+                                                    name="oldPassword"
+                                                    component="p"
+                                                    className="text-red-500 text-sm"
+                                                />
+                                                <div className="flex flex-col gap-2 relative">
+                                                    {/* <label
                                                 htmlFor="newPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
                                                 New Password
                                             </label> */}
-                                            <Field
-                                                type={showNewPassword ? 'text' : 'password'}
-                                                name="newPassword"
-                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
-                                                placeholder="Enter your new password"
-                                            />
-                                            <div
-                                                className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer text-gray-400"
-                                                onClick={() =>
-                                                    setShowNewPassword((prev) => !prev)
-                                                }
-                                            >
-                                                {showNewPassword ? (
-                                                    <IoMdEyeOff size={20} />
-                                                ) : (
-                                                    <IoMdEye size={20} />
-                                                )}
-                                            </div>
-                                        </div>
-                                        <ErrorMessage
-                                            name="newPassword"
-                                            component="p"
-                                            className="text-red-500 text-sm"
-                                        />
+                                                    <Field
+                                                        type={showNewPassword ? 'text' : 'password'}
+                                                        name="newPassword"
+                                                        className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
+                                                        placeholder="Enter your new password"
+                                                    />
+                                                    <div
+                                                        className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer text-gray-400"
+                                                        onClick={() =>
+                                                            setShowNewPassword((prev) => !prev)
+                                                        }
+                                                    >
+                                                        {showNewPassword ? (
+                                                            <IoMdEyeOff size={20} />
+                                                        ) : (
+                                                            <IoMdEye size={20} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <ErrorMessage
+                                                    name="newPassword"
+                                                    component="p"
+                                                    className="text-red-500 text-sm"
+                                                />
 
-                                        <div className="flex flex-col gap-2 relative">
-                                            {/* <label
+                                                <div className="flex flex-col gap-2 relative">
+                                                    {/* <label
                                                 htmlFor="confirmNewPassword"
                                                 className="text-sm text-gray-600 dark:text-gray-400"
                                             >
                                                 Confirm New Password
                                             </label> */}
-                                            <Field
-                                                type={showConfirmPassword ? 'text' : 'password'}
-                                                name="confirmNewPassword"
-                                                className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
-                                                placeholder="Confirm your new password"
-                                            />
-                                            <div
-                                                className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer text-gray-400"
-                                                onClick={() =>
-                                                    setShowConfirmPassword((prev) => !prev)
-                                                }
-                                            >
-                                                {showConfirmPassword ? (
-                                                    <IoMdEyeOff size={20} />
-                                                ) : (
-                                                    <IoMdEye size={20} />
-                                                )}
-                                            </div>
-                                        </div>
-                                        <ErrorMessage
-                                            name="confirmNewPassword"
-                                            component="p"
-                                            className="text-red-500 text-sm"
-                                        />
-                                        <button
-                                            type="submit"
-                                            disabled={formikProps.isSubmitting}
-                                            className={`${formikProps.isSubmitting
-                                                ? 'bg-gray-400 cursor-wait'
-                                                : 'bg-blue-500'
-                                                } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white mt-3`}
-                                        >
-                                            {formikProps.isSubmitting ? 'Loading...' : 'Submit'}
-                                        </button>
-                                    </Form>
+                                                    <Field
+                                                        type={showConfirmPassword ? 'text' : 'password'}
+                                                        name="confirmNewPassword"
+                                                        className="px-4 py-2 border rounded-md placeholder:text-gray-400 bg-transparent dark:bg-gray-700 dark:text-white"
+                                                        placeholder="Confirm your new password"
+                                                    />
+                                                    <div
+                                                        className="absolute top-[71%] -translate-y-1/2 right-3 cursor-pointer text-gray-400"
+                                                        onClick={() =>
+                                                            setShowConfirmPassword((prev) => !prev)
+                                                        }
+                                                    >
+                                                        {showConfirmPassword ? (
+                                                            <IoMdEyeOff size={20} />
+                                                        ) : (
+                                                            <IoMdEye size={20} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <ErrorMessage
+                                                    name="confirmNewPassword"
+                                                    component="p"
+                                                    className="text-red-500 text-sm"
+                                                />
+                                                <button
+                                                    type="submit"
+                                                    disabled={formikProps.isSubmitting}
+                                                    className={`${formikProps.isSubmitting
+                                                        ? 'bg-gray-400 cursor-wait'
+                                                        : 'bg-blue-500'
+                                                        } text-white px-4 py-2 rounded-md dark:bg-gray-700 dark:text-white mt-3`}
+                                                >
+                                                    {formikProps.isSubmitting ? 'Loading...' : 'Submit'}
+                                                </button>
+                                            </Form>
+                                        )}
+                                    </Formik>
                                 )}
-                            </Formik>
-                        )}
-                        {activeTab === 'profile' && (
-                            <Formik initialValues={{}} onSubmit={() => { }}>
-                                <UserModal
-                                    isOpen={true}
-                                    userNickname={userNickname}
-                                    userEmailAddress={userEmailAddress}
-                                    avatar={avatar}
-                                    social={social}
-                                    onclose={() => {
-                                        onclose();
-                                    }}
-                                />
-                            </Formik>
-                        )}
-                        {activeTab === 'subscriptions' && (
-                            <SubscriptionModal Subscription={Subscription} />
-                        )}
-                        {activeTab === 'general' && (
-                            <div className="flex justify-between items-center">
-                                <label className="text-sm font-semibold text-gray-200 dark:text-gray-200 select-none">
-                                    Delete All Projects
-                                </label>
-                                <button
-                                    onClick={handleDeleteAllProjects}
-                                    className="dark:bg-red-500 text-white px-4 py-2 rounded-md  dark:text-white"
-                                >
-                                    Delete
-                                </button>
+                                {activeTab === 'profile' && (
+                                    <Formik initialValues={{}} onSubmit={() => { }}>
+                                        <UserModal
+                                            isOpen={true}
+                                            userNickname={userNickname}
+                                            userEmailAddress={userEmailAddress}
+                                            avatar={avatar}
+                                            social={social}
+                                            onclose={() => {
+                                                onclose();
+                                            }}
+                                        />
+                                    </Formik>
+                                )}
+                                {activeTab === 'subscriptions' && (
+                                    <SubscriptionModal Subscription={Subscription} />
+                                )}
+                                {activeTab === 'general' && (
+                                    <div className="flex justify-between items-start dark:bg-gray-800 p-3 rounded-md h-full align-top	">
+                                        <div className='items-center flex justify-between w-full'>
+                                        <label className="text-sm font-semibold text-gray-200 dark:text-gray-200 select-none">
+                                            Delete All Projects
+                                        </label>
+                                        <button
+                                            onClick={handleDeleteAllProjects}
+                                            className="dark:bg-red-500 text-white px-4 py-2 rounded-md  dark:text-white"
+                                        >
+                                            Delete
+                                        </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </div>
+                    </Modal.Body>
+                </Modal.Content>
+            </Modal.Root>
+
+            {/* <div
+                className={`fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center  z-50 inset-0 backdrop-blur-md bg-black bg-opacity-60 ${showAccount ? '' : 'hidden'
+                    } `}
+            >
+               
+                <div className={`bg-white rounded-3xl border p-4 flex flex-col gap-4 dark:bg-gray-800 ${!social ? 'w-[600px]' : 'w-[400px]'}  dark:border-gray-700`}>
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+
+                        </h2>
+                        <button
+                            onClick={() => {
+                                onClose();
+                            }}
+                            className="text-gray-600 hover:text-gray-800 dark:text-gray-200 dark:hover:text-gray-300"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M5.293 6.293a1 1 0 011.414 0L10 8.586l3.293-3.293a1 1 0 111.414 1.414L11.414 10l3.293 3.293a1 1 0 01-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 01-1.414-1.414L8.586 10 5.293 6.707a1 1 0 010-1.414z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                        </button>
                     </div>
+
                 </div>
-            </div>
-        </div>
+            </div> */}
+        </>
     );
 };
 

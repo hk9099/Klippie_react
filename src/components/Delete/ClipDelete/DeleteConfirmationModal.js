@@ -29,7 +29,11 @@ function ConfirmationModal({ show, onConfirm, onCancel, projectName }) {
   }
 
   return (
-    <div className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+    <div className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 "
+      style={{
+        zIndex: 99999999999999999,
+      }}
+    >
       <MantineProvider>
         <div className="bg-gray-800 w-full max-w-md p-6 rounded-lg border shadow-lg z-50 border-gray-700 text-white">
           <div className="flex justify-between items-center mb-2">

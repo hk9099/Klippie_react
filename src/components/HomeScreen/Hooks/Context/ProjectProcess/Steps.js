@@ -285,7 +285,7 @@ const Steps = ({ newhistoryvideoClips, errorMessage, cloudinaryResponse, userNam
                     <Suggetionpopup isOpen={isSuggetionpopupOpen} onClose={() => setIsSuggetionpopupOpen(false)} />
                 )} */}
                 {!accordionVisible && (
-                    <DragDropModal className="z-50" />
+                    <DragDropModal  />
                 )}
                 {error && <div className="mb-4 text-red-500">{error}</div>}
             </div>

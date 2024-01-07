@@ -19,6 +19,7 @@ const Forgotpassword = lazy(() => import('./Pages/forgotpassword.js'));
 const Dashboard = lazy(() => import('./components/DashBoard/dashboard.js'));
 const OtpVarification = lazy(() => import('./Pages/otpVarification.js'));
 const Layout = lazy(() => import('./components/Parent/Layout.js'));
+const Sidebar = lazy(() => import('./components/Sidebar/Sidebar.js'));
 const Steps = lazy(() => import('./components/HomeScreen/Hooks/Context/ProjectProcess/Steps.js'));
 const HomeScreen = lazy(() => import('./components/HomeScreen/FirstScreen/HomeScreen.js'));
 const PricingCardsContainer = lazy(() => import('./components/chargebee/CardContainer/PricingCardsContainer.js'));
@@ -26,7 +27,7 @@ const Editor = lazy(() => import('./components/MediaEditor/Editor.js'));
 const NotFoundPage = lazy(() => import('./Pages/NotFoundPage.js'));
 const Test = lazy(() => import('./components/Testing/confetti.js'));
 const NewTable = lazy(() => import('./components/Testing/newtable.js'));
-
+const NavbarSection = lazy(() => import('./components/Testing/TestingLayout.js'));
 function App() {
   const { projectId } = useParams();
   if (process.env.NODE_ENV === 'development') {
@@ -73,11 +74,11 @@ function App() {
                         <Route path="*" element={<NotFoundPage />} />
                         <Route
                           path="/dashboard"
-                          element={<Layout><Dashboard /></Layout>}
+                          element={<Sidebar><Dashboard /></Sidebar>}
                         />
                         <Route
                           path="/dashboard/:projectId" // Define a dynamic parameter
-                          element={<Layout><Dashboard /></Layout>}
+                          element={<Sidebar><Dashboard /></Sidebar>}
                         />
                         <Route path="/otpVarification" element={<OtpVarification />} />
                         <Route path="/steps" element={<Steps />} />
@@ -87,6 +88,7 @@ function App() {
                         <Route path='/newtable' element={<NewTable />} />
                         <Route path="/pricing" element={<PricingCardsContainer />} />
                         <Route path="/editor/:clipId" element={<Editor />} />
+                        <Route path="/testing" element={<NavbarSection />} />
                       </Routes>
                     </CloudinaryProvider>
                   </SidebarProvider>

@@ -197,7 +197,7 @@ const Navbar = ({ creaditBalance }) => {
 
     return (
         <>
-            <nav className='border-gray-200 mx-2 px-2 py-2.5 rounded dark:bg-transparent top-0 z-50 '>
+            <nav className='border-gray-200 rounded dark:bg-transparent top-0 z-50 '>
                 <div className='flex justify-end items-center mx-auto'>
                     <div className='flex justify-end items-center w-100'>
                         {subscribed === false && (!isNaN(hours) && !isNaN(minutes)) ? (
@@ -208,7 +208,7 @@ const Navbar = ({ creaditBalance }) => {
                                 </div>
                             </div>
                         ) : (
-                            <div className={`p-4 transform transition-transform duration-500 ease-in-out hover:scale-105`}>
+                            <div className={`transform transition-transform duration-500 ease-in-out hover:scale-105`}>
                                 <div className={`bg-gradient-to-r from-indigo-400 to-blue-900 text-white px-4 py-3 font-bold text-xxl flex justify-center items-center select-none rounded-lg shadow-lg`}>
                                     Lifetime Unlimited
                                 </div>

@@ -439,8 +439,8 @@ export default function Dashboard() {
     </div>
       <MantineProvider>
         {/* <Toaster position="top-center" /> */}
-        <div className="flex h-full">
-          {showPopup ? null : (
+        <div className="flex h-full xs:flex-col sm:flex-row">
+          {/* {showPopup ? null : (
             <Sidebar
               setProjectId={setProjectId}
               setNewvideoClips={setNewvideoClips}
@@ -448,10 +448,11 @@ export default function Dashboard() {
               setAccordionVisible={setAccordionVisible}
               setError={setError}
             />
-          )}
-          <section className="w-full px-3 " style={{ overflow: 'auto' }}>
+          )} */}
+          <section className="w-full ">
             {/* <button type="button" className="" onClick={showToast}>Toast</button> */}
-            <Modal className="z-50" />
+            {/* <Modal className="z-50" /> */}
+            {/* <div className="xs:hidden sm:block">
             {loginCount === 1 && (newProjectCount === undefined || '') ? (
               <Navbar creaditBalance={creaditBalance} />
             ) : loginCount > 1 ? (
@@ -459,6 +460,7 @@ export default function Dashboard() {
             ) : (
               <Navbar creaditBalance={creaditBalance} />
             )}
+            </div> */}
             {showPopup ? (
               <PopupForm onSubmit={handleSubmit} onCancel={handleCancel} />
             ) : (
@@ -478,11 +480,11 @@ export default function Dashboard() {
                 ) : loginCount === 1 && (newProjectCount === undefined || '') ? (
                   <HomeScreen userName={userName} creaditBalance={creaditBalance} />
                 ) : loginCount === 1 && newProjectCount >= 1 ? (
-                  <DragDropModal className="z-50" />
+                  <DragDropModal  />
                 ) : loginCount > 1 && (newProjectCount === undefined || '') ? (
-                  <DragDropModal className="z-50" />
+                  <DragDropModal  />
                 ) : loginCount > 1 && newProjectCount >= 1 ? (
-                  <DragDropModal className="z-50" />
+                  <DragDropModal  />
                 ) : (
                   null
                 )}

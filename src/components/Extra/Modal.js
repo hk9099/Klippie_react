@@ -142,7 +142,7 @@ const Modal = ({ onSubmit, isOpen, onClose }) => {
     return (
         <div
             className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
-            style={{ margin: "0px" }}
+            style={{ margin: "0px" ,zIndex: 99999999999999999 }}
         >
             <div className=" p-8 rounded-lg w-[25%] bg-white dark:bg-gray-800 shadow-lg">
                 <h2 className="text-xl  mb-4 text-gray-800 dark:text-white font-poppins text-center font-bold">

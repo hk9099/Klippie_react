@@ -14,154 +14,23 @@ import {
 } from '@tanstack/react-table';
 import CloudinaryVideoPlayer from "../VideoPlayer/cloudinaryVideoPlayer.js";
 import '../../assets/css/Table.css'
-import { TextInput, Checkbox, Textarea, Button, CopyButton, ActionIcon, Tooltip, rem, Group, Pagination, LoadingOverlay, Box } from '@mantine/core';
+import { usePagination } from '@mantine/hooks';
+import { TextInput, Text, Checkbox, Textarea, Button, CopyButton, ActionIcon, Tooltip, rem, Loader, Pagination, LoadingOverlay, Box, Group, Select } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCopy, IconCheck } from '@tabler/icons-react';
+import { IconCopy, IconCheck, IconX, IconReload, IconChevronDown } from '@tabler/icons-react';
 import DropDownButton from "../Table/Action/GridDropdown.js";
 import axios from 'axios';
+import qs from 'qs';
 
-function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUrl }) {
+function NewTable({ newmainClips, videoClips, setVideoCount, userToken, useBaseUrl }) {
     useEffect(() => {
         setData(videoClips)
     }, [videoClips])
-    function CustomCell({ getValue, row: { index }, column: { id }, table }) {
-        const initialValue = getValue();
-        const [value, setValue] = useState(initialValue);
-        const [isHovered, setIsHovered] = useState(false);
 
-        const handleChange = (e) => {
-            setValue(e.target.value);
-        };
+    const [data, setData] = useState([]);
+    console.log(data, 'dataaaaaaaaaaaaaaaaaaaaaaaaaa')
 
-        const handleMouseEnter = () => {
-            setIsHovered(true);
-        };
-
-        const handleMouseLeave = () => {
-            setIsHovered(false);
-        };
-
-        const onBlur = () => {
-            console.log('Saving value:', value);
-            table.options.meta?.updateData(index, id, value);
-        };
-
-
-        useEffect(() => {
-            setValue(initialValue);
-        }, [initialValue]);
-
-        if (id === 'src') {
-            return (
-                <div className='w-full'>
-                    <CloudinaryVideoPlayer src={getValue()} title={getValue()} type={getValue()} publicId={getValue()} startTime={getValue()} endTime={getValue()} clipId={getValue()} />
-                </div>
-            )
-        }
-
-        if (id === 'title') {
-            return (
-                <div
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    className='relative'
-                >
-                    {/* <input
-                        value={value}
-                        onChange={handleChange}
-                        onBlur={onBlur}
-                        className='bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none '
-                    /> */}
-                    <Textarea
-                        variant="unstyled"
-                        value={value}
-                        onChange={handleChange}
-                        onBlur={onBlur}
-                        placeholder=""
-                        color='white'
-                        classNames={{
-                            input: 'bg-transparent w-auto text-[#fff!important] p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none',
-                            // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
-                        }}
-                    />
-                    {isHovered && (
-                        <button
-                            onClick={onBlur}
-                            className='absolute right-0 top-0 p-1 bg-blue-500 text-white hover:bg-blue-700'
-                        >
-                            Save
-                        </button>
-                    )}
-                </div>
-            );
-        }
-
-        if (id === 'description') {
-            return (
-                <div
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    className='relative w-full'
-                >
-                    <textarea
-                        value={value}
-                        onChange={handleChange}
-                        onBlur={onBlur}
-                        className='bg-transparent text-white p-0 border-0 hover:border hover:border-white outline-none h-auto resize-none '
-                    />
-                    {isHovered && (
-                        <button
-                            onClick={onBlur}
-                            className='absolute right-0 top-0 p-1 bg-blue-500 text-white hover:bg-blue-700'
-                        >
-                            Saved
-                        </button>
-                    )}
-                </div>
-            );
-        }
-
-        const readOnly = true
-
-        return (
-            // <input
-            //     value={value}
-            //     onChange={handleChange}
-            //     onBlur={onBlur}
-            //     readOnly={readOnly}
-            //     className={`bg-transparent text-white outline-none p-0 border-0 ${readOnly ? 'cursor-pointer' : 'hover:border hover:border-white outline-none h-12 resize-none'}`}
-            // />
-            <TextInput
-                variant="unstyled"
-                value={value}
-                onChange={handleChange}
-                onBlur={onBlur}
-                disabled={readOnly}
-                placeholder=""
-                styles={{
-                    input: {
-                        color: '#fff',
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        outline: 'none',
-                        cursor: readOnly ? 'pointer' : 'text',
-                        fontSize: '1rem',
-                        lineHeight: '1.5rem',
-                        fontWeight: 900,
-                        textAlign: 'center',
-                    },
-                    root: {
-                        color: '#FFFFFF',
-                        justifyContent: 'center',
-                    },
-                }}
-            />
-        );
-    }
-
-    // const defaultColumn = {
-    //     cell: CustomCell,
-    // };
+    const refreshData = () => setData([]);
 
     function useSkipper() {
         const shouldSkipRef = useRef(true);
@@ -210,7 +79,7 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
 
     const [rowSelection, setRowSelection] = React.useState({})
 
-    const columnHelper = createColumnHelper(); // Replace 'Person' with the actual type
+    const columnHelper = createColumnHelper();
 
     const columns = [
         {
@@ -254,10 +123,9 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
         }),
         columnHelper.accessor('title', {
             header: 'Title',
-            cell: ({ getValue }) => {
-                const initialValue = getValue();
+            cell: ({ row }) => {
                 // eslint-disable-next-line react-hooks/rules-of-hooks
-                const [valuee, setValue] = useState(initialValue);
+                const [value, setValue] = useState(row.original.title);
                 const [isHovered, setIsHovered] = useState(false);
 
                 const handleChange = (e) => {
@@ -271,11 +139,49 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                 const handleMouseLeave = () => {
                     setIsHovered(false);
                 };
+                const handleRegenerate = (id, columnId, newValue) => {
+                    let data = qs.stringify({
+                        'id': id,
+                        [columnId]: 'true',
+                    });
 
+                    let config = {
+                        method: 'post',
+                        maxBodyLength: Infinity,
+                        url: 'https://dev-api.getklippie.com/v1/clip/re-clip-data',
+                        headers: {
+                            'accept': 'application/json',
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + userToken
+                        },
+                        data: data
+                    };
+
+                    axios.request(config)
+                        .then((response) => {
+                            console.log(response.data.data.title, 'sdsdfsdfsdf');
+                            setData((old) =>
+                                old.map((rowData) => {
+                                    if (rowData.id === id) {
+                                        return {
+                                            ...rowData,
+                                            [columnId]: response.data.data.title
+                                        };
+                                    }
+                                    return rowData;
+                                })
+                            );
+
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                };
                 useEffect(() => {
-                    setValue(initialValue);
-                }, [initialValue]);
+                    setValue(row.original.title);
+                }, [row.original.title]);
                 const [visible, setVisible] = useState(false);
+                const [error, setError] = useState();
 
                 return (
                     <div
@@ -290,108 +196,16 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                             />
                             <Textarea
                                 variant="unstyled"
-                                value={valuee}
-                                onChange={handleChange}
-                                placeholder=""
-                                autosize
-                                minRows={9}
-                                maxRows={9}
-                                color='white'
-                                classNames={{
-                                    input: 'bg-transparent w-[auto!important]  p-[5px!important] text-[#fff!important] p-0 border-0 hover:border hover:border-white outline-none ',
-                                    // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
-                                }}
-                                styles={{
-                                    input: {
-                                        fontSize: '14px',
-                                    }
-                                }}
-                            />
-                        </Box>
-                        <div className='flex justify-end'>
-                            {isHovered && (
-                                <div className='flex justify-end items-center mt-2'>
-                                    <CopyButton value={valuee} >
-                                        {({ copied, copy }) => (
-                                            <Button color={copied ? 'teal' : 'blue'} onClick={copy}>
-                                                {copied ? 'Copied' : 'Copy'}
-                                            </Button>
-                                        )}
-                                    </CopyButton>
-                                    <Button
-                                        variant="filled"
-                                        color="green"
-                                        styles={{
-                                            root: {
-                                                marginLeft: rem(10),
-                                            },
-                                        }}
-                                        onClick={() => {
-                                            setVisible(true)
-                                        }}
-                                    >
-                                        Save
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )
-            },
-            footer: info => info.column.id,
-            // size: 200,
-        }),
-        columnHelper.accessor('description', {
-            header: 'Discription ',
-            footer: info => info.column.id,
-            cell: ({ row }) => {
-                const initialValue = row.original.description
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                const [value, setValue] = useState(initialValue);
-                const [isHovered, setIsHovered] = useState(false);
-
-                const handleChange = (e) => {
-                    setValue(e.target.value);
-                };
-
-                const handleMouseEnter = () => {
-                    setIsHovered(true);
-                };
-
-                const handleMouseLeave = () => {
-                    setIsHovered(false);
-                };
-
-                useEffect(() => {
-                    setValue(initialValue);
-                }, [initialValue]);
-                const [visible, setVisible] = useState(false);
-                const [error, setError] = useState();
-               
-                return (
-                    <div
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
-                        className=' '
-                    >
-
-                        <Box pos="relative">
-                            <LoadingOverlay visible={visible}
-                                overlayProps={{ radius: 'sm', blur: 0, opacity: 0.6 }}
-                                loaderProps={{ color: 'violet', type: 'bars' }}
-                            />
-                            <Textarea
-                                variant="unstyled"
                                 value={value}
                                 onChange={handleChange}
                                 placeholder=""
                                 autosize
-                                error={error}
                                 minRows={9}
+                                error={error}
                                 maxRows={9}
                                 color='white'
                                 classNames={{
-                                    input: 'bg-transparent  p-[5px!important] text-[#fff!important]  hover:border hover:border-white outline-none  resize-none',
+                                    input: 'bg-transparent w-[auto!important]  p-[5px!important] text-[#fff!important] p-0 border-0 hover:border hover:border-white outline-none ',
                                     // root: 'bg-transparent  w-auto text-white p-0 border-0 hover:border hover:border-white outline-none h-12 resize-none'
                                 }}
                                 styles={{
@@ -401,7 +215,7 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                                     error: {
                                         borderColor: '#ef4444',
                                         border: `${error ? '1px solid' : 'none'}`,
-                                        boderRadius: `${error ? '10px' : 'none'}`,
+                                        borderRadius: `${error ? '10px' : 'none'}`,
                                         padding: `${error ? '5px' : 'none'}`,
                                         fontSize: '14px',
                                         fontWeight: 'bold',
@@ -414,11 +228,19 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                         <div className='flex justify-end'>
                             {isHovered && (
                                 <div className='flex justify-end items-center mt-2'>
-                                    <CopyButton value={value} >
+                                    <CopyButton
+                                        value={value}
+                                        timeout={2000}>
                                         {({ copied, copy }) => (
-                                            <Button color={copied ? 'teal' : 'blue'} onClick={copy}>
-                                                {copied ? 'Copied' : 'Copy'}
-                                            </Button>
+                                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="bottom">
+                                                <ActionIcon color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
+                                                    {copied ? (
+                                                        <IconCheck style={{ width: rem(16) }} />
+                                                    ) : (
+                                                        <IconCopy style={{ width: rem(16) }} />
+                                                    )}
+                                                </ActionIcon>
+                                            </Tooltip>
                                         )}
                                     </CopyButton>
                                     <Button
@@ -429,23 +251,37 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                                                 marginLeft: rem(10),
                                             },
                                         }}
+                                        onClick={() => handleRegenerate(row.original.id, 'title', value)}
+                                    >
+                                        Regenerate
+                                    </Button>
+                                    <Button
+                                        variant="filled"
+                                        color="green"
+                                        styles={{
+                                            root: {
+                                                marginLeft: rem(10),
+                                            },
+                                        }}
                                         onClick={() => {
                                             setVisible(true)
-                                            let data = JSON.stringify({
-                                                "id": row.original.id,
-                                                "description": value,
+                                            let data = qs.stringify({
+                                                'id': row.original.id,
+                                                'title': value
                                             });
+
                                             let config = {
                                                 method: 'post',
                                                 maxBodyLength: Infinity,
-                                                url: `${useBaseUrl}/v1/clip/update`,
+                                                url: 'https://dev-api.getklippie.com/v1/clip/update',
                                                 headers: {
                                                     'accept': 'application/json',
-                                                    'Content-Type': 'application/json',
+                                                    'Content-Type': 'application/x-www-form-urlencoded',
                                                     'Authorization': 'Bearer ' + userToken
                                                 },
                                                 data: data
                                             };
+
                                             axios.request(config)
                                                 .then((response) => {
                                                     console.log(JSON.stringify(response.data), 'ytjfghjgfhjghjgfhjhg');
@@ -469,6 +305,236 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                     </div>
                 )
             },
+            footer: info => info.column.id,
+            // size: 200,
+        }),
+        columnHelper.accessor('description', {
+            header: 'Discription ',
+            footer: info => info.column.id,
+            cell: ({ row }) => {
+                const [value, setValue] = useState(row.original.description);
+                const [isHovered, setIsHovered] = useState(false);
+                const [visible, setVisible] = useState(false);
+                const [error, setError] = useState();
+
+                const [regenerationStatus, setRegenerationStatus] = useState();
+
+                const handleChange = (e) => {
+                    setValue(e.target.value);
+                };
+
+                const handleMouseEnter = () => {
+                    setIsHovered(true);
+                };
+
+                const handleMouseLeave = () => {
+                    setIsHovered(false);
+                };
+
+                function getButtonLabel() {
+                    return regenerationStatus === 'generating' ? 'Generating' : 'Regenerate';
+                }
+
+                function getButtonColor() {
+                    return regenerationStatus === 'generated' ? 'teal' : 'gray';
+                }
+
+
+                const handleRegenerate = (id, columnId, newValue) => {
+                    setRegenerationStatus('generating');
+
+                    let data = qs.stringify({
+                        'id': id,
+                        [columnId]: 'true',
+                    });
+
+                    let config = {
+                        method: 'post',
+                        maxBodyLength: Infinity,
+                        url: 'https://dev-api.getklippie.com/v1/clip/re-clip-data',
+                        headers: {
+                            'accept': 'application/json',
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + userToken
+                        },
+                        data: data
+                    };
+
+                    axios.request(config)
+                        .then((response) => {
+                            console.log(response.data.data.description, 'sdsdfsdfsdf');
+                            setData((old) =>
+                                old.map((rowData) => {
+                                    if (rowData.id === id) {
+                                        return {
+                                            ...rowData,
+                                            [columnId]: response.data.data.description
+                                        };
+                                    }
+                                    return rowData;
+                                })
+                            );
+                            setRegenerationStatus('generated');
+
+                            // Reset to 'regenerate' after 2 seconds
+                            setTimeout(() => {
+                                setRegenerationStatus('regenerate');
+                            }, 2000);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            setRegenerationStatus('failed');
+
+                            // Reset to 'regenerate' after 2 seconds
+                            // setTimeout(() => {
+                            //     setRegenerationStatus('regenerate');
+                            // }, 2000);
+                        });
+                };
+
+                function getIconForStatus(status) {
+                    switch (status) {
+                        case 'generating':
+                            return <Loader color="gray" size="xs" />;
+                        case 'generated':
+                            return <IconCheck style={{ width: rem(16) }} />;
+                        case 'failed':
+                            return <IconX style={{ width: rem(16) }} />;
+                        default:
+                            return <IconReload style={{ width: rem(16) }} />;
+                    }
+                }
+
+                return (
+                    <div
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                        className=' '
+                    >
+                        <Box pos="relative">
+                            <LoadingOverlay visible={visible}
+                                overlayProps={{ radius: 'sm', blur: 0, opacity: 0.6 }}
+                                loaderProps={{ color: 'violet', type: 'bars' }}
+                            />
+                            <Textarea
+                                variant="unstyled"
+                                value={value}
+                                onChange={handleChange}
+                                placeholder=""
+                                autosize
+                                error={error}
+                                minRows={9}
+                                maxRows={9}
+                                color='white'
+                                classNames={{
+                                    input: 'bg-transparent p-[5px!important] text-[#fff!important] hover:border hover:border-white outline-none resize-none',
+                                }}
+                                styles={{
+                                    input: {
+                                        fontSize: '14px'
+                                    },
+                                    error: {
+                                        borderColor: '#ef4444',
+                                        border: `${error ? '1px solid' : 'none'}`,
+                                        borderRadius: `${error ? '10px' : 'none'}`,
+                                        padding: `${error ? '5px' : 'none'}`,
+                                        fontSize: '14px',
+                                        fontWeight: 'bold',
+                                        color: '#fff',
+                                        backgroundColor: '#ef4444',
+                                    }
+                                }}
+                            />
+                        </Box>
+                        <div className='flex justify-end'>
+                            {isHovered && (
+                                <div className='flex justify-end items-center mt-2'>
+                                    <CopyButton
+                                        value={value}
+                                        timeout={2000}>
+                                        {({ copied, copy }) => (
+                                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="bottom">
+                                                <ActionIcon color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
+                                                    {copied ? (
+                                                        <IconCheck style={{ width: rem(16) }} />
+                                                    ) : (
+                                                        <IconCopy style={{ width: rem(16) }} />
+                                                    )}
+                                                </ActionIcon>
+                                            </Tooltip>
+                                        )}
+                                    </CopyButton>
+                                    <CopyButton timeout={2000}>
+                                        {({ copied, copy }) => (
+                                            <Tooltip label={getButtonLabel()} withArrow position="right">
+                                                <ActionIcon color={getButtonColor()} variant="subtle" onClick={() => handleRegenerate(row.original.id, 'description', value)}>
+                                                    {getIconForStatus(regenerationStatus)}
+                                                </ActionIcon>
+                                            </Tooltip>
+                                        )}
+                                    </CopyButton>
+                                    <Button
+                                        variant="filled"
+                                        color="green"
+                                        styles={{
+                                            root: {
+                                                marginLeft: rem(10),
+                                            },
+                                        }}
+                                        onClick={() => handleRegenerate(row.original.id, 'description', value)}
+                                    >
+                                        Regenerate
+                                    </Button>
+                                    <Button
+                                        variant="filled"
+                                        color="green"
+                                        styles={{
+                                            root: {
+                                                marginLeft: rem(10),
+                                            },
+                                        }}
+                                        onClick={() => {
+                                            setVisible(true)
+                                            let data = qs.stringify({
+                                                'id': row.original.id,
+                                                'summary': value
+                                            });
+
+                                            let config = {
+                                                method: 'post',
+                                                maxBodyLength: Infinity,
+                                                url: 'https://dev-api.getklippie.com/v1/clip/update',
+                                                headers: {
+                                                    'accept': 'application/json',
+                                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                                    'Authorization': 'Bearer ' + userToken
+                                                },
+                                                data: data
+                                            };
+
+                                            axios.request(config)
+                                                .then((response) => {
+                                                    console.log(JSON.stringify(response.data), 'ytjfghjgfhjghjgfhjhg');
+                                                    setVisible(false)
+                                                })
+                                                .catch((error) => {
+                                                    console.log(error);
+                                                    setError(error.response.data.detail)
+                                                    setVisible(false)
+                                                    setTimeout(() => {
+                                                        setError(null)
+                                                    }, 7000);
+                                                });
+                                        }}
+                                    >
+                                        Save
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+            },
             size: 'auto',
         }),
         columnHelper.accessor('time', {
@@ -486,13 +552,9 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
         }),
     ];
 
-    const [data, setData] = useState(videoClips);
 
-    console.log("New Table", videoClips)
-    // const refreshData = () => setData([]);
 
     const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
-
     const columnResizeMode = 'onChange';
     const columnResizeDirection = 'ltr';
     // console.log("defaultColumn", defaultColumn)
@@ -530,6 +592,8 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
             },
         },
     });
+
+    const tablePagination = usePagination({ total: table.getPageCount(), initialPage: 1 });
 
     return (
         <div className="">
@@ -611,46 +675,44 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                     </tbody>
                 </table>
             </div>
-            <div className="h-2" />
-            <div className="flex items-center gap-2">
-                <button
-                    className="border rounded p-1"
-                    onClick={() => table.setPageIndex(0)}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    {'<<'}
-                </button>
-                <button
-                    className="border rounded p-1"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    {'<'}
-                </button>
-                <button
-                    className="border rounded p-1"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    {'>'}
-                </button>
-                <button
-                    className="border rounded p-1"
-                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                    disabled={!table.getCanNextPage()}
-                >
-                    {'>>'}
-                </button>
-                <span className="flex items-center gap-1">
-                    <div>Page</div>
-                    <strong>
-                        {table.getState().pagination.pageIndex + 1} of{' '}
-                        {table.getPageCount()}
-                    </strong>
-                </span>
-                <span className="flex items-center gap-1">
-                    | Go to page:
-                    <input
+            <div className="flex items-center justify-between gap-2 mb-4 mt-4">
+                <Group >
+                    <Text styles={{
+                        root: {
+                            color: '#fff'
+                        }
+                    }}>
+                        Clips per page:
+                    </Text>
+                    <Select
+                        value={table.getState().pagination.pageSize.toString()}
+                        onChange={(e) => {
+                            table.setPageSize(Number(e));
+                        }}
+                        rightSection={<IconChevronDown width={20} />}
+                        data={[
+                            { label: '5', value: "5" },
+                            { label: '10', value: "10" },
+                            { label: '20', value: "20" },
+                            { label: '30', value: "30" },
+                            { label: '40', value: "40" },
+                            { label: '50', value: "50" },
+                            { label: '60', value: "60" },
+                            { label: '70', value: "70" },
+                            { label: '80', value: "80" },
+                            { label: '90', value: "90" },
+                            { label: '100', value: "100" },
+                        ]}
+                        className="rounded w-20"
+                    />
+                </Group>
+                <Group>
+                    <Text styles={{
+                        root: {
+                            color: '#fff'
+                        }
+                    }}>Go to Page:</Text>
+                    <TextInput
                         type="number"
                         defaultValue={table.getState().pagination.pageIndex + 1}
                         onChange={(e) => {
@@ -659,30 +721,32 @@ function NewTable({newmainClips, videoClips, setVideoCount, userToken, useBaseUr
                                 : 0;
                             table.setPageIndex(page);
                         }}
-                        className="border p-1 rounded w-16"
+                        className="rounded w-16"
                     />
-                </span>
-                <select
-                    value={table.getState().pagination.pageSize}
-                    onChange={(e) => {
-                        table.setPageSize(Number(e.target.value));
-                    }}
-                >
-                    {[5, 10, 30, 40, 50].map((pageSize) => (
-                        <option key={pageSize} value={pageSize}>
-                            Show {pageSize}
-                        </option>
-                    ))}
-                </select>
+                    <Text
+                        styles={{
+                            root: {
+                                color: '#fff'
+                            }
+                        }}
+                    >Page: {table.getState().pagination.pageIndex + 1} of{' '}{table.getPageCount()} </Text>
+                    <Pagination
+                        color="violet"
+                        total={table.getPageCount()}
+                        value={table.getState().pagination.pageIndex + 1}
+                        onChange={(value) => table.setPageIndex(value - 1)}
+                        onFirstPage={() => table.setPageIndex(0)}
+                        onNextPage={() => table.nextPage()}
+                        onPreviousPage={() => table.previousPage()}
+                        onLastPage={() => table.setPageIndex(table.getPageCount() - 1)}
+                        siblings={1}
+                        withEdges
+                        withControls
+                        defaultValue={10}
+                    />
+                </Group>
             </div>
-            <div>{table.getRowModel().rows.length} Rows</div>
-            <div>
-                {/* <button onClick={() => refreshData()}>Refresh Data</button> */}
-            </div>
-            <div>
-                <label>Row Selection State:</label>
-                <pre>{JSON.stringify(table.getSelectedRowModel().rows, null, 2)}</pre>
-            </div>
+
         </div>
     );
 }

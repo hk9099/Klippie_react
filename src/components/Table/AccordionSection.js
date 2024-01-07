@@ -219,7 +219,7 @@ export default function AccordionSection({ videoClips, videoURl, clips,newmainCl
         <div className="flex-grow-0 flex-shrink-0 w-[100%] h-[90%] overflow-y-auto">
             <MantineProvider>
                 <Toaster />
-                <Accordion alwaysOpen={true} className="p-4">
+                <Accordion alwaysOpen={true} className="">
                     <AccordionItem isActive={openStates[0]}>
                         <AccordionHeader
                             onClick={() => toggleAccordion(0)}
